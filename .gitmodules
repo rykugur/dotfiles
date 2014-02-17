@@ -1,3 +1,6 @@
 [submodule "prezto"]
 	path = prezto
 	url = https://www.github.com/rykugur/prezto
+[submodule "powerline"]
+	path = powerline
+	url = https://github.com/rykugur/powerline
