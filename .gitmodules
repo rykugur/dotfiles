@@ -4,3 +4,6 @@
 [submodule "powerline"]
 	path = powerline
 	url = https://github.com/rykugur/powerline
+[submodule "powerline-fonts"]
+	path = powerline-fonts
+	url = https://www.github.com/rykugur/powerline-fonts
