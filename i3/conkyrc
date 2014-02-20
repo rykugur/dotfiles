@@ -1,0 +1,28 @@
+background        no
+out_to_console    yes
+out_to_x      no
+update_interval   2
+total_run_times   0
+short_units   yes
+pad_percents      3
+
+override_utf8_locale yes
+
+own_window_transparent no
+own_window_colour red
+
+# see here for variables:
+# http://conky.sourceforge.net/variables.html
+
+# mixer conky var requires oss module to be load
+# modprobe snd-pcm-oss
+
+TEXT
+,[{"full_text": " cpu [$cpubar] ","color": "\#DC322F"},
+  {"full_text": " mem [$membar] ", "color":"\#B58900"},
+  {"full_text": " up [$uptime_short] ", "color":"\#268BD2"},
+  {"full_text": " bat [${battery_bar}] ", "color":"\#159E20"},
+  {"full_text": " ${time %a %b %d} ${time %I:%M} "}
+]
+
+# {"full_text": " snd [${mixerbar vol}] ", "color":"\#268BD2"},
