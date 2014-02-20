@@ -1,0 +1,48 @@
+!color0  (black) 	      = Black
+!color1  (red)            = Red3
+!color2  (green) 	      = Green3
+!color3  (yellow) 	      = Yellow3
+!color4  (blue) 	      = Blue3
+!color5  (magenta) 	      = Magenta3
+!color6  (cyan) 	      = Cyan3
+!color7  (white) 	      = AntiqueWhite
+!color8  (bright black)   = Grey25
+!color9  (bright red) 	  = Red
+!color10 (bright green)   = Green
+!color11 (bright yellow)  = Yellow
+!color12 (bright blue) 	  = Blue
+!color13 (bright magenta) = Magenta
+!color14 (bright cyan) 	  = Cyan
+!color15 (bright white)   = White
+!foreground 		      = Black
+!background 		      = White
+
+URxvt.background:#000000
+!URxvt*borderLess: true
+!URxvt*borderless: false
+URxvt.colorBD:Gray95
+URxvt.colorUL:Green
+URxvt.cutchars: `"'%&()*,;<>@[]{|'"│`
+URxvt*cursorBlink: false
+URxvt*depth: 32
+!URxvt*font: xft:terminus:pixelsize=10:antialias=true
+URxvt*font: xft:Inconsolata for Powerline:pixelsize=12:antialias=true
+URxvt.foreground:#C9C9C9
+!URxvt*imLocale: en_US.UTF-8
+!URxvt*imLocale: en_US.utf8
+URxvt*saveLines: 120000
+URxvt*scrollBar: false
+URxvt*shading: 0
+!URxvt*termName: rxvt-unicode
+URxvt*termName: rxvt-unicode-256color
+URxvt*transparent: false
+URxvt*urlLauncher: google-chrome
+
+URxvt*color0: #000000
+URxvt*color4: #005577
+URxvt*color6: #89b6e2
+URxvt*color7: #cccccc
+URxvt*color8: #555753
+URxvt*color12: #0075A3
+URxvt*color14: #46a4ff
+URxvt*color15: #ffffff	

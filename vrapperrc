@@ -1,0 +1,18 @@
+" random settings
+set ignorecase
+set incsearch
+set hlsearch
+
+" get rid of highlighting after a search
+nnoremap ,<space> :noh<CR>
+
+" remap hjkl to be less annoying (to fit better with default homerow/index key)
+noremap ; l
+noremap l k
+noremap k j
+noremap j h
+" remap doubles to <ESC> for easy switching from insert mode
+inoremap jj <ESC>
+inoremap kk <ESC>
+inoremap ;; <ESC>
+inoremap lll <ESC>
