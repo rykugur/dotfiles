@@ -1,0 +1,17 @@
+# ignore these directories as they will be installed as submodules by vundle
+comments.vim
+delimitMate
+indentLine
+nerdtree
+rainbow_parentheses.vim
+supertab
+tagbar
+vim-fugitive
+vim-indent-guides
+vim-surround
+TaskList.vim
+neocomplcache.vim
+syntastic
+slimv.vim
+vim-misc
+vim-notes
