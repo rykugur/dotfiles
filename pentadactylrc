@@ -14,10 +14,10 @@ map , <leader>
 nmap -builtin <leader><space>  <silent> :noh<cr>
 
 " because hjkl is dumb
-noremap ; l
-noremap l k
-noremap k j
-noremap j h
+map -builtin ; l
+map -builtin l k
+map -builtin k j
+map -builtin j h
 
 "
 " Style: Minimalistic Tabs
