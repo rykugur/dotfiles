@@ -195,7 +195,7 @@ nnoremap <leader>WY ggVG"+y
 " slimv
 let g:slimv_swank_scheme=1
 " vim-notes
-:let g:notes_directories = ['~/Google\ Drive/Notes']
+":let g:notes_directories = ['~/Google\ Drive/Notes']
 
 "folding settings
 set foldmethod=indent   "fold based on indent
