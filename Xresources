@@ -25,8 +25,9 @@ URxvt.colorUL:Green
 URxvt.cutchars: `"'%&()*,;<>@[]{|'"│`
 URxvt*cursorBlink: false
 URxvt*depth: 32
-!URxvt*font: xft:terminus:pixelsize=10:antialias=true
-URxvt*font: xft:Inconsolata for Powerline:pixelsize=12:antialias=true
+URxvt*font: xft:terminus:pixelsize=10:antialias=true
+!URxvt*font: xft:Inconsolata for Powerline:pixelsize=12:antialias=true
+!URxvt*font: xft:inconsolata:pixelsize=12
 URxvt.foreground:#C9C9C9
 !URxvt*imLocale: en_US.UTF-8
 !URxvt*imLocale: en_US.utf8
