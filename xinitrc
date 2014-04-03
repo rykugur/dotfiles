@@ -16,8 +16,6 @@ sudo VBoxClient-all &
 xrdb -merge ~/.Xresources
 xrdb ~/.Xresources
 
-xset r rate 200 25
-
 #exec startxfce4
 #exec enlightenment_start
 exec i3
