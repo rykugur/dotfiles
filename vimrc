@@ -1,10 +1,10 @@
 " function to trim trailing spaces on multiple lines
 " can alternatlive use <leader>s as detailed below for single lines
 fun! StripTrailingWhitespaces()
-    let l = line(".")
-    let c = col(".")
-    %s/\s\+$//e
-    call cursor(l, c)
+  let l = line(".")
+  let c = col(".")
+  %s/\s\+$//e
+  call cursor(l, c)
 endfun
 
 " enable vundle
@@ -71,22 +71,22 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 " specify colors! (added to remove black!)
 let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
+  \ ['brown',       'RoyalBlue3'],
+  \ ['Darkblue',    'SeaGreen3'],
+  \ ['darkgray',    'DarkOrchid3'],
+  \ ['darkgreen',   'firebrick3'],
+  \ ['darkcyan',    'RoyalBlue3'],
+  \ ['darkred',     'SeaGreen3'],
+  \ ['darkmagenta', 'DarkOrchid3'],
+  \ ['brown',       'firebrick3'],
+  \ ['gray',        'RoyalBlue3'],
+  \ ['darkmagenta', 'DarkOrchid3'],
+  \ ['Darkblue',    'firebrick3'],
+  \ ['darkgreen',   'RoyalBlue3'],
+  \ ['darkcyan',    'SeaGreen3'],
+  \ ['darkred',     'DarkOrchid3'],
+  \ ['red',         'firebrick3'],
+\ ]
 
 " detect filetype fix
 au BufRead,BufNewFile *.exp set filetype=tcl
@@ -101,8 +101,10 @@ set completeopt=menuone,longest,preview
 let mapleader=","
 " tab settings
 set expandtab
-set shiftwidth=4
-set tabstop=4
+set smarttab
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
 " indent settings
 set autoindent
 " search settings
@@ -114,12 +116,15 @@ set hlsearch
 set laststatus=2
 " other misc sets
 set cursorline
+set cursorcolumn
 set hidden
 set modelines=0
 set nocompatible
 set nobackup
 set noswapfile
 set number
+set ttyfast
+set lazyredraw
 "set pastetoggle=<leader><F5>
 nnoremap <silent> <leader>pp :set paste!<CR>
 
