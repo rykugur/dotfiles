@@ -3,6 +3,11 @@ set ignorecase
 set incsearch
 set hlsearch
 
+" tab settings
+set expandtab
+set shiftwidth=2
+set tabstop=2
+
 " get rid of highlighting after a search
 nnoremap ,<space> :noh<CR>
 
