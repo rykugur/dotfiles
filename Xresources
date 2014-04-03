@@ -1,11 +1,11 @@
-!color0  (black) 	      = Black
+!color0  (black) 	        = Black
 !color1  (red)            = Red3
-!color2  (green) 	      = Green3
+!color2  (green) 	        = Green3
 !color3  (yellow) 	      = Yellow3
-!color4  (blue) 	      = Blue3
+!color4  (blue) 	        = Blue3
 !color5  (magenta) 	      = Magenta3
-!color6  (cyan) 	      = Cyan3
-!color7  (white) 	      = AntiqueWhite
+!color6  (cyan) 	        = Cyan3
+!color7  (white) 	        = AntiqueWhite
 !color8  (bright black)   = Grey25
 !color9  (bright red) 	  = Red
 !color10 (bright green)   = Green
@@ -14,27 +14,23 @@
 !color13 (bright magenta) = Magenta
 !color14 (bright cyan) 	  = Cyan
 !color15 (bright white)   = White
-!foreground 		      = Black
-!background 		      = White
+!foreground 		          = Black
+!background 		          = White
 
 URxvt.background:#000000
-!URxvt*borderLess: true
-!URxvt*borderless: false
 URxvt.colorBD:Gray95
-URxvt.colorUL:Green
 URxvt.cutchars: `"'%&()*,;<>@[]{|'"│`
-URxvt*cursorBlink: false
+URxvt*cursorBlink: true
+URxvt*cursorUnderline: true
 URxvt*depth: 32
-URxvt*font: xft:terminus:pixelsize=10:antialias=true
-!URxvt*font: xft:Inconsolata for Powerline:pixelsize=12:antialias=true
-!URxvt*font: xft:inconsolata:pixelsize=12
+URxvt*font: xft:uushi:size=7:antialias=true
+URxvt*boldFont: xft:uushi:size=7:antialias=true
+URxvt*italicFont: xft:uushi:size=7:antialias=true
 URxvt.foreground:#C9C9C9
-!URxvt*imLocale: en_US.UTF-8
-!URxvt*imLocale: en_US.utf8
+URxvt*imLocale: en_US.UTF-8
 URxvt*saveLines: 120000
 URxvt*scrollBar: false
 URxvt*shading: 0
-!URxvt*termName: rxvt-unicode
 URxvt*termName: rxvt-unicode-256color
 URxvt*transparent: false
 URxvt*urlLauncher: google-chrome
