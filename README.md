@@ -1,6 +1,10 @@
 dotfiles
 ========
 
+This is a very poorly named repo.
+
+This is also not much of a README.
+
 Various linux dot and config files.
 
 Be sure to call 'git submodule update --init --recursive' # apparently deprecated?
