@@ -9,10 +9,9 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-#force_xinerama yes
-
-new_window 1pixel
-#hide_edge_borders horizontal
+#new_window pixel 0
+#new_float pixel 0
+hide_edge_borders both
 
 set $mod Mod4
 
@@ -25,14 +24,10 @@ set $workspace6 6: dah
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
-#font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 #font xft:Terminus bold 12
-font xft:inconsolata 6
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, if you need a lot of unicode glyphs or
-# right-to-left text rendering, you should instead use pango for rendering and
-# chose a FreeType font, such as:
-# font pango:DejaVu Sans Mono 10
+#font xft:inconsolata 8
+font xft:lemon 8
+#font xft:uushi 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -71,10 +66,12 @@ bindsym $mod+Control+0 exec scrot
 # lock screen
 #bindsym Control+Mod1+l exec i3lock -c 000000
 
-# split in horizontal orientation
-bindsym $mod+h split h
-
-# split in vertical orientation
+# split view
+#bindsym $mod+h split h
+# Either Mac OS X or VirtualBox is retarded and doesn't pass Cmd+h onto the
+# guest OS, so I have to remap mod+h to the totally sensical mod+c. I'm
+# more inclined to believe that it's Mac OS X.
+bindsym $mod+c split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
@@ -135,26 +132,26 @@ bindsym $mod+Next exec "amixer -D pulse sset Master '5%-'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+  # These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+  # Pressing left will shrink the window’s width.
+  # Pressing right will grow the window’s width.
+  # Pressing up will shrink the window’s height.
+  # Pressing down will grow the window’s height.
+  bindsym j resize shrink width 10 px or 10 ppt
+  bindsym k resize grow height 10 px or 10 ppt
+  bindsym l resize shrink height 10 px or 10 ppt
+  bindsym semicolon resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+  # same bindings, but for the arrow keys
+  bindsym Left resize shrink width 10 px or 10 ppt
+  bindsym Down resize grow height 10 px or 10 ppt
+  bindsym Up resize shrink height 10 px or 10 ppt
+  bindsym Right resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
 }
 
 bindsym $mod+z mode "resize"
@@ -164,25 +161,44 @@ assign [class="Chromium"] $workspace2
 assign [class="Firefox"] $workspace2
 assign [class="luakit"] $workspace2
 assign [class="Nvpy"] $workspace4
-#assign [class="Eclipse"] $workspace3
+assign [class="Eclipse"] $workspace3
+assign [class="jetbrains-idea-ce"] $workspace3
 
 # colors
-# colorclass              border  background  text  indicator
-# client.focused
-# client.focused_inactive
-# client.unfocused
-# client.urgent
+# colorclass            #border   #background  #text     #indicator
+client.focused          #283E4E   #285577      #FFFFFF   #49BBD2
+client.focused_inactive #314757   #314757      #ffffff   #484e50
+client.unfocused        #505050   #505050      #8A8A8A   #2e9ef4
+client.urgent           #2f343a   #900000      #ffffff   #900000
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    status_command ~/.i3/conky
-    #status_command i3status
+  mode dock
+  position bottom
+
+  workspace_buttons yes
+
+  status_command ~/.i3/conky
+  #status_command i3status
+
+  colors {
+    background #252525
+    statusline #FFFFFF
+    separator  #252525
+
+    # colorclass       #border   #background   #text
+    focused_workspace  #252525   #252525       #FE5000
+    active_workspace   #252525   #252525       #FE5000
+    inactive_workspace #252525   #252525       #888888
+    urgent_workspace   #252525   #252525       #FE5000
+  }
 }
 
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec feh --bg-fill ~/dotfiles/wallpapers/ArchMinimal.png
+exec feh --bg-fill ~/dotfiles/backgrounds/bird.jpg
 exec "urxvtd -q -o -f"
 exec "compton --config ~/dotfiles/compton.conf"
+exec "xset r rate 190 40"

@@ -20,10 +20,10 @@ own_window_colour red
 # {"full_text": " snd [${mixerbar vol}] ", "color":"\#268BD2"},
 
 TEXT
-,[{"full_text": " cpu [$cpubar] ","color": "\#DC322F"},
-  {"full_text": " mem [$membar] ", "color":"\#B58900"},
-  {"full_text": " bat [${battery_bar}] ", "color":"\#159E20"},
-  {"full_text": " up [$uptime_short] ", "color":"\#268BD2"},
+,[{"full_text": " CPU [$cpubar] ","color": "\#FE5000"},
+  {"full_text": " MEM [$membar] ", "color":"\#B58900"},
+  {"full_text": " BAT [${battery_bar}] ", "color":"\#159E20"},
+  {"full_text": " UP [$uptime_short] ", "color":"\#268BD2"},
   {"full_text": " ${time %a %b %d} ${time %I:%M} "}
 ]
 
