@@ -12,7 +12,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " enable powerline
-set rtp+=~/dotfiles/powerline/powerline/bindings/vim
+set rtp+=~/.dotfiles/powerline/powerline/bindings/vim
 "set rtp+=/usr/local/lib/python2.7/site-packages/Powerline-beta-py2.7.egg/powerline/bindings/vim
 "call vam#ActivateAddons(['powerline'])
 
@@ -115,8 +115,8 @@ set hlsearch
 "set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
 set laststatus=2
 " other misc sets
-set cursorline
-set cursorcolumn
+"set cursorline
+"set cursorcolumn
 set hidden
 set modelines=0
 set nocompatible
@@ -175,6 +175,11 @@ nnoremap <silent> <leader>; :wincmd l<CR>
 nnoremap <silent> <leader>l :wincmd k<CR>
 nnoremap <silent> <leader>k :wincmd j<CR>
 nnoremap <silent> <leader>j :wincmd h<CR>
+" easy window moving
+nnoremap <silent> <leader>: :wincmd L<CR>
+nnoremap <silent> <leader>L :wincmd K<CR>
+nnoremap <silent> <leader>K :wincmd J<CR>
+nnoremap <silent> <leader>J :wincmd H<CR>
 " easy tabs
 "nnoremap <leader>tn :tabnew<cr>
 "nnoremap <leader>to :tabonly<cr>
