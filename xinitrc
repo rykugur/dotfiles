@@ -13,7 +13,6 @@ fi
 
 sudo VBoxClient-all &
 
-xrdb -merge ~/.Xresources
 xrdb ~/.Xresources
 
 #exec startxfce4
