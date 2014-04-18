@@ -36,6 +36,7 @@ Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/slimv.vim'
 Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-notes'
+Bundle 'kien/ctrlp.vim'
 
 " syntax and colorscheme specifics
 syntax enable
