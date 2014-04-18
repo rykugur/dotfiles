@@ -1,7 +1,42 @@
 #!/usr/bin/env zsh
 
+# TODO: likely a more "proper" way to do this?
+# TODO: ruby script instead?
+
 HOME_DIR=~
 DOTFILES_DIR=$HOME_DIR/.dotfiles
+
+if [ ! -d $DOTFILES_DIR ]; then
+  # TODO: ugly
+  echo "No .dotfiles dir exists, exiting"
+  return
+fi
+
+cd $DOTFILES_DIR
+cd prezto
+git checkout master
+git submodule init
+git submodule update
+git remote add upstream git://github.com/sorin-ionescu/prezto.git
+
+cd $DOTFILES_DIR
+cd vim/bundle/vundle
+git checkout master
+git remote add upstream git://github.com/gmarik/vundle.git
+
+cd $DOTFILES_DIR
+cd powerline
+git checkout develop
+git remote add upstream git://github.com/Lokaltog/powerline.git
+
+cd $DOTFILES_DIR
+cd powerline-fonts
+git checkout master
+git remote add upstream git://github.com/Lokaltog/powerline-fonts.git
+
+cd $DOTFILES_DIR
+git submodule init
+git submodule update
 
 cd $HOME_DIR
 
