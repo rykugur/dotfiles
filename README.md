@@ -27,8 +27,6 @@ TODO: add to install script:
 
     git remote add upstream git://github.com/Lokaltog/powerline-fonts.git
 
-    git remote add upstream git://github.com/zsh-users/antigen.git
-
     git remote add upstream git://github.com/trapd00r/ls--.git
 
     git remote add upstream git://github.com/cpbotha/nvpy
