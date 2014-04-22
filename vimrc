@@ -12,12 +12,12 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " enable powerline
-set rtp+=~/.dotfiles/powerline/powerline/bindings/vim
+"set rtp+=~/.dotfiles/powerline/powerline/bindings/vim
 "set rtp+=/usr/local/lib/python2.7/site-packages/Powerline-beta-py2.7.egg/powerline/bindings/vim
 "call vam#ActivateAddons(['powerline'])
 
 " let Vundle manage Vundle
-"  " required! 
+"  " required!
 Bundle 'gmarik/vundle'
 
 " Vundle Bundles
@@ -37,26 +37,20 @@ Bundle 'vim-scripts/slimv.vim'
 Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-notes'
 Bundle 'kien/ctrlp.vim'
+Bundle 'bling/vim-airline'
 
+""""""""""""""""""""""""""""""
 " syntax and colorscheme specifics
+""""""""""""""""""""""""""""""
 syntax enable
-"colorscheme distinguished
 colorscheme hybrid
-"colorscheme 256-grayvim
-"colorscheme mustang
-"set t_Co=256
 set fileencodings=utf-8
-"let g:molokai_original = 1
-"set background=dark
-"
-" IndentLines
-let g:indentLine_color_term = 239
-
 " filetype settings
 filetype on
 filetype plugin on
 filetype indent on
-
+" IndentLines
+let g:indentLine_color_term = 239
 " IndentGuides (default key: <leader>ig)
 let g:indent_guides_auto_colors = 0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=darkgray
@@ -64,7 +58,6 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=gray
 set ts=2 sw=2 noet
 let g:indent_guides_start_level=2
 "let g:indent_guides_guide_size=1
-
 " RainbowParentheses
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
@@ -128,6 +121,35 @@ set ttyfast
 set lazyredraw
 "set pastetoggle=<leader><F5>
 nnoremap <silent> <leader>pp :set paste!<CR>
+
+""""""""""""""""""""""""""""""
+" airline
+""""""""""""""""""""""""""""""
+let g:airline_theme = 'powerlineish'
+" let g:airline_branch_prefix = '<'
+" let g:airline_readonly_symbol = '<'
+" let g:airline_linecolumn_prefix = '<'
+"let g:airline_left_sep = '▶'
+"let g:airline_left_alt_sep = '>'
+"let g:airline_right_sep = '◀'
+"let g:airline_right_alt_sep = '<'
+"if !exists('g:airline_symbols')
+    "let g:airline_symbols = {}
+"endif
+"let g:airline_symbols.linenr = '␊'
+"let g:airline_symbols.linenr = '␤'
+"let g:airline_symbols.linenr = '¶'
+"let g:airline_symbols.branch = '⎇'
+"let g:airline_symbols.paste = 'ρ'
+"let g:airline_symbols.paste = 'Þ'
+"let g:airline_symbols.paste = '∥'
+"let g:airline_symbols.whitespace = 'Ξ'
+"let g:airline#extensions#branch#enabled = 1
+"let g:airline#extensions#syntastic#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" toggle cursorline when entering/leaving insert mode
+autocmd InsertEnter,InsertLeave * set cul!
 
 " key remaps
 nmap <F4> :NERDTreeToggle<CR>
