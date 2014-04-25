@@ -40,6 +40,7 @@ bindsym $mod+Shift+w kill
 
 # start dmenu (a program launcher)
 bindsym $mod+r exec dmenu_run -i
+#bindsym $mod+r exec dmenu_run -i -l 10
 
 # change focus
 bindsym $mod+j focus left
@@ -188,8 +189,8 @@ bar {
     separator  #252525
 
     # colorclass       #border   #background   #text
-    focused_workspace  #252525   #252525       #FE5000
-    active_workspace   #252525   #252525       #FE5000
+    focused_workspace  #CFCFCF   #CFCFCF       #252525
+    active_workspace   #252525   #252525       #268BD2
     inactive_workspace #252525   #252525       #888888
     urgent_workspace   #252525   #252525       #FE5000
   }
