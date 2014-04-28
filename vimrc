@@ -117,8 +117,8 @@ set nocompatible
 set nobackup
 set noswapfile
 set number
-set ttyfast
-set lazyredraw
+"set ttyfast
+"set lazyredraw
 "set pastetoggle=<leader><F5>
 nnoremap <silent> <leader>pp :set paste!<CR>
 
