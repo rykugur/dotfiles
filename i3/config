@@ -40,6 +40,7 @@ bindsym $mod+Shift+w kill
 
 # start dmenu (a program launcher)
 bindsym $mod+r exec dmenu_run -i
+#bindsym $mod+r exec dmenu_run -i -l 10
 
 # change focus
 bindsym $mod+j focus left
@@ -166,9 +167,9 @@ assign [class="jetbrains-idea-ce"] $workspace3
 
 # colors
 # colorclass            #border   #background  #text     #indicator
-client.focused          #283E4E   #285577      #FFFFFF   #49BBD2
+client.focused          #CFCFCF   #CFCFCF      #252525   #49BBD2
 client.focused_inactive #314757   #314757      #ffffff   #484e50
-client.unfocused        #505050   #505050      #8A8A8A   #2e9ef4
+client.unfocused        #252525   #252525      #CFCFCF   #2e9ef4
 client.urgent           #2f343a   #900000      #ffffff   #900000
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -188,8 +189,8 @@ bar {
     separator  #252525
 
     # colorclass       #border   #background   #text
-    focused_workspace  #252525   #252525       #FE5000
-    active_workspace   #252525   #252525       #FE5000
+    focused_workspace  #CFCFCF   #CFCFCF       #252525
+    active_workspace   #252525   #252525       #268BD2
     inactive_workspace #252525   #252525       #888888
     urgent_workspace   #252525   #252525       #FE5000
   }
