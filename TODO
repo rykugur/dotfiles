@@ -1,6 +1,5 @@
-i3
-  colors (mostly the container title bar and border colors)
 i3bar
   battery: whether charging or not
   volume?
 Move zsh dotfiles out of prezto submodule...?
+Update origin to git@git://... addr for all submodules
