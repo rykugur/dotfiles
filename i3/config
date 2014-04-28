@@ -167,9 +167,9 @@ assign [class="jetbrains-idea-ce"] $workspace3
 
 # colors
 # colorclass            #border   #background  #text     #indicator
-client.focused          #283E4E   #285577      #FFFFFF   #49BBD2
+client.focused          #CFCFCF   #CFCFCF      #252525   #49BBD2
 client.focused_inactive #314757   #314757      #ffffff   #484e50
-client.unfocused        #505050   #505050      #8A8A8A   #2e9ef4
+client.unfocused        #252525   #252525      #CFCFCF   #2e9ef4
 client.urgent           #2f343a   #900000      #ffffff   #900000
 
 # Start i3bar to display a workspace bar (plus the system information i3status
