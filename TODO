@@ -4,3 +4,6 @@ i3bar
 Move zsh dotfiles out of prezto submodule...?
 Update origin to git@git://... addr for all submodules
 GTK themes!
+Create a second dotfiles, e.g. workfiles, that contains the dotfiles repo and remove C42 related things from it
+  dotfiles should be a submodule?
+ls++?
