@@ -50,9 +50,9 @@ ln -s $DOTFILES_DIR/prezto .zprezto
 ln -s $DOTFILES_DIR/xinitrc .xinitrc
 ln -s $DOTFILES_DIR/Xresources .Xresources
 ln -s $DOTFILES_DIR/pentadactylrc .pentadactylrc
+ln -s $DOTFILES_DIR/zpreztorc .zpreztorc
+ln -s $DOTFILES_DIR/zprofile .zprofile
+ln -s $DOTFILES_DIR/zshrc .zshrc
 ln -s $DOTFILES_DIR/prezto/runcoms/zlogin .zlogin
 ln -s $DOTFILES_DIR/prezto/runcoms/zlogout .zlogout
-ln -s $DOTFILES_DIR/prezto/runcoms/zpreztorc .zpreztorc
-ln -s $DOTFILES_DIR/prezto/runcoms/zprofile .zprofile
 ln -s $DOTFILES_DIR/prezto/runcoms/zshenv .zshenv
-ln -s $DOTFILES_DIR/prezto/runcoms/zshrc .zshrc
