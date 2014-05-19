@@ -62,6 +62,7 @@ module DotfileLib
     elsif Dir.exists?("#{home}/.dotfiles")
       base_path = "#{home}/.dotfiles"
     else
+      # TODO: check if 'dotfiles' or 'workdotfiles' exists... if so, rename?
       # uh oh!
       puts "Couldn't get basepath. Neither .dotfiles or .workfiles exist in #{home}."
       exit
