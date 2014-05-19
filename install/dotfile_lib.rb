@@ -4,9 +4,7 @@ require 'optparse'
 require 'ostruct'
 require 'pp'
 
-class DotfileLib
-  @options
-
+module DotfileLib
   @personal_file_paths = [
       'dotfiles/i3,.i3',
       'dotfiles/vim,.vim',
@@ -45,40 +43,15 @@ class DotfileLib
     @work_file_paths
   end # end work_file_paths()
 
-  def DotfileLib.verbose(str)
-    puts str if @options.verbose
-  end # end verbose()
-
-  def self.validateOpts
-    if @options.personal && @options.work
+  def self.validateOpts(options)
+    if options.personal && options.work
       puts "Can't specify both personal and work!"
       exit
-    elsif !@options.personal && !@options.work
+    elsif !options.personal && !options.work
       puts "Need to specify either personal or work!"
       exit
     end
   end # validateOpts()
-
-  def self.getBasePath
-    if @options.personal
-      base_path = "#{Dir.home}/.dotfiles"
-    elsif @options.work
-      base_path = "#{Dir.home}/.workdotfiles"
-    else
-      # uh oh!
-      puts "What did you do?! Couldn't get base path."
-      exit
-    end
-
-    if !Dir.exists?(base_path)
-      puts "base_path: #{base_path} doesn't exist!"
-      exit
-    end
-
-    puts "base_path: #{base_path}" if @options.debug
-
-    base_path
-  end # getBasePath()
 
   def self.getBasePathNoFlag
     home = Dir.home
@@ -116,8 +89,6 @@ class DotfileLib
       opts.on("-d", "--debug", "Enables debug; doesn't actually write any files to disk. Implies verbose.") { options.debug = true; options.verbose = true }
     end
     opts.parse! args
-
-    @options = options
 
     options
   end # parse()

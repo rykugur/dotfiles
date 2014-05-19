@@ -7,13 +7,13 @@ require 'pp'
 
 require './dotfile_lib'
 
-base_path = DotfileLib.getBasePathNoFlag
+base_path = DotfileLib::getBasePathNoFlag
 
 # TODO: This is pretty stupid... it assumes one or the other...
 if base_path.include? "work"
-  file_paths = DotfileLib.work_file_paths
+  file_paths = DotfileLib::work_file_paths
 else
-  file_paths = DotfileLib.personal_file_paths
+  file_paths = DotfileLib::personal_file_paths
 end
 
 home = Dir.home

@@ -7,18 +7,19 @@ require 'pp'
 
 require './dotfile_lib'
 
-options = DotfileLib.parse
+options = DotfileLib::parse
 pp "options: #{options}" if options.verbose
 
-DotfileLib.validateOpts
+DotfileLib::validateOpts(options)
 
 if options.personal
-  file_paths = DotfileLib.personal_file_paths
+  file_paths = DotfileLib::personal_file_paths
 elsif options.work
-  file_paths = DotfileLib.work_file_paths
+  file_paths = DotfileLib::work_file_paths
 end
 
-base_path = DotfileLib.getBasePath
+# TODO: this is really naive
+base_path = DotfileLib::getBasePathNoFlag
 
 puts "Creating symbolic links for the following file paths: #{file_paths}" if options.verbose
 
