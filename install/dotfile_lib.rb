@@ -6,19 +6,19 @@ require 'pp'
 
 module DotfileLib
   @personal_file_paths = [
-      'dotfiles/i3,.i3',
-      'dotfiles/vim,.vim',
-      'dotfiles/vimrc,.vimrc',
-      'dotfiles/prezto,.zprezto',
-      'dotfiles/xinitrc,.xinitrc',
-      'dotfiles/Xresources,.Xresources',
-      'dotfiles/pentadactylrc,.pentadactylrc',
-      'dotfiles/zpreztorc,.zpreztorc',
-      'dotfiles/zprofile,.zprofile',
-      'dotfiles/zshrc,.zshrc',
-      'dotfiles/prezto/runcoms/zlogin,.zlogin',
-      'dotfiles/prezto/runcoms/zlogout,.zlogout',
-      'dotfiles/prezto/runcoms/zshenv,.zshenv'
+      'i3,.i3',
+      'vim,.vim',
+      'vimrc,.vimrc',
+      'prezto,.zprezto',
+      'xinitrc,.xinitrc',
+      'Xresources,.Xresources',
+      'pentadactylrc,.pentadactylrc',
+      'zpreztorc,.zpreztorc',
+      'zprofile,.zprofile',
+      'zshrc,.zshrc',
+      'prezto/runcoms/zlogin,.zlogin',
+      'prezto/runcoms/zlogout,.zlogout',
+      'prezto/runcoms/zshenv,.zshenv'
   ]
 
   @work_file_paths = [
