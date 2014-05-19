@@ -8,3 +8,6 @@ Create a second dotfiles, e.g. workfiles, that contains the dotfiles repo and re
   dotfiles should be a submodule?
 ls++?
 Fix install script, ensure that e.g. remote is added after ran
+urxvt
+  lighter background color
+  better color theme to match i3?
