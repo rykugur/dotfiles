@@ -17,3 +17,6 @@ vim-misc
 vim-notes
 ctrlp.vim
 vim-airline
+YouCompleteMe
+vim-cucumber
+vim-rails

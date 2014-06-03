@@ -17,7 +17,8 @@ ZSH_HIGHLIGHT_STYLES[path]='bold'
 # exports
 export EDITOR=vim
 export VISUAL=vim
-export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+#export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 # linux aliases
 alias ..='cd ..'
@@ -28,8 +29,7 @@ alias dircount='ls -l | wc -l'
 alias dircountall='ls -al | wc -l'
 alias dotfiles='cd ~/.dotfiles'
 alias dush='du -sh'
-alias find='find . -name'
-alias findo='find'
+alias findy='find . -name'
 alias less='less -N'
 #alias ls='ls++ --potsf'
 alias lso='/bin/ls'
