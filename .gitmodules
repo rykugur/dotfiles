@@ -10,3 +10,6 @@
 [submodule "prezto"]
 	path = prezto
 	url = git@github.com:rykugur/prezto.git
+[submodule "oh-my-fish"]
+	path = oh-my-fish
+	url = git@github.com:rykugur/oh-my-fish.git
