@@ -37,6 +37,8 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-cucumber'
 Bundle 'vim-scripts/comments.vim'
 Bundle 'Yggdroot/indentLine'
 Bundle 'nathanaelkane/vim-indent-guides'
@@ -47,6 +49,7 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-notes'
 Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
+Bundle 'Valloric/YouCompleteMe'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
@@ -135,6 +138,10 @@ nnoremap <silent> <leader>pp :set paste!<CR>
 " airline
 """"""""""""""""""""""""""""""
 let g:airline_theme = 'powerlineish'
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
 " let g:airline_branch_prefix = '<'
 " let g:airline_readonly_symbol = '<'
 " let g:airline_linecolumn_prefix = '<'
