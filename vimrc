@@ -37,8 +37,8 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-cucumber'
+"Bundle 'tpope/vim-rails'
+"Bundle 'tpope/vim-cucumber'
 Bundle 'vim-scripts/comments.vim'
 Bundle 'Yggdroot/indentLine'
 Bundle 'nathanaelkane/vim-indent-guides'
@@ -49,7 +49,6 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-notes'
 Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
-Bundle 'Valloric/YouCompleteMe'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
@@ -113,6 +112,8 @@ set tabstop=2
 set softtabstop=2
 " indent settings
 set autoindent
+" backspace settings
+set backspace=indent,eol,start
 " search settings
 set ignorecase
 set incsearch
