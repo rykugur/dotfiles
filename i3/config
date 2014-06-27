@@ -33,7 +33,7 @@ font xft:lemon 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec urxvtc
+bindsym $mod+Return exec urxvtc -e fish
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -73,6 +73,7 @@ bindsym $mod+Control+0 exec scrot
 # guest OS, so I have to remap mod+h to the totally sensical mod+c. I'm
 # more inclined to believe that it's Mac OS X.
 bindsym $mod+c split h
+bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
