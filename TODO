@@ -11,3 +11,4 @@ Fix install script, ensure that e.g. remote is added after ran
 urxvt
   lighter background color
   better color theme to match i3?
+aliases > fish functions
