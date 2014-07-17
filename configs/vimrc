@@ -16,6 +16,9 @@ if ! has('gui_running')
     augroup END
 endif
 
+" work-around for errors while using fish shell
+set shell=bash
+
 " enable vundle
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
