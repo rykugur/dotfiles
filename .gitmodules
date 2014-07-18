@@ -13,3 +13,6 @@
 [submodule "oh-my-fish"]
 	path = oh-my-fish
 	url = git@github.com:rykugur/oh-my-fish.git
+[submodule "devicons"]
+	path = devicons
+	url = git@github.com:rykugur/devicons.git
