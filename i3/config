@@ -13,7 +13,10 @@
 #new_float pixel 0
 hide_edge_borders both
 
-set $mod Mod4
+# L_Super (Win)
+#set $mod Mod4
+# L_Alt
+set $mod Mod1
 
 set $workspace1 1: main
 set $workspace2 2: www
@@ -30,10 +33,11 @@ font xft:lemon 8
 #font xft:uushi 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+floating_modifier Mod4
 
 # start a terminal
-bindsym $mod+Return exec urxvtc -e fish
+#bindsym $mod+Return exec urxvtc -e fish
+bindsym $mod+Return exec urxvtc
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -77,12 +81,15 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen
+bindsym $mod+shift+f fullscreen
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+#bindsym $mod+s layout stacking
+#bindsym $mod+t layout tabbed
+#bindsym $mod+e layout toggle split
+bindsym $mod+Shift+t layout tabbed
+bindsym $mod+Shift+e layout toggle split
+bindsym $mod+Shift+s layout stacking
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -91,7 +98,7 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+#bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -125,7 +132,7 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Control+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # multimedia keys
 bindsym $mod+Prior exec "amixer -D pulse sset Master '5%+'"
@@ -156,15 +163,40 @@ mode "resize" {
   bindsym Escape mode "default"
 }
 
-bindsym $mod+z mode "resize"
+bindsym $mod+Shift+z mode "resize"
+
+# pressing mod+Pause will allow us to lock, sleep, etc
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+mode "$mode_system" {
+  bindsym l exec fish -c "i3exit lock", mode "default"
+  bindsym e exec fish -c "i3exit logout", mode "default"
+  bindsym s exec fish -c "i3exit suspend", mode "default"
+  bindsym h exec fish -c "i3exit hibernate", mode "default"
+  bindsym r exec fish -c "i3exit reboot", mode "default"
+  bindsym Shift+s fish -c "i3exit shutdown", mode "default"  
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindsym $mod+Pause mode "$mode_system"
 
 # assignments
 assign [class="Chromium"] $workspace2
+for_window [class="Chromium"] layout tabbed
 assign [class="Firefox"] $workspace2
+for_window [class="Firefox"] layout tabbed
 assign [class="luakit"] $workspace2
 assign [class="Nvpy"] $workspace4
 assign [class="Eclipse"] $workspace3
 assign [class="jetbrains-idea-ce"] $workspace3
+
+# game assignments
+assign [class="Steam"] $workspace4
+for_window [class="Steam"] layout tabbed
+assign [class="dota_linux"] $workspace5
+assign [title="Kerbal Space Program"] $workspace5
+assign [class="primusrun"] $workspace5
 
 # colors
 # colorclass            #border   #background  #text     #indicator
