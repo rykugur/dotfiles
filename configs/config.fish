@@ -15,6 +15,11 @@ set fish_plugins sublime
 # Load oh-my-fish configuration.
 . $fish_path/oh-my-fish.fish
 
+# custom config.fish stuff below:
+#
+# don't greet me!
+set fish_greeting ""
+
 # "aliases"
 function steamcd 
   cd ~/.local/share/Steam/SteamApps/common
