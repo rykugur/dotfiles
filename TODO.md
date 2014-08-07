@@ -12,3 +12,10 @@ urxvt
   lighter background color
   better color theme to match i3?
 aliases > fish functions
+
+branches:
+  devicons: master
+  oh-my-fish: master
+  powerline: develop [ can remove? ]
+  powerline-fonts: master
+  prezto: master [ can remove? ]
