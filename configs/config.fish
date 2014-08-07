@@ -25,5 +25,5 @@ function pacman_deps
 end
 
 function update_pacman_mirrors
-  sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+  sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist
 end
