@@ -1,22 +1,13 @@
 dotfiles
 ========
 
-This is a very poorly named repo.
+This is a very poorly named repo, as it now contains more than just dotfiles.
 
-This is also not much of a README.
+This is also not much of a README. It's a pretty bad and outdated one, actually. You probably shouldn't rely on it.
 
-Various linux dot and config files.
+Be sure to call 'git submodule init' and 'git submodule update'
 
-Be sure to call 'git submodule update --init --recursive' # apparently deprecated?
-
-Will need to cp ls++ binary to /usr/bin or some other location.
-
-Note: for issues where urxvt will display unicode characters but urxvtc will not, add to /etc/profile:
-export LC_CTYPE="en_US.UTF-8"
-
-TODO: create install script
-
-TODO: add to install script:
+TODO: install script/add to install script:
     "vim +BundleInstall +qall" to install vim "vundle" bundles
 
     git remote add upstream git://github.com/sorin-ionescu/prezto.git
