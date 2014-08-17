@@ -20,9 +20,25 @@ set fish_plugins sublime
 # don't greet me!
 set fish_greeting ""
 
-# "aliases"
+# exports
+set -x PATH $PATH ~/bin
+#set -x WINEPREFIX "/home/dusty/.PlayOnLinux/wineprefix/.wine32_cmst"
+set -x WINEPREFIX "/home/dusty/.wine32"
+set -x WINEARCH "win32"
+
+# "aliases" and quickie functions
+alias arches "ssh arches"
+
 function steamcd 
   cd ~/.local/share/Steam/SteamApps/common
+end
+
+function nvsettings
+  primusrun nvidia-settings -c :8 &
+end
+
+function steam_wine
+  primusrun "/home/dusty/.wine32/drive_c/Program Files/Steam/Steam.exe"
 end
 
 function pacman_deps

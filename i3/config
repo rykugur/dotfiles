@@ -19,7 +19,7 @@ hide_edge_borders both
 set $mod Mod1
 
 set $workspace1 1: main
-set $workspace2 2: www
+set $workspace2 2: www/media
 set $workspace3 3: code
 set $workspace4 4: fus
 set $workspace5 5: ro
@@ -139,6 +139,9 @@ bindsym $mod+Prior exec "amixer -D pulse sset Master '5%+'"
 bindsym $mod+Next exec "amixer -D pulse sset Master '5%-'"
 #bindsym XF86AudioMute exec "amixer -D pulse set Master toggle"
 
+# snippets
+bindsym $mod+Shift+v exec fish -c snippets
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
   # These bindings trigger as soon as you enter the resize mode
@@ -181,7 +184,9 @@ mode "$mode_system" {
 }
 bindsym $mod+Pause mode "$mode_system"
 
+#########################
 # assignments
+#########################
 assign [class="Chromium"] $workspace2
 for_window [class="Chromium"] layout tabbed
 assign [class="Firefox"] $workspace2
@@ -194,9 +199,13 @@ assign [class="jetbrains-idea-ce"] $workspace3
 # game assignments
 assign [class="Steam"] $workspace4
 for_window [class="Steam"] layout tabbed
+assign [class="Wine"] $workspace5
+for_window [class="Wine"] layout tabbed
+assign [class="Steam.exe"] $workspace4
+for_window [class="Steam.exe"] layout tabbed
+
 assign [class="dota_linux"] $workspace5
 assign [title="Kerbal Space Program"] $workspace5
-assign [class="primusrun"] $workspace5
 
 # colors
 # colorclass            #border   #background  #text     #indicator
@@ -232,7 +241,7 @@ bar {
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg
+exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 exec "urxvtd -q -o -f"
-exec "compton --config ~/dotfiles/compton.conf"
+exec "compton --config ~/.dotfiles/compton.conf"
 exec "xset r rate 190 40"
