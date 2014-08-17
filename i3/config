@@ -243,5 +243,5 @@ bar {
 # or exec_always to exec on every reload
 exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 exec "urxvtd -q -o -f"
-exec "compton --config ~/.dotfiles/compton.conf"
+exec "compton --config ~/.dotfiles/configs/compton.conf"
 exec "xset r rate 190 40"
