@@ -29,6 +29,7 @@ set -x WINEARCH "win32"
 
 ### "aliases" and quickie functions
 alias arches "ssh arches"
+alias pingtest "ping google.com"
 
 ### source our quickie fish functions
 . $HOME/.dotfiles/configs/fish_funcs.fish
