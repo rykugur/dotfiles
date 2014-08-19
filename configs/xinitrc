@@ -11,14 +11,21 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-#sudo VBoxClient-all &
+# force numlock on during start
+numlockx & 
 
+# turn off this god-forsaken tap-to-click
+# Note the very obviously named variable...
+synclient MaxTapTime=0
+
+# make sure xrdb has the most up-to-date settings
 xrdb ~/.Xresources
 
-pulseaudio --start
+# set our repeat rate
+xset r rate 190 40
 
-#xrandr --setprovideroutputsource modesetting NVIDIA-0
-#xrandr --auto
+# need to manually start pulseaudio
+pulseaudio --start
 
 #exec startxfce4
 #exec enlightenment_start
