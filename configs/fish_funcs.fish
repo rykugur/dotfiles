@@ -7,7 +7,7 @@ function nvsettings
 end
 
 function steam_wine
-  primusrun "/home/dusty/.wine32/drive_c/Program Files/Steam/Steam.exe" &
+  primusrun wine "/home/dusty/.wine32/drive_c/Program Files/Steam/Steam.exe" &
 end
 
 function pacman_deps
