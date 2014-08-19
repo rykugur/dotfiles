@@ -37,7 +37,7 @@ floating_modifier Mod4
 
 # start a terminal
 #bindsym $mod+Return exec urxvtc -e fish
-bindsym $mod+Return exec urxvtc
+bindsym $mod+Return exec urxvtc -pe selection-to-clipboard
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -72,11 +72,6 @@ bindsym $mod+Control+0 exec scrot
 #bindsym Control+Mod1+l exec i3lock -c 000000
 
 # split view
-#bindsym $mod+h split h
-# Either Mac OS X or VirtualBox is retarded and doesn't pass Cmd+h onto the
-# guest OS, so I have to remap mod+h to the totally sensical mod+c. I'm
-# more inclined to believe that it's Mac OS X.
-bindsym $mod+c split h
 bindsym $mod+h split h
 bindsym $mod+v split v
 
@@ -139,6 +134,10 @@ bindsym $mod+Prior exec "amixer -D pulse sset Master '5%+'"
 bindsym $mod+Next exec "amixer -D pulse sset Master '5%-'"
 #bindsym XF86AudioMute exec "amixer -D pulse set Master toggle"
 
+# brightness
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+
 # snippets
 bindsym $mod+Shift+v exec fish -c snippets
 
@@ -194,7 +193,9 @@ for_window [class="Firefox"] layout tabbed
 assign [class="luakit"] $workspace2
 assign [class="Nvpy"] $workspace4
 assign [class="Eclipse"] $workspace3
+for_window [class="Eclipse"] layout tabbed
 assign [class="jetbrains-idea-ce"] $workspace3
+for_window [class="jetbrains-idea-ce"] layout tabbed
 
 # game assignments
 assign [class="Steam"] $workspace4
@@ -243,5 +244,5 @@ bar {
 # or exec_always to exec on every reload
 exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 exec "urxvtd -q -o -f"
-exec "compton --config ~/.dotfiles/configs/compton.conf"
-exec "xset r rate 190 40"
+#exec "compton --config ~/.dotfiles/configs/compton.conf"
+#exec "xset r rate 190 40"
