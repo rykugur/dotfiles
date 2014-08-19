@@ -17,12 +17,21 @@
 !foreground 		          = Black
 !background 		          = White
 
+!!! term stuff
+URxvt.cutchars: `"'%&()*,;<>@[]{|'"│`
+URxvt*depth: 32
+URxvt*imLocale: en_US.UTF-8
+URxvt*saveLines: 1200000
+URxvt*scrollTtyOutput: false
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress: true
+URxvt*termName: rxvt-unicode-256color
+URxvt*transparent: false
+!URxvt*urlLauncher: chromium
+
+!!! appearance
 URxvt.background:#000000
 URxvt.colorBD:Gray95
-URxvt.cutchars: `"'%&()*,;<>@[]{|'"│`
-URxvt*cursorBlink: true
-URxvt*cursorUnderline: false
-URxvt*depth: 32
 !URxvt*font: xft:uushi:size=7:antialias=true
 !URxvt*boldFont: xft:uushi:size=7:antialias=true
 !URxvt*italicFont: xft:uushi:size=7:antialias=true
@@ -30,17 +39,10 @@ URxvt*font: xft:Source Code Pro for Powerline:size=8:antialias=true
 URxvt*boldFont: xft:Source Code Pro for Powerline:size=8:antialias=true
 URxvt*italicFont: xft:Source Code Pro for Powerline:size=8:antialias=true
 URxvt*foreground: #C9C9C9
-URxvt*imLocale: en_US.UTF-8
-URxvt*saveLines: 1200000
-URxvt*scrollTtyOutput: false
-URxvt*scrollWithBuffer: true
-URxvt*scrollTtyKeypress: true
+URxvt*cursorBlink: true
+URxvt*cursorUnderline: false
 URxvt*scrollBar: false
 URxvt*shading: 0
-URxvt*termName: rxvt-unicode-256color
-URxvt*transparent: false
-URxvt*urlLauncher: chromium
-
 URxvt*color0: #000000
 URxvt*color4: #005577
 URxvt*color6: #89b6e2
@@ -49,3 +51,11 @@ URxvt*color8: #555753
 URxvt*color12: #0075A3
 URxvt*color14: #46a4ff
 URxvt*color15: #ffffff	
+
+!!! extensions
+URxvt.perl-ext-common:      default,clipboard,url-select,keyboard-select
+URxvt.url-select.launcher:  chromium
+URxvt.url-select.underline: true
+URxvt.keysym.M-u:           perl:url-select:select_next
+URxvt.keysym.M-Escape:      perl:keyboard-select:activate
+URxvt.keysym.M-s:           perl:keyboard-select:search
