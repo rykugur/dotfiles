@@ -29,7 +29,7 @@ set $workspace6 6: dah
 # is used in the bar {} block below. ISO 10646 = Unicode
 #font xft:Terminus bold 12
 #font xft:inconsolata 8
-font xft:lemon 8
+font xft:lemon 9
 #font xft:uushi 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -132,7 +132,10 @@ bindsym $mod+Control+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit
 # multimedia keys
 bindsym $mod+Prior exec "amixer -D pulse sset Master '5%+'"
 bindsym $mod+Next exec "amixer -D pulse sset Master '5%-'"
+# XF86AudioRaiseVolume
+# XF86AudioLowerVolume
 #bindsym XF86AudioMute exec "amixer -D pulse set Master toggle"
+bindsym XF86AudioPlay exec "playerctl play-pause"
 
 # brightness
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5

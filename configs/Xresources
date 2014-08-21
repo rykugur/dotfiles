@@ -35,9 +35,9 @@ URxvt.colorBD:Gray95
 !URxvt*font: xft:uushi:size=7:antialias=true
 !URxvt*boldFont: xft:uushi:size=7:antialias=true
 !URxvt*italicFont: xft:uushi:size=7:antialias=true
-URxvt*font: xft:Source Code Pro for Powerline:size=8:antialias=true
-URxvt*boldFont: xft:Source Code Pro for Powerline:size=8:antialias=true
-URxvt*italicFont: xft:Source Code Pro for Powerline:size=8:antialias=true
+URxvt*font: xft:Source Code Pro for Powerline:size=9:antialias=true
+URxvt*boldFont: xft:Source Code Pro for Powerline:size=9:antialias=true
+URxvt*italicFont: xft:Source Code Pro for Powerline:size=9:antialias=true
 URxvt*foreground: #C9C9C9
 URxvt*cursorBlink: true
 URxvt*cursorUnderline: false
@@ -59,3 +59,6 @@ URxvt.url-select.underline: true
 URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 URxvt.keysym.M-s:           perl:keyboard-select:search
+
+!!! annoying shit
+URxvt*iso14755: False
