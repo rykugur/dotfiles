@@ -19,7 +19,7 @@ hide_edge_borders both
 set $mod Mod1
 
 set $workspace1 1: main
-set $workspace2 2: www/media
+set $workspace2 2: www
 set $workspace3 3: email
 set $workspace4 4: code
 set $workspace5 5: steam
