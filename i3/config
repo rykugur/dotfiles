@@ -20,17 +20,19 @@ set $mod Mod1
 
 set $workspace1 1: main
 set $workspace2 2: www/media
-set $workspace3 3: code
-set $workspace4 4: fus
-set $workspace5 5: ro
-set $workspace6 6: dah
+set $workspace3 3: email
+set $workspace4 4: code
+set $workspace5 5: steam
+set $workspace6 6: fus
+set $workspace7 7: ro
+set $workspace8 8: dah
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
 #font xft:Terminus bold 12
 #font xft:inconsolata 8
-font xft:lemon 9
-#font xft:uushi 8
+font xft:lemon 10
+#font xft:uushi 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier Mod4
@@ -198,27 +200,30 @@ for_window [class="Chromium"] layout tabbed
 assign [class="Firefox"] $workspace2
 for_window [class="Firefox"] layout tabbed
 assign [class="luakit"] $workspace2
-assign [class="Nvpy"] $workspace4
-assign [class="Eclipse"] $workspace3
+assign [class="Thunderbird"] $workspace3
+for_window [class="Thunderbird"] layout tabbed
+assign [class="Eclipse"] $workspace4
 for_window [class="Eclipse"] layout tabbed
-assign [class="jetbrains-idea-ce"] $workspace3
+assign [class="jetbrains-idea-ce"] $workspace4
 for_window [class="jetbrains-idea-ce"] layout tabbed
 
 # game assignments
-assign [class="Steam"] $workspace4
+assign [class="Steam"] $workspace5
 for_window [class="Steam"] layout tabbed
-assign [class="Wine"] $workspace5
+assign [class="Wine"] $workspace6
 for_window [class="Wine"] layout tabbed
-assign [class="Steam.exe"] $workspace4
+assign [class="Steam.exe"] $workspace6
 for_window [class="Steam.exe"] layout tabbed
 
-assign [class="dota_linux"] $workspace5
-assign [title="Kerbal Space Program"] $workspace5
+assign [class="dota_linux"] $workspace9
+assign [title="Kerbal Space Program"] $workspace9
 
 # colors
+# CFCFCF => light gray
+# 252525 => dark gray
 # colorclass            #border   #background  #text     #indicator
 client.focused          #CFCFCF   #CFCFCF      #252525   #49BBD2
-client.focused_inactive #314757   #314757      #ffffff   #484e50
+client.focused_inactive #CFCFCF   #CFCFCF      #252525   #49BBD2
 client.unfocused        #252525   #252525      #CFCFCF   #2e9ef4
 client.urgent           #2f343a   #900000      #ffffff   #900000
 
@@ -251,5 +256,5 @@ bar {
 # or exec_always to exec on every reload
 exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 exec "urxvtd -q -o -f"
-#exec "compton --config ~/.dotfiles/configs/compton.conf"
+exec "compton --config ~/.dotfiles/configs/compton.conf"
 #exec "xset r rate 190 40"
