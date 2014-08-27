@@ -206,6 +206,8 @@ assign [class="Eclipse"] $workspace4
 for_window [class="Eclipse"] layout tabbed
 assign [class="jetbrains-idea-ce"] $workspace4
 for_window [class="jetbrains-idea-ce"] layout tabbed
+assign [class="Skype"] $workspace8
+for_window [class="Skype"] layout tabbed
 
 # game assignments
 assign [class="Steam"] $workspace5
