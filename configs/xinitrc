@@ -27,6 +27,9 @@ xset r rate 190 40
 # need to manually start pulseaudio
 pulseaudio --start
 
+# start clipit
+clipit &
+
 #exec startxfce4
 #exec enlightenment_start
 exec i3
