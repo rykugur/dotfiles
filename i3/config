@@ -133,18 +133,19 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Control+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+# volume keys
+# '--' is required for the next two lines because otherwise it considers "-5%" to be an argument
+bindsym XF86AudioRaiseVolume exec "pactl -- set-sink-volume 1 +5%"
+bindsym XF86AudioLowerVolume exec "pactl -- set-sink-volume 1 -5%"
+bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle"
+
 # multimedia keys
-bindsym $mod+Prior exec "amixer -D pulse sset Master '5%+'"
-bindsym $mod+Next exec "amixer -D pulse sset Master '5%-'"
-# XF86AudioRaiseVolume
-# XF86AudioLowerVolume
-#bindsym XF86AudioMute exec "amixer -D pulse set Master toggle"
 bindsym XF86AudioPlay exec "playerctl play-pause"
 bindsym XF86AudioStop exec "playerctl stop"
 bindsym XF86AudioNext exec "playerctl next"
 bindsym XF86AudioPrev exec "playerctl previous"
 
-# brightness
+# brightness keys
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
