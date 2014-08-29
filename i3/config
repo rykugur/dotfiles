@@ -218,8 +218,8 @@ for_window [class="Wine"] layout tabbed
 assign [class="Steam.exe"] $workspace6
 for_window [class="Steam.exe"] layout tabbed
 
-assign [class="dota_linux"] $workspace9
-assign [title="Kerbal Space Program"] $workspace9
+assign [class="dota_linux"] $workspace6
+assign [title="Kerbal Space Program"] $workspace6
 
 # colors
 # CFCFCF => light gray
