@@ -216,7 +216,7 @@ assign [class="Steam"] $workspace5
 for_window [class="Steam"] layout tabbed
 assign [class="Wine"] $workspace6
 for_window [class="Wine"] layout tabbed
-assign [class="Steam.exe"] $workspace6
+assign [class="Steam.exe"] $workspace5
 for_window [class="Steam.exe"] layout tabbed
 
 assign [class="dota_linux"] $workspace6
