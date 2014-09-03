@@ -1,0 +1,47 @@
+" general settings
+" set mapleader
+let mapleader=","
+" tab settings
+set expandtab
+set shiftwidth=4
+set tabstop=4
+" indent settings
+set autoindent
+" search settings
+set ignorecase
+set incsearch
+set hlsearch
+" status line stuff
+"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
+set laststatus=2
+" other misc sets
+set cursorline
+set hidden
+set modelines=0
+set nocompatible
+set nobackup
+set noswapfile
+set number
+set visualbell
+"set pastetoggle=<leader><F5>
+nnoremap <silent> <leader>pp :set paste!<CR>
+
+" training to not use arrow keys wooooo
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+nnoremap j gj
+nnoremap k gk
+" remap hjkl to be less annoying (to fit better with default homerow/index key)
+noremap ; l
+noremap l k
+noremap k j
+noremap j h
+" remap doubles to <ESC> for easy switching from insert mode
+"inoremap jj <ESC>
+"inoremap kk <ESC>
+"inoremap lll <ESC>
+"inoremap ;; <ESC>
+" select all
+nnoremap aa ggVG
