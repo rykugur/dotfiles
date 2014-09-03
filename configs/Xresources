@@ -18,7 +18,7 @@
 !background 		          = White
 
 !!! term stuff
-URxvt.cutchars: `"'%&()*,;<>@[]{|'"│`
+URxvt.cutchars: `"'%&()*,;<>@[]{|'"│=`
 URxvt*depth: 32
 URxvt*imLocale: en_US.UTF-8
 URxvt*saveLines: 1200000
@@ -59,6 +59,10 @@ URxvt.url-select.underline: true
 URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
 URxvt.keysym.M-s:           perl:keyboard-select:search
+!URxvt.keysym.M-c:           perl:clipboard:copy
+!URxvt.keysym.M-v:           perl:clipboard:paste
+!URxvt.keysym.M-C-v:         perl:clipboard:paste_escaped
+!URxvt.keysym.C-S-v:         perl:clipboard:paste
 
 !!! annoying shit
 URxvt*iso14755: False
