@@ -24,8 +24,10 @@ set fish_greeting ""
 
 ### exports
 set -x PATH $PATH ~/bin
-set -x WINEPREFIX "/home/dusty/.wine32"
-set -x WINEARCH "win32"
+set -x GOPATH $HOME/code/go
+set -x JAVA_HOME /usr/lib/jvm/java-7-openjdk
+#set -x WINEPREFIX "/home/dusty/.wine32"
+#set -x WINEARCH "win32"
 
 ### "aliases" and quickie functions
 alias arches "ssh arches"
