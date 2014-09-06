@@ -25,7 +25,6 @@ set fish_greeting ""
 ### exports
 set -x PATH $PATH ~/bin
 set -x GOPATH $HOME/code/go
-set -x GOROOT $HOME/code/go
 set -x JAVA_HOME /usr/lib/jvm/java-7-openjdk
 #set -x WINEPREFIX "/home/dusty/.wine32"
 #set -x WINEARCH "win32"
