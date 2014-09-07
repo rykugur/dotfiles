@@ -31,6 +31,7 @@ set -x JAVA_HOME /usr/lib/jvm/java-7-openjdk
 
 ### "aliases" and quickie functions
 alias arches "ssh arches"
+alias archesvnc "vncviewer arches:2"
 alias pingtest "ping google.com"
 
 ### source our quickie fish functions
