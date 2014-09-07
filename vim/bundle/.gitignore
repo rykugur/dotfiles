@@ -19,3 +19,5 @@ ctrlp.vim
 vim-airline
 vim-cucumber
 vim-rails
+YouCompleteMe
+vim-go
