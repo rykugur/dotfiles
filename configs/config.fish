@@ -34,5 +34,11 @@ alias arches "ssh arches"
 alias archesvnc "vncviewer -passwd ~/.vnc/passwd arches:2 &"
 alias pingtest "ping google.com"
 
+# pacman aliases
+alias pacscc "sudo pacman -Scc"
+alias pacsyu "sudo pacman -Syu"
+alias pacsyy "sudo pacman -Syy"
+alias pacs   "sudo pacman -S"
+
 ### source our quickie fish functions
 . $HOME/.dotfiles/configs/fish_funcs.fish
