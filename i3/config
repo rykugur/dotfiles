@@ -69,8 +69,8 @@ bindsym $mod+Shift+l move up
 bindsym $mod+Shift+semicolon move right
 
 # screenshot
-bindsym $mod+Control+0 exec scrot
-#bindsym $mod+Control+hyphen exec "scrot -s"
+bindsym Print exec scrot
+bindsym $mod+Print exec "scrot -s"
 
 # lock screen
 #bindsym Control+Mod1+l exec i3lock -c 000000
