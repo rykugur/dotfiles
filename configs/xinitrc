@@ -22,7 +22,7 @@ synclient MaxTapTime=0
 xrdb ~/.Xresources
 
 # set our repeat rate
-xset r rate 190 40
+#xset r rate 190 40
 
 # need to manually start pulseaudio
 pulseaudio --start
