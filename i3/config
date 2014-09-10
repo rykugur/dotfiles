@@ -264,7 +264,6 @@ exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"
-exec "dropboxd &"
 exec "clipit &"
 
 # because this keeps fucking disapearring
