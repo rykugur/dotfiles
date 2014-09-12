@@ -142,7 +142,7 @@
 
     # redisplay last message(s)
     # On the US keyboard layout 'grave' is normally above TAB and left of '1'.
-    history = alt+ctrl+grave
+    history = ctrl+shift+comma
 
     # context menu
     context = ctrl+shift+period
