@@ -1,0 +1,9 @@
+#!/usr/bin/fish
+
+set -l local_hostname (hostname)
+
+if test $local_hostname = "vendetta"
+  urxvt -e ssh arches
+else
+  urxvt -e ssh rollhax.asuscomm.com
+end
