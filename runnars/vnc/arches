@@ -1,0 +1,9 @@
+#!/usr/bin/fish
+
+set -l local_hostname (hostname)
+
+if test $local_hostname = "vendetta"
+  vncviewer -passwd ~/.vnc/passwd arches:2
+else
+  vncviewer -passwd ~/.vnc/passwd rollhax.asuscomm.com:2
+end

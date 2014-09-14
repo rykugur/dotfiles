@@ -1,3 +1,0 @@
-#!/usr/bin/fish
-
-vncviewer -passwd ~/.vnc/passwd arches:2
