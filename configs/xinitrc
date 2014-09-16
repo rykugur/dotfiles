@@ -27,6 +27,10 @@ xrdb ~/.Xresources
 # need to manually start pulseaudio
 pulseaudio --start
 
+# enable autocutsel
+autocutsel -fork &
+autocutsel -selection PRIMARY -fork &
+
 #exec startxfce4
 #exec enlightenment_start
 exec i3
