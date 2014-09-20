@@ -69,7 +69,8 @@ bindsym $mod+Shift+l move up
 bindsym $mod+Shift+semicolon move right
 
 # screenshot
-bindsym Print exec scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/shots/'
+#bindsym Print exec scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/shots/'
+bindsym Print exec scrot -e 'mv $f ~/shots/'
 bindsym $mod+Print exec scrot -s '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/shots/'
 
 # lock screen
