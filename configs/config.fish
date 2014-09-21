@@ -40,5 +40,9 @@ alias pacsyu "sudo pacman -Syu"
 alias pacsyy "sudo pacman -Syy"
 alias pacs   "sudo pacman -S"
 
+# load virtualbox modules (as needed)
+alias vboxmp "sudo modprobe -a vboxguest vboxsf vboxvideo"
+sudo vboxrm "sudo rmmod vboxguest vboxsf vboxvideo"
+
 ### source our quickie fish functions
 . $HOME/.dotfiles/configs/fish_funcs.fish
