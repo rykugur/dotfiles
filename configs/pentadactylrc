@@ -15,5 +15,5 @@ map -builtin j h
 map  -builtin J :back<CR>
 map  -builtin K :forward<CR>
 
-map -builtin <C-k> <C-Tab>
-map -builtin <C-l> <C-S-Tab>
+map -builtin <C-;> <C-Tab>
+map -builtin <C-j> <C-S-Tab>

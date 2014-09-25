@@ -24,12 +24,25 @@ set fish_greeting ""
 
 ### exports
 set -x PATH $PATH ~/bin
-set -x WINEPREFIX "/home/dusty/.wine32"
-set -x WINEARCH "win32"
+set -x GOPATH $HOME/code/go
+set -x JAVA_HOME /usr/lib/jvm/java-7-openjdk
+#set -x WINEPREFIX "/home/dusty/.wine32"
+#set -x WINEARCH "win32"
 
 ### "aliases" and quickie functions
 alias arches "ssh arches"
+alias archesvnc "vncviewer -passwd ~/.vnc/passwd arches:2 &"
 alias pingtest "ping google.com"
+
+# pacman aliases
+alias pacscc "sudo pacman -Scc"
+alias pacsyu "sudo pacman -Syu"
+alias pacsyy "sudo pacman -Syy"
+alias pacs   "sudo pacman -S"
+
+# load virtualbox modules (as needed)
+alias vboxmp "sudo modprobe -a vboxguest vboxsf vboxvideo"
+sudo vboxrm "sudo rmmod vboxguest vboxsf vboxvideo"
 
 ### source our quickie fish functions
 . $HOME/.dotfiles/configs/fish_funcs.fish

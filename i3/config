@@ -19,25 +19,28 @@ hide_edge_borders both
 set $mod Mod1
 
 set $workspace1 1: main
-set $workspace2 2: www/media
-set $workspace3 3: code
-set $workspace4 4: fus
-set $workspace5 5: ro
-set $workspace6 6: dah
+set $workspace2 2: www
+set $workspace3 3: email
+set $workspace4 4: code
+set $workspace5 5: steam
+set $workspace6 6: fus
+set $workspace7 7: ro
+set $workspace8 8: dah
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
 #font xft:Terminus bold 12
 #font xft:inconsolata 8
 font xft:lemon 9
-#font xft:uushi 8
+#font xft:uushi light 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier Mod4
 
 # start a terminal
 #bindsym $mod+Return exec urxvtc -e fish
-bindsym $mod+Return exec urxvtc -pe selection-to-clipboard
+#bindsym $mod+Return exec urxvtc -pe selection-to-clipboard
+bindsym $mod+Return exec urxvt -pe selection-to-clipboard
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -66,7 +69,8 @@ bindsym $mod+Shift+l move up
 bindsym $mod+Shift+semicolon move right
 
 # screenshot
-bindsym $mod+Control+0 exec scrot
+bindsym Print exec scrot -e 'mv $f ~/shots/'
+bindsym $mod+Print exec scrot -s -e 'mv $f ~/shots/'
 
 # lock screen
 #bindsym Control+Mod1+l exec i3lock -c 000000
@@ -105,10 +109,10 @@ bindsym $mod+3 workspace $workspace3
 bindsym $mod+4 workspace $workspace4
 bindsym $mod+5 workspace $workspace5
 bindsym $mod+6 workspace $workspace6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
+bindsym $mod+7 workspace $workspace7
+bindsym $mod+8 workspace $workspace8
+bindsym $mod+9 workspace $workspace9
+bindsym $mod+0 workspace $workspace10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $workspace1
@@ -117,35 +121,39 @@ bindsym $mod+Shift+3 move container to workspace $workspace3
 bindsym $mod+Shift+4 move container to workspace $workspace4
 bindsym $mod+Shift+5 move container to workspace $workspace5
 bindsym $mod+Shift+6 move container to workspace $workspace6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+7 move container to workspace $workspace7
+bindsym $mod+Shift+8 move container to workspace $workspace8
+bindsym $mod+Shift+9 move container to workspace $workspace9
+bindsym $mod+Shift+0 move container to workspace $workspace10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
+bindsym $mod+Shift+Control+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Control+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+# volume keys
+# '--' is required for the next two lines because otherwise it considers "-5%" to be an argument
+bindsym XF86AudioRaiseVolume exec "pactl -- set-sink-volume 1 +5%"
+bindsym XF86AudioLowerVolume exec "pactl -- set-sink-volume 1 -5%"
+bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle"
+
 # multimedia keys
-bindsym $mod+Prior exec "amixer -D pulse sset Master '5%+'"
-bindsym $mod+Next exec "amixer -D pulse sset Master '5%-'"
-# XF86AudioRaiseVolume
-# XF86AudioLowerVolume
-#bindsym XF86AudioMute exec "amixer -D pulse set Master toggle"
 bindsym XF86AudioPlay exec "playerctl play-pause"
 bindsym XF86AudioStop exec "playerctl stop"
 bindsym XF86AudioNext exec "playerctl next"
 bindsym XF86AudioPrev exec "playerctl previous"
 
-# brightness
+# brightness keys
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
 # snippets
 bindsym $mod+Shift+v exec fish -c snippets
+
+# runnar - used to run arbitrary pre-defined scripts
+bindsym $mod+Shift+r exec fish -c runnar
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -196,28 +204,39 @@ assign [class="Chromium"] $workspace2
 for_window [class="Chromium"] layout tabbed
 assign [class="Firefox"] $workspace2
 for_window [class="Firefox"] layout tabbed
+#for_window [class="Firefox"] fullscreen
 assign [class="luakit"] $workspace2
-assign [class="Nvpy"] $workspace4
-assign [class="Eclipse"] $workspace3
+assign [class="Thunderbird"] $workspace3
+for_window [class="Thunderbird"] layout tabbed
+assign [class="Eclipse"] $workspace4
 for_window [class="Eclipse"] layout tabbed
-assign [class="jetbrains-idea-ce"] $workspace3
+assign [class="jetbrains-idea-ce"] $workspace4
 for_window [class="jetbrains-idea-ce"] layout tabbed
+assign [class="Skype"] $workspace8
+for_window [class="Skype"] layout tabbed
+assign [class="Vncviewer"] $workspace8
+for_window [class="Vncviewer"] fullscreen
 
 # game assignments
-assign [class="Steam"] $workspace4
+assign [class="Steam"] $workspace5
 for_window [class="Steam"] layout tabbed
-assign [class="Wine"] $workspace5
+assign [class="Wine"] $workspace6
 for_window [class="Wine"] layout tabbed
-assign [class="Steam.exe"] $workspace4
+assign [class="Steam.exe"] $workspace5
 for_window [class="Steam.exe"] layout tabbed
 
-assign [class="dota_linux"] $workspace5
-assign [title="Kerbal Space Program"] $workspace5
+assign [class="dota_linux"] $workspace6
+assign [title="Kerbal Space Program"] $workspace6
+
+assign [class="starbound"] $workspace6
+for_window [class="starbound"] fullscreen
 
 # colors
+# CFCFCF => light gray
+# 252525 => dark gray
 # colorclass            #border   #background  #text     #indicator
 client.focused          #CFCFCF   #CFCFCF      #252525   #49BBD2
-client.focused_inactive #314757   #314757      #ffffff   #484e50
+client.focused_inactive #CFCFCF   #CFCFCF      #252525   #49BBD2
 client.unfocused        #252525   #252525      #CFCFCF   #2e9ef4
 client.urgent           #2f343a   #900000      #ffffff   #900000
 
@@ -229,7 +248,8 @@ bar {
 
   workspace_buttons yes
 
-  status_command ~/.i3/conky
+  status_command i3blocks
+  #status_command ~/.i3/conky
   #status_command i3status
 
   colors {
@@ -249,6 +269,10 @@ bar {
 # can use exec to only exec once
 # or exec_always to exec on every reload
 exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
-exec "urxvtd -q -o -f"
-#exec "compton --config ~/.dotfiles/configs/compton.conf"
-#exec "xset r rate 190 40"
+#exec "urxvtd -q -o -f"
+#exec "urxvtd &"
+exec "compton --config ~/.dotfiles/configs/compton.conf"
+exec "clipit &"
+
+# because this keeps fucking disapearring
+exec_always "xset r rate 190 40"
