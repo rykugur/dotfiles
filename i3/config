@@ -227,6 +227,7 @@ for_window [class="Steam.exe"] layout tabbed
 
 assign [class="dota_linux"] $workspace6
 assign [title="Kerbal Space Program"] $workspace6
+assign [title="eu4"] $workspace6
 
 assign [class="starbound"] $workspace6
 for_window [class="starbound"] fullscreen
