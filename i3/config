@@ -79,7 +79,9 @@ bindsym $mod+Print exec scrot -s -e 'mv $f ~/shots/'
 
 # split view
 bindsym $mod+h split h
+bindsym $mod+backslash split h
 bindsym $mod+v split v
+bindsym $mod+minus split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+shift+f fullscreen
@@ -231,6 +233,7 @@ for_window [class="Steam.exe"] layout tabbed
 
 assign [class="dota_linux"] $workspace6
 assign [title="Kerbal Space Program"] $workspace6
+assign [title="eu4"] $workspace6
 
 assign [class="starbound"] $workspace6
 for_window [class="starbound"] fullscreen
