@@ -38,6 +38,7 @@ alias pingtest "ping google.com"
 alias pacscc "sudo pacman -Scc"
 alias pacsyu "sudo pacman -Syu"
 alias pacsyy "sudo pacman -Syy"
+alias pacss  "pacman -Ss"
 alias pacs   "sudo pacman -S"
 
 # load virtualbox modules (as needed)

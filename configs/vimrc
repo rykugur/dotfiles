@@ -58,6 +58,8 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
 Bundle 'fatih/vim-go'
 Bundle 'Valloric/YouCompleteMe'
+Bundle 'godlygeek/tabular'
+Bundle 'plasticboy/vim-markdown'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
@@ -123,6 +125,17 @@ au FileType go nmap <leader>c <Plug>(go-coverage)
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
 au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
 au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+
+""""""""""""""""""""""""""""""
+" vim-markdown stuff
+""""""""""""""""""""""""""""""
+let g:vim_markdown_initial_foldlevel=10
+
+""""""""""""""""""""""""""""""
+" vim-notes
+""""""""""""""""""""""""""""""
+:let g:notes_directories = ['~/notes', '~/personal/notes']
+:let g:notes_suffix = '.md'
 
 " general settings
 " set mapleader
@@ -267,8 +280,6 @@ nnoremap <leader>Y ggVG"*y
 nnoremap <leader>WY ggVG"+y
 " slimv
 let g:slimv_swank_scheme=1
-" vim-notes
-":let g:notes_directories = ['~/Google\ Drive/Notes']
 
 "folding settings
 set foldmethod=indent   "fold based on indent
