@@ -38,7 +38,7 @@ Bundle 'gmarik/vundle'
 
 " Vundle Bundles
 " To update/install: :BundleInstall in or vim +BundleInstall +qall on cli
-Bundle 'ervandew/supertab'
+"Bundle 'ervandew/supertab'
 Bundle 'majutsushi/tagbar'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/nerdtree'
