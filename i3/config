@@ -280,6 +280,7 @@ exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"
 exec "clipit &"
+exec "owncloud &"
 
 # because this keeps fucking disapearring
 exec_always "xset r rate 190 40"
