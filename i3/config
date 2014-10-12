@@ -59,9 +59,9 @@ bindsym $mod+semicolon focus right
 #bindsym $mod+Tab focus right
 
 # change workspace
-bindsym $mod+Left workspace prev
+#bindsym $mod+Left workspace prev
 bindsym Control+$mod+j workspace prev
-bindsym $mod+Right workspace next
+#bindsym $mod+Right workspace next
 bindsym Control+$mod+semicolon workspace next
 
 # move focused window
