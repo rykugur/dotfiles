@@ -6,6 +6,9 @@ alias dfh "df -h"
 alias dush "du -sh"
 alias pingtest "ping google.com"
 
+# go aliases
+alias gocd "cd $GOPATH"
+
 # git aliases
 alias gco "git checkout"
 alias gd  "git diff"
