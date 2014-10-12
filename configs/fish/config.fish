@@ -1,8 +1,8 @@
 # source our base_config.fish file
-. /home/djerome/.dotfiles/configs/fish/base_config.fish
+. $HOME/.dotfiles/configs/fish/base_config.fish
 
 # source our common.fish file
-. /home/djerome/.dotfiles/configs/fish/common.fish
+. $HOME/.dotfiles/configs/fish/common.fish
 
 # source our quickie fish functions
 . $HOME/.dotfiles/configs/fish/fish_funcs.fish

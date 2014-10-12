@@ -20,7 +20,7 @@ set fish_plugins sublime
 # exports
 ######################
 set -x EDITOR "vim"
-set -x GOPATH "/home/djerome/personal/code/go"
+set -x GOPATH "$HOME/personal/code/go"
 set -x GOBIN "$GOPATH/bin"
 set -x JAVA_HOME "/usr/lib/jvm/java-7-openjdk"
 
