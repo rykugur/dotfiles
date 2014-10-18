@@ -9,8 +9,8 @@
 
 ### exports
 set PATH $PATH ~/bin
-#set -x WINEPREFIX "/home/dusty/.wine32"
-#set -x WINEARCH "win32"
+set -x WINEPREFIX "/home/dusty/.wine32"
+set -x WINEARCH "win32"
 
 ### "aliases" and quickie functions
 alias arches "ssh arches"
