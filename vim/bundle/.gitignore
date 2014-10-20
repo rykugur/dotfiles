@@ -21,3 +21,5 @@ vim-cucumber
 vim-rails
 YouCompleteMe
 vim-go
+tabular
+vim-markdown

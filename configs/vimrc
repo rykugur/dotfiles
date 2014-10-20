@@ -38,7 +38,7 @@ Bundle 'gmarik/vundle'
 
 " Vundle Bundles
 " To update/install: :BundleInstall in or vim +BundleInstall +qall on cli
-Bundle 'ervandew/supertab'
+"Bundle 'ervandew/supertab'
 Bundle 'majutsushi/tagbar'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/nerdtree'
@@ -65,7 +65,7 @@ Bundle 'plasticboy/vim-markdown'
 " syntax and colorscheme specifics
 """"""""""""""""""""""""""""""
 syntax enable
-colorscheme hybrid
+colorscheme mustang
 set fileencodings=utf-8
 " filetype settings
 filetype on

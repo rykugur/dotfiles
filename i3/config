@@ -59,9 +59,9 @@ bindsym $mod+semicolon focus right
 #bindsym $mod+Tab focus right
 
 # change workspace
-bindsym $mod+Left workspace prev
+#bindsym $mod+Left workspace prev
 bindsym Control+$mod+j workspace prev
-bindsym $mod+Right workspace next
+#bindsym $mod+Right workspace next
 bindsym Control+$mod+semicolon workspace next
 
 # move focused window
@@ -280,6 +280,7 @@ exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"
 exec "clipit &"
+exec "owncloud &"
 
 # because this keeps fucking disapearring
 exec_always "xset r rate 190 40"

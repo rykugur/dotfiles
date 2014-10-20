@@ -206,10 +206,10 @@
 #    summary = *signed off*
 #    urgency = low
 #
-#[says]
-#    appname = Pidgin
-#    summary = *says*
-#    urgency = critical
+[says]
+    appname = Pidgin
+    summary = *says*
+    urgency = critical
 #
 #[twitter]
 #    appname = Pidgin
