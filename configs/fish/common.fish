@@ -5,6 +5,9 @@
 alias dfh "df -h"
 alias dush "du -sh"
 alias pingtest "ping google.com"
+if test -e /usr/bin/ls++
+  alias ll "/usr/bin/ls++"
+end
 
 # go aliases
 alias gocd "cd $GOPATH"
@@ -12,6 +15,7 @@ alias gocd "cd $GOPATH"
 # git aliases
 alias gco "git checkout"
 alias gd  "git diff"
+alias gdh "git diff HEAD~1..HEAD"
 alias gds "git diff --staged"
 alias gg  "git grep"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""

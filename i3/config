@@ -275,7 +275,7 @@ bar {
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_playpen.jpg"
+exec "feh --bg-fill ~/.dotfiles/backgrounds/jeb_ghostride.jpg"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"

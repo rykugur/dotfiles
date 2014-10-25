@@ -16,3 +16,6 @@
 [submodule "devicons"]
 	path = devicons
 	url = git@github.com:rykugur/devicons.git
+[submodule "ls--"]
+	path = ls--
+	url = git@github.com:rykugur/ls--.git

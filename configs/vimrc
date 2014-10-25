@@ -166,6 +166,8 @@ set nocompatible
 set nobackup
 set noswapfile
 set number
+""" better handling of large files (still testing)
+set synmaxcol=120
 "set ttyfast
 "set lazyredraw
 "set pastetoggle=<leader><F5>
