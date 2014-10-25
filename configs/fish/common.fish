@@ -5,6 +5,9 @@
 alias dfh "df -h"
 alias dush "du -sh"
 alias pingtest "ping google.com"
+if test -e /usr/bin/ls++
+  alias ll "/usr/bin/ls++"
+end
 
 # go aliases
 alias gocd "cd $GOPATH"
