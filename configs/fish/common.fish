@@ -1,11 +1,14 @@
 # 'common' fish aliases
 # aka those common to home and work
 
+set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
+
 # misc aliases
 alias dfh "df -h"
 alias dush "du -sh"
 alias pingtest "ping google.com"
 if test -e /usr/bin/ls++
+  alias ls "/usr/bin/ls++"
   alias ll "/usr/bin/ls++"
 end
 
