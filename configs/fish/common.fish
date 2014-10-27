@@ -12,6 +12,8 @@ if test -e /usr/bin/ls++
   alias ll "/usr/bin/ls++"
   alias llo "/usr/bin/ls -lh"
   alias lso "/usr/bin/ls"
+else
+  alias ll "ls -lh"
 end
 
 # go aliases
