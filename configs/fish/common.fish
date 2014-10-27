@@ -10,6 +10,8 @@ alias pingtest "ping google.com"
 if test -e /usr/bin/ls++
   alias ls "/usr/bin/ls++"
   alias ll "/usr/bin/ls++"
+  alias llo "/usr/bin/ls -lh"
+  alias lso "/usr/bin/ls"
 end
 
 # go aliases
