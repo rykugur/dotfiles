@@ -15,3 +15,5 @@ set -x WINEARCH "win32"
 ### "aliases" and quickie functions
 alias arches "ssh arches"
 alias archesvnc "vncviewer -passwd ~/.vnc/passwd arches:2 &"
+
+alias ta "transmission-remote $ARCHES:$ARCHES_TRANSMISSION_PORT -a"

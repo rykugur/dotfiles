@@ -222,6 +222,7 @@ assign [class="Skype"] $workspace8
 for_window [class="Skype"] layout tabbed
 assign [class="Vncviewer"] $workspace8
 for_window [class="Vncviewer"] fullscreen
+for_window [class="CrashPlan"] floating enable
 
 # game assignments
 assign [class="Steam"] $workspace5
@@ -234,7 +235,8 @@ for_window [class="Steam.exe"] layout tabbed
 assign [class="dota_linux"] $workspace6
 assign [title="Kerbal Space Program"] $workspace6
 assign [title="eu4"] $workspace6
-
+assign [class="dontstarve_steam"] $workspace6
+for_window [class="dontstarve_steam"] fullscreen
 assign [class="starbound"] $workspace6
 for_window [class="starbound"] fullscreen
 
@@ -275,7 +277,7 @@ bar {
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec "feh --bg-fill ~/.dotfiles/backgrounds/jeb_ghostride.jpg"
+exec "feh --bg-fill ~/.dotfiles/backgrounds/nix_dirs.jpg"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"

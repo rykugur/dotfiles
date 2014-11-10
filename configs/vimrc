@@ -65,7 +65,7 @@ Bundle 'plasticboy/vim-markdown'
 " syntax and colorscheme specifics
 """"""""""""""""""""""""""""""
 syntax enable
-colorscheme mustang
+colorscheme badwolf
 set fileencodings=utf-8
 " filetype settings
 filetype on
