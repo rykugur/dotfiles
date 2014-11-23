@@ -16,6 +16,11 @@ set fish_plugins sublime
 # Load oh-my-fish configuration.
 . $fish_path/oh-my-fish.fish
 
+# Load any local configs
+if [ -e $HOME/.fish_local.fish ]
+  . $HOME/.fish_local.fish
+end
+
 ######################
 # exports
 ######################
