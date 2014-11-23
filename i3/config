@@ -222,6 +222,7 @@ assign [class="Skype"] $workspace8
 for_window [class="Skype"] layout tabbed
 assign [class="Vncviewer"] $workspace8
 for_window [class="Vncviewer"] fullscreen
+for_window [class="CrashPlan"] floating enable
 
 # game assignments
 assign [class="Steam"] $workspace5
@@ -276,7 +277,7 @@ bar {
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec "feh --bg-fill ~/.dotfiles/backgrounds/jeb_ghostride.jpg"
+exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_at_emmas.jpg"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"
