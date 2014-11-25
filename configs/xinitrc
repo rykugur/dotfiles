@@ -30,5 +30,5 @@ pulseaudio --start
 #exec startxfce4
 #exec enlightenment_start
 #startkde
-exec i3
+exec ssh-agent i3
 # ...or the Window Manager of your choice
