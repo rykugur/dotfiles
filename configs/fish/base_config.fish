@@ -21,6 +21,12 @@ if [ -e $HOME/.fish_local.fish ]
   . $HOME/.fish_local.fish
 end
 
+# Other potential fish function directories
+if [ -e $HOME/.dotfiles/fish/functions ]
+  _append_path $HOME/.dotfiles/fish/functions fish_function_path
+end
+
+
 ######################
 # exports
 ######################
