@@ -155,6 +155,12 @@ bindsym $mod+Control+Prior exec "playerctl previous"
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
+# calculator!
+bindsym XF86Calculator exec gnome-calculator
+#XF86Mail
+#XF86Search
+#XF86HomePage
+
 # snippets
 bindsym $mod+Shift+v exec fish -c snippets
 
