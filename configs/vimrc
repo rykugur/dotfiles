@@ -60,6 +60,7 @@ Bundle 'fatih/vim-go'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
+Bundle 'jceb/vim-orgmode'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
