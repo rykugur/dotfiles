@@ -1,0 +1,3 @@
+#!/usr/bin/fish
+
+xset r rate 190 40
