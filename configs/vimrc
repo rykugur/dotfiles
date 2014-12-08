@@ -61,6 +61,7 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jceb/vim-orgmode'
+Bundle 'mtth/scratch.vim'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
