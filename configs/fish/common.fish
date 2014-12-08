@@ -6,6 +6,7 @@ set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
 # misc aliases
 alias dfh "df -h"
 alias dush "du -sh"
+alias notes "cd $OWNCLOUD_NOTES"
 alias pingtest "ping google.com"
 if test -e /usr/bin/ls++
   alias ls "/usr/bin/ls++ --potsf"
