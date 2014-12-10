@@ -1,10 +1,7 @@
 #
 
 function vim_notes --description "opens the given file name in vim notes plugin, uses dmenu as input; usage: vim_notes"
-  # for now, just open up a vim session in the right directory... get this working at some point
-  #cd $OWNCLOUD_NOTES
-  #urxvt -e vim
-
+  # ensure we have an owncloud notes variable defined
   if test -z $OWNCLOUD_NOTES
     return
   end
@@ -16,7 +13,14 @@ function vim_notes --description "opens the given file name in vim notes plugin,
 
   # pass an empty string to dmenu to trick it, but also so it won't return anything if nothing is entered
   # use basename to get the file name only
-  set -l note_file (basename (find -L $OWNCLOUD_NOTES -type f | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/dmenu -l 10))
+  set -l note_file (find -L $OWNCLOUD_NOTES -type f | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/dmenu -l 10)
 
-  urxvt -e vim note:$note_file
+  if test -z $note_file
+    # escape was likely pressed, run away
+    return
+  end
+
+  if test -n $note_file
+    urxvt -e vim note:(basename $note_file)
+  end
 end
