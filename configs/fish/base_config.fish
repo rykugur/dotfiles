@@ -35,5 +35,9 @@ set -x GOPATH "$HOME/personal/code/go"
 set -x GOBIN "$GOPATH/bin"
 set -x JAVA_HOME "/usr/lib/jvm/java-7-openjdk"
 
+# fish abbreviations allow you to define... well... abbreviations... so that when you type e.g. "gc"
+# and press space, it is automatically expanded to "git commit"
+set -x fish_user_abbreviations 'gc=git commit' 'gco=git checkout' 'gd=git diff' 'gg=git grep' 'supac=sudo pacman' 'pac=pacman' 'sc=systemctl' 'ssc=sudo systemctl'
+
 # don't greet me!
 set fish_greeting ""
