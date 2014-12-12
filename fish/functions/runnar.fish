@@ -11,6 +11,10 @@ function runnar --description ''
   cd $base_dir
   set -l runnar_dir (find -L . -type d | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/dmenu)
 
+  if test -z $runnar_dir
+    return
+  end
+
   cd $runnar_dir
   set -l runnar (find -L . -type f | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/dmenu)
 
