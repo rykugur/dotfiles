@@ -11,6 +11,9 @@ function vim_notes --description "opens the given file name in vim notes plugin,
     return
   end
 
+  # cd to this dir to make searching eas(y|ier)
+  cd $OWNCLOUD_NOTES
+
   # pass an empty string to dmenu to trick it, but also so it won't return anything if nothing is entered
   # use basename to get the file name only
   set -l note_file (find -L $OWNCLOUD_NOTES -type f | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/dmenu -l 10)
