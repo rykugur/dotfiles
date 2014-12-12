@@ -167,6 +167,9 @@ bindsym $mod+Shift+v exec fish -c snippets
 # runnar - used to run arbitrary pre-defined scripts
 bindsym $mod+Shift+r exec fish -c runnar
 
+# notes - open notes in vim
+bindsym $mod+Shift+n exec fish -c vim_notes
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
   # These bindings trigger as soon as you enter the resize mode
