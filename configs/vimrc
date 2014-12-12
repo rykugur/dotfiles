@@ -136,8 +136,8 @@ let g:vim_markdown_initial_foldlevel=10
 """"""""""""""""""""""""""""""
 " vim-notes
 """"""""""""""""""""""""""""""
-:let g:notes_directories = ['~/notes', '~/personal/notes']
-:let g:notes_suffix = '.md'
+:let g:notes_directories = [$WORK_NOTES_DIR, $PERSONAL_NOTES_DIR]
+":let g:notes_suffix = '.md'
 
 " general settings
 " set mapleader
