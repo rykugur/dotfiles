@@ -24,6 +24,8 @@ function vim_notes --description "opens the given file name in vim notes plugin,
   end
 
   if test -n $note_file
-    urxvt -e vim note:(basename $note_file)
+    #urxvt -e vim note:(basename $note_file)
+    urxvt -e vim $note_file
+    #echo $note_file
   end
 end
