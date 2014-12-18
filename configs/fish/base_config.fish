@@ -37,7 +37,7 @@ set -x JAVA_HOME "/usr/lib/jvm/java-7-openjdk"
 
 # fish abbreviations allow you to define... well... abbreviations... so that when you type e.g. "gc"
 # and press space, it is automatically expanded to "git commit"
-set -x fish_user_abbreviations 'gc=git commit' 'gco=git checkout' 'gd=git diff' 'gg=git grep' 'supac=sudo pacman' 'pac=pacman' 'sc=systemctl' 'ssc=sudo systemctl'
+set -x fish_user_abbreviations 'gc=git commit' 'gco=git checkout' 'gd=git diff' 'gds=git diff --staged' 'gg=git grep' 'gp=git pull' 'supac=sudo pacman' 'pac=pacman' 'sc=systemctl' 'ssc=sudo systemctl' 'sscr=sudo systemctl restart'
 
 # don't greet me!
 set fish_greeting ""
