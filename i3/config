@@ -18,14 +18,14 @@ hide_edge_borders both
 # L_Alt
 set $mod Mod1
 
-set $workspace1 1: main
-set $workspace2 2: www
-set $workspace3 3: email
-set $workspace4 4: code
-set $workspace5 5: steam
-set $workspace6 6: fus
-set $workspace7 7: ro
-set $workspace8 8: dah
+set $workspace1 1: fus
+set $workspace2 2: ro
+set $workspace3 3: dah
+set $workspace4 4: wuld
+set $workspace5 5: nah
+set $workspace6 6: kest
+set $workspace7 7: sieben
+set $workspace8 8: acht
 set $workspace9 9: nein
 set $workspace10 10: zehn
 
