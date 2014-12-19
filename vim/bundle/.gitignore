@@ -24,4 +24,5 @@ vim-markdown
 vim-orgmode
 scratch.vim
 unite.vim
-vimproc
+vimproc.vim
+vim-speeddating
