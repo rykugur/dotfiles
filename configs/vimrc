@@ -53,8 +53,8 @@ Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/slimv.vim'
 Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-notes'
-Bundle 'kien/ctrlp.vim'
+"Bundle 'xolox/vim-notes'
+"Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
 Bundle 'fatih/vim-go'
 Bundle 'Valloric/YouCompleteMe'
@@ -62,6 +62,9 @@ Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jceb/vim-orgmode'
 Bundle 'mtth/scratch.vim'
+"Bundle 'cwoac/nvim'
+Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/unite.vim'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
@@ -136,8 +139,17 @@ let g:vim_markdown_initial_foldlevel=10
 """"""""""""""""""""""""""""""
 " vim-notes
 """"""""""""""""""""""""""""""
-:let g:notes_directories = [$WORK_NOTES_DIR, $PERSONAL_NOTES_DIR]
+"":let g:notes_directories = [$WORK_NOTES_DIR, $PERSONAL_NOTES_DIR]
 ":let g:notes_suffix = '.md'
+
+""""""""""""""""""""""""""""""
+" unite
+""""""""""""""""""""""""""""""
+let g:unite_source_history_yank_enable = 1
+nnoremap <C-p> :Unite file_rec/async<cr>
+nnoremap <space>/ :Unite grep:.<cr>
+nnoremap <space>y :Unite history/yank<cr>
+nnoremap <space>s :Unite -quick-match buffer<cr>
 
 " general settings
 " set mapleader
