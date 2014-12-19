@@ -23,3 +23,6 @@ YouCompleteMe
 vim-go
 tabular
 vim-markdown
+vim-orgmode
+scratch.vim
+nvim

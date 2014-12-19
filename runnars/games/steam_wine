@@ -1,3 +1,4 @@
 #!/usr/bin/fish
 
-primusrun env WINEPREFIX=/home/dusty/.local/share/wineprefixes/steam WINEARCH=win32 wine "/home/dusty/.local/share/wineprefixes/steam/drive_c/Program Files/Steam/Steam.exe" &
+#primusrun env WINEPREFIX=/home/dusty/.local/share/wineprefixes/steam WINEARCH=win32 wine "/home/dusty/.local/share/wineprefixes/steam/drive_c/Program Files/Steam/Steam.exe" &
+primusrun env WINEPREFIX=/home/dusty/.local/share/wineprefixes/steam WINEARCH=win32 padsp wine "/home/dusty/.local/share/wineprefixes/steam/drive_c/Program Files/Steam/Steam.exe" &

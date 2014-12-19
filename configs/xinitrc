@@ -27,8 +27,13 @@ xrdb ~/.Xresources
 # need to manually start pulseaudio
 pulseaudio --start
 
+# start xautlock to call slock after 10 minutes of inactivity OR if the mouse is
+# left in the bottom-right corner for 3 seconds
+#xautolock -time 10 -locker slock -nowlocker slock -detectsleep -corners 000+ -cornerdelay 3 &
+xautolock -time 10 -locker slock -nowlocker slock -detectsleep &
+
 #exec startxfce4
 #exec enlightenment_start
 #startkde
-exec i3
+exec ssh-agent i3
 # ...or the Window Manager of your choice

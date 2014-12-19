@@ -155,11 +155,20 @@ bindsym $mod+Control+Prior exec "playerctl previous"
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
+# calculator!
+bindsym XF86Calculator exec gnome-calculator
+#XF86Mail
+#XF86Search
+#XF86HomePage
+
 # snippets
 bindsym $mod+Shift+v exec fish -c snippets
 
 # runnar - used to run arbitrary pre-defined scripts
 bindsym $mod+Shift+r exec fish -c runnar
+
+# notes - open notes in vim
+bindsym $mod+Shift+n exec fish -c vim_notes
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -277,7 +286,7 @@ bar {
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec "feh --bg-fill ~/.dotfiles/backgrounds/nix_dirs.jpg"
+exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_at_emmas.jpg"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"

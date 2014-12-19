@@ -16,6 +16,17 @@ set fish_plugins sublime
 # Load oh-my-fish configuration.
 . $fish_path/oh-my-fish.fish
 
+# Load any local configs
+if [ -e $HOME/.fish_local.fish ]
+  . $HOME/.fish_local.fish
+end
+
+# Other potential fish function directories
+if [ -e $HOME/.dotfiles/fish/functions ]
+  _append_path $HOME/.dotfiles/fish/functions fish_function_path
+end
+
+
 ######################
 # exports
 ######################
@@ -23,6 +34,10 @@ set -x EDITOR "vim"
 set -x GOPATH "$HOME/personal/code/go"
 set -x GOBIN "$GOPATH/bin"
 set -x JAVA_HOME "/usr/lib/jvm/java-7-openjdk"
+
+# fish abbreviations allow you to define... well... abbreviations... so that when you type e.g. "gc"
+# and press space, it is automatically expanded to "git commit"
+set -x fish_user_abbreviations 'ga=git add' 'gc=git commit' 'gco=git checkout' 'gd=git diff' 'gds=git diff --staged' 'gf=git fetch' 'gg=git grep' 'gp=git pull' 'supac=sudo pacman' 'pac=pacman' 'sc=systemctl' 'ssc=sudo systemctl' 'sscr=sudo systemctl restart'
 
 # don't greet me!
 set fish_greeting ""
