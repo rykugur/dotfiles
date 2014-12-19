@@ -14,8 +14,6 @@ neocomplcache.vim
 syntastic
 slimv.vim
 vim-misc
-vim-notes
-ctrlp.vim
 vim-airline
 vim-cucumber
 vim-rails
@@ -25,4 +23,5 @@ tabular
 vim-markdown
 vim-orgmode
 scratch.vim
-nvim
+unite.vim
+vimproc
