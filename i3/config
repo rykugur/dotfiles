@@ -33,7 +33,8 @@ set $workspace10 10: zehn
 # is used in the bar {} block below. ISO 10646 = Unicode
 #font xft:Terminus bold 12
 #font xft:inconsolata 8
-font xft:lemon 9
+#font xft:lemon 9
+font xft:GohuFont 9
 #font xft:uushi light 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position
