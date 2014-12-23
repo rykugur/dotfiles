@@ -127,13 +127,8 @@ au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 """"""""""""""""""""""""""""""
 " vim-markdown stuff
 """"""""""""""""""""""""""""""
-let g:vim_markdown_initial_foldlevel=10
-
-""""""""""""""""""""""""""""""
-" vim-notes
-""""""""""""""""""""""""""""""
-"":let g:notes_directories = [$WORK_NOTES_DIR, $PERSONAL_NOTES_DIR]
-":let g:notes_suffix = '.md'
+"let g:vim_markdown_initial_foldlevel=10
+let g:vim_markdown_folding_disabled=1
 
 """"""""""""""""""""""""""""""
 " unite
