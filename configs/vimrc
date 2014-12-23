@@ -48,11 +48,9 @@ Bundle 'tpope/vim-fugitive'
 "Bundle 'tpope/vim-cucumber'
 Bundle 'vim-scripts/comments.vim'
 Bundle 'Yggdroot/indentLine'
-Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'scrooloose/syntastic'
-Bundle 'vim-scripts/slimv.vim'
-Bundle 'xolox/vim-misc'
+"Bundle 'xolox/vim-misc'
 "Bundle 'xolox/vim-notes'
 "Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
@@ -66,6 +64,7 @@ Bundle 'mtth/scratch.vim'
 "Bundle 'cwoac/nvim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/unite.vim'
+Bundle 'terryma/vim-multiple-cursors'
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
@@ -79,13 +78,6 @@ filetype plugin on
 filetype indent on
 " IndentLines
 let g:indentLine_color_term = 239
-" IndentGuides (default key: <leader>ig)
-let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=darkgray
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=gray
-set ts=2 sw=2 noet
-let g:indent_guides_start_level=2
-"let g:indent_guides_guide_size=1
 " RainbowParentheses
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
@@ -151,6 +143,15 @@ nnoremap <C-p> :Unite file_rec/async<cr>
 nnoremap <space>/ :Unite grep:.<cr>
 nnoremap <space>y :Unite history/yank<cr>
 nnoremap <space>s :Unite -quick-match buffer<cr>
+
+""""""""""""""""""""""""""""""
+" multicursor
+""""""""""""""""""""""""""""""
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
 
 " general settings
 " set mapleader
