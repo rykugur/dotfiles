@@ -32,6 +32,10 @@ pulseaudio --start
 #xautolock -time 10 -locker slock -nowlocker slock -detectsleep -corners 000+ -cornerdelay 3 &
 xautolock -time 10 -locker slock -nowlocker slock -detectsleep &
 
+# other incidentals
+spotify &
+pavucontrol &
+
 #exec startxfce4
 #exec enlightenment_start
 #startkde
