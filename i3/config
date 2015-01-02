@@ -18,14 +18,14 @@ hide_edge_borders both
 # L_Alt
 set $mod Mod1
 
-set $workspace1 1: main
-set $workspace2 2: www
-set $workspace3 3: email
-set $workspace4 4: code
-set $workspace5 5: steam
-set $workspace6 6: fus
-set $workspace7 7: ro
-set $workspace8 8: dah
+set $workspace1 1: fus
+set $workspace2 2: ro
+set $workspace3 3: dah
+set $workspace4 4: wuld
+set $workspace5 5: nah
+set $workspace6 6: kest
+set $workspace7 7: sieben
+set $workspace8 8: acht
 set $workspace9 9: nein
 set $workspace10 10: zehn
 
@@ -33,7 +33,8 @@ set $workspace10 10: zehn
 # is used in the bar {} block below. ISO 10646 = Unicode
 #font xft:Terminus bold 12
 #font xft:inconsolata 8
-font xft:lemon 9
+#font xft:lemon 9
+font xft:GohuFont 9
 #font xft:uushi light 8
 
 # Use Mouse+$mod to drag floating windows to their wanted position

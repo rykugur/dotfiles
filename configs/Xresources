@@ -14,9 +14,12 @@ URxvt*transparent: false
 !URxvt*font: xft:uushi:size=7:antialias=true
 !URxvt*boldFont: xft:uushi:size=7:antialias=true
 !URxvt*italicFont: xft:uushi:size=7:antialias=true
-URxvt*font: xft:Source Code Pro for Powerline:size=9:antialias=true
-URxvt*boldFont: xft:Source Code Pro for Powerline:size=9:antialias=true
-URxvt*italicFont: xft:Source Code Pro for Powerline:size=9:antialias=true
+!URxvt*font: xft:Source Code Pro for Powerline:size=9:antialias=true
+!URxvt*boldFont: xft:Source Code Pro for Powerline:size=9:antialias=true
+!URxvt*italicFont: xft:Source Code Pro for Powerline:size=9:antialias=true
+URxvt*font: xft:GohuFont:size=10:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true
+URxvt*boldFont: xft:GohuFont:size=10:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true
+URxvt*italicFont: xft:GohuFont:size=10:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true
 URxvt*cursorBlink: true
 URxvt*cursorUnderline: false
 URxvt*scrollBar: false
