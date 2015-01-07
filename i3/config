@@ -148,8 +148,10 @@ bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle"
 bindsym XF86AudioPlay exec "playerctl play-pause"
 bindsym XF86AudioStop exec "playerctl stop"
 bindsym XF86AudioNext exec "playerctl next"
-bindsym $mod+Control+Next exec "playerctl next"
 bindsym XF86AudioPrev exec "playerctl previous"
+bindsym $mod+Control+Home exec "playerctl play-pause"
+bindsym $mod+Control+End exec "playerctl stop"
+bindsym $mod+Control+Next exec "playerctl next"
 bindsym $mod+Control+Prior exec "playerctl previous"
 
 # brightness keys
