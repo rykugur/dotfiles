@@ -148,14 +148,6 @@ let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 
-
-""""""""""""""""""""""""""""""
-" vim-orgmode
-""""""""""""""""""""""""""""""
-" These aren't necessary, but adding them anyways
-au FileType org nmap <leader>cbn :OrgCheckBoxNewBelow<CR>
-au FileType org nmap <leader>cbt :OrgCheckBoxToggle<CR> 
-
 " general settings
 " set mapleader
 let mapleader=","
