@@ -1,6 +1,6 @@
 #
 
-function vim_notes --description "opens the given file name in vim notes plugin, uses dmenu as input; usage: vim_notes"
+function nvpy_notes --description "opens the given file name in nvpy, uses dmenu as input if no arg passed; usage: nvpy_notes [personal|work]"
   # ensure we have a notes directory variable defined
   if test -z $NOTES_DIR
     return
@@ -11,8 +11,12 @@ function vim_notes --description "opens the given file name in vim notes plugin,
     return
   end
 
-  # present a list of note sets with which to work
-  set -l selected_note_dir (echo personal\nwork | /usr/bin/dmenu)
+  # present a list of note sets with which to work?
+  if test -z $argv[1]
+    set selected_note_dir (echo personal\nwork | /usr/bin/dmenu)
+  else
+    set selected_note_dir $argv[1]
+  end
 
   if test -z $selected_note_dir
     # escape was likely pressed, run away
