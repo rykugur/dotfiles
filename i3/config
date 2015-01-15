@@ -177,7 +177,7 @@ bindsym $mod+Shift+v exec fish -c snippets
 bindsym $mod+Shift+r exec fish -c runnar
 
 # notes - open notes in vim
-bindsym $mod+Shift+n exec fish -c vim_notes
+bindsym $mod+Shift+n exec fish -c nvpy_notes
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
