@@ -36,6 +36,7 @@ xautolock -time 10 -locker slock -nowlocker slock -detectsleep &
 spotify &
 blockify &
 pasystray &
+xbindkeys &
 
 #exec startxfce4
 #exec enlightenment_start
