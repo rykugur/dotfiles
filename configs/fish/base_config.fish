@@ -39,7 +39,7 @@ _append_path $GOBIN PATH
 
 # fish abbreviations allow you to define... well... abbreviations... so that when you type e.g. "gc"
 # and press space, it is automatically expanded to "git commit"
-set -x fish_user_abbreviations 'ga=git add' 'gc=git commit' 'gco=git checkout' 'gd=git diff' 'gds=git diff --staged' 'gf=git fetch' 'gfp=git fetch -p' 'gg=git grep' geg='git grep -E' 'gp=git pull' 'supac=sudo pacman' 'supacs=sudo pacman -S' 'pac=pacman' pacss='pacman -Ss' 'sc=systemctl' 'ssc=sudo systemctl' 'sscr=sudo systemctl restart'
+set -x fish_user_abbreviations 'ga=git add' 'gc=git commit' 'gca=git commit --amend' 'gco=git checkout' 'gd=git diff' 'gds=git diff --staged' 'gf=git fetch' 'gfp=git fetch -p' 'gg=git grep' geg='git grep -E' 'gp=git pull' 'supac=sudo pacman' 'supacs=sudo pacman -S' 'pac=pacman' pacss='pacman -Ss' 'sc=systemctl' 'ssc=sudo systemctl' 'sscr=sudo systemctl restart'
 
 # don't greet me!
 set fish_greeting ""
