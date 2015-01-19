@@ -33,7 +33,7 @@ end
 set -x EDITOR "vim"
 set -x GOPATH "$HOME/personal/code/go"
 set -x GOBIN "$GOPATH/bin"
-set -x JAVA_HOME "/usr/lib/jvm/java-7-openjdk"
+set -x JAVA_HOME "/usr/lib/jvm/jdk1.7.0_71"
 
 _append_path $GOBIN PATH
 
