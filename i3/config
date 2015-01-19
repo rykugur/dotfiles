@@ -13,6 +13,9 @@
 #new_float pixel 0
 hide_edge_borders both
 
+# only focus on what I select via keyboard shortcuts, not what the mouse is overing over
+focus_follows_mouse no
+
 # L_Super (Win)
 #set $mod Mod4
 # L_Alt
