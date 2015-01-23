@@ -26,7 +26,6 @@ xrdb ~/.Xresources
 
 # need to manually start pulseaudio
 pulseaudio --start
-pulseaudio-equalizer enable
 
 # start xautlock to call slock after 10 minutes of inactivity OR if the mouse is
 # left in the bottom-right corner for 3 seconds
