@@ -1,12 +1,12 @@
 [submodule "powerline"]
 	path = powerline
-	url = https://github.com/rykugur/powerline
+	url = git@github.com:rykugur/dotfiles.git/powerline
 [submodule "powerline-fonts"]
 	path = powerline-fonts
-	url = https://www.github.com/rykugur/powerline-fonts
+	url = git@github.com:rykugur/dotfiles.git/powerline-fonts
 [submodule "vim/bundle/vundle"]
 	path = vim/bundle/vundle
-	url = https://www.github.com/rykugur/vundle
+	url = git@github.com:rykugur/dotfiles.git/vundle
 [submodule "prezto"]
 	path = prezto
 	url = git@github.com:rykugur/prezto.git
