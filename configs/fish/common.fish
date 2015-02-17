@@ -5,6 +5,7 @@ set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
 
 # misc aliases
 alias dfh "df -h"
+alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
 alias expenses "gnumeric $DOCS_DIR/personal/finances/monthly_expenses.gnumeric"
 alias notes "cd $NOTES_DIR"
