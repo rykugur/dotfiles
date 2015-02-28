@@ -10,6 +10,7 @@ alias dush "du -sh"
 alias expenses "gnumeric $DOCS_DIR/personal/finances/monthly_expenses.gnumeric"
 alias notes "cd $NOTES_DIR"
 alias pingtest "ping google.com"
+alias steamcd "cd $STEAM_DIR"
 if test -e /usr/bin/ls++
   alias ls "/usr/bin/ls++ --potsf"
   alias ll "/usr/bin/ls++ --potsf"
@@ -21,6 +22,7 @@ end
 
 # go aliases
 alias gocd "cd $GOPATH"
+
 
 # git aliases
 #alias gco "git checkout"
