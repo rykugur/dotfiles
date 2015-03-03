@@ -27,3 +27,4 @@ unite.vim
 vimproc.vim
 vim-speeddating
 vim-multiple-cursors
+gocode
