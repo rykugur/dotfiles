@@ -1,7 +1,3 @@
-function steamcd 
-  cd ~/.local/share/Steam/SteamApps/common
-end
-
 function nvsettings
   primusrun nvidia-settings -c :8 &
 end

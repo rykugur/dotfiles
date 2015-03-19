@@ -33,11 +33,13 @@ end
 set -x EDITOR "vim"
 set -x GOPATH "$HOME/personal/code/go"
 set -x GOBIN "$GOPATH/bin"
-set -x JAVA_HOME "/usr/lib/jvm/java-7-openjdk"
+set -x JAVA_HOME "/usr/lib/jvm/jdk1.7.0_71"
+
+_append_path $GOBIN PATH
 
 # fish abbreviations allow you to define... well... abbreviations... so that when you type e.g. "gc"
 # and press space, it is automatically expanded to "git commit"
-set -x fish_user_abbreviations 'ga=git add' 'gc=git commit' 'gco=git checkout' 'gd=git diff' 'gds=git diff --staged' 'gf=git fetch' 'gg=git grep' geg='git grep -E' 'gp=git pull' 'supac=sudo pacman' 'supacs=sudo pacman -S' 'pac=pacman' 'sc=systemctl' 'ssc=sudo systemctl' 'sscr=sudo systemctl restart'
+set -x fish_user_abbreviations '..=cd ..' '...=cd ../..' '....=cd ../../..' 'ga=git add' 'gc=git commit' 'gca=git commit --amend' 'gco=git checkout' 'gd=git diff' 'gds=git diff --staged' 'gf=git fetch' 'gfp=git fetch -p' 'gg=git grep' 'gp=git pull' 'gs=git stash' gsl='git stash list | cat' gss='git status --short' 'pagi=ps aux | grep -v grep | grep -i' 'supac=sudo pacman' 'supacs=sudo pacman -S' 'pac=pacman' pacss='pacman -Ss' 'sc=systemctl' 'ssc=sudo systemctl' 'sscr=sudo systemctl restart'
 
 # don't greet me!
 set fish_greeting ""

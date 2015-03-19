@@ -5,9 +5,14 @@ set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
 
 # misc aliases
 alias dfh "df -h"
+alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
-alias notes "cd $OWNCLOUD_NOTES"
+alias expenses "gnumeric $DOCS_DIR/personal/finances/monthly_expenses.gnumeric"
+alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
+alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
+alias notes "cd $NOTES_DIR"
 alias pingtest "ping google.com"
+alias steamcd "cd $STEAM_DIR"
 if test -e /usr/bin/ls++
   alias ls "/usr/bin/ls++ --potsf"
   alias ll "/usr/bin/ls++ --potsf"
@@ -20,15 +25,9 @@ end
 # go aliases
 alias gocd "cd $GOPATH"
 
+
 # git aliases
-#alias gco "git checkout"
-#alias gd  "git diff"
-alias gdh "git diff HEAD~1..HEAD"
-alias gds "git diff --staged"
-#alias gg  "git grep"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
-alias gsl "git stash list | cat"
-alias gss "git status --short"
 
 # pacman aliases
 #alias spscc "sudo pacman -Scc"

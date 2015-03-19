@@ -13,6 +13,9 @@
 #new_float pixel 0
 hide_edge_borders both
 
+# only focus on what I select via keyboard shortcuts, not what the mouse is overing over
+focus_follows_mouse no
+
 # L_Super (Win)
 #set $mod Mod4
 # L_Alt
@@ -39,6 +42,7 @@ font xft:GohuFont 9
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier Mod4
+floating_modifier $mod+Control
 
 # start a terminal
 #bindsym $mod+Return exec urxvtc -e fish
@@ -140,21 +144,28 @@ bindsym $mod+Control+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit
 
 # volume keys
 # '--' is required for the next two lines because otherwise it considers "-5%" to be an argument
-bindsym XF86AudioRaiseVolume exec "pactl -- set-sink-volume 1 +5%"
-bindsym XF86AudioLowerVolume exec "pactl -- set-sink-volume 1 -5%"
 bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle"
+bindsym Control+F8 exec "pactl set-sink-mute 1 toggle"
+bindsym XF86AudioLowerVolume exec "pactl -- set-sink-volume 1 -5%"
+bindsym Control+F9 exec "pactl -- set-sink-volume 1 -5%"
+bindsym XF86AudioRaiseVolume exec "pactl -- set-sink-volume 1 +5%"
+bindsym Control+F10 exec "pactl -- set-sink-volume 1 +5%"
 
 # multimedia keys
 bindsym XF86AudioPlay exec "playerctl play-pause"
 bindsym XF86AudioStop exec "playerctl stop"
 bindsym XF86AudioNext exec "playerctl next"
-bindsym $mod+Control+Next exec "playerctl next"
 bindsym XF86AudioPrev exec "playerctl previous"
+bindsym $mod+Control+Home exec "playerctl play-pause"
+bindsym $mod+Control+End exec "playerctl stop"
+bindsym $mod+Control+Next exec "playerctl next"
 bindsym $mod+Control+Prior exec "playerctl previous"
 
 # brightness keys
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym Control+F6 exec xbacklight -dec 5
+bindsym Control+F7 exec xbacklight -inc 5
 
 # calculator!
 bindsym XF86Calculator exec gnome-calculator
@@ -169,7 +180,8 @@ bindsym $mod+Shift+v exec fish -c snippets
 bindsym $mod+Shift+r exec fish -c runnar
 
 # notes - open notes in vim
-bindsym $mod+Shift+n exec fish -c vim_notes
+# disabled (For now?)
+#bindsym $mod+Shift+n exec fish -c nvpy
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -212,6 +224,14 @@ mode "$mode_system" {
   bindsym Escape mode "default"
 }
 bindsym $mod+Pause mode "$mode_system"
+
+## notes!
+#set $mode_notes Notes (p) personal, (w) work
+#mode "$mode_notes" {
+  #bindsym p exec nvpy_notes personal
+  #bindsym w exec nvpy_notes work
+#}
+#bindsym $mod+Shift+n mode "$mode_notes"
 
 #########################
 # assignments
@@ -288,11 +308,8 @@ bar {
 # can use exec to only exec once
 # or exec_always to exec on every reload
 exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_at_emmas.jpg"
+exec "xset r rate 190 40"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
 exec "compton --config ~/.dotfiles/configs/compton.conf"
 exec "clipit &"
-exec "owncloud &"
-
-# because this keeps fucking disapearring
-exec_always "xset r rate 190 40"
