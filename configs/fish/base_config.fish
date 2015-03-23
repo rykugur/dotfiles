@@ -55,6 +55,8 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gs='git stash' \
                                gsl='git stash list | cat' \
                                gss='git status --short' \
+                               gr='grep --color=auto' \
+                               grE='grep --color=auto -niRE' \
                                pagi='ps aux | grep -v grep | grep -i' \
                                supac='sudo pacman' \
                                supacs='sudo pacman -S' \
