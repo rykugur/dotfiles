@@ -28,3 +28,4 @@ vimproc.vim
 vim-speeddating
 vim-multiple-cursors
 gocode
+vim-fish
