@@ -75,9 +75,12 @@ bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+semicolon move right
 
-# screenshot
+# screenshots
+# now with OSX-user friendly shortcuts!
 bindsym Print exec scrot -e 'mv $f ~/shots/'
+bindsym $mod+Shift+3 exec scrot -e 'mv $f ~/shots/'
 bindsym $mod+Print exec scrot -s -e 'mv $f ~/shots/'
+bindsym $mod+Shift+4 exec scrot -s -e 'mv $f ~/shots/'
 
 # lock screen
 #bindsym Control+Mod1+l exec i3lock -c 000000
@@ -124,16 +127,16 @@ bindsym $mod+9 workspace $workspace9
 bindsym $mod+0 workspace $workspace10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $workspace1
-bindsym $mod+Shift+2 move container to workspace $workspace2
-bindsym $mod+Shift+3 move container to workspace $workspace3
-bindsym $mod+Shift+4 move container to workspace $workspace4
-bindsym $mod+Shift+5 move container to workspace $workspace5
-bindsym $mod+Shift+6 move container to workspace $workspace6
-bindsym $mod+Shift+7 move container to workspace $workspace7
-bindsym $mod+Shift+8 move container to workspace $workspace8
-bindsym $mod+Shift+9 move container to workspace $workspace9
-bindsym $mod+Shift+0 move container to workspace $workspace10
+#bindsym $mod+Shift+1 move container to workspace $workspace1
+#bindsym $mod+Shift+2 move container to workspace $workspace2
+#bindsym $mod+Shift+3 move container to workspace $workspace3
+#bindsym $mod+Shift+4 move container to workspace $workspace4
+#bindsym $mod+Shift+5 move container to workspace $workspace5
+#bindsym $mod+Shift+6 move container to workspace $workspace6
+#bindsym $mod+Shift+7 move container to workspace $workspace7
+#bindsym $mod+Shift+8 move container to workspace $workspace8
+#bindsym $mod+Shift+9 move container to workspace $workspace9
+#bindsym $mod+Shift+0 move container to workspace $workspace10
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -203,6 +206,29 @@ mode "resize" {
   bindsym Right resize grow width 10 px or 10 ppt
 
   # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+
+# pressing mod+Shift+m enters container move mode
+# Allows us to press a workspace number to move a container to a workspace
+mode "mode_move_container" {
+  bindsym 1 move container to workspace $workspace1
+  bindsym 2 move container to workspace $workspace2
+  bindsym 3 move container to workspace $workspace3
+  bindsym 4 move container to workspace $workspace4
+  bindsym 5 move container to workspace $workspace5
+  bindsym 6 move container to workspace $workspace6
+  bindsym 7 move container to workspace $workspace7
+  bindsym 8 move container to workspace $workspace8
+  bindsym 9 move container to workspace $workspace9
+  bindsym 0 move container to workspace $workspace10
+
+  # j/; to move to prev/next workspaces
+  bindsym j move container to workspace prev
+  bindsym semicolon move container to workspace next
+
+  # back to normal
   bindsym Return mode "default"
   bindsym Escape mode "default"
 }

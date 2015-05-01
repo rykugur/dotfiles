@@ -64,7 +64,8 @@ set -x fish_user_abbreviations ..='cd ..' \
                                pacss='pacman -Ss' \
                                sc='systemctl' \
                                ssc='sudo systemctl' \
-                               sscr='sudo systemctl restart'
+                               sscr='sudo systemctl restart' \
+                               sv='sudo vim'
 
 # don't greet me!
 set fish_greeting ""
