@@ -51,6 +51,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gf='git fetch' \
                                gfp='git fetch -p' \
                                gg='git grep' \
+                               gl='git log' \
                                gp='git pull' \
                                gs='git stash' \
                                gsl='git stash list | cat' \
