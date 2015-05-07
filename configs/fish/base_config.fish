@@ -26,7 +26,6 @@ if [ -e $HOME/.dotfiles/fish/functions ]
   _append_path $HOME/.dotfiles/fish/functions fish_function_path
 end
 
-
 ######################
 # exports
 ######################
@@ -34,9 +33,46 @@ set -x EDITOR "vim"
 set -x GOPATH "$HOME/personal/code/go"
 set -x GOBIN "$GOPATH/bin"
 set -x JAVA_HOME "/usr/lib/jvm/jdk1.7.0_71"
+set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
+set -x WINEPREFIX "/home/dusty/.wine32"
+set -x WINEARCH "win32"
+
+set PATH $PATH ~/bin
 
 _append_path $GOBIN PATH
 
+######################
+# aliases
+######################
+alias dfh "df -h"
+alias docs "cd $DOCS_DIR"
+alias dush "du -sh"
+alias expenses "open $EXPENSES_FILE"
+# leaving this as an alias instead of abbreviation due to length and formatting business
+alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
+alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
+alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
+alias notes "cd $NOTES_DIR"
+alias pingtest "ping google.com"
+alias steamcd "cd $STEAM_DIR"
+if test -e /usr/bin/ls++
+  alias ls "/usr/bin/ls++ --potsf"
+  alias ll "/usr/bin/ls++ --potsf"
+  alias llo "/usr/bin/ls -lh"
+  alias lso "/usr/bin/ls"
+else
+  alias ll "ls -lh"
+end
+
+# arch specific aliases
+#alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
+alias pacmir  "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+alias vboxmp "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
+alias vboxrm "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
+
+######################
+# abbreviations
+######################
 # fish abbreviations allow you to define... well... abbreviations... so that when you type e.g. "gc"
 # and press space, it is automatically expanded to "git commit"
 set -x fish_user_abbreviations ..='cd ..' \
