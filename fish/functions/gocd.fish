@@ -18,7 +18,6 @@ function gocd --description 'wrapper script for easier gopath navigation'
           # if they're super concerned with it they can gtfo and type it out
           # I do realize I'm primarily talking to myself. Go away.
           set TO_DIR (find $TO_DIR -name "*$argv[2]*" | head -n1)
-          echo TO_DIR=$TO_DIR
         end
       case p or pkg
         # don't check for other args here as we might have multiple directories that begin with, for example, "linux_amd*"
