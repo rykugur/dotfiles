@@ -22,6 +22,8 @@ function gocd --description 'wrapper script for easier gopath navigation'
       case p or pkg
         # don't check for other args here as we might have multiple directories that begin with, for example, "linux_amd*"
         set TO_DIR "$BASE_DIR/pkg"
+      case '*'
+        set TO_DIR $BASE_DIR
     end
   else 
     # just cd to $GOPATH
