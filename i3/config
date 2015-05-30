@@ -273,7 +273,7 @@ bindsym $mod+Control+Shift+F10 mode "$mode_system"
 assign [class="Chromium"] $workspace2
 for_window [class="Chromium"] layout tabbed
 assign [class="Chrome"] $workspace2
-for_window [class="Chrome"] floating enable
+for_window [class="Chrome"] layout tabbed
 assign [class="Firefox"] $workspace2
 for_window [class="Firefox"] layout tabbed
 #for_window [class="Firefox"] fullscreen
