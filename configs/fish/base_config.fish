@@ -96,8 +96,11 @@ set -x fish_user_abbreviations ..='cd ..' \
                                grE='grep --color=auto -niRE' \
                                pagi='ps aux | grep -v grep | grep -i' \
                                supac='sudo pacman' \
+                               supacr='sudo pacman -R' \
                                supacs='sudo pacman -S' \
                                pac='pacman' \
+                               pacr='pacman -R' \
+                               pacs='pacman -S' \
                                pacss='pacman -Ss' \
                                sc='systemctl' \
                                ssc='sudo systemctl' \
