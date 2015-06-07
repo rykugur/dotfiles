@@ -37,21 +37,18 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Vundle Bundles
-" To update/install: :BundleInstall in or vim +BundleInstall +qall on cli
-"Bundle 'ervandew/supertab'
+" To install: :BundleInstall in vim or vim +BundleInstall +qall on cli
+" To update: BundleUpdate in vimor vim +BundleUpdate +qall on cli
 Bundle 'majutsushi/tagbar'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-fugitive'
-"Bundle 'tpope/vim-rails'
-"Bundle 'tpope/vim-cucumber'
-Bundle 'vim-scripts/comments.vim'
+Bundle 'tpope/vim-commentary'
+Bundle 'tpope/vim-speeddating'
 Bundle 'Yggdroot/indentLine'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'scrooloose/syntastic'
-"Bundle 'xolox/vim-misc'
-"Bundle 'xolox/vim-notes'
 "Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
 Bundle 'fatih/vim-go'
@@ -59,13 +56,23 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'jceb/vim-orgmode'
-Bundle 'tpope/vim-speeddating'
 Bundle 'mtth/scratch.vim'
-"Bundle 'cwoac/nvim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/unite.vim'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'dag/vim-fish'
+
+""""""""""""""""""""""""""""""
+" general vim stuff
+""""""""""""""""""""""""""""""
+" toggle cursorline when entering/leaving insert mode
+autocmd InsertEnter,InsertLeave * set cul!
+
+"folding settings
+set foldmethod=indent   "fold based on indent
+set foldnestmax=10      "deepest fold is 10 levels
+set nofoldenable        "dont fold by default
+set foldlevel=1         "this is just what i use
 
 """"""""""""""""""""""""""""""
 " syntax and colorscheme specifics
@@ -73,13 +80,175 @@ Bundle 'dag/vim-fish'
 syntax enable
 colorscheme badwolf
 set fileencodings=utf-8
+
+""""""""""""""""""""""""""""""
 " filetype settings
+""""""""""""""""""""""""""""""
 filetype on
 filetype plugin on
 filetype indent on
-" IndentLines
+
+" detect filetype fix
+au BufRead,BufNewFile *.exp set filetype=tcl
+
+" python stuff
+au FileType python set omnifunc=pythoncomplete#Complete
+let g:SuperTabDefaultCompletionType = "context"
+set completeopt=menuone,longest,preview
+
+" golang stuff
+au FileType go nmap <leader>i <Plug>(go-info)
+au FileType go nmap <leader>gd <Plug>(go-doc)
+au FileType go nmap <leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType go nmap <leader>ds <Plug>(go-def-split)
+au FileType go nmap <leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <leader>dt <Plug>(go-def-tab)
+
+""""""""""""""""""""""""""""""
+" sets
+""""""""""""""""""""""""""""""
+set hidden
+set modelines=0
+set nocompatible
+set nobackup
+set noswapfile
+set number
+
+" general settings
+let mapleader=","
+
+" tab settings
+set expandtab
+set smarttab
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+
+" indent settings
+set autoindent
+
+" backspace settings
+set backspace=indent,eol,start
+
+" search settings
+set ignorecase
+set incsearch
+set hlsearch
+
+" status line stuff
+"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
+set laststatus=2
+
+" disable the read-only warning
+set autoread
+command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+
+" better handling of large files (still testing)
+set synmaxcol=120
+
+""""""""""""""""""""""""""""""
+" maps
+""""""""""""""""""""""""""""""
+" paste
+nnoremap <silent> <leader>pp :set paste!<CR>
+" copy line to system clipboard (middle click)
+nnoremap <leader>y "*y
+" copy line to system clipboard that can be used in Windows VM (this is
+" retarded)
+nnoremap <leader>wy "+y
+" copy entire file to system clipboard (middle click)
+nnoremap <leader>Y ggVG"*y
+" copy entire file to system clipboard that can be used in Windows VM (this is
+" still retarded)
+nnoremap <leader>WY ggVG"+y
+
+" Home key
+imap <esc>OH <esc>0i
+cmap <esc>OH <home>
+nmap <esc>OH 0
+
+" End key
+nmap <esc>OF $
+imap <esc>OF <esc>$a
+cmap <esc>OF <end>
+
+" training to not use arrow keys wooooo
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+nnoremap <left> <nop>
+nnoremap <right> <nop>
+nnoremap j gj
+nnoremap k gk
+
+" remap hjkl to be less annoying (to fit better with default homerow/index key)
+noremap ; l
+noremap l k
+noremap k j
+noremap j h
+
+" remap doubles to <ESC> for easy switching from insert mode
+inoremap jj <ESC>
+inoremap kk <ESC>
+inoremap lll <ESC>
+inoremap ;; <ESC>
+
+" select all
+nnoremap aa ggVG
+
+" easy window split
+"nnoremap <leader>w <C-w>v<C-w>l
+nnoremap <leader>v :vsplit<CR>
+nnoremap <leader>h :split<CR>
+
+" easy window switching
+nnoremap <silent> <leader>; :wincmd l<CR>
+nnoremap <silent> <leader>l :wincmd k<CR>
+nnoremap <silent> <leader>k :wincmd j<CR>
+nnoremap <silent> <leader>j :wincmd h<CR>
+
+" easy window moving
+nnoremap <silent> <leader>: :wincmd L<CR>
+nnoremap <silent> <leader>L :wincmd K<CR>
+nnoremap <silent> <leader>K :wincmd J<CR>
+nnoremap <silent> <leader>J :wincmd H<CR>
+
+" easy tabs
+"nnoremap <leader>tn :tabnew<cr>
+"nnoremap <leader>to :tabonly<cr>
+"nnoremap <leader>tc :tabclose<cr>
+"nnoremap <leader>tj :tabp<cr>
+"nnoremap <leader>t; :tabn<cr>
+"map <leader>tm :tabmove
+
+" key remaps
+nmap <F4> :NERDTreeToggle<CR>
+nmap <F8> :TagbarToggle<CR>
+" F1 is bad
+inoremap <F1> <ESC>
+nnoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+
+" trim trailing spaces
+"nnoremap <leader>s :s/\s\+$//e<CR>
+nnoremap <leader>S :call StripTrailingWhitespaces()<CR>
+
+" get rid of hightlighting after a search
+nnoremap <leader><space> :noh<cr>
+
+" stop that stupid window from popping up
+map q: :q
+
+""""""""""""""""""""""""""""""
+" plugin specific
+""""""""""""""""""""""""""""""
+""" IndentLines
 let g:indentLine_color_term = 239
-" RainbowParentheses
+
+""" RainbowParentheses
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
@@ -103,55 +272,25 @@ let g:rbpt_colorpairs = [
   \ ['red',         'firebrick3'],
 \ ]
 
-" detect filetype fix
-au BufRead,BufNewFile *.exp set filetype=tcl
-
-" python stuff
-au FileType python set omnifunc=pythoncomplete#Complete
-let g:SuperTabDefaultCompletionType = "context"
-set completeopt=menuone,longest,preview
-
-""""""""""""""""""""""""""""""
-" golang stuff
-""""""""""""""""""""""""""""""
-au FileType go nmap <leader>i <Plug>(go-info)
-au FileType go nmap <leader>gd <Plug>(go-doc)
-au FileType go nmap <leader>gv <Plug>(go-doc-vertical)
-au FileType go nmap <leader>r <Plug>(go-run)
-au FileType go nmap <leader>b <Plug>(go-build)
-au FileType go nmap <leader>t <Plug>(go-test)
-au FileType go nmap <leader>c <Plug>(go-coverage)
-au FileType go nmap <leader>ds <Plug>(go-def-split)
-au FileType go nmap <leader>dv <Plug>(go-def-vertical)
-au FileType go nmap <leader>dt <Plug>(go-def-tab)
-
-""""""""""""""""""""""""""""""
-" vim-markdown stuff
-""""""""""""""""""""""""""""""
+""" vim-markdown stuff
 "let g:vim_markdown_initial_foldlevel=10
 let g:vim_markdown_folding_disabled=1
 
-""""""""""""""""""""""""""""""
-" unite
-""""""""""""""""""""""""""""""
+""" unite
 let g:unite_source_history_yank_enable = 1
 nnoremap <C-p> :Unite file_rec/async<cr>
 nnoremap <space>/ :Unite grep:.<cr>
 nnoremap <space>y :Unite history/yank<cr>
 nnoremap <space>s :Unite -quick-match buffer<cr>
 
-""""""""""""""""""""""""""""""
-" multicursor
-""""""""""""""""""""""""""""""
+""" multicursor
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 
-""""""""""""""""""""""""""""""
-" gotags
-""""""""""""""""""""""""""""""
+""" gotags
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -180,45 +319,7 @@ let g:tagbar_type_go = {
     \ 'ctagsargs' : '-sort -silent'
 \ }
 
-" general settings
-" set mapleader
-let mapleader=","
-" tab settings
-set expandtab
-set smarttab
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
-" indent settings
-set autoindent
-" backspace settings
-set backspace=indent,eol,start
-" search settings
-set ignorecase
-set incsearch
-set hlsearch
-" status line stuff
-"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
-set laststatus=2
-" other misc sets
-"set cursorline
-"set cursorcolumn
-set hidden
-set modelines=0
-set nocompatible
-set nobackup
-set noswapfile
-set number
-""" better handling of large files (still testing)
-set synmaxcol=120
-"set ttyfast
-"set lazyredraw
-"set pastetoggle=<leader><F5>
-nnoremap <silent> <leader>pp :set paste!<CR>
-
-""""""""""""""""""""""""""""""
-" airline
-""""""""""""""""""""""""""""""
+""" airline
 let g:airline_theme = 'powerlineish'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
@@ -245,89 +346,3 @@ let g:airline_symbols.space = "\ua0"
 "let g:airline#extensions#branch#enabled = 1
 "let g:airline#extensions#syntastic#enabled = 1
 let g:airline_powerline_fonts = 1
-
-" toggle cursorline when entering/leaving insert mode
-autocmd InsertEnter,InsertLeave * set cul!
-
-" key remaps
-nmap <F4> :NERDTreeToggle<CR>
-nmap <F8> :TagbarToggle<CR>
-" Home key
-imap <esc>OH <esc>0i
-cmap <esc>OH <home>
-nmap <esc>OH 0
-" End key
-nmap <esc>OF $
-imap <esc>OF <esc>$a
-cmap <esc>OF <end>
-" training to not use arrow keys wooooo
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-"inoremap <up> <nop>
-"inoremap <down> <nop>
-"inoremap <left> <nop>
-"inoremap <right> <nop>
-nnoremap j gj
-nnoremap k gk
-" F1 is bad
-inoremap <F1> <ESC>
-nnoremap <F1> <ESC>
-vnoremap <F1> <ESC>
-" remap hjkl to be less annoying (to fit better with default homerow/index key)
-noremap ; l
-noremap l k
-noremap k j
-noremap j h
-" remap doubles to <ESC> for easy switching from insert mode
-inoremap jj <ESC>
-inoremap kk <ESC>
-inoremap lll <ESC>
-inoremap ;; <ESC>
-" select all
-nnoremap aa ggVG
-" easy window split
-"nnoremap <leader>w <C-w>v<C-w>l
-nnoremap <leader>v :vsplit<CR>
-nnoremap <leader>h :split<CR>
-" easy window switching
-nnoremap <silent> <leader>; :wincmd l<CR>
-nnoremap <silent> <leader>l :wincmd k<CR>
-nnoremap <silent> <leader>k :wincmd j<CR>
-nnoremap <silent> <leader>j :wincmd h<CR>
-" easy window moving
-nnoremap <silent> <leader>: :wincmd L<CR>
-nnoremap <silent> <leader>L :wincmd K<CR>
-nnoremap <silent> <leader>K :wincmd J<CR>
-nnoremap <silent> <leader>J :wincmd H<CR>
-" easy tabs
-"nnoremap <leader>tn :tabnew<cr>
-"nnoremap <leader>to :tabonly<cr>
-"nnoremap <leader>tc :tabclose<cr>
-"nnoremap <leader>tj :tabp<cr>
-"nnoremap <leader>t; :tabn<cr>
-"map <leader>tm :tabmove
-" trim trailing spaces
-"nnoremap <leader>s :s/\s\+$//e<CR>
-nnoremap <leader>S :call StripTrailingWhitespaces()<CR>
-" get rid of hightlighting after a search
-nnoremap <leader><space> :noh<cr>
-" copy line to system clipboard (middle click)
-nnoremap <leader>y "*y
-" copy line to system clipboard that can be used in Windows VM (this is
-" retarded)
-nnoremap <leader>wy "+y
-" copy entire file to system clipboard (middle click)
-nnoremap <leader>Y ggVG"*y
-" copy entire file to system clipboard that can be used in Windows VM (this is
-" still retarded)
-nnoremap <leader>WY ggVG"+y
-" slimv
-let g:slimv_swank_scheme=1
-
-"folding settings
-set foldmethod=indent   "fold based on indent
-set foldnestmax=10      "deepest fold is 10 levels
-set nofoldenable        "dont fold by default
-set foldlevel=1         "this is just what i use

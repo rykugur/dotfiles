@@ -40,11 +40,12 @@ xbindkeys &
 # disable screen sleep
 xset s off
 xset s noblank
+xset -dpms
 
 #exec startxfce4
 #exec enlightenment_start
 #startkde
 exec ssh-agent i3
 #exec gnome-session
-#exec cinnamon-session
+#exec ssh-agent cinnamon-session
 # ...or the Window Manager of your choice
