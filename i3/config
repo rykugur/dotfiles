@@ -343,7 +343,7 @@ bar {
 # execs
 # can use exec to only exec once
 # or exec_always to exec on every reload
-exec "feh --bg-fill ~/.dotfiles/backgrounds/mieke_at_emmas.jpg"
+exec "feh --bg-fill ~/.dotfiles/backgrounds/bird.jpg"
 exec "xset r rate 190 40"
 #exec "urxvtd -q -o -f"
 #exec "urxvtd &"
