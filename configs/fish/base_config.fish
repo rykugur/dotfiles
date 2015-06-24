@@ -52,7 +52,7 @@ alias expenses "open $EXPENSES_FILE"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
 alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
 alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
-alias notes "cd $NOTES_DIR"
+alias notes "cd $PERSONAL_NOTES_DIR"
 alias pingtest "ping google.com"
 alias steamcd "cd $STEAM_DIR"
 if test -e /usr/bin/ls++
