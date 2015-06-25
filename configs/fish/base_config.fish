@@ -78,9 +78,12 @@ alias vboxrm "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
 set -x fish_user_abbreviations ..='cd ..' \
                                ...='cd ../..' \
                                ....='cd ../../..' \
+                               fn='find . -name' \
+                               fin='find . -iname' \
                                ga='git add' \
                                gc='git commit' \
                                gca='git commit --amend' \
+                               gcm='git commit -m' \
                                gco='git checkout' \
                                gd='git diff' \
                                gds='git diff --staged' \
