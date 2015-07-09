@@ -17,14 +17,14 @@ function gocd --description 'wrapper script for easier gopath navigation'
           # append a wildcard on the assumption that the user knows wtf they're doing, and just grab head
           # if they're super concerned with it they can gtfo and type it out
           # I do realize I'm primarily talking to myself. Go away.
-          set TO_DIR (find $TO_DIR -name "*$argv[2]*" | head -n1)
+          set TO_DIR (find $TO_DIR -type d -name "*$argv[2]*" | head -n1)
         end
       case p or pkg
         # don't check for other args here as we might have multiple directories that begin with, for example, "linux_amd*"
         set TO_DIR "$BASE_DIR/pkg"
       case '*'
         # take a "best-effort" guess of where they want to go... likely somewhere in src
-        set TO_DIR (find $BASE_DIR/src -name "*$argv[1]*" | head -n1)
+        set TO_DIR (find $BASE_DIR/src -type d -name "*$argv[1]*" | head -n1)
     end
   else 
     # just cd to $GOPATH
