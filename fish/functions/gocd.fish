@@ -23,7 +23,8 @@ function gocd --description 'wrapper script for easier gopath navigation'
         # don't check for other args here as we might have multiple directories that begin with, for example, "linux_amd*"
         set TO_DIR "$BASE_DIR/pkg"
       case '*'
-        set TO_DIR $BASE_DIR
+        # take a "best-effort" guess of where they want to go... likely somewhere in src
+        set TO_DIR (find $BASE_DIR/src -name "*$argv[1]*" | head -n1)
     end
   else 
     # just cd to $GOPATH
