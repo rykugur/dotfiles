@@ -48,6 +48,14 @@
   m:0x18 + c:114
   Alt+Mod2 + Right
 
-##################################
+"xvkbd -xsendevent -text "\[Delete]""
+  m:0x8 + c:22
+  Alt + BackSpace
+
+"xvkbd -xsendevent -text "\[Insert]""
+  m:0x5 + c:36
+  Control + Shift + Return
+
+#################################
 # End of xbindkeys configuration #
 ##################################
