@@ -85,6 +85,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gca='git commit --amend' \
                                gcm='git commit -m' \
                                gco='git checkout' \
+                               gcob='git checkout -b' \
                                gd='git diff' \
                                gds='git diff --staged' \
                                gf='git fetch' \
