@@ -57,7 +57,8 @@ Bundle 'mtth/scratch.vim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/unite.vim'
 Bundle 'terryma/vim-multiple-cursors'
-Bundle 'dag/vim-fish'
+" Bundle 'dag/vim-fish'
+ Bundle 'Soares/fish.vim'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
