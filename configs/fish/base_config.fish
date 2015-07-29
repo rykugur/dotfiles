@@ -99,6 +99,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                grhh='git reset --hard HEAD' \
                                gs='git stash' \
                                gsl='git stash list | cat' \
+                               gsp='git stash pop' \
                                gss='git status --short' \
                                gr='grep --color=auto' \
                                grE='grep --color=auto -niRE' \
@@ -106,13 +107,17 @@ set -x fish_user_abbreviations ..='cd ..' \
                                supac='sudo pacman' \
                                supacr='sudo pacman -R' \
                                supacs='sudo pacman -S' \
+                               supacsyy='sudo pacman -Syy' \
+                               supacsyyu='sudo pacman -Syyu' \
                                pac='pacman' \
                                pacr='pacman -R' \
+                               pacqs='pacman -Qs' \
                                pacs='pacman -S' \
                                pacss='pacman -Ss' \
                                sc='systemctl' \
                                ssc='sudo systemctl' \
                                sscr='sudo systemctl restart' \
+                               sscs='sudo systemctl status' \
                                sv='sudo vim'
 
 # don't greet me!

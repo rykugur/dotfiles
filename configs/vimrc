@@ -46,22 +46,19 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-speeddating'
-" Bundle 'tpope/vim-sleuth'
 Bundle 'Yggdroot/indentLine'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'scrooloose/syntastic'
-"Bundle 'kien/ctrlp.vim'
 Bundle 'bling/vim-airline'
 Bundle 'fatih/vim-go'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'godlygeek/tabular'
-Bundle 'plasticboy/vim-markdown'
-Bundle 'jceb/vim-orgmode'
 Bundle 'mtth/scratch.vim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/unite.vim'
 Bundle 'terryma/vim-multiple-cursors'
-Bundle 'dag/vim-fish'
+" Bundle 'dag/vim-fish'
+ Bundle 'Soares/fish.vim'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
@@ -272,10 +269,6 @@ let g:rbpt_colorpairs = [
   \ ['darkred',     'DarkOrchid3'],
   \ ['red',         'firebrick3'],
 \ ]
-
-""" vim-markdown stuff
-"let g:vim_markdown_initial_foldlevel=10
-let g:vim_markdown_folding_disabled=1
 
 """ unite
 let g:unite_source_history_yank_enable = 1
