@@ -107,6 +107,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                supac='sudo pacman' \
                                supacr='sudo pacman -R' \
                                supacs='sudo pacman -S' \
+                               supacscc='sudo pacman -Scc' \
                                supacsyy='sudo pacman -Syy' \
                                supacsyyu='sudo pacman -Syyu' \
                                supacu='sudo pacman -U' \
