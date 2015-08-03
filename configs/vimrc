@@ -58,7 +58,8 @@ Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/unite.vim'
 Bundle 'terryma/vim-multiple-cursors'
 " Bundle 'dag/vim-fish'
- Bundle 'Soares/fish.vim'
+Bundle 'Soares/fish.vim'
+Bundle 'unblevable/quick-scope'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
