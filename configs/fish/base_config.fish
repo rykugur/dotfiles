@@ -91,7 +91,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gds='git diff --staged' \
                                gf='git fetch' \
                                gfp='git fetch -p' \
-                               gg='git grep' \
+                               gg='git grep --color=auto -n' \
                                gl='git log' \
                                gp='git pull' \
                                gr='git reset' \
