@@ -81,6 +81,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                fn='find . -name' \
                                fin='find . -iname' \
                                ga='git add' \
+                               gbc='git branch --contains' \
                                gc='git commit' \
                                gca='git commit --amend' \
                                gcm='git commit -m' \
