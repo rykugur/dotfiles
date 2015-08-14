@@ -88,6 +88,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gco='git checkout' \
                                gco.='git checkout .' \
                                gcob='git checkout -b' \
+                               gcobb='git checkout -b djerome/(_git_branch_name)/' \
                                gd='git diff' \
                                gds='git diff --staged' \
                                gf='git fetch' \
@@ -102,7 +103,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gsl='git stash list | cat' \
                                gsp='git stash pop' \
                                gss='git status --short' \
-                               gr='grep --color=auto' \
+                               gr='grep --color=auto -n' \
                                grE='grep --color=auto -niRE' \
                                pagi='ps aux | grep -v grep | grep -i' \
                                supac='sudo pacman' \
