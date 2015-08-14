@@ -89,7 +89,6 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gco='git checkout' \
                                gco.='git checkout .' \
                                gcob='git checkout -b' \
-                               gcobb='git checkout -b djerome/(_git_branch_name)/' \
                                gd='git diff' \
                                gds='git diff --staged' \
                                gf='git fetch' \
