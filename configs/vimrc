@@ -121,10 +121,12 @@ set number
 let mapleader=","
 
 " tab settings
+"" use spaces instead of tabs
 set expandtab
 set smarttab
-set shiftwidth=2
+"" set tab to four spaces
 set tabstop=2
+set shiftwidth=2
 set softtabstop=2
 
 " indent settings
