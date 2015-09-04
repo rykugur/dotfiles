@@ -95,7 +95,8 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gfp='git fetch -p' \
                                gg='git grep --color=auto -n' \
                                gl='git log' \
-                               gp='git pull' \
+                               gpl='git pull' \
+                               gps='git push' \
                                gr='git reset' \
                                grh='git reset HEAD' \
                                grhh='git reset --hard HEAD' \
