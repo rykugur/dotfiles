@@ -217,16 +217,16 @@ mode "resize" {
 # Allows us to press a workspace number to move a container to a workspace
 set $mode_move_container Which workspace?
 mode "$mode_move_container" {
-  bindsym 1 move container to workspace $workspace1, mode "default"
-  bindsym 2 move container to workspace $workspace2, mode "default"
-  bindsym 3 move container to workspace $workspace3, mode "default"
-  bindsym 4 move container to workspace $workspace4, mode "default"
-  bindsym 5 move container to workspace $workspace5, mode "default"
-  bindsym 6 move container to workspace $workspace6, mode "default"
-  bindsym 7 move container to workspace $workspace7, mode "default"
-  bindsym 8 move container to workspace $workspace8, mode "default"
-  bindsym 9 move container to workspace $workspace9, mode "default"
-  bindsym 0 move container to workspace $workspace10, mode "default"
+  bindsym 1 move container to workspace $workspace1, workspace $workspace1, mode "default"
+  bindsym 2 move container to workspace $workspace2, workspace $workspace2, mode "default"
+  bindsym 3 move container to workspace $workspace3, workspace $workspace3, mode "default"
+  bindsym 4 move container to workspace $workspace4, workspace $workspace4, mode "default"
+  bindsym 5 move container to workspace $workspace5, workspace $workspace5, mode "default"
+  bindsym 6 move container to workspace $workspace6, workspace $workspace6, mode "default"
+  bindsym 7 move container to workspace $workspace7, workspace $workspace7, mode "default"
+  bindsym 8 move container to workspace $workspace8, workspace $workspace8, mode "default"
+  bindsym 9 move container to workspace $workspace9, workspace $workspace9, mode "default"
+  bindsym 0 move container to workspace $workspace10, workspace $workspace10, mode "default"
 
   # j/; to move to prev/next workspaces
   bindsym j move container to workspace prev
