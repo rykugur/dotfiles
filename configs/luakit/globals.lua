@@ -57,10 +57,11 @@ search_engines = {
     aur         = "https://aur.archlinux.org/packages/?O=0&K=%s",
     imdb        = "http://www.imdb.com/find?s=all&q=%s",
     wikipedia   = "https://en.wikipedia.org/wiki/Special:Search?search=%s",
+    duckduckgo  = "https://duckduckgo.com/?q=%s",
 }
 
 -- Set google as fallback search engine
-search_engines.default = search_engines.google
+search_engines.default = search_engines.duckduckgo
 -- Use this instead to disable auto-searching
 --search_engines.default = "%s"
 
