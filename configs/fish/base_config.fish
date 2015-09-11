@@ -126,7 +126,8 @@ set -x fish_user_abbreviations ..='cd ..' \
                                sscr='sudo systemctl restart' \
                                sscs='sudo systemctl status' \
                                sv='sudo vim' \
-                               svec='sudo vim /etc/hosts'
+                               svec='sudo vim /etc/hosts' \
+                               taill='tail -Fn 999'
 
 # don't greet me!
 set fish_greeting ""
