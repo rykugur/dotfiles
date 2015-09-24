@@ -49,19 +49,22 @@ soup.accept_policy = cookie_policy.always
 -- character (%) may need to be escaped by placing another % before or after
 -- it to avoid collisions with lua's string.format characters.
 -- See: http://www.lua.org/manual/5.1/manual.html#pdf-string.format
+-- Also, because I'm awesome, I'm using the search_engines for some pre-defined
+-- awesomeness (a lot of this stuff is also defined as a cmd).
 search_engines = {
-    github      = "https://github.com/search?q=%s",
-    youtube     = "http://www.youtube.com/results?search_query=%s",
-    google      = "https://google.com/search?q=%s",
-    archwiki    = "https://wiki.archlinux.org/index.php?search=%s",
-    aur         = "https://aur.archlinux.org/packages/?O=0&K=%s",
-    imdb        = "http://www.imdb.com/find?s=all&q=%s",
-    wikipedia   = "https://en.wikipedia.org/wiki/Special:Search?search=%s",
-    duckduckgo  = "https://duckduckgo.com/?q=%s",
-    sab         = "http://balescream:32111",
-    sb          = "http://balescream:32112",
-    cp          = "http://balescream:32113",
-    trans       = "http://balescream:32116",
+    github       = "https://github.com/search?q=%s",
+    youtube      = "http://www.youtube.com/results?search_query=%s",
+    google       = "https://google.com/search?q=%s",
+    archwiki     = "https://wiki.archlinux.org/index.php?search=%s",
+    aur          = "https://aur.archlinux.org/packages/?O=0&K=%s",
+    imdb         = "http://www.imdb.com/find?s=all&q=%s",
+    wikipedia    = "https://en.wikipedia.org/wiki/Special:Search?search=%s",
+    duckduckgo   = "https://duckduckgo.com/?q=%s",
+    sab          = "http://balescream:32111",
+    sb           = "http://balescream:32112",
+    cp           = "http://balescream:32113",
+    trans        = "http://balescream:32116",
+    home         = globals.homepage,
 }
 
 -- Set google as fallback search engine
