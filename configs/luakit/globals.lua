@@ -64,6 +64,7 @@ search_engines = {
     sb           = "http://balescream:32112",
     cp           = "http://balescream:32113",
     trans        = "http://balescream:32116",
+    trp          = "http://www.reddit.com/me/m/trp",
     home         = globals.homepage,
 }
 
