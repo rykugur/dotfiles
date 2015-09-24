@@ -30,7 +30,7 @@ end
 # exports
 ######################
 set -x EDITOR "vim"
-set -x GOPATH "$HOME/personal/code/go"
+set -x GOPATH "$HOME/code/go"
 set -x GOBIN "$GOPATH/bin"
 set -x JAVA_HOME "/usr/lib/jvm/jdk1.7.0_71"
 set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
