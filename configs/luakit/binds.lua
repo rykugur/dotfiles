@@ -590,6 +590,31 @@ add_cmds({
                 w:notify("Dumped HTML to: " .. file)
             end
         end),
+
+    cmd("sab", "Opens sab in a thsi tab.",
+      function (w) w:navigate(w:search_open("http://balescream:32111")) end),
+    cmd("sabn", "Opens sab in a new tab.",
+      function (w) w:new_tab("http://balescream:32111") end),
+
+    cmd({"sickbeard", "sb"}, "Opens sickeard in this tab.",
+      function (w) w:navigate(w:search_open("http://balescream:32112")) end),
+    cmd({"sickbeardn", "sbn"}, "Opens sickeard in a new tab.",
+      function (w) w:new_tab("http://balescream:32112") end),
+
+    cmd({"couchpotato", "couch", "cp"}, "Opens couchpotato in this tab.",
+      function (w) w:navigate(w:search_open("http://balescream:32113")) end),
+    cmd({"couchpotaton", "couchn", "cpn"}, "Opens couchpotato in a new tab.",
+      function (w) w:new_tab("http://balescream:32113") end),
+
+    cmd("kodi", "Opens kodi in this tab.",
+      function (w) w:navigate(w:search_open("http://balescream:32115")) end),
+    cmd("kodin", "Opens kodi in a new tab.",
+      function (w) w:new_tab("http://balescream:32115") end),
+
+    cmd({"transmission", "tran"}, "Opens transmission in his tab.",
+      function (w) w:navigate(w:search_open("http://balescream:32116")) end),
+    cmd({"transmissionn", "trann"}, "Opens transmission in a new tab.",
+      function (w) w:new_tab("http://balescream:32116") end),
 })
 
 -- vim: et:sw=4:ts=8:sts=4:tw=80

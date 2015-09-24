@@ -58,6 +58,7 @@ search_engines = {
     imdb        = "http://www.imdb.com/find?s=all&q=%s",
     wikipedia   = "https://en.wikipedia.org/wiki/Special:Search?search=%s",
     duckduckgo  = "https://duckduckgo.com/?q=%s",
+    balescream  = "http://balescream:%s",
 }
 
 -- Set google as fallback search engine
