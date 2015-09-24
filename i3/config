@@ -45,16 +45,13 @@ floating_modifier Mod4
 floating_modifier $mod+Control
 
 # start a terminal
-#bindsym $mod+Return exec urxvtc -e fish
-#bindsym $mod+Return exec urxvtc -pe selection-to-clipboard
 bindsym $mod+Return exec urxvt -pe selection-to-clipboard
 
 # kill focused window
 bindsym $mod+Shift+w kill
 
 # start dmenu (a program launcher)
-bindsym $mod+r exec dmenu_run -i
-#bindsym $mod+r exec dmenu_run -i -l 10
+bindsym $mod+r exec dmenu_run -i -fn "-*-gohufont-*-*-*-*-*-80-*-*-*-*-*-*"
 
 # change focus
 bindsym $mod+j focus left
@@ -64,9 +61,7 @@ bindsym $mod+semicolon focus right
 #bindsym $mod+Tab focus right
 
 # change workspace
-#bindsym $mod+Left workspace prev
 bindsym Control+$mod+j workspace prev
-#bindsym $mod+Right workspace next
 bindsym Control+$mod+semicolon workspace next
 
 # move focused window
@@ -83,7 +78,7 @@ bindsym $mod+Print exec scrot -s -e 'mv $f ~/shots/'
 bindsym $mod+Shift+4 exec scrot -s -e 'mv $f ~/shots/'
 
 # passmenu
-bindsym $mod+Shift+p exec passmenu
+bindsym $mod+Shift+p exec ~/gits/password-store/contrib/dmenu/passmenu
 
 # lock screen
 #bindsym Control+Mod1+l exec i3lock -c 000000
