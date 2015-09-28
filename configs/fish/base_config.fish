@@ -94,6 +94,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gf='git fetch' \
                                gfp='git fetch -p' \
                                gg='git grep --color=auto -n' \
+                               ggi='git grep --color=auto -ni' \
                                gl='git log' \
                                gpl='git pull' \
                                gps='git push' \
