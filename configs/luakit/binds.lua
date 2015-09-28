@@ -591,7 +591,7 @@ add_cmds({
             end
         end),
 
-    cmd("sab", "Opens sab in a thsi tab.",
+    cmd("sab", "Opens sab in this tab.",
       function (w) w:navigate(w:search_open("http://balescream:32111")) end),
     cmd("sabn", "Opens sab in a new tab.",
       function (w) w:new_tab("http://balescream:32111") end),
