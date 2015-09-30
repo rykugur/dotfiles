@@ -16,11 +16,6 @@ set fish_plugins sublime
 # Load oh-my-fish configuration.
 . $fish_path/oh-my-fish.fish
 
-# Load any local configs
-if [ -e $HOME/.fish_local.fish ]
-  . $HOME/.fish_local.fish
-end
-
 # Other potential fish function directories
 if [ -e $HOME/.dotfiles/fish/functions ]
   _append_path $HOME/.dotfiles/fish/functions fish_function_path
@@ -132,3 +127,9 @@ set -x fish_user_abbreviations ..='cd ..' \
 
 # don't greet me!
 set fish_greeting ""
+
+# Load any local configs
+# Do this last, since we might want to append to abbreviations
+if [ -e $HOME/.fish_local.fish ]
+  . $HOME/.fish_local.fish
+end
