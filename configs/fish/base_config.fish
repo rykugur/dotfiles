@@ -42,7 +42,6 @@ _append_path $GOBIN PATH
 alias dfh "df -h"
 alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
-alias expenses "open $EXPENSES_FILE"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 # leaving this as an alias instead of abbreviation due to length and formatting business
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
