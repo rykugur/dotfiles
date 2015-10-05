@@ -287,7 +287,7 @@ for_window [class="jetbrains-idea-ce"] layout tabbed
 assign [class="Skype"] $workspace8
 for_window [class="Skype"] layout tabbed
 assign [class="Vncviewer"] $workspace8
-for_window [class="Vncviewer"] fullscreen
+# for_window [class="Vncviewer"] fullscreen
 for_window [class="CrashPlan"] floating enable
 
 # game assignments
