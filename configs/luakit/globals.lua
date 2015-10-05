@@ -66,6 +66,7 @@ search_engines = {
     trans        = "http://balescream:32116",
     trp          = "http://www.reddit.com/me/m/trp",
     home         = globals.homepage,
+    dict         = "http://www.dict.cc/?s=%s",
 }
 
 -- Set google as fallback search engine
