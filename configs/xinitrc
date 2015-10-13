@@ -14,11 +14,6 @@ fi
 # force numlock on during start
 numlockx & 
 
-# turn off this god-forsaken tap-to-click
-# Note the very obviously named variable...
-synclient MaxTapTime=0
-synclient TapButton2=0
-
 # make sure xrdb has the most up-to-date settings
 xrdb ~/.Xresources
 
@@ -38,6 +33,7 @@ spotify &
 blockify &
 pasystray &
 xbindkeys &
+bashbullett -scr
 
 #exec startxfce4
 #exec enlightenment_start
