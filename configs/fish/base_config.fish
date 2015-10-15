@@ -83,6 +83,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gco='git checkout' \
                                gco.='git checkout .' \
                                gcob='git checkout -b' \
+                               gcp='git cherry-pick' \
                                gd='git diff' \
                                gds='git diff --staged' \
                                gf='git fetch' \
