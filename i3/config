@@ -182,6 +182,8 @@ bindsym $mod+Shift+r exec fish -c runnar
 
 # tempa-permanently remap middleclick (for chromebook)
 bindsym $mod+Shift+i exec xdotool click 2
+# potential work-around for weird issues with shift+insert pasting from the wrong buffer, dependant on app...
+bindsym Shift+Insert exec xdotool click 2
 
 # notes - open notes in vim
 # disabled (For now?)
