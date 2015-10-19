@@ -33,10 +33,10 @@ spotify &
 blockify &
 pasystray &
 xbindkeys &
-bashbullett -scr
 
 #exec startxfce4
 #exec enlightenment_start
 #startkde
 exec ssh-agent i3
+#exec ssh-agent openbox
 # ...or the Window Manager of your choice
