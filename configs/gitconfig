@@ -1,7 +1,7 @@
 [color]
 	ui = auto
 [user]
-	name = Rykugur
+	name = rykugur
 	email = rollhax@gmail.com
 [alias]
   g = log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
