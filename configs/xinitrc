@@ -27,7 +27,7 @@ pulseaudio --start
 # left in the bottom-right corner for 3 seconds
 # xautolock -time 10 -locker slock -nowlocker slock -detectsleep -corners 000+ -cornerdelay 3 &
 # xautolock -time 10 -locker slock -nowlocker slock -detectsleep &
-xautolock -time 10 -locker pixellock -nowlocker lock -detectsleep &
+xautolock -time 10 -locker pixellock -nowlocker pixellock -detectsleep &
 
 # other incidentals
 dropbox &
