@@ -102,6 +102,7 @@ require "downloads_chrome"
 
 -- Set download location
 downloads.default_dir = os.getenv("HOME") .. "/downloads"
+-- download to default location without asking
 downloads.add_signal("download-location", function (uri, file)
   if not file or file == "" then
     file = (string.match(uri, "/([^/]+)$")
