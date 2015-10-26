@@ -39,7 +39,7 @@ _append_path $GOBIN PATH
 ######################
 # aliases
 ######################
-alias dfh "df -h"
+alias dfh "pydf"
 alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
