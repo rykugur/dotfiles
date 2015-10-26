@@ -95,6 +95,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gl='git log' \
                                gpl='git pull' \
                                gps='git push' \
+                               gpls='git pull; and git push' \
                                gr='git reset' \
                                grh='git reset HEAD' \
                                grhh='git reset --hard HEAD' \
