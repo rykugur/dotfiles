@@ -146,7 +146,7 @@ separator=false
 separator_block_width=1
 
 [Time]
-command=date '+%m-%d-%Y %I:%M:%S'
+command=date '+%a %m-%d-%Y %I:%M:%S'
 color=#252525
 interval=2
 align=left
