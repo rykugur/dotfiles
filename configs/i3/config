@@ -21,6 +21,7 @@ focus_follows_mouse no
 # L_Alt
 set $mod Mod1
 
+# Set workspace titles/vars
 set $workspace1 1: fus
 set $workspace2 2: ro
 set $workspace3 3: dah
@@ -32,13 +33,13 @@ set $workspace8 8: acht
 set $workspace9 9: nein
 set $workspace10 10: zehn
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below. ISO 10646 = Unicode
-#font xft:Terminus bold 12
-#font xft:inconsolata 8
-#font xft:lemon 9
-font xft:GohuFont 9
-#font xft:uushi light 8
+# Font for window titles
+# font xft:Terminus bold 12
+# font xft:inconsolata 8
+# font xft:lemon 9
+font xft:GohuFont 8
+# font xft:uushi light 8
+# font pango:Monospace 7
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier Mod4
@@ -124,18 +125,6 @@ bindsym $mod+8 workspace $workspace8
 bindsym $mod+9 workspace $workspace9
 bindsym $mod+0 workspace $workspace10
 
-# move focused container to workspace
-#bindsym $mod+Shift+1 move container to workspace $workspace1
-#bindsym $mod+Shift+2 move container to workspace $workspace2
-#bindsym $mod+Shift+3 move container to workspace $workspace3
-#bindsym $mod+Shift+4 move container to workspace $workspace4
-#bindsym $mod+Shift+5 move container to workspace $workspace5
-#bindsym $mod+Shift+6 move container to workspace $workspace6
-#bindsym $mod+Shift+7 move container to workspace $workspace7
-#bindsym $mod+Shift+8 move container to workspace $workspace8
-#bindsym $mod+Shift+9 move container to workspace $workspace9
-#bindsym $mod+Shift+0 move container to workspace $workspace10
-
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -144,12 +133,13 @@ bindsym $mod+Shift+Control+r restart
 bindsym $mod+Control+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # volume keys
-# '--' is required for the next two lines because otherwise it considers "-5%" to be an argument
+# '--' is required for in some of the following lines because otherwise it considers "-5%" to be an argument
 bindsym XF86AudioMute exec "pactl set-sink-mute 1 toggle"
-bindsym Control+F8 exec "pactl set-sink-mute 1 toggle"
 bindsym XF86AudioLowerVolume exec "pactl -- set-sink-volume 1 -5%"
-bindsym Control+F9 exec "pactl -- set-sink-volume 1 -5%"
 bindsym XF86AudioRaiseVolume exec "pactl -- set-sink-volume 1 +5%"
+# chromebook/other
+bindsym Control+F8 exec "pactl set-sink-mute 1 toggle"
+bindsym Control+F9 exec "pactl -- set-sink-volume 1 -5%"
 bindsym Control+F10 exec "pactl -- set-sink-volume 1 +5%"
 
 # multimedia keys
@@ -212,6 +202,7 @@ mode "resize" {
   bindsym Return mode "default"
   bindsym Escape mode "default"
 }
+bindsym $mod+Shift+z mode "resize"
 
 # pressing mod+Shift+m enters container move mode
 # Allows us to press a workspace number to move a container to a workspace
@@ -237,8 +228,6 @@ mode "$mode_move_container" {
   bindsym Escape mode "default"
 }
 bindsym $mod+Shift+m mode "$mode_move_container"
-
-bindsym $mod+Shift+z mode "resize"
 
 # pressing mod+Pause will allow us to lock, sleep, etc
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
@@ -268,38 +257,39 @@ bindsym $mod+Control+Shift+F10 mode "$mode_system"
 #bindsym $mod+Shift+n mode "$mode_notes"
 
 #########################
-# assignments
+# assignment window classes to a workspace
 #########################
+# browsers
 assign [class="Chromium"] $workspace2
 for_window [class="Chromium"] layout tabbed
 assign [class="Chrome"] $workspace2
 for_window [class="Chrome"] layout tabbed
 assign [class="Firefox"] $workspace2
 for_window [class="Firefox"] layout tabbed
-assign [class="Dwb"] $workspace2
-for_window [class="Dwb"] layout tabbed
-#for_window [class="Firefox"] fullscreen
 assign [class="luakit"] $workspace2
-assign [class="Thunderbird"] $workspace3
-for_window [class="Thunderbird"] layout tabbed
+for_window [class="luakit"] layout tabbed
+
+# code
 assign [class="Eclipse"] $workspace4
 for_window [class="Eclipse"] layout tabbed
 assign [class="jetbrains-idea-ce"] $workspace4
 for_window [class="jetbrains-idea-ce"] layout tabbed
+
+# misc
 assign [class="Skype"] $workspace8
 for_window [class="Skype"] layout tabbed
 assign [class="Vncviewer"] $workspace8
-# for_window [class="Vncviewer"] fullscreen
 for_window [class="CrashPlan"] floating enable
+assign [class="Kodi"] $workspace9
+for_window [class="Kodi"] fullscreen
 
 # game assignments
 assign [class="Steam"] $workspace5
 for_window [class="Steam"] layout tabbed
-assign [class="Wine"] $workspace6
-for_window [class="Wine"] layout tabbed
 assign [class="Steam.exe"] $workspace5
 for_window [class="Steam.exe"] layout tabbed
-
+assign [class="Wine"] $workspace6
+for_window [class="Wine"] layout tabbed
 assign [class="dota_linux"] $workspace6
 assign [title="Kerbal Space Program"] $workspace6
 assign [title="eu4"] $workspace6
@@ -308,39 +298,36 @@ for_window [class="dontstarve_steam"] fullscreen
 assign [class="starbound"] $workspace6
 for_window [class="starbound"] fullscreen
 
-assign [class="Kodi"] $workspace9
-for_window [class="Kodi"] fullscreen
-
 # colors
 # CFCFCF => light gray
 # 252525 => dark gray
 # colorclass            #border   #background  #text     #indicator
 client.focused          #CFCFCF   #CFCFCF      #252525   #49BBD2
 client.focused_inactive #CFCFCF   #CFCFCF      #252525   #49BBD2
-client.unfocused        #252525   #252525      #CFCFCF   #2e9ef4
+client.unfocused        #CFCFCF   #CFCFCF      #888888   #2e9ef4
 client.urgent           #2f343a   #900000      #ffffff   #900000
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-  mode dock
+  # mode dock
   position bottom
 
   workspace_buttons yes
 
-  status_command i3blocks
-  #status_command ~/.i3/conky
-  #status_command i3status
+  separator_symbol " "
+
+  status_command i3blocks -c ~/.dotfiles/configs/i3/i3blocks_bot
 
   colors {
-    background #252525
+    background #CFCFCF
     statusline #FFFFFF
-    separator  #252525
+    separator  #FF9900
 
     # colorclass       #border   #background   #text
     focused_workspace  #CFCFCF   #CFCFCF       #252525
     active_workspace   #252525   #252525       #268BD2
-    inactive_workspace #252525   #252525       #888888
+    inactive_workspace #CFCFCF   #CFCFCF       #888888
     urgent_workspace   #252525   #252525       #FE5000
   }
 }

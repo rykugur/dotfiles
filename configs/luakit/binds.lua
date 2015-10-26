@@ -375,8 +375,8 @@ add_binds("normal", {
     key({"Control"}, "w", "Close current tab.",
         function (w) w:close_tab() end),
 
-    key({}, "d", "Close current tab",
-        function (w) w:close_tab() end),
+    key({}, "d", "Close current tab, saves current session after",
+        function (w) w:close_tab() w:save_session() end),
         --function (w, m) for i=1,m.count do w:close_tab() end end, {count=1}),
 
     key({}, "<", "Reorder tab left `[count=1]` positions.",
@@ -418,8 +418,8 @@ add_binds("normal", {
     buf("^ZQ$", "Quit and don't save the session.",
         function (w) w:close_win() end),
 
-    buf("^D$",  "Quit and don't save the session.",
-        function (w) w:close_win() end),
+    -- buf("^D$",  "Quit and don't save the session.",
+    --     function (w) w:close_win() end),
 
     -- Enter passthrough mode
     key({"Control"}, "z",
@@ -525,11 +525,11 @@ add_cmds({
     cmd("inc[rease]", "Increment last number in URL.",
         function (w, a) w:navigate(w:inc_uri(tonumber(a) or 1)) end),
 
-    cmd("o[pen]", "Open one or more URLs.",
-        function (w, a) w:navigate(w:search_open(a)) end),
+    cmd("o[pen]", "Open one or more URLs. Saves the current session after.",
+        function (w, a) w:navigate(w:search_open(a)) w:save_session() end),
 
-    cmd("t[abopen]", "Open one or more URLs in a new tab.",
-        function (w, a) w:new_tab(w:search_open(a)) end),
+    cmd("t[abopen]", "Open one or more URLs in a new tab. Saves the current session after.",
+        function (w, a) w:new_tab(w:search_open(a)) w:save_session() end),
 
     cmd("w[inopen]", "Open one or more URLs in a new window.",
         function (w, a) window.new{w:search_open(a)} end),

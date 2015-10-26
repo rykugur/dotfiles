@@ -62,11 +62,13 @@ search_engines = {
     duckduckgo   = "https://duckduckgo.com/?q=%s",
     home         = globals.homepage,
     dict         = "http://www.dict.cc/?s=%s",
-    -- cheapo bookmarks
+    -- home server bookmarks
     sab          = "http://balescream:32111",
     sb           = "http://balescream:32112",
     cp           = "http://balescream:32113",
     trans        = "http://balescream:32116",
+    -- cheapo bookmarks
+    sub          = "http://reddit.com/r/%s",
     trp          = "http://www.reddit.com/me/m/trp",
 }
 
