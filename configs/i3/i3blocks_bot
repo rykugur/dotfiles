@@ -39,7 +39,7 @@ interval=1800 # update weather every half hour
 ###########################
 
 [CPUIcon]
-command=echo "<span font_desc='FontAwesome'></span> "
+command=echo "<span font_desc='FontAwesome'></span> "
 color=#252525
 markup=pango
 interval=once

@@ -1,15 +1,9 @@
 #!/bin/bash
-if ! pgrep i3lock >/dev/null 2>&1
-then
+if pgrep i3lock >/dev/null 2>&1; then
+  pkill i3lock
+fi
+
 	scrot ~/.tmp/screenshot.png
 	convert -scale 10% -scale 1000% ~/.tmp/screenshot.png ~/.tmp/screenshotblur.png
 	composite -gravity center $HOME/.dotfiles/configs/i3/lockiconsml.png ~/.tmp/screenshotblur.png ~/.tmp/screenshotblur.png
 	i3lock -i ~/.tmp/screenshotblur.png
-#else
-	#pkill i3lock
-	#sleep 0.1
-	#scrot ~/.tmp/screenshot.png
-	#convert -scale 10% -scale 1000% ~/.tmp/screenshot.png ~/.tmp/screenshotblur.png
-	#composite -gravity center $HOME/.dotfiles/configs/i3/lockiconsml.png ~/.tmp/screenshotblur.png ~/.tmp/screenshotblur.png
-	#i3lock -i ~/.tmp/screenshotblur.png
-fi
