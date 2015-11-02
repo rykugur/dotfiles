@@ -32,3 +32,4 @@ vim-fish
 vim-commentary
 fish.vim
 quick-scope
+ctrlp.vim
