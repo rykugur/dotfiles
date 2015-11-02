@@ -9,6 +9,9 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+# create/set our ipc socket file
+ipc-socket ~/.i3/ipc.sock
+
 #new_window pixel 0
 #new_float pixel 0
 hide_edge_borders both
@@ -170,10 +173,9 @@ bindsym $mod+Shift+v exec fish -c snippets
 # runnar - used to run arbitrary pre-defined scripts
 bindsym $mod+Shift+r exec fish -c runnar
 
-# tempa-permanently remap middleclick (for chromebook)
-bindsym $mod+Shift+i exec xdotool click 2
-# potential work-around for weird issues with shift+insert pasting from the wrong buffer, dependant on app...
-bindsym Shift+Insert exec xdotool click 2
+# tempa-permanently remap middleclick (for chromebook/laptops without an easily-accessible insert key)
+# mostly working (doesn't work in luakit, for example)
+bindsym $mod+Shift+i exec xdotool type --delay 0 --window (xdotool getactivewindow) (xsel -o)
 
 # notes - open notes in vim
 # disabled (For now?)
