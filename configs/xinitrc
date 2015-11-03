@@ -36,6 +36,10 @@ blockify &
 pasystray &
 xbindkeys &
 
+if [ -e ~/.screenlayout.sh ]; then
+  ~/.screenlayout.sh
+fi
+
 #exec startxfce4
 #exec enlightenment_start
 #startkde
