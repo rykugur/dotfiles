@@ -176,6 +176,8 @@ bindsym $mod+Shift+r exec fish -c runnar
 # tempa-permanently remap middleclick (for chromebook/laptops without an easily-accessible insert key)
 # mostly working (doesn't work in luakit, for example)
 bindsym $mod+Shift+i exec xdotool type --delay 0 --window (xdotool getactivewindow) (xsel -o)
+# hacky work-around, mostly for luakit.... BE FUCKING SURE YOUR MOUSE IS HOVERING OVER WHERE YOU WANT TO PASTE
+bindsym $mod+Shift+Control+i exec xdotool click 2
 
 # notes - open notes in vim
 # disabled (For now?)
