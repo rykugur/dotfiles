@@ -12,7 +12,7 @@ function i3exit --description 'script to control locking, suspend, etc. in i3'
     set -l ctl $argv[1]
     switch $ctl
       case lock
-        eval $_LOCK
+        eval $_LOCK &
       case logout
         i3-msg exit
       case suspend
