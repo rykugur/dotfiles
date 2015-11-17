@@ -68,7 +68,8 @@ search_engines = {
     cp           = "http://balescream:32113",
     trans        = "http://balescream:32116",
     -- cheapo bookmarks
-    sub          = "http://reddit.com/r/%s",
+    kego         = "http://www.redit.com/r/keto"
+    sub          = "http://www.reddit.com/r/%s",
     trp          = "http://www.reddit.com/me/m/trp",
 }
 
