@@ -74,6 +74,7 @@ alias vboxrm "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
 set -x fish_user_abbreviations ..='cd ..' \
                                ...='cd ../..' \
                                ....='cd ../../..' \
+                               cwd='pwd | xclip -i' \
                                fn='find . -name' \
                                fin='find . -iname' \
                                ga='git add' \
