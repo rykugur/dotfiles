@@ -49,7 +49,7 @@ floating_modifier Mod4
 floating_modifier $mod+Control
 
 # start a terminal
-bindsym $mod+Return exec urxvt -pe selection-to-clipboard
+bindsym $mod+Return exec urxvt
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -172,6 +172,9 @@ bindsym $mod+Shift+v exec fish -c snippets
 
 # runnar - used to run arbitrary pre-defined scripts
 bindsym $mod+Shift+r exec fish -c runnar
+
+# umaluts - quicky script for printing umlauts to cursor position
+bindsym $mod+Shift+u exec fish -c umlauts
 
 # tempa-permanently remap middleclick (for chromebook/laptops without an easily-accessible insert key)
 # mostly working (doesn't work in luakit, for example)
