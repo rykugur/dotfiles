@@ -76,10 +76,10 @@ bindsym $mod+Shift+semicolon move right
 
 # screenshots
 # now with OSX-user friendly shortcuts!
-bindsym Print exec scrot -e 'mv $f ~/shots/'
-bindsym $mod+Shift+3 exec scrot -e 'mv $f ~/shots/'
-bindsym $mod+Print exec scrot -s -e 'mv $f ~/shots/'
-bindsym $mod+Shift+4 exec scrot -s -e 'mv $f ~/shots/'
+bindsym Print exec "scrot -e 'mv $f ~/shots/'"
+bindsym $mod+Shift+3 exec "scrot -e 'mv $f ~/shots/'"
+bindsym $mod+Print exec "scrot -s -e 'mv $f ~/shots/'"
+bindsym $mod+Shift+4 exec "scrot -s -e 'mv $f ~/shots/'"
 
 # passmenu
 bindsym $mod+Shift+p exec ~/gits/password-store/contrib/dmenu/passmenu
