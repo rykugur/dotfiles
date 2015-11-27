@@ -40,6 +40,10 @@ if [ -e ~/.screenlayout.sh ]; then
   ~/.screenlayout.sh
 fi
 
+if [ -e ~/.xinitrc.local ]; then
+  . ~/.xinitrc.local
+fi
+
 #exec startxfce4
 #exec enlightenment_start
 #startkde
