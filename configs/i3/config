@@ -49,7 +49,7 @@ floating_modifier Mod4
 floating_modifier $mod+Control
 
 # start a terminal
-bindsym $mod+Return exec urxvt -pe selection-to-clipboard
+bindsym $mod+Return exec urxvt
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -76,10 +76,10 @@ bindsym $mod+Shift+semicolon move right
 
 # screenshots
 # now with OSX-user friendly shortcuts!
-bindsym Print exec scrot -e 'mv $f ~/shots/'
-bindsym $mod+Shift+3 exec scrot -e 'mv $f ~/shots/'
-bindsym $mod+Print exec scrot -s -e 'mv $f ~/shots/'
-bindsym $mod+Shift+4 exec scrot -s -e 'mv $f ~/shots/'
+bindsym Print exec "scrot -e 'mv $f ~/shots/'"
+bindsym $mod+Shift+3 exec "scrot -e 'mv $f ~/shots/'"
+bindsym $mod+Print exec "scrot -s -e 'mv $f ~/shots/'"
+bindsym $mod+Shift+4 exec "scrot -s -e 'mv $f ~/shots/'"
 
 # passmenu
 bindsym $mod+Shift+p exec ~/gits/password-store/contrib/dmenu/passmenu
@@ -172,6 +172,9 @@ bindsym $mod+Shift+v exec fish -c snippets
 
 # runnar - used to run arbitrary pre-defined scripts
 bindsym $mod+Shift+r exec fish -c runnar
+
+# umaluts - quicky script for printing umlauts to cursor position
+bindsym $mod+Shift+u exec fish -c umlauts
 
 # tempa-permanently remap middleclick (for chromebook/laptops without an easily-accessible insert key)
 # mostly working (doesn't work in luakit, for example)
