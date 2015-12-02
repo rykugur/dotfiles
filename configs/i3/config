@@ -4,6 +4,8 @@
 
 # TODO: set colors for bars/dmenu here, use later...
 
+set $dmenu_cmd "dmenu_run -w 500 -l 10 -x 400 -y 300 -i"
+
 # create/set our ipc socket file
 ipc-socket ~/.i3/ipc.sock
 
@@ -52,7 +54,7 @@ bindsym $mod+Shift+w kill
 # start dmenu (a program launcher)
 # This just executes a locally defined variable. Obviously, if that variable isn't defined,
 # you're gonna have a bad time.
-bindsym $mod+r exec $DMENU_CMD
+bindsym $mod+r exec $dmenu_cmd
 
 # change focus
 bindsym $mod+j focus left
