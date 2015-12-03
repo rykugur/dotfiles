@@ -91,8 +91,9 @@ bindsym $mod+backslash split h
 bindsym $mod+v split v
 bindsym $mod+minus split v
 
-# enter fullscreen mode for the focused container
-bindsym $mod+shift+f fullscreen
+# toggle fullscreen mode for the focused container; also moves the mouse to upper-left (hacky way to avoid
+# xautolock from locking; requires the "-corners -000" flag to be passed to xautolog (see xinitrc)).
+bindsym $mod+shift+f fullscreen; exec "xdotool mousemove 0 0"
 
 # change container layout (stacked, tabbed, toggle split)
 #bindsym $mod+s layout stacking
