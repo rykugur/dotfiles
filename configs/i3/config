@@ -46,7 +46,7 @@ floating_modifier Mod4
 floating_modifier $mod+Control
 
 # start a terminal
-bindsym $mod+Return exec urxvt
+bindsym $mod+Return exec urxvtc
 
 # kill focused window
 bindsym $mod+Shift+w kill
@@ -345,6 +345,5 @@ bar {
 # or exec_always to exec on every reload
 exec "feh --bg-fill ~/.desktop_bg"
 exec "xset r rate 190 40"
-#exec "urxvtd -q -o -f"
-#exec "urxvtd &"
+exec "urxvtd -q -o -f"
 exec "compton --config ~/.dotfiles/configs/compton.conf -b"
