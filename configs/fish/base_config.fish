@@ -39,7 +39,6 @@ _append_path $GOBIN PATH
 ######################
 # aliases
 ######################
-alias dfh "pydf"
 alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
@@ -51,6 +50,11 @@ alias hosts "sudo vim /etc/hosts"
 alias notes "cd $PERSONAL_NOTES_DIR"
 alias pingtest "ping google.com"
 alias steamcd "cd $STEAM_DIR"
+if which -a pydf >> /dev/null
+  alias dfh "pydf"
+else
+  alias dfh "df -h"
+end
 if test -e /usr/bin/ls++
   alias ls "/usr/bin/ls++ --potsf"
   alias ll "/usr/bin/ls++ --potsf"
