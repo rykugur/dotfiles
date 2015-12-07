@@ -182,10 +182,6 @@ bindsym $mod+Shift+i exec xdotool type --delay 0 --window (xdotool getactivewind
 # hacky work-around, mostly for luakit.... BE FUCKING SURE YOUR MOUSE IS HOVERING OVER WHERE YOU WANT TO PASTE
 bindsym $mod+Shift+Control+i exec xdotool click 2
 
-# notes - open notes in vim
-# disabled (For now?)
-#bindsym $mod+Shift+n exec fish -c nvpy
-
 # resize window (you can also use the mouse for that)
 mode "resize" {
   # These bindings trigger as soon as you enter the resize mode
@@ -212,7 +208,7 @@ mode "resize" {
 bindsym $mod+Shift+z mode "resize"
 
 # pressing mod+Shift+m enters container move mode
-# Allows us to press a workspace number to move a container to a workspace
+# Allows you to press a workspace number to move a container to a workspace
 set $mode_move_container Which workspace?
 mode "$mode_move_container" {
   bindsym 1 move container to workspace $workspace1, workspace $workspace1, mode "default"
@@ -254,14 +250,6 @@ bindsym $mod+Pause mode "$mode_system"
 bindsym XF86PowerOff mode "$mode_system"
 # and now, for the chromebook, until I figure out how to bind Pause to something...
 bindsym $mod+Control+Shift+F10 mode "$mode_system"
-
-## notes!
-#set $mode_notes Notes (p) personal, (w) work
-#mode "$mode_notes" {
-  #bindsym p exec nvpy_notes personal
-  #bindsym w exec nvpy_notes work
-#}
-#bindsym $mod+Shift+n mode "$mode_notes"
 
 #########################
 # assignment window classes to a workspace
