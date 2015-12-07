@@ -2,13 +2,12 @@
 URxvt.cutchars: `"'%&()*,;<>@[]{|'"│=`
 URxvt*depth: 32
 URxvt*imLocale: en_US.UTF-8
-URxvt*saveLines: 1200000
+!URxvt*saveLines: 1200000
 URxvt*scrollTtyOutput: false
 URxvt*scrollWithBuffer: true
 URxvt*scrollTtyKeypress: true
 URxvt*termName: rxvt-unicode-256color
 URxvt*transparent: false
-!URxvt*urlLauncher: chromium
 
 !!! appearance
 !URxvt*font: xft:uushi:size=7:antialias=true
@@ -25,7 +24,7 @@ URxvt*cursorUnderline: false
 URxvt*scrollBar: false
 URxvt*shading: 0
 
-!!!!!! colors
+!!! colors
 *.foreground:   #a2a2a2
 *.background:   #282828
 *.cursorColor:  #a2a2a2
@@ -56,7 +55,6 @@ URxvt*shading: 0
 
 !!! extensions
 URxvt.perl-ext-common:      default,clipboard,url-select,keyboard-select
-URxvt.url-select.launcher:  chromium
 URxvt.url-select.underline: true
 URxvt.keysym.M-u:           perl:url-select:select_next
 URxvt.keysym.M-Escape:      perl:keyboard-select:activate
