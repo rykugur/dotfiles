@@ -64,8 +64,8 @@ bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
 
 # change workspace
-bindsym Control+$mod+j workspace prev
-bindsym Control+$mod+semicolon workspace next
+bindsym $mod+Control+j workspace prev
+bindsym $mod+Control+semicolon workspace next
 
 # move focused window
 bindsym $mod+Shift+j move left
@@ -82,9 +82,6 @@ bindsym $mod+Shift+4 exec "scrot -s -e 'mv $f ~/shots/'"
 
 # passmenu
 bindsym $mod+Shift+p exec passmenu
-
-# lock screen
-#bindsym Control+Mod1+l exec i3lock -c 000000
 
 # split view
 bindsym $mod+h split h
