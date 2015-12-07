@@ -1,6 +1,7 @@
 # So, apparently you can use environment variables with i3. NOTE: these need to be defined when i3 starts.
 # You can't define a variable and just refresh i3, since it won't be defined in i3's session.
 # Might be a way to set something in i3's running session, but easier to just restart.
+# Alternatively, just set a variable locally, instead of relying on env variables.
 
 # TODO: set colors for bars/dmenu here, use later...
 
