@@ -5,6 +5,6 @@
 if ! pgrep i3lock >/dev/null 2>&1; then
   scrot ~/.tmp/screenshot.png
   convert -scale 10% -scale 1000% ~/.tmp/screenshot.png ~/.tmp/screenshotblur.png
-  composite -gravity center $HOME/.dotfiles/configs/i3/lockiconsml.png ~/.tmp/screenshotblur.png ~/.tmp/screenshotblur.png
+  composite -gravity center $HOME/.dotfiles/configs/i3/assets/lockiconsml.png ~/.tmp/screenshotblur.png ~/.tmp/screenshotblur.png
   i3lock -i ~/.tmp/screenshotblur.png
 fi
