@@ -27,18 +27,15 @@ end
 set -x EDITOR "vim"
 set -x GOPATH "$HOME/code/go"
 set -x GOBIN "$GOPATH/bin"
-set -x JAVA_HOME "/usr/lib/jvm/jdk1.7.0_71"
 set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
-set -x WINEPREFIX "/home/dusty/.wine32"
-set -x WINEARCH "win32"
 
-set PATH $PATH ~/bin
-
+_append_path $HOME/bin PATH
 _append_path $GOBIN PATH
 
 ######################
 # aliases
 ######################
+alias compare_dirs "rsync --dry-run -v -r -c --delete"
 alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
