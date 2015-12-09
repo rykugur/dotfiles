@@ -43,6 +43,7 @@ alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 # leaving this as an alias instead of abbreviation due to length and formatting business
+alias grep "grep --color"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
 alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
 alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
@@ -108,9 +109,9 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gsl='git stash list | cat' \
                                gsp='git stash pop' \
                                gss='git status --short' \
-                               grn='grep --color=auto -n' \
-                               grin='grep --color=auto -ni' \
-                               grine='grep --color=auto -niRE' \
+                               grn='grep -n' \
+                               grin='grep -ni' \
+                               grine='grep -niRE' \
                                pagi='ps aux | grep -v grep | grep -i' \
                                supac='sudo pacman' \
                                supacr='sudo pacman -R' \
