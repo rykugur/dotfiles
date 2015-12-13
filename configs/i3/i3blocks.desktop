@@ -1,0 +1,135 @@
+#[script]
+#label=
+#command=~/.blocklets/script_name
+#interval=30
+#signal=
+#full_text=
+#short_text=
+#color=
+##min_width=
+#align=
+#name=
+#instance=
+#urgent=
+#separator=
+#separator_block_width=
+#markup=
+#format=
+
+
+### colors
+# light grey: #CFCFCF
+# dark grey: #666666
+# sexy orange: #FF9900
+
+[WeatherIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[Weather]
+label=
+command=~/.i3/scripts/weather 56011
+color=#252525
+interval=1800 # update weather every half hour
+
+###########################
+
+[CPUIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[CPU]
+command=~/.i3/scripts/load_average
+color=#252525
+interval=1
+align=left
+
+###########################
+
+[DiskIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[Disk]
+command=~/.i3/scripts/disk
+color=#252525
+interval=60
+align=left
+
+###########################
+
+[MemIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[Memory]
+label=
+command=~/.i3/scripts/memory
+color=#252525
+interval=5
+align=left
+
+###########################
+
+[NetIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[Network]
+label=
+command=~/.i3/scripts/network
+color=#252525
+interval=3600 # update IP every hour
+align=left
+
+###########################
+
+[VolIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[volume]
+command=echo VOL
+color=#252525
+interval=once
+align=left
+
+###########################
+
+[TimeIcon]
+command=echo "<span font_desc='FontAwesome'></span> "
+color=#252525
+markup=pango
+interval=once
+separator=false
+separator_block_width=1
+
+[Time]
+command=date '+%a %m-%d-%Y %I:%M:%S'
+color=#252525
+interval=2
+align=left
