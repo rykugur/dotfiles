@@ -46,6 +46,7 @@ alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
 alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
 alias hosts "sudo vim /etc/hosts"
 alias notes "cd $PERSONAL_NOTES_DIR"
+alias restart_netwk "sudo systemctl restart dhcpcd@$DEFAULT_NETWORK_INTERFACE.service"
 alias pingtest "ping google.com"
 alias steamcd "cd $STEAM_DIR"
 if which -a pydf >> /dev/null
