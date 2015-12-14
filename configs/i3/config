@@ -311,7 +311,7 @@ bar {
 
   separator_symbol " "
 
-  status_command i3blocks -c ~/.dotfiles/configs/i3/i3blocks.conf
+  status_command i3blocks -c ~/.i3blocks.conf
 
   colors {
     background #CFCFCF
