@@ -48,6 +48,7 @@ alias hosts "sudo vim /etc/hosts"
 alias notes "cd $PERSONAL_NOTES_DIR"
 alias restart_netwk "sudo systemctl restart dhcpcd@$DEFAULT_NETWORK_INTERFACE.service"
 alias pingtest "ping google.com"
+alias sclist "systemctl --type=service"
 alias steamcd "cd $STEAM_DIR"
 if which -a pydf >> /dev/null
   alias dfh "pydf"
