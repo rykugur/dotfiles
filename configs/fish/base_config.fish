@@ -48,6 +48,7 @@ alias hosts "sudo vim /etc/hosts"
 alias notes "cd $PERSONAL_NOTES_DIR"
 alias restart_netwk "sudo systemctl restart dhcpcd@$DEFAULT_NETWORK_INTERFACE.service"
 alias pingtest "ping google.com"
+alias sclist "systemctl --type=service"
 alias steamcd "cd $STEAM_DIR"
 if which -a pydf >> /dev/null
   alias dfh "pydf"
@@ -125,9 +126,13 @@ set -x fish_user_abbreviations ..='cd ..' \
                                pacs='pacman -S' \
                                pacss='pacman -Ss' \
                                sc='systemctl' \
+                               scr='systemctl restart' \
+                               scs='systemctl start' \
+                               scst='systemctl status' \
                                ssc='sudo systemctl' \
                                sscr='sudo systemctl restart' \
-                               sscs='sudo systemctl status' \
+                               sscs='sudo systemctl start' \
+                               sscst='sudo systemctl status' \
                                sv='sudo vim' \
                                svec='sudo vim /etc/hosts' \
                                taill='tail -Fn 999'
