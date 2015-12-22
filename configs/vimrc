@@ -353,11 +353,10 @@ let g:airline_symbols.space = "\ua0"
 "let g:airline#extensions#syntastic#enabled = 1
 let g:airline_powerline_fonts = 1
 
-" ctrlp
-let g:ctrlp_match_window = 'bottom,order:ttb'
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g "'"
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
 
 " commentary
 autocmd FileType fish setlocal commentstring=#\ %s
