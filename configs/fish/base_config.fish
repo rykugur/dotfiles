@@ -50,6 +50,8 @@ alias restart_netwk "sudo systemctl restart dhcpcd@$DEFAULT_NETWORK_INTERFACE.se
 alias pingtest "ping google.com"
 alias sclist "systemctl --type=service"
 alias steamcd "cd $STEAM_DIR"
+
+### optional aliases, depend on a program being on the path
 if which -a pydf >> /dev/null
   alias dfh "pydf"
 else
@@ -64,7 +66,7 @@ else
   alias ll "ls -lh"
 end
 
-# arch specific aliases
+### arch specific aliases
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
 alias pacmir  "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
 alias vboxmp "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
