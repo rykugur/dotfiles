@@ -33,3 +33,6 @@ vim-commentary
 fish.vim
 quick-scope
 ctrlp.vim
+
+# always ignore vundle, it's managed by vim/vim scripts
+vundle

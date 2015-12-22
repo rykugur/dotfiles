@@ -73,12 +73,7 @@ bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+semicolon move right
 
-# screenshots
-# now with OSX-user friendly shortcuts!
-bindsym Print exec "scrot -e 'mv $f ~/shots/'"
-bindsym $mod+Shift+3 exec "scrot -e 'mv $f ~/shots/'"
-bindsym $mod+Print exec "scrot -s -e 'mv $f ~/shots/'"
-bindsym $mod+Shift+4 exec "scrot -s -e 'mv $f ~/shots/'"
+# screenshots moved to xbindkeysrc
 
 # passmenu
 bindsym $mod+Shift+p exec passmenu
@@ -91,6 +86,7 @@ bindsym $mod+minus split v
 
 # toggle fullscreen mode for the focused container; also moves the mouse to upper-left (hacky way to avoid
 # xautolock from locking; requires the "-corners -000" flag to be passed to xautolog (see xinitrc)).
+# doesn't work if you double-click (e.g.) a video in vlc.
 bindsym $mod+shift+f fullscreen; exec "xdotool mousemove 0 0"
 
 # change container layout (stacked, tabbed, toggle split)
@@ -173,11 +169,7 @@ bindsym $mod+Shift+r exec fish -c runnar
 # umaluts - quicky script for printing umlauts to cursor position
 bindsym $mod+Shift+u exec fish -c umlauts
 
-# tempa-permanently remap middleclick (for chromebook/laptops without an easily-accessible insert key)
-# mostly working (doesn't work in luakit, for example)
-bindsym $mod+Shift+i exec xdotool type --delay 0 --window (xdotool getactivewindow) (xsel -o)
-# hacky work-around, mostly for luakit.... BE FUCKING SURE YOUR MOUSE IS HOVERING OVER WHERE YOU WANT TO PASTE
-bindsym $mod+Shift+Control+i exec xdotool click 2
+# middle click/shift-insert paste from primary buffer moved to xbindkeysrc
 
 # resize window (you can also use the mouse for that)
 mode "resize" {

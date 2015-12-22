@@ -46,7 +46,9 @@ alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
 alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
 alias hosts "sudo vim /etc/hosts"
 alias notes "cd $PERSONAL_NOTES_DIR"
+alias restart_netwk "sudo systemctl restart dhcpcd@$DEFAULT_NETWORK_INTERFACE.service"
 alias pingtest "ping google.com"
+alias sclist "systemctl --type=service"
 alias steamcd "cd $STEAM_DIR"
 if which -a pydf >> /dev/null
   alias dfh "pydf"
@@ -110,23 +112,31 @@ set -x fish_user_abbreviations ..='cd ..' \
                                grin='grep -ni' \
                                grine='grep -niRE' \
                                pagi='ps aux | grep -v grep | grep -i' \
+                               pac='pacman' \
+                               pacr='pacman -R' \
+                               pacrcs='pacman -Rcs' \
+                               pacs='pacman -S' \
+                               pacscc='pacman -Scc' \
+                               pacsyu='pacman -Syu' \
+                               pacsyy='pacman -Syy' \
+                               pacsyyu='pacman -Syyu' \
                                supac='sudo pacman' \
                                supacr='sudo pacman -R' \
+                               supacrcs='sudo pacman -Rcs' \
                                supacs='sudo pacman -S' \
                                supacscc='sudo pacman -Scc' \
                                supacsyu='sudo pacman -Syu' \
                                supacsyy='sudo pacman -Syy' \
                                supacsyyu='sudo pacman -Syyu' \
                                supacu='sudo pacman -U' \
-                               pac='pacman' \
-                               pacr='pacman -R' \
-                               pacqs='pacman -Qs' \
-                               pacs='pacman -S' \
-                               pacss='pacman -Ss' \
                                sc='systemctl' \
+                               scr='systemctl restart' \
+                               scs='systemctl start' \
+                               scst='systemctl status' \
                                ssc='sudo systemctl' \
                                sscr='sudo systemctl restart' \
-                               sscs='sudo systemctl status' \
+                               sscs='sudo systemctl start' \
+                               sscst='sudo systemctl status' \
                                sv='sudo vim' \
                                svec='sudo vim /etc/hosts' \
                                taill='tail -Fn 999'
@@ -136,6 +146,6 @@ set fish_greeting ""
 
 # Load any local configs
 # Do this last, since we might want to append to abbreviations
-if [ -e $HOME/.fish_local.fish ]
+if test -e $HOME/.fish_local.fish
   . $HOME/.fish_local.fish
 end
