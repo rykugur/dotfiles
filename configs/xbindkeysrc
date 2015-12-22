@@ -62,6 +62,6 @@
     Alt + Print 
 
 #scrot area alt
-"scrot -s -e 'mv $f ~/shots/'"
+"sleep 0.1; scrot -s -e 'mv $f ~/shots/'"
     m:0x9 + c:13
     Shift+Alt + 4 
