@@ -17,8 +17,8 @@ set fish_plugins sublime
 . $fish_path/oh-my-fish.fish
 
 # Other potential fish function directories
-if [ -e $HOME/.dotfiles/fish/functions ]
-  _append_path $HOME/.dotfiles/fish/functions fish_function_path
+if [ -e $HOME/.dotfiles/configs/fish/functions ]
+  _append_path $HOME/.dotfiles/configs/fish/functions fish_function_path
 end
 
 ######################
