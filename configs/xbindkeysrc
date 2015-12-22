@@ -26,15 +26,6 @@
 # m:xxx + c:xxx 
 # Shift+... 
 
-
-
-
-#keystate_numlock = enable
-#keystate_scrolllock = enable
-#keystate_capslock = enable
-
-
-
 #start of line
 "xvkbd -xsendevent -text "\[Home]""
     m:0x8 + c:113
@@ -74,6 +65,3 @@
 "scrot -s -e 'mv $f ~/shots/'"
     m:0x9 + c:13
     Shift+Alt + 4 
-
-#
-# End of xbindkeys configuration
