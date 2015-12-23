@@ -27,7 +27,6 @@ xautolock -time 10 -locker pixellock -nowlocker pixellock -detectsleep -corners 
 
 # other incidentals
 dropbox &
-spotify &
 xbindkeys
 
 if [ -e ~/.screenlayout.sh ]; then
