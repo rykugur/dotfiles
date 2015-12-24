@@ -36,12 +36,13 @@ _append_path $GOBIN PATH
 # aliases
 ######################
 alias compare_dirs "rsync --dry-run -v -r -c --delete"
+alias docs "cd ~/.docs"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 # leaving this as an alias instead of abbreviation due to length and formatting business
 alias grep "grep --color"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
-alias hosts "sudo vim /etc/hosts"
+alias notes "cd ~/.notes"
 alias pingtest "ping google.com"
 alias sclist "systemctl --type=service"
 
