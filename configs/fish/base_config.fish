@@ -36,20 +36,14 @@ _append_path $GOBIN PATH
 # aliases
 ######################
 alias compare_dirs "rsync --dry-run -v -r -c --delete"
-alias docs "cd $DOCS_DIR"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 # leaving this as an alias instead of abbreviation due to length and formatting business
 alias grep "grep --color"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
-alias home_cp_start "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan start'"
-alias home_cp_stop "ssh $HOME_SERVER_ADDRESS 'crashplan/bin/crashplan stop'"
 alias hosts "sudo vim /etc/hosts"
-alias notes "cd $PERSONAL_NOTES_DIR"
-alias restart_netwk "sudo systemctl restart dhcpcd@$DEFAULT_NETWORK_INTERFACE.service"
 alias pingtest "ping google.com"
 alias sclist "systemctl --type=service"
-alias steamcd "cd $STEAM_DIR"
 
 ### optional aliases, depend on a program being on the path
 if which -a pydf >> /dev/null
