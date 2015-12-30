@@ -1,8 +1,8 @@
 #
 
 function i3exit --description 'script to control locking, suspend, etc. in i3'
-  if test -e /usr/bin/pixellock
-    set _LOCK "/usr/bin/pixellock"
+  if test -e $HOME/bin/pixellock
+    set _LOCK "$HOME/bin/pixellock"
   else 
     notify-send "pixellock script missing, defaulting to i3lock"
     set _LOCK "i3lock"
@@ -16,11 +16,11 @@ function i3exit --description 'script to control locking, suspend, etc. in i3'
       case logout
         i3-msg exit
       case suspend
-        eval $_LOCK &
         systemctl suspend
-      case hibernate
         eval $_LOCK &
+      case hibernate
         systemctl hibernate
+        eval $_LOCK &
       case reboot
         systemctl reboot
       case shutdown
