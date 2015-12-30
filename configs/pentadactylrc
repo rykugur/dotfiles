@@ -17,3 +17,5 @@ map  -builtin K :forward<CR>
 
 map -builtin <C-;> <C-Tab>
 map -builtin <C-j> <C-S-Tab>
+
+set defsearch=duckduckgo
