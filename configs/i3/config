@@ -249,6 +249,7 @@ for_window [class="Chromium"] layout tabbed
 assign [class="Chrome"] $workspace2
 for_window [class="Chrome"] layout tabbed
 assign [class="Firefox"] $workspace2
+for_window [class="Firefox"] border pixel 1
 for_window [class="Firefox"] layout tabbed
 assign [class="luakit"] $workspace2
 for_window [class="luakit"] layout tabbed
