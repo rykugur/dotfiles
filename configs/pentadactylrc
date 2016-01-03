@@ -6,16 +6,21 @@ set hlfind
 hi -a StatusLine font-weight: normal;
 hi -a StatusLineNormal color:#C5C8C6 !important; background:#282A2E !important;
 
-" because hjkl is dumb
+" because hjkl is dumb, says me
 map -builtin ; l
 map -builtin l k
 map -builtin k j
 map -builtin j h
 
+" forward/back binds
 map  -builtin J :back<CR>
 map  -builtin K :forward<CR>
 
+" tab binds that don't work at the moment...
 map -builtin <C-;> <C-Tab>
 map -builtin <C-j> <C-S-Tab>
+
+" clear search results
+map -builtin ,<space> :noh<CR>
 
 set defsearch=duckduckgo
