@@ -1,5 +1,5 @@
 " Options
-set guioptions+=Bn
+set guioptions+=n
 set hlfind
 
 " Statusline
