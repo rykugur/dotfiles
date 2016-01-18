@@ -249,6 +249,8 @@ for_window [class="Chromium"] layout tabbed
 assign [class="Chrome"] $workspace2
 for_window [class="Chrome"] layout tabbed
 assign [class="Firefox"] $workspace2
+# don't show title bar for firefox
+for_window [class="Firefox"] border pixel 1
 for_window [class="Firefox"] layout tabbed
 assign [class="luakit"] $workspace2
 for_window [class="luakit"] layout tabbed
@@ -325,3 +327,4 @@ exec "feh --bg-fill ~/.desktop_bg"
 exec "xset r rate 190 40"
 exec "urxvtd -q -o -f"
 exec "compton --config ~/.dotfiles/configs/compton.conf -b"
+exec "ckb"
