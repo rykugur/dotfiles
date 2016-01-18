@@ -17,3 +17,10 @@ map  -builtin K :forward<CR>
 
 map -builtin <C-;> <C-Tab>
 map -builtin <C-j> <C-S-Tab>
+
+" reddit command binds, because I'm awesome and not lazy at all.
+command rgames execute "tabopen http://reddit.com/me/m/games"
+command rtech execute "tabopen http://reddit.com/me/m/tech"
+command rtrp execute "tabopen http://reddit.com/me/m/trp"
+
+source ~/.pentadactylrc.local
