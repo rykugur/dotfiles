@@ -24,3 +24,10 @@ map -builtin <C-j> <C-S-Tab>
 map -builtin ,<space> :noh<CR>
 
 set defsearch=duckduckgo
+
+" reddit command binds, because I'm awesome and not lazy at all.
+command rgames execute "tabopen http://reddit.com/me/m/games"
+command rtech execute "tabopen http://reddit.com/me/m/tech"
+command rtrp execute "tabopen http://reddit.com/me/m/trp"
+
+source ~/.pentadactylrc.local
