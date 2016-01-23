@@ -16,6 +16,3 @@
 [submodule "ls--"]
 	path = ls--
 	url = git@github.com:rykugur/ls--.git
-[submodule "bass"]
-	path = bass
-	url = git@github.com:rykugur/bass.git
