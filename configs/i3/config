@@ -23,13 +23,13 @@ focus_follows_mouse no
 set $mod Mod1
 
 # Set workspace titles/vars
-set $workspace1 1: fus
-set $workspace2 2: ro
-set $workspace3 3: dah
-set $workspace4 4: wuld
-set $workspace5 5: nah
-set $workspace6 6: kest
-set $workspace7 7: sieben
+set $workspace1 1: term
+set $workspace2 2: www
+set $workspace3 3: misc
+set $workspace4 4: src
+set $workspace5 5: fus
+set $workspace6 6: ro
+set $workspace7 7: dah
 set $workspace8 8: acht
 set $workspace9 9: nein
 set $workspace10 10: zehn
