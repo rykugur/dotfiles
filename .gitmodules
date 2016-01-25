@@ -4,9 +4,6 @@
 [submodule "powerline-fonts"]
 	path = powerline-fonts
 	url = git@github.com:rykugur/powerline-fonts.git
-[submodule "vim/bundle/vundle"]
-	path = configs/vim/bundle/vundle
-	url = git@github.com:rykugur/vundle.git
 [submodule "oh-my-fish"]
 	path = oh-my-fish
 	url = git@github.com:rykugur/oh-my-fish.git
@@ -15,4 +12,4 @@
 	url = git@github.com:rykugur/devicons.git
 [submodule "ls--"]
 	path = ls--
-	url = git@github.com:rykugur/ls--.git
+  url = git@github.com:rykugur/ls--.git
