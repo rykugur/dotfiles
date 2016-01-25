@@ -17,8 +17,8 @@ map  -builtin J :back<CR>
 map  -builtin K :forward<CR>
 
 " tab binds that don't work at the moment...
-map -builtin <C-;> <C-Tab>
-map -builtin <C-j> <C-S-Tab>
+map -builtin <C-;> :tabn<CR>
+map -builtin <C-j> :tabp<CR>
 
 " clear search results
 map -builtin ,<space> :noh<CR>
