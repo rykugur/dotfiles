@@ -15,4 +15,7 @@
 	url = git@github.com:rykugur/devicons.git
 [submodule "ls--"]
 	path = ls--
-	url = git@github.com:rykugur/ls--.git
+  url = git@github.com:rykugur/ls--.git
+[submodule "configs/vim/bundle/vundle"]
+	path = configs/vim/bundle/vundle
+	url = git@github.com:rykugur/vundle.git
