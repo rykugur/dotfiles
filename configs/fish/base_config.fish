@@ -100,6 +100,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gpl='git pull' \
                                gps='git push' \
                                gpls='git pull; and git push' \
+                               gpub='git push -u origin (_git_branch_name)' \
                                gr='git reset' \
                                grh='git reset HEAD' \
                                grhh='git reset --hard HEAD' \
