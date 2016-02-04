@@ -60,6 +60,8 @@ Bundle 'terryma/vim-multiple-cursors'
 Bundle 'Soares/fish.vim'
 Bundle 'unblevable/quick-scope'
 Bundle 'kien/ctrlp.vim'
+Bundle 'tpope/vim-markdown'
+" Bundle 'plasticboy/vim-markdown'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
