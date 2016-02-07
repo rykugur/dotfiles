@@ -8,6 +8,8 @@ URxvt*scrollWithBuffer: true
 URxvt*scrollTtyKeypress: true
 URxvt*termName: rxvt-unicode-256color
 URxvt*transparent: false
+! set default window size for non-tiled window managers
+URxvt.geometry: 120x40
 
 !!! appearance
 !URxvt*font: xft:uushi:size=7:antialias=true
