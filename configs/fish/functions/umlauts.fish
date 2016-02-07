@@ -29,5 +29,11 @@ function umlauts --description "hacky script to print umlauts to wherever"
       set _actual ß
   end # end switch
 
-  xdotool type --delay 0 --window (xdotool getactivewindow) $_actual
+  sleep 0.1
+
+  set -l _active_win (xdotool getactivewindow)
+  echo "executing: write_to_active_win $_actual" | tee ~/umlautslog
+
+  # xdotool type --delay 0 --window $_active_win $_actual
+  write_to_active_win $_actual
 end # end function
