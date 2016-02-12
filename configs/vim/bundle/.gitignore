@@ -13,7 +13,6 @@ TaskList.vim
 neocomplcache.vim
 syntastic
 slimv.vim
-vim-misc
 vim-airline
 vim-cucumber
 vim-rails
@@ -33,6 +32,8 @@ vim-commentary
 fish.vim
 quick-scope
 ctrlp.vim
+vim-misc
+vim-notes
 
 # always ignore vundle, it's managed by vim/vim scripts
 vundle

@@ -61,7 +61,8 @@ Bundle 'Soares/fish.vim'
 Bundle 'unblevable/quick-scope'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-markdown'
-" Bundle 'plasticboy/vim-markdown'
+Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-notes'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
@@ -328,7 +329,7 @@ let g:tagbar_type_go = {
 \ }
 
 """ airline
-let g:airline_theme = 'powerlineish'
+let g:airline_theme = 'badwolf'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
@@ -354,6 +355,11 @@ let g:airline_symbols.space = "\ua0"
 "let g:airline#extensions#branch#enabled = 1
 "let g:airline#extensions#syntastic#enabled = 1
 let g:airline_powerline_fonts = 1
+
+""" vim-notes
+let g:notes_directories = ['~/.notes']
+let g:notes_suffix = ".txt"
+let g:notes_title_sync = 0
 
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('ag')
