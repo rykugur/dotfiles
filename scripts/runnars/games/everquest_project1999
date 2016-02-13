@@ -2,7 +2,7 @@
 
 # Project 1999
 
-export WINEPREFIX=$HOME/.wine
-cd ~/.wine/drive_c/Program\ Files/Sony/EverQuest
+export WINEPREFIX=$HOME/games/wine_eqp1999
+cd ~/games/wine_eqp1999/drive_c/Program\ Files/Sony/EverQuest
 
 taskset -c 0 padsp wine eqgame.exe patchme 2> /dev/null
