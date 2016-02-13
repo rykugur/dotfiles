@@ -45,6 +45,7 @@ alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset
 alias notes "cd ~/.notes"
 alias pingtest "ping google.com"
 alias sclist "systemctl --type=service"
+alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
 ### optional aliases, depend on a program being on the path
 if which -a pydf >> /dev/null
