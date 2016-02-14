@@ -306,6 +306,21 @@
   <!-- ================== -->
   <!-- TODO: --> 
   <!-- volume/brightness/media keys -->
+  <keybind key="A-S-r">
+    <action name="Execute">
+      <command>fish -c runnar</command>
+    </action>
+  </keybind>
+  <keybind key="A-S-v">
+    <action name="Execute">
+      <command>fish -c snippets</command>
+    </action>
+  </keybind>
+  <keybind key="A-S-u">
+    <action name="Execute">
+      <command>fish -c umlauts</command>
+    </action>
+  </keybind>
 
   <!-- ================== -->
   <!-- Misc Openbox Stuff -->
