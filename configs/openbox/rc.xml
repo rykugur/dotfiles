@@ -317,6 +317,9 @@
       <menu>root-menu</menu>
     </action>
   </keybind>
+  <keybind key="A-S-d">
+    <action name="ToggleShowDesktop" />
+  </keybind>
 
   <!-- ================== -->
   <!-- Window Stuff -->
