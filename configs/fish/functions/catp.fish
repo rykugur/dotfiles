@@ -14,5 +14,10 @@ function catp --description 'cats the given file to the primary selection buffer
     return 1
   end
 
-  cat $argv | xclip -i
+  set -l _arch (uname)
+  if test $_arch = "Darwin"
+    cat $argv | pbcopy
+  else
+    cat $argv | xclip -i
+  end
 end
