@@ -7,4 +7,4 @@ PANEL_FONT_ICON="FontAwesome:12"
 
 . $SCRIPT_DIR/lemonbar_config.sh
 
-./lemonbar_panel.sh | lemonbar -p -g $PANEL_HEIGHT -f $PANEL_FONT -f $PANEL_FONT_ICON -B $COLOR_BACKGROUND
+./lemonbar_panel.sh | lemonbar -p -g $PANEL_HEIGHT -f $PANEL_FONT -f $PANEL_FONT_ICON -B $COLOR_BACKGROUND -F $COLOR_FOREGROUND
