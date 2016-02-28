@@ -31,3 +31,25 @@ ln -s ~/.dotfiles/configs/tmux.conf .tmux.conf
 ln -s /path/to/runnars .runnars
 ln -s /path/to/snippets .snippets
 ```
+
+Requirements
+============
+
+# base
+
+dmenu2
+feh
+urxvt (rxvt-unicode)
+compton
+i3blocks
+xdotool
+pactl
+playerctl
+xorg-xbacklight
+
+# for i3
+
+# for openbox
+
+lemonbar-xft
+acpi
