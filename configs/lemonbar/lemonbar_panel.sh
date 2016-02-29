@@ -109,7 +109,7 @@ while :; do
 	CENTER=""
 	RIGHT="$BATTERY $VOL $NETWORK %{B${COLOR_ACTIVE_WORKSPACE}} $DATE $TIME %{B${COLOR_BACKGROUND}}"
 
-	echo "%{l}$LEFT %{c}$CENTER %{r}$RIGHT"
+	echo "%{l} $LEFT %{c}$CENTER %{r}$RIGHT"
 
   # TODO: are we sleeping long enough so as to not cause too much cpu utilizabtion for a
   # panel script?
