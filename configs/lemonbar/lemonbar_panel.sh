@@ -25,34 +25,6 @@ trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 . $SCRIPT_DIR/lemonbar_config.sh
 
-# PANEL_SEP=" "
-# PANEL_SEP_ELLIPSIS=""
-# ICON_CPU="" # tachometer
-# ICON_MEMORY=""
-# ICON_DISK="" # bar chart
-# ICON_DISK_ALT="" # bank
-# ICON_BATTERY_0=""
-# ICON_BATTERY_0_ALT="" # ambulance
-# ICON_BATTERY_25=""
-# ICON_BATTERY_50=""
-# ICON_BATTERY_75=""
-# ICON_BATTERY_100=""
-# ICON_CALENDAR=""
-# ICON_CLOCK=""
-# ICON_CODE="" # github
-# ICON_GAME=""
-# ICON_FIREFOX=""
-# ICON_NETWORK_ETH="" # cloud
-# ICON_NETWORK_WIFI=""
-# ICON_TERM="" # ">_"
-# ICON_VOLUME=""
-# ICON_VOLUME_LOW=""
-# ICON_VOLUME_MUTE=""
-# ICON_WORKSPACES=""
-# COLOR_FOREGROUND='#FFEBDBB2'
-# COLOR_BACKGROUND='#FF282828'
-# COLOR_ACTIVE_WORKSPACE='#FF282828'
-
 while :; do
   DESKTOP_1="$ICON_TERM misc"
   DESKTOP_2="$ICON_FIREFOX www"
