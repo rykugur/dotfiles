@@ -46,25 +46,26 @@ while :; do
 
   WORKSPACES="$DESKTOP_1 $DESKTOP_2 $DESKTOP_3 $DESKTOP_4"
   
-  BATTERY_STATUS=$(cat /sys/class/power_supply/BAT1/status)
-  if [ $BATTERY_STATUS = "Discharging" ]; then
-    CURR_BATTERY_PERCENT=$(acpi | awk '{print $4}' | sed -e 's/,//g' | sed -e 's/%//g')
+  BATTERY=""
+  if [ "$(ls -A /sys/class/power_supply/)" ]; then
+    BATTERY_STATUS=$(cat /sys/class/power_supply/BAT1/status)
+    if [ $BATTERY_STATUS = "Discharging" ]; then
+      CURR_BATTERY_PERCENT=$(acpi | awk '{print $4}' | sed -e 's/,//g' | sed -e 's/%//g')
 
-    if [ $CURR_BATTERY_PERCENT -lt 10 ]; then
-      ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_0_ALT"
-    elif [ $CURR_BATTERY_PERCENT -lt 25 ]; then 
-      ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_25"
-    elif [ $CURR_BATTERY_PERCENT -lt 50 ]; then
-      ICON_BATTERY="$ICON_BATTERY_50"
-    elif [ $CURR_BATTERY_PERCENT -lt 75 ]; then
-      ICON_BATTERY="$ICON_BATTERY_75"
-    else
-      ICON_BATTERY="$ICON_BATTERY_100"
+      if [ $CURR_BATTERY_PERCENT -lt 10 ]; then
+        ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_0_ALT"
+      elif [ $CURR_BATTERY_PERCENT -lt 25 ]; then 
+        ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_25"
+      elif [ $CURR_BATTERY_PERCENT -lt 50 ]; then
+        ICON_BATTERY="$ICON_BATTERY_50"
+      elif [ $CURR_BATTERY_PERCENT -lt 75 ]; then
+        ICON_BATTERY="$ICON_BATTERY_75"
+      else
+        ICON_BATTERY="$ICON_BATTERY_100"
+      fi
+
+      BATTERY="$ICON_BATTERY $CURR_BATTERY_PERCENT%"
     fi
-
-    BATTERY="$ICON_BATTERY $CURR_BATTERY_PERCENT%"
-  else
-    BATTERY=""
   fi
 
   CURR_VOL_PERCENT=$(pactl list sinks | egrep "Volume.*\%" | head -n1 | awk '{print $5}')

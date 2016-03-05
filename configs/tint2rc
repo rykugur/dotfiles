@@ -21,7 +21,7 @@ border_color = #D64937 100
 panel_items = TS
 panel_monitor = all
 panel_position =  bottom left horizontal
-panel_size = 1728 20
+panel_size = 100% 20
 panel_margin = 0 0
 panel_padding = 0 0 10
 panel_dock = 0
@@ -84,7 +84,7 @@ systray = 1
 systray_padding = 0 6 15
 systray_sort = left2right
 systray_background_id = 0
-systray_icon_size = 16
+systray_icon_size = 0
 systray_icon_asb = 100 0 0
 
 # Clock
