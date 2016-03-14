@@ -140,7 +140,7 @@
     <name>desktop 2</name>
     -->
   </names>
-  <popupTime>875</popupTime>
+  <popupTime>0</popupTime>
   <!-- The number of milliseconds to show the popup for when switching
        desktops.  Set this to 0 to disable the popup. -->
 </desktops>
@@ -414,7 +414,7 @@
   <!-- Applications -->
   <keybind key="A-r">
     <action name="Execute">
-      <command>dmenu_run</command>
+      <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -i</command>
     </action>
   </keybind>
   <keybind key="A-Return">

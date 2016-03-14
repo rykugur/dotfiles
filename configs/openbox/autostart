@@ -2,4 +2,5 @@ feh --bg-fill ~/.desktop_bg
 xset r rate 190 40
 urxvtd -q -o -f
 compton --config ~/.dotfiles/configs/compton.conf -b
+tint2 &
 $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh

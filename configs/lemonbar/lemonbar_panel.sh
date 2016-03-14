@@ -25,34 +25,6 @@ trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
 
 . $SCRIPT_DIR/lemonbar_config.sh
 
-# PANEL_SEP=" "
-# PANEL_SEP_ELLIPSIS=""
-# ICON_CPU="" # tachometer
-# ICON_MEMORY=""
-# ICON_DISK="" # bar chart
-# ICON_DISK_ALT="" # bank
-# ICON_BATTERY_0=""
-# ICON_BATTERY_0_ALT="" # ambulance
-# ICON_BATTERY_25=""
-# ICON_BATTERY_50=""
-# ICON_BATTERY_75=""
-# ICON_BATTERY_100=""
-# ICON_CALENDAR=""
-# ICON_CLOCK=""
-# ICON_CODE="" # github
-# ICON_GAME=""
-# ICON_FIREFOX=""
-# ICON_NETWORK_ETH="" # cloud
-# ICON_NETWORK_WIFI=""
-# ICON_TERM="" # ">_"
-# ICON_VOLUME=""
-# ICON_VOLUME_LOW=""
-# ICON_VOLUME_MUTE=""
-# ICON_WORKSPACES=""
-# COLOR_FOREGROUND='#FFEBDBB2'
-# COLOR_BACKGROUND='#FF282828'
-# COLOR_ACTIVE_WORKSPACE='#FF282828'
-
 while :; do
   DESKTOP_1="$ICON_TERM misc"
   DESKTOP_2="$ICON_FIREFOX www"
@@ -74,25 +46,26 @@ while :; do
 
   WORKSPACES="$DESKTOP_1 $DESKTOP_2 $DESKTOP_3 $DESKTOP_4"
   
-  BATTERY_STATUS=$(cat /sys/class/power_supply/BAT1/status)
-  if [ $BATTERY_STATUS = "Discharging" ]; then
-    CURR_BATTERY_PERCENT=$(acpi | awk '{print $4}' | sed -e 's/,//g' | sed -e 's/%//g')
+  BATTERY=""
+  if [ "$(ls -A /sys/class/power_supply/)" ]; then
+    BATTERY_STATUS=$(cat /sys/class/power_supply/BAT1/status)
+    if [ $BATTERY_STATUS = "Discharging" ]; then
+      CURR_BATTERY_PERCENT=$(acpi | awk '{print $4}' | sed -e 's/,//g' | sed -e 's/%//g')
 
-    if [ $CURR_BATTERY_PERCENT -lt 10 ]; then
-      ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_0_ALT"
-    elif [ $CURR_BATTERY_PERCENT -lt 25 ]; then 
-      ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_25"
-    elif [ $CURR_BATTERY_PERCENT -lt 50 ]; then
-      ICON_BATTERY="$ICON_BATTERY_50"
-    elif [ $CURR_BATTERY_PERCENT -lt 75 ]; then
-      ICON_BATTERY="$ICON_BATTERY_75"
-    else
-      ICON_BATTERY="$ICON_BATTERY_100"
+      if [ $CURR_BATTERY_PERCENT -lt 10 ]; then
+        ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_0_ALT"
+      elif [ $CURR_BATTERY_PERCENT -lt 25 ]; then 
+        ICON_BATTERY="$%{+u U${COLOR_WARN}} ICON_BATTERY_25"
+      elif [ $CURR_BATTERY_PERCENT -lt 50 ]; then
+        ICON_BATTERY="$ICON_BATTERY_50"
+      elif [ $CURR_BATTERY_PERCENT -lt 75 ]; then
+        ICON_BATTERY="$ICON_BATTERY_75"
+      else
+        ICON_BATTERY="$ICON_BATTERY_100"
+      fi
+
+      BATTERY="$ICON_BATTERY $CURR_BATTERY_PERCENT%"
     fi
-
-    BATTERY="$ICON_BATTERY $CURR_BATTERY_PERCENT%"
-  else
-    BATTERY=""
   fi
 
   CURR_VOL_PERCENT=$(pactl list sinks | egrep "Volume.*\%" | head -n1 | awk '{print $5}')
