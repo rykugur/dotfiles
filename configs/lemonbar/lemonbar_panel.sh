@@ -68,8 +68,8 @@ while :; do
     fi
   fi
 
-  CURR_VOL_PERCENT=$(pactl list sinks | egrep "Volume.*\%" | head -n1 | awk '{print $5}')
-  VOL="$ICON_VOLUME $CURR_VOL_PERCENT"
+  # CURR_VOL_PERCENT=$(pactl list sinks | egrep "Volume.*\%" | head -n1 | awk '{print $5}')
+  # VOL="$ICON_VOLUME $CURR_VOL_PERCENT"
 
 	NETWORK_ICON="$ICON_NETWORK_ETH" # default to ethernet icon
   IP_ADDR=$(ip addr show $DEFAULT_NETWORK_INTERFACE | awk '/inet / {print $2}' | sed -e 's/\/[0-9]*//g')
@@ -80,7 +80,8 @@ while :; do
 
 	LEFT="$WORKSPACES"
 	CENTER=""
-	RIGHT="$BATTERY $VOL $NETWORK %{B${COLOR_ACTIVE_WORKSPACE}} $DATE $TIME %{B${COLOR_BACKGROUND}}"
+	# RIGHT="$BATTERY $VOL $NETWORK %{B${COLOR_ACTIVE_WORKSPACE}} $DATE $TIME %{B${COLOR_BACKGROUND}}"
+	RIGHT="$BATTERY $NETWORK %{B${COLOR_ACTIVE_WORKSPACE}} $DATE $TIME %{B${COLOR_BACKGROUND}}"
 
 	echo "%{l} $LEFT %{c}$CENTER %{r}$RIGHT"
 
