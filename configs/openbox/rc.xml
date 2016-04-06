@@ -304,8 +304,57 @@
   <!-- ================== -->
   <!-- CUSTOM KEYBINDS -->
   <!-- ================== -->
-  <!-- TODO: --> 
-  <!-- volume/brightness/media keys -->
+
+  <!-- ================== -->
+  <!-- Media Keys -->
+  <keybind key="XF86AudioMute">
+    <action name="Execute">
+      <command>pactl set-sink-mute 1 toggle</command>
+    </action>
+  </keybind>
+  <keybind key="XF86AudioRaiseVolume">
+    <action name="Execute">
+      <command>pactl set-sink-volume 1 +5%</command>
+    </action>
+  </keybind>
+  <keybind key="XF86AudioLowerVolume">
+    <action name="Execute">
+      <command>pactl set-sink-volume 1 -5%</command>
+    </action>
+  </keybind>
+  <keybind key="XF86AudioPlay">
+    <action name="Execute">
+      <command>playerctl play-pause</command>
+    </action>
+  </keybind>
+  <keybind key="XF86AudioStop">
+    <action name="Execute">
+      <command>playerctl stop</command>
+    </action>
+  </keybind>
+  <keybind key="XF86AudioNext">
+    <action name="Execute">
+      <command>playerctl next</command>
+    </action>
+  </keybind>
+  <keybind key="XF86AudioPrev">
+    <action name="Execute">
+      <command>playerctl previous</command>
+    </action>
+  </keybind>
+  <keybind key="XF86MonBrightnessUp">
+    <action name="Execute">
+      <command>xbacklight -inc 5</command>
+    </action>
+  </keybind>
+  <keybind key="XF86MonBrightnessDown">
+    <action name="Execute">
+      <command>xbacklight -dec 5</command>
+    </action>
+  </keybind>
+
+  <!-- ================== -->
+  <!-- Apps and Whatnots -->
   <keybind key="A-S-r">
     <action name="Execute">
       <command>fish -c runnar</command>
