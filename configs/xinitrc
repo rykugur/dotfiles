@@ -20,14 +20,8 @@ xrdb ~/.Xresources
 # need to manually start pulseaudio
 pulseaudio --start
 
-# start xautlock to call slock after 10 minutes of inactivity OR if the mouse is
-# left in the bottom-right corner for 3 seconds
-# -corners -000 means DON'T lock if the mouse is in the upper-left corner...
-# xautolock -time 10 -locker $HOME/bin/pixellock -nowlocker $HOME/bin/pixellock -detectsleep -corners -000 -cornerdelay 3 &
-
 # other incidentals
 dropbox &
-xbindkeys
 
 if [ -e ~/.screenlayout.sh ]; then
   ~/.screenlayout.sh
