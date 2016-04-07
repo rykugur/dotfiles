@@ -12,3 +12,8 @@ ttf-font-awesome
 xbindkeys_config-gtk2
 gtk-theme-arc-git
 arch-wiki-man
+numix-themes
+numix-circle-icon-theme-git
+numix-frost-themes
+numix-icon-theme-git
+xcursor-numix
