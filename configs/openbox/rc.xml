@@ -306,6 +306,14 @@
   <!-- ================== -->
 
   <!-- ================== -->
+  <!-- Misc Keys -->
+  <keybind key="A-Pause">
+    <action name="Execute">
+      <command>pixellock</command>
+    </action>
+  </keybind>
+
+  <!-- ================== -->
   <!-- Media Keys -->
   <keybind key="XF86AudioMute">
     <action name="Execute">
