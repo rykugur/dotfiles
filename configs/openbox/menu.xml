@@ -395,4 +395,33 @@
   </item>
 </menu>
 
+<menu id="logout-menu" label="Logout?">
+  <item label="Lock">
+    <action name="Execute">
+      <command>pixellock</command>
+    </action>
+  </item>
+  <item label="Log Out">
+    <action name="Exit">
+    </action>
+  </item>
+  <item label="Suspend">
+    <action name="Execute">
+      <command>~/.dotfiles/configs/openbox/scripts/suspend.sh</command>
+    </action>
+  </item>
+  <separator />
+  <item label="Reboot">
+    <action name="Execute">
+      <command>systemctl reboot</command>
+    </action>
+  </item>
+  <separator />
+  <item label="Poweroff">
+    <action name="Execute">
+      <command>systemctl poweroff</command>
+    </action>
+  </item>
+</menu>
+
 </openbox_menu>

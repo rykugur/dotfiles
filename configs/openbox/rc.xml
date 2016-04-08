@@ -312,6 +312,9 @@
       <command>pixellock</command>
     </action>
   </keybind>
+  <keybind key="A-S-Pause">
+    <action name="ShowMenu"><menu>logout-menu</menu></action>
+  </keybind>
 
   <!-- ================== -->
   <!-- Media Keys -->
