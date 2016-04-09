@@ -1,3 +1,0 @@
-#!/usr/bin/fish
-
-env WINEPREFIX=/home/dusty/.local/share/wineprefixes/steam WINEARCH=win32 primusrun wine skse_loader.exe
