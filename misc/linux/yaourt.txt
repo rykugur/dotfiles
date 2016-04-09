@@ -17,3 +17,5 @@ numix-circle-icon-theme-git
 numix-frost-themes
 numix-icon-theme-git
 xcursor-numix
+tt-font-font-awesome
+dmenu2

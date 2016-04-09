@@ -15,7 +15,6 @@ glances
 wget
 openssh
 cmake
-dmenu
 conky
 acpi
 gtk3
