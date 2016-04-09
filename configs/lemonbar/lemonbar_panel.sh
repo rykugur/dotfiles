@@ -48,7 +48,7 @@ while :; do
   
   BATTERY=""
   if [ "$(ls -A /sys/class/power_supply/)" ]; then
-    BATTERY_STATUS=$(cat /sys/class/power_supply/BAT1/status)
+    BATTERY_STATUS=$(cat /sys/class/power_supply/BAT0/status)
     if [ $BATTERY_STATUS = "Discharging" ]; then
       CURR_BATTERY_PERCENT=$(acpi | awk '{print $4}' | sed -e 's/,//g' | sed -e 's/%//g')
 
@@ -88,5 +88,5 @@ while :; do
   # TODO: are we sleeping long enough so as to not cause too much cpu utilizabtion for a
   # panel script?
 	# sleep 0.2
-	sleep 0.1
+	# sleep 0.1
 done
