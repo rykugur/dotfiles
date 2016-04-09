@@ -48,7 +48,7 @@ while :; do
   
   BATTERY=""
   if [ "$(ls -A /sys/class/power_supply/)" ]; then
-    BATTERY_STATUS=$(cat /sys/class/power_supply/BAT0/status)
+    BATTERY_STATUS=$(cat /sys/class/power_supply/$DEFAULT_BATTERY/status)
     if [ $BATTERY_STATUS = "Discharging" ]; then
       CURR_BATTERY_PERCENT=$(acpi | awk '{print $4}' | sed -e 's/,//g' | sed -e 's/%//g')
 
