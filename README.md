@@ -6,7 +6,7 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 Local Config
 ============
 
-Create a file in your homedir called ".fish_local.fish" for any local config. Gets loaded last so as to overwrite any base config.
+Create a file in your homedir called ".fish_local.fish" for any local config. This file gets loaded/sourced last so as to overwrite any base config.
 
 Symlinks
 ========
