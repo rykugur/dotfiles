@@ -109,6 +109,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gr='git reset' \
                                grh='git reset HEAD' \
                                grhh='git reset --hard HEAD' \
+                               grm='git remote' \
                                grv='git remote -v' \
                                gss='git status --short' \
                                grn='grep -n' \
