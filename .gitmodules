@@ -10,11 +10,11 @@
 	path = configs/vim/bundle/vundle
   url = git@github.com:rykugur/vundle.git
   branch = master
-[submodule "oh-my-fish"]
-	path = deps/oh-my-fish
-  url = git@github.com:rykugur/oh-my-fish.git
-  branch = master
 [submodule "deps/ls--"]
 	path = deps/ls--
 	url = git@github.com:rykugur/ls--.git
+	branch = master
+[submodule "deps/oh-my-fish"]
+	path = deps/oh-my-fish
+	url = git@github.com:rykugur/oh-my-fish.git
 	branch = master
