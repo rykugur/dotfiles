@@ -320,17 +320,20 @@
   <!-- Media Keys -->
   <keybind key="XF86AudioMute">
     <action name="Execute">
-      <command>pactl set-sink-mute 1 toggle</command>
+      <!-- <command>pactl set-sink-mute 1 toggle</command> -->
+      <command>amixer -D pulse set Master toggle</command>
     </action>
   </keybind>
   <keybind key="XF86AudioRaiseVolume">
     <action name="Execute">
-      <command>pactl set-sink-volume 1 +5%</command>
+      <!-- <command>pactl set-sink-volume 1 +5%</command> -->
+      <command>amixer -D pulse set Master 5%+ unmute</command>
     </action>
   </keybind>
   <keybind key="XF86AudioLowerVolume">
     <action name="Execute">
-      <command>pactl set-sink-volume 1 -5%</command>
+      <!-- <command>pactl set-sink-volume 1 -5%</command> -->
+      <command>amixer -D pulse set Master 5%- unmute</command>
     </action>
   </keybind>
   <keybind key="XF86AudioPlay">
