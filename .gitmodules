@@ -14,7 +14,3 @@
 	path = deps/oh-my-fish
   url = git@github.com:rykugur/oh-my-fish.git
   branch = master
-[submodule "ls--"]
-	path = deps/ls--
-  url = git@github.com:rykugur/ls--.git
-  branch = master
