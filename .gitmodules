@@ -10,3 +10,11 @@
 	path = deps/oh-my-fish
 	url = git@github.com:rykugur/oh-my-fish.git
 	branch = master
+[submodule "deps/powerline"]
+	path = deps/powerline
+	url = git@github.com:rykugur/powerline.git
+	branch = develop
+[submodule "deps/powerline-fonts"]
+	path = deps/powerline-fonts
+	url = git@github.com:rykugur/powerline-fonts.git
+	branch = master
