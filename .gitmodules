@@ -1,11 +1,3 @@
-[submodule "powerline"]
-	path = deps/powerline
-  url = git@github.com:rykugur/powerline.git
-  branch = develop
-[submodule "powerline-fonts"]
-	path = deps/powerline-fonts
-  url = git@github.com:rykugur/powerline-fonts.git
-  branch = master
 [submodule "configs/vim/bundle/vundle"]
 	path = configs/vim/bundle/vundle
   url = git@github.com:rykugur/vundle.git
