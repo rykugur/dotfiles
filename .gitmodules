@@ -1,9 +1,9 @@
 [submodule "powerline"]
-	path = powerline
+	path = deps/powerline
   url = git@github.com:rykugur/powerline.git
   branch = develop
 [submodule "powerline-fonts"]
-	path = powerline-fonts
+	path = deps/powerline-fonts
   url = git@github.com:rykugur/powerline-fonts.git
   branch = master
 [submodule "configs/vim/bundle/vundle"]
@@ -11,14 +11,10 @@
   url = git@github.com:rykugur/vundle.git
   branch = master
 [submodule "oh-my-fish"]
-	path = oh-my-fish
+	path = deps/oh-my-fish
   url = git@github.com:rykugur/oh-my-fish.git
   branch = master
-[submodule "devicons"]
-	path = devicons
-	url = git@github.com:rykugur/devicons.git
-  branch = master
 [submodule "ls--"]
-	path = ls--
+	path = deps/ls--
   url = git@github.com:rykugur/ls--.git
   branch = master
