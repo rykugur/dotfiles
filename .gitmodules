@@ -18,3 +18,7 @@
 	path = deps/powerline-fonts
 	url = git@github.com:rykugur/powerline-fonts.git
 	branch = master
+[submodule "deps/fisherman"]
+	path = deps/fisherman
+	url = git@github.com:rykugur/fisherman.git
+	branch = master

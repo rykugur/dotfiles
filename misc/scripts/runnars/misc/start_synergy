@@ -6,4 +6,4 @@ if pgrep synergys >/dev/null 2>&1
 end
 
 echo "Starting synergy..."
-/usr/bin/synergys --daemon --config /etc/synergy.conf
+/usr/bin/synergys --daemon --config $HOME/.synergy.conf
