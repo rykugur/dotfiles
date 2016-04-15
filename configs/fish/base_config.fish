@@ -19,6 +19,7 @@ set fish_plugins sublime
 # source fisherman
 set fisher_home ~/.dotfiles/deps/fisherman
 set fisher_config ~/.config/fisherman
+set fisher_file ~/.dotfiles/configs/fish/fisherfile
 source $fisher_home/config.fish
 
 # Other potential fish function directories
