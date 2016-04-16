@@ -22,7 +22,3 @@
 	path = deps/fisherman
 	url = git@github.com:rykugur/fisherman.git
 	branch = master
-[submodule "deps/password-store"]
-	path = deps/password-store
-	url = git@github.com:rykugur/password-store.git
-	branch = master
