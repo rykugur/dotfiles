@@ -313,7 +313,16 @@
     </action>
   </keybind>
   <keybind key="A-S-Pause">
-    <action name="ShowMenu"><menu>logout-menu</menu></action>
+    <action name="ShowMenu">
+      <menu>logout-menu</menu>
+    </action>
+  </keybind>
+  <keybind key="A-S-p">
+    <action name="Execute">
+      <!-- I need to execute this in a fish shell so that my export of -->
+      <!-- PASSWORD_STORE_X_SELECTION registers. -->
+      <command>fish -c passmenu</command>
+    </action>
   </keybind>
 
   <!-- ================== -->
