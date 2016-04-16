@@ -25,6 +25,10 @@ xorg-xbacklight
 lemonbar-xft
 acpi
 
+# Optional
+
+password-store (``git clone https://git.zx2c4.com/password-store``) - place password-store/contrib/dmenu/passmenu somewhere on the path.
+
 Getting Started
 ===============
 
