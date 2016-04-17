@@ -21,7 +21,7 @@ xrdb ~/.Xresources
 pulseaudio --start
 
 # other incidentals
-dropbox &
+# dropbox &
 
 if [ -e ~/.screenlayout.sh ]; then
   ~/.screenlayout.sh
