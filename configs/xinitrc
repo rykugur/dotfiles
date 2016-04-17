@@ -20,6 +20,10 @@ xrdb ~/.Xresources
 # need to manually start pulseaudio
 pulseaudio --start
 
+# sync clipboard and primary buffers
+autocutsel -selection CLIPBOARD -fork
+autocutsel -selection PRIMARY -fork
+
 # other incidentals
 # dropbox &
 
