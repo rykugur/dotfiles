@@ -96,6 +96,7 @@ set -x fish_user_abbreviations ..='cd ..' \
                                gca='git commit --amend' \
                                gcm='git commit -m' \
                                gcm.='git commit -m "."' \
+                               gcmyolo='git commit -m \"(curl -s whatthecommit.com/index.txt)\"' \
                                gco='git checkout' \
                                gco.='git checkout .' \
                                gcob='git checkout -b' \
