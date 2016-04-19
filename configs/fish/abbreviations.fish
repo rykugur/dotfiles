@@ -1,4 +1,3 @@
-set -x fish_user_abbreviations ""
 
 ### misc
 set fish_user_abbreviations $fish_user_abbreviations ..='cd ..'
@@ -74,6 +73,7 @@ set fish_user_abbreviations $fish_user_abbreviations gfp='git fetch -p'
 set fish_user_abbreviations $fish_user_abbreviations gg='git grep --color=auto -n' 
 set fish_user_abbreviations $fish_user_abbreviations ggi='git grep --color=auto -ni' 
 set fish_user_abbreviations $fish_user_abbreviations gl='git log' 
+set fish_user_abbreviations $fish_user_abbreviations glo='git log --oneline' 
 set fish_user_abbreviations $fish_user_abbreviations gpl='git pull' 
 set fish_user_abbreviations $fish_user_abbreviations gps='git push' 
 set fish_user_abbreviations $fish_user_abbreviations gpls='git pull; and git push' 
