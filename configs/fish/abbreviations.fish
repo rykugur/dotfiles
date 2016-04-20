@@ -5,6 +5,7 @@ set fish_user_abbreviations $fish_user_abbreviations ..='cd ..'
 set fish_user_abbreviations $fish_user_abbreviations ...='cd ../..' 
 set fish_user_abbreviations $fish_user_abbreviations ....='cd ../../..' 
 set fish_user_abbreviations $fish_user_abbreviations .....='cd ../../../..' 
+set fish_user_abbreviations $fish_user_abbreviations cdc='cd ~/code' 
 # note that for this to work on OSX, you should alias xclip to pbcopy (passing the additional -i seems to be ignored)
 set fish_user_abbreviations $fish_user_abbreviations cwd='pwd | tr -d "n" | xclip -i' 
 set fish_user_abbreviations $fish_user_abbreviations fn='find . -name' 
