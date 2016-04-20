@@ -484,7 +484,7 @@
   <!-- Applications -->
   <keybind key="A-r">
     <action name="Execute">
-      <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -i</command>
+      <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -z</command>
     </action>
   </keybind>
   <keybind key="A-Return">
