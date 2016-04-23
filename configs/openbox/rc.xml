@@ -322,6 +322,13 @@
       <command>env PASSWORD_STORE_X_SELECTION=primary passmenu</command>
     </action>
   </keybind>
+  <!-- Open a new vim window and call 'VimwikiIndex' immediately, which -->
+  <!-- opens our vimwiki index file. -->
+  <keybind key="A-S-n">
+    <action name="Execute">
+      <command>urxvtc -e vim -c VimwikiIndex</command>
+    </action>
+  </keybind>
 
   <!-- ================== -->
   <!-- Media Keys -->
@@ -484,7 +491,8 @@
   <!-- Applications -->
   <keybind key="A-r">
     <action name="Execute">
-      <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -z</command>
+      <!-- <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -z</command> -->
+      <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -i</command>
     </action>
   </keybind>
   <keybind key="A-Return">
