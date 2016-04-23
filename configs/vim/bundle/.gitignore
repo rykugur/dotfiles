@@ -35,6 +35,7 @@ ctrlp.vim
 vim-misc
 vim-notes
 vim-airline-themes
+vimwiki
 
 # always ignore vundle, it's managed by vim/vim scripts
 vundle
