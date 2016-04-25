@@ -62,8 +62,9 @@ Bundle 'Soares/fish.vim'
 Bundle 'unblevable/quick-scope'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-markdown'
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-notes'
+" Bundle 'xolox/vim-misc'
+" Bundle 'xolox/vim-notes'
+Bundle 'vimwiki/vimwiki'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
@@ -361,6 +362,9 @@ let g:airline_powerline_fonts = 1
 let g:notes_directories = ['~/.notes']
 let g:notes_suffix = ".txt"
 let g:notes_title_sync = 0
+
+""" vimwiki
+let g:vimwiki_list = [{'path': '~/.notes/vimwiki'}]
 
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('ag')
