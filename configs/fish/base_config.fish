@@ -27,16 +27,11 @@ if test -e $HOME/.dotfiles/configs/fish/functions
   _append_path $HOME/.dotfiles/configs/fish/functions fish_function_path
 end
 
-######################
-# exports
-######################
-set -x EDITOR "vim"
-set -x GOPATH "$HOME/code/go"
-set -x GOBIN "$GOPATH/bin"
-set -x URXVT_CMD "urxvt -pe selection-to-clipboard"
-
 _append_path $HOME/bin PATH
 _append_path $GOBIN PATH
+
+# source our exports file
+. $HOME/.dotfiles/configs/fish/exports.fish
 
 # source our aliases file
 . $HOME/.dotfiles/configs/fish/aliases.fish
