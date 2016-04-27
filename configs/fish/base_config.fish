@@ -47,6 +47,8 @@ alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep "grep --color"
 # leaving this as an alias instead of abbreviation due to length and formatting business
+alias glg "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
+alias gll "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
 alias notes "cd ~/.notes"
 alias pingtest "ping google.com"
