@@ -93,6 +93,7 @@ set fileencodings=utf-8
 filetype on
 filetype plugin on
 filetype indent on
+syntax on
 
 " detect filetype fix
 au BufRead,BufNewFile *.exp set filetype=tcl
