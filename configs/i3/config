@@ -57,6 +57,9 @@ bindsym $mod+Shift+w kill
 # you're gonna have a bad time.
 bindsym $mod+r exec $dmenu_cmd
 
+# vimnotes!
+bindsym $mod+Shift+n exec urxvtc -e vim -c VimwikiIndex
+
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
@@ -229,7 +232,7 @@ mode "$mode_system" {
   bindsym s exec fish -c "i3exit suspend", mode "default"
   bindsym h exec fish -c "i3exit hibernate", mode "default"
   bindsym r exec fish -c "i3exit reboot", mode "default"
-  bindsym Shift+s fish -c "i3exit shutdown", mode "default"  
+  bindsym Shift+s fish -c "i3exit shutdown", mode "default"
 
   # back to normal: Enter or Escape
   bindsym Return mode "default"
@@ -248,6 +251,8 @@ assign [class="Chromium"] $workspace2
 for_window [class="Chromium"] layout tabbed
 assign [class="Chrome"] $workspace2
 for_window [class="Chrome"] layout tabbed
+assign [class="Firefox"] $workspace2
+for_window [class="vivaldi-stable"] layout tabbed
 assign [class="Firefox"] $workspace2
 # don't show title bar for firefox
 for_window [class="Firefox"] border pixel 1

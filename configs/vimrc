@@ -62,8 +62,9 @@ Bundle 'Soares/fish.vim'
 Bundle 'unblevable/quick-scope'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-markdown'
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-notes'
+" Bundle 'xolox/vim-misc'
+" Bundle 'xolox/vim-notes'
+Bundle 'vimwiki/vimwiki'
 
 """"""""""""""""""""""""""""""
 " general vim stuff
@@ -92,6 +93,7 @@ set fileencodings=utf-8
 filetype on
 filetype plugin on
 filetype indent on
+syntax on
 
 " detect filetype fix
 au BufRead,BufNewFile *.exp set filetype=tcl
@@ -248,6 +250,8 @@ vnoremap <F1> <ESC>
 " trim trailing spaces
 "nnoremap <leader>s :s/\s\+$//e<CR>
 nnoremap <leader>S :call StripTrailingWhitespaces()<CR>
+" automatically delete trailing whitespace on save
+au BufWritePre * :%s/\s\+$//e
 
 " get rid of hightlighting after a search
 " same as :nohlsearch
@@ -361,6 +365,9 @@ let g:airline_powerline_fonts = 1
 let g:notes_directories = ['~/.notes']
 let g:notes_suffix = ".txt"
 let g:notes_title_sync = 0
+
+""" vimwiki
+let g:vimwiki_list = [{'path': '~/.notes/'}]
 
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('ag')

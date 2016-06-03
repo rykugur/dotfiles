@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+HOSTNAME="${cat /etc/hostname}"
 INTERFACE="${1:-$DEFAULT_NETWORK_INTERFACE}"
 #LABEL="${2:-E}"
 #LABEL=""
@@ -37,4 +38,5 @@ ipaddr="${ipaddr:-0.0.0.0}"
 # [ -n "$speed" ] && echo "($speed Mbits/s)" || echo
 
 # short text
-echo "$LABEL$ipaddr"
+# echo "$LABEL$ipaddr"
+echo "$HOSTNAME[$ipaddr]"
