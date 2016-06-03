@@ -17,3 +17,6 @@
 [submodule "deps/fisherman"]
 	path = deps/fisherman
 	url = https://github.com/fisherman/fisherman.git
+[submodule "deps/ls--"]
+	path = deps/ls--
+	url = https://github.com/trapd00r/ls--.git
