@@ -2,10 +2,6 @@
 	path = configs/vim/bundle/vundle
   url = git@github.com:rykugur/vundle.git
   branch = master
-[submodule "deps/oh-my-fish"]
-	path = deps/oh-my-fish
-	url = git@github.com:rykugur/oh-my-fish.git
-	branch = master
 [submodule "deps/powerline"]
 	path = deps/powerline
 	url = git@github.com:rykugur/powerline.git
@@ -20,3 +16,6 @@
 [submodule "deps/ls--"]
 	path = deps/ls--
 	url = https://github.com/trapd00r/ls--.git
+[submodule "deps/oh-my-fish"]
+	path = deps/oh-my-fish
+	url = https://github.com/oh-my-fish/oh-my-fish.git
