@@ -24,7 +24,7 @@ endif
 set shell=bash
 
 " enable vundle
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#rc()
 
 " enable powerline
