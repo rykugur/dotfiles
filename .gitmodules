@@ -2,23 +2,18 @@
 	path = configs/vim/bundle/vundle
   url = git@github.com:rykugur/vundle.git
   branch = master
-[submodule "deps/ls--"]
-	path = deps/ls--
-	url = git@github.com:rykugur/ls--.git
-	branch = master
-[submodule "deps/oh-my-fish"]
-	path = deps/oh-my-fish
-	url = git@github.com:rykugur/oh-my-fish.git
-	branch = master
-[submodule "deps/powerline"]
-	path = deps/powerline
-	url = git@github.com:rykugur/powerline.git
-	branch = develop
-[submodule "deps/powerline-fonts"]
-	path = deps/powerline-fonts
-	url = git@github.com:rykugur/powerline-fonts.git
-	branch = master
 [submodule "deps/fisherman"]
 	path = deps/fisherman
-	url = git@github.com:rykugur/fisherman.git
-	branch = master
+	url = https://github.com/fisherman/fisherman.git
+[submodule "deps/ls--"]
+	path = deps/ls--
+	url = https://github.com/trapd00r/ls--.git
+[submodule "deps/oh-my-fish"]
+	path = deps/oh-my-fish
+	url = https://github.com/oh-my-fish/oh-my-fish.git
+[submodule "deps/powerline"]
+	path = deps/powerline
+	url = https://github.com/powerline/powerline.git
+[submodule "deps/powerline-fonts"]
+	path = deps/powerline-fonts
+	url = https://github.com/powerline/fonts.git
