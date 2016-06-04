@@ -57,16 +57,18 @@ ln -s ~/.dotfiles/configs/i3/scripts pixellock /usr/bin/pixellock
 ln -s ~/.dotfiles/configs/vim .vim
 ln -s ~/.dotfiles/configs/vimrc .vimrc
 ln -s ~/.dotfiles/deps/configs/ls++.conf .ls++.conf
-``
+```
 
 After that, hacky step; install oh-my-fish, then create a symlink.
 
-``
+```
 cd ~/.dotfiles/deps/oh-my-fish/bin
 ./install
 cd ~
 ln -s ~/.dotfiles/configs/fish/config.fish ~/.config/fish/config.fish
 ```
+
+Finally, edit ``$HOME/.config/fish/config.fish``, uncomment and set your OMF_CONFIG path.
 
 Optional but useful symlinks:
 

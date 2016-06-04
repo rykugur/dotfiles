@@ -29,6 +29,11 @@ else
   alias ll "ls -lh"
 end
 
+### alias xclip->pbcopy if on OSX
+if test (uname) = "Darwin"
+  alias xclip "pbcopy"
+end
+
 ### arch specific aliases
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
 alias pacmir  "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
