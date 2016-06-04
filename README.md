@@ -54,12 +54,18 @@ ln -s ~/.dotfiles/configs/xinitrc .xinitrc
 ln -s ~/.dotfiles/configs/i3 .i3
 ln -s ~/.dotfiles/configs/configs/i3/i3blocks.conf .i3blocks.conf
 ln -s ~/.dotfiles/configs/i3/scripts pixellock /usr/bin/pixellock
-
-ln -s ~/.dotfiles/deps/oh-my-fish .oh-my-fish
-ln -s ~/.dotfiles/configs/fish/config.fish ~/.config/fish/config.fish
 ln -s ~/.dotfiles/configs/vim .vim
 ln -s ~/.dotfiles/configs/vimrc .vimrc
 ln -s ~/.dotfiles/deps/configs/ls++.conf .ls++.conf
+``
+
+After that, hacky step; install oh-my-fish, then create a symlink.
+
+``
+cd ~/.dotfiles/deps/oh-my-fish/bin
+./install
+cd ~
+ln -s ~/.dotfiles/configs/fish/config.fish ~/.config/fish/config.fish
 ```
 
 Optional but useful symlinks:

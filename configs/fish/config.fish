@@ -2,6 +2,10 @@
 # on my public github account. It's sourced by local config.fish files, along with other fish
 # config files.
 
+# source oh-my-fish
+set -gx OMF_PATH "/Users/dusty/.local/share/omf"
+source $OMF_PATH/init.fish
+
 # source fisherman
 set fisher_home ~/.dotfiles/deps/fisherman
 set fisher_config ~/.config/fisherman
