@@ -3,7 +3,8 @@
 # config files.
 
 # source oh-my-fish
-set -gx OMF_PATH "/Users/dusty/.local/share/omf"
+set -gx OMF_PATH "$HOME/.local/share/omf"
+set -gx OMF_CONFIG "$HOME/.dotfiles/configs/fish/omf"
 source $OMF_PATH/init.fish
 
 # source fisherman
