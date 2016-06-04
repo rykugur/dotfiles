@@ -57,9 +57,9 @@ URxvt.geometry: 120x40
 !URxvt*font: xft:Source Code Pro for Powerline:size=9:antialias=true
 !URxvt*boldFont: xft:Source Code Pro for Powerline:size=9:antialias=true
 !URxvt*italicFont: xft:Source Code Pro for Powerline:size=9:antialias=true
-URxvt*font: xft:GohuFont:size=9:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true:xft:Font-Awesome:size=9:antialias=true
-URxvt*boldFont: xft:GohuFont:size=9:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true:xft:Font-Awesome:size=9:antialias=true
-URxvt*italicFont: xft:GohuFont:size=9:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true:xft:Font-Awesome:size=9:antialias=true
+URxvt*font: xft:GohuFont:size=9:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true,xft:Font-Awesome:size=9:antialias=true,xft:Source Code Pro for Powerline:size=9:antialias=true
+URxvt*boldFont: xft:GohuFont:size=9:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true,xft:Font-Awesome:size=9:antialias=true,xft:Source Code Pro for Powerline:size=9:antialias=true
+URxvt*italicFont: xft:GohuFont:size=9:antialias=true,xft:DejaVu Sans Mono for Powerline:size=9:antialias=true,xft:Font-Awesome:size=9:antialias=true,xft:Source Code Pro for Powerline:size=9:antialias=true
 URxvt*cursorBlink: true
 URxvt*cursorUnderline: false
 URxvt*scrollBar: false
