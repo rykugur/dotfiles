@@ -1,7 +1,3 @@
-[submodule "configs/vim/bundle/vundle"]
-	path = configs/vim/bundle/vundle
-  url = git@github.com:rykugur/vundle.git
-  branch = master
 [submodule "deps/fisherman"]
 	path = deps/fisherman
 	url = https://github.com/fisherman/fisherman.git
