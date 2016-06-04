@@ -14,3 +14,6 @@
 [submodule "deps/powerline"]
 	path = deps/powerline
 	url = https://github.com/powerline/powerline.git
+[submodule "deps/powerline-fonts"]
+	path = deps/powerline-fonts
+	url = https://github.com/powerline/fonts.git
