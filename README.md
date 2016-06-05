@@ -78,6 +78,10 @@ ln -s ~/.dotfiles/configs/tmux.conf .tmux.conf
 
 ln -s /path/to/runnars .runnars
 ln -s /path/to/snippets .snippets
+
+# to replace the bobthefish prompt
+rm ~/.config/fish/functions/fish_prompt.fish
+ln -s ~/.dotfiles/configs/fish/omf/fish_prompt_bobthefish.fish ~/.config/fish/functions/fish_prompt.fish
 ```
 
 # Local Config
