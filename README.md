@@ -68,7 +68,7 @@ cd ~
 ln -s ~/.dotfiles/configs/fish/config.fish ~/.config/fish/config.fish
 ```
 
-Finally, edit ``$HOME/.config/fish/config.fish``, uncomment and set your OMF_CONFIG path.
+Finally, edit ``$HOME/.config/fish/config.fish``, uncomment and set your OMF_CONFIG path and run `omf install`.
 
 Optional but useful symlinks:
 
