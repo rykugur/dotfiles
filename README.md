@@ -82,8 +82,16 @@ ln -s /path/to/snippets .snippets
 # to replace the bobthefish prompt
 rm ~/.config/fish/functions/fish_prompt.fish
 ln -s ~/.dotfiles/configs/fish/omf/fish_prompt_bobthefish.fish ~/.config/fish/functions/fish_prompt.fish
+
+# replace fish title
+
+ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish ~/.config/fish/functions/fish_title.fish
 ```
 
 # Local Config
 
 You can create a file that is sourced on fish startup to override some base configuration. Create a file in your homedir called ".fish_local.fish" and put your custom/overrides there.
+
+# TODO
+
+- Work out order of import for functions.
