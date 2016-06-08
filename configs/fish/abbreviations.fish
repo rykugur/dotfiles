@@ -56,7 +56,7 @@ set fish_user_abbreviations $fish_user_abbreviations sscst='sudo systemctl statu
 ### git specific
 set fish_user_abbreviations $fish_user_abbreviations ga='git add'
 set fish_user_abbreviations $fish_user_abbreviations ga.='git add .'
-set fish_user_abbreviations $fish_user_abbreviations gas='git add (git status --short | grep MM | awk \'{print $2}\')'
+set fish_user_abbreviations $fish_user_abbreviations gas='git add (git status --short | grep -E "(AM|MM)" | awk \'{print $2}\')'
 set fish_user_abbreviations $fish_user_abbreviations gau='git add -u'
 set fish_user_abbreviations $fish_user_abbreviations gb='git branch'
 set fish_user_abbreviations $fish_user_abbreviations gbc='git branch --contains'
