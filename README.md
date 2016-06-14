@@ -83,9 +83,11 @@ ln -s /path/to/snippets .snippets
 rm ~/.config/fish/functions/fish_prompt.fish
 ln -s ~/.dotfiles/configs/fish/omf/fish_prompt_bobthefish.fish ~/.config/fish/functions/fish_prompt.fish
 
-# replace fish title
-
+# overwrite certain odd functionality in some themes
+# TODO: this can be resolved by fixing the order in which we append to fish_function_path, so then I won't
+# need to concern myself with doing this at all
 ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish ~/.config/fish/functions/fish_title.fish
+ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish ~/.config/fish/functions/prompt_pwd.fish
 ```
 
 # Local Config
