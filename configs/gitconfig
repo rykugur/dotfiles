@@ -7,12 +7,12 @@
   g = log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
   l = log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
 
-  # Show which branch is tracking what 
-  track = branch -vv 
+  # Show which branch is tracking what
+  track = branch -vv
 
   # Show missing commits from a branch
   missing = "!f() { git log --oneline `git rev-parse --abbrev-ref HEAD`..$1; }; f"
 [push]
 	default = simple
 [core]
-	editor = /usr/bin/vim
+	editor = vim

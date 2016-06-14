@@ -12,7 +12,19 @@ alias notes "cd ~/.notes"
 alias pingtest "ping google.com"
 alias sclist "systemctl --type=service"
 alias vi "vim"
+alias vimnotes "vim -c VimwikiIndex"
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
+
+### lazy-mode awk-aliases until I'm not lazy and write a proper script
+alias awk1 "awk '{print \$1}'"
+alias awk2 "awk '{print \$2}'"
+alias awk3 "awk '{print \$3}'"
+alias awk4 "awk '{print \$4}'"
+alias awk5 "awk '{print \$5}'"
+alias awk6 "awk '{print \$6}'"
+alias awk7 "awk '{print \$7}'"
+alias awk8 "awk '{print \$8}'"
+alias awk9 "awk '{print \$9}'"
 
 ### optional aliases, depend on a program being on the path
 if which -a pydf >> /dev/null
