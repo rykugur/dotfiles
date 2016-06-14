@@ -12,6 +12,7 @@ alias notes "cd ~/.notes"
 alias pingtest "ping google.com"
 alias sclist "systemctl --type=service"
 alias vi "vim"
+alias vimnotes "vim -c VimwikiIndex"
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
 ### optional aliases, depend on a program being on the path
