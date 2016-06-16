@@ -4,6 +4,8 @@ alias docs "cd ~/.docs"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep "grep --color"
+# might be a faster/more efficient way to do this
+alias gbn "git status | head -n1 | awk '{print \$3}'"
 # leaving this as an alias instead of abbreviation due to length and formatting business
 alias glg "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias gll "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
