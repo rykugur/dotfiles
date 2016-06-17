@@ -271,8 +271,6 @@ assign [class="Skype"] $workspace8
 for_window [class="Skype"] layout tabbed
 assign [class="Vncviewer"] $workspace8
 for_window [class="CrashPlan"] floating enable
-assign [class="Kodi"] $workspace9
-for_window [class="Kodi"] fullscreen
 
 # game assignments
 assign [class="Steam"] $workspace5
