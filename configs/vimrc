@@ -368,6 +368,8 @@ let g:notes_title_sync = 0
 
 """ vimwiki
 let g:vimwiki_list = [{'path': '~/.notes/'}]
+" don't shorten URL's
+let g:vimwiki_url_maxsave = 0
 
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('ag')
