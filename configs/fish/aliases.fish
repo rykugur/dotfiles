@@ -1,21 +1,20 @@
 ### misc aliases
 alias compare_dirs "rsync --dry-run -v -r -c --delete"
-alias docs "cd ~/.docs"
-alias dush "du -sh"
-alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
-alias grep "grep --color"
-# might be a faster/more efficient way to do this
-alias gbn "git status | head -n1 | awk '{print \$3}'"
-# leaving this as an alias instead of abbreviation due to length and formatting business
-alias glg "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
-alias gll "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
-alias gls "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
-alias notes "cd ~/.notes"
-alias pingtest "ping google.com"
-alias sclist "systemctl --type=service"
-alias vi "vim"
-alias vimnotes "vim -c VimwikiIndex"
-alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
+alias docs         "cd ~/.docs"
+alias dush         "du -sh"
+alias getmyip      "dig +short myip.opendns.com @resolver1.opendns.com"
+alias grep         "grep --color"
+alias gbn          "git status | head -n1 | awk '{print \$3}'"
+alias glg          "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
+alias gll          "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
+alias gls          "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
+alias jsonify      "xclip -o | python -m json.tool"
+alias notes        "cd ~/.notes"
+alias pingtest     "ping google.com"
+alias sclist       "systemctl --type=service"
+alias vi           "vim"
+alias vimnotes     "vim -c VimwikiIndex"
+alias ytdl         "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
 ### lazy-mode awk-aliases until I'm not lazy and write a proper script
 alias awk1 "awk '{print \$1}'"
@@ -51,6 +50,6 @@ end
 ### arch specific aliases
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
 alias pacmir  "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
-alias vboxmp "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
-alias vboxrm "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
+alias vboxmp  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
+alias vboxrm  "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
 
