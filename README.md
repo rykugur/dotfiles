@@ -88,6 +88,7 @@ ln -s ~/.dotfiles/configs/fish/omf/fish_prompt_bobthefish.fish ~/.config/fish/fu
 # need to concern myself with doing this at all
 ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish ~/.config/fish/functions/fish_title.fish
 ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish ~/.config/fish/functions/prompt_pwd.fish
+ln -s ~/.dotfiles/configs/fish/functions/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish
 ```
 
 # Local Config
