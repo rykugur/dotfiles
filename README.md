@@ -99,4 +99,3 @@ You can create a file that is sourced on fish startup to override some base conf
 
 - Work out order of import for functions.
 - Update this damn readme.
-- Figure out per-project git config (user.name/user.email) so commits on my work machine stop showing my work details.
