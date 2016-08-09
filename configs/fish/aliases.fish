@@ -12,6 +12,7 @@ alias gls          "git log --topo-order --stat --pretty=format:\"%C(bold)Commit
 alias jsonify      "xclip -o | python -m json.tool"
 alias notes        "cd $HOME/.notes"
 alias pingtest     "ping google.com"
+alias resrc        "source $HOME/.config/fish/config.fish"
 alias sclist       "systemctl --type=service"
 alias vi           "vim"
 alias vimnotes     "vim -c VimwikiIndex"

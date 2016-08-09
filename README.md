@@ -98,3 +98,4 @@ You can create a file that is sourced on fish startup to override some base conf
 # TODO
 
 - Work out order of import for functions.
+- Update this damn readme.
