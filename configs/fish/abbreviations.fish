@@ -9,7 +9,7 @@ set fish_user_abbreviations $fish_user_abbreviations pyjson='python -m json.tool
 set fish_user_abbreviations $fish_user_abbreviations vimn='vim -c "VimwikiIndex"'
 set fish_user_abbreviations $fish_user_abbreviations yolo='curl -s whatthecommit.com/index.txt'
 # note that for this to work on OSX, you should alias xclip to pbcopy (passing the additional -i seems to be ignored)
-set fish_user_abbreviations $fish_user_abbreviations cwd='pwd | tr -d "n" | xclip -i'
+set fish_user_abbreviations $fish_user_abbreviations cwd='pwd | tr -d "\\n" | xclip -i'
 set fish_user_abbreviations $fish_user_abbreviations fn='find . -name'
 set fish_user_abbreviations $fish_user_abbreviations fin='find . -iname'
 set fish_user_abbreviations $fish_user_abbreviations grn='grep -n'
