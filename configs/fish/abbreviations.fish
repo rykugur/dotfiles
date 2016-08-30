@@ -13,6 +13,7 @@ set fish_user_abbreviations $fish_user_abbreviations yolo='curl -s whatthecommit
 set fish_user_abbreviations $fish_user_abbreviations cwd='pwd | tr -d "\\n" | xclip -i'
 set fish_user_abbreviations $fish_user_abbreviations fn='find . -name'
 set fish_user_abbreviations $fish_user_abbreviations fin='find . -iname'
+set fish_user_abbreviations $fish_user_abbreviations grc='gource --stop-at-end -c 2 --disable-auto-rotate --hide filenames'
 set fish_user_abbreviations $fish_user_abbreviations grn='grep -n'
 set fish_user_abbreviations $fish_user_abbreviations grin='grep -ni'
 set fish_user_abbreviations $fish_user_abbreviations grine='grep -niRE'
