@@ -2,11 +2,16 @@
 
 function gits --description "cd wrapper for gits dir"
   set -l argc (count $argv)
-  set -l _base_dir "$HOME/gits"
   set -l _usage "Usage: gits [dir]"
 
-  # set a sane default
-  set -l _dir "dotfiles"
+  if test -z $GITS
+    echo "GITS env variable not set, exiting"
+    return 1
+  end
+
+  set -l _base_dir $GITS
+
+  set -l _dir ""
   if test $argc -gt 0
     switch $argv[1]
     case sync or s
