@@ -25,6 +25,7 @@ set number
 set visualbell
 "set pastetoggle=<leader><F5>
 nnoremap <silent> <leader>pp :set paste!<CR>
+nnoremap <silent> <leader><space> :noh<CR>
 
 " training to not use arrow keys wooooo
 nnoremap <up> <nop>
