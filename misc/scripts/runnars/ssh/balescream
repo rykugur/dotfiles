@@ -1,0 +1,3 @@
+#!/usr/bin/fish
+
+urxvt -e ssh balescream
