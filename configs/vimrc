@@ -163,7 +163,7 @@ set autoread
 command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
 " better handling of large files (still testing)
-set synmaxcol=120
+" set synmaxcol=120
 
 """"""""""""""""""""""""""""""
 " maps
@@ -380,7 +380,7 @@ endif
 autocmd FileType fish setlocal commentstring=#\ %s
 
 " color the background of any characters longer than a certain length
-augroup vimrc_autocmds
-  autocmd BufEnter * highlight OverLength ctermbg=darkgrey guibg=#592929
-  autocmd BufEnter * match OverLength /\%74v.*/
-augroup END
+" augroup vimrc_autocmds
+"   autocmd BufEnter * highlight OverLength ctermbg=blue guibg=#592929
+"   autocmd BufEnter * match OverLength /\%74v.*/
+" augroup END
