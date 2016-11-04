@@ -84,6 +84,7 @@ set fish_user_abbreviations $fish_user_abbreviations gg='git grep --color=auto -
 set fish_user_abbreviations $fish_user_abbreviations ggi='git grep --color=auto -ni'
 set fish_user_abbreviations $fish_user_abbreviations gl='git log'
 set fish_user_abbreviations $fish_user_abbreviations glo='git log --oneline'
+set fish_user_abbreviations $fish_user_abbreviations glss='git ls-files --stage'
 set fish_user_abbreviations $fish_user_abbreviations gpl='git pull'
 set fish_user_abbreviations $fish_user_abbreviations gps='git push'
 set fish_user_abbreviations $fish_user_abbreviations gpsf='git push --force'
