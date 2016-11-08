@@ -36,6 +36,7 @@ vim-misc
 vim-notes
 vim-airline-themes
 vimwiki
+vim-auto-save
 
 # always ignore vundle, it's managed by vim/vim scripts
 vundle
