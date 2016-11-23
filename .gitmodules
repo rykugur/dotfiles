@@ -16,3 +16,6 @@
 [submodule "configs/vim/bundle/Vundle.vim"]
 	path = configs/vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule "deps/Term-ExtendedColor"]
+	path = deps/Term-ExtendedColor
+	url = https://github.com/trapd00r/Term-ExtendedColor.git
