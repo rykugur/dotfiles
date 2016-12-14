@@ -1,6 +1,6 @@
-if $SHELL =~ 'fish'
-  set shell='/bin/sh'
-endif
+"if $SHELL =~ 'fish'
+"  set shell='/bin/sh'
+"endif
 
 " function to trim trailing spaces on multiple lines
 " can alternatlive use <leader>s as detailed below for single lines
@@ -24,48 +24,49 @@ endif
 set shell=bash
 
 " enable vundle
-set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#rc()
+set rtp+=~/gits/Vundle.vim
+call vundle#begin('~/.dotfiles/configs/vim/bundle')
 
 " enable powerline
 "set rtp+=~/.dotfiles/powerline/powerline/bindings/vim
 "set rtp+=/usr/local/lib/python2.7/site-packages/Powerline-beta-py2.7.egg/powerline/bindings/vim
 "call vam#ActivateAddons(['powerline'])
 
+""" vundle
 " let Vundle manage Vundle
-"  " required!
-Bundle 'gmarik/vundle'
+" required!
+Plugin 'VundleVim/Vundle.vim'
 
-" Vundle Bundles
-" To install: :BundleInstall in vim or vim +BundleInstall +qall on cli
-" To update: BundleUpdate in vimor vim +BundleUpdate +qall on cli
-Bundle 'majutsushi/tagbar'
-Bundle 'Raimondi/delimitMate'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-commentary'
-Bundle 'tpope/vim-speeddating'
-Bundle 'Yggdroot/indentLine'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'scrooloose/syntastic'
-Bundle 'vim-airline/vim-airline'
-Bundle 'vim-airline/vim-airline-themes'
-Bundle 'fatih/vim-go'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'godlygeek/tabular'
-Bundle 'mtth/scratch.vim'
-Bundle 'Shougo/vimproc.vim'
-Bundle 'Shougo/unite.vim'
-Bundle 'terryma/vim-multiple-cursors'
-Bundle 'Soares/fish.vim'
-Bundle 'unblevable/quick-scope'
-Bundle 'kien/ctrlp.vim'
-Bundle 'tpope/vim-markdown'
-" Bundle 'xolox/vim-misc'
-" Bundle 'xolox/vim-notes'
-Bundle 'vimwiki/vimwiki'
-Bundle 'vim-scripts/vim-auto-save'
+Plugin 'majutsushi/tagbar'
+Plugin 'Raimondi/delimitMate'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-speeddating'
+Plugin 'Yggdroot/indentLine'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'fatih/vim-go'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'godlygeek/tabular'
+Plugin 'mtth/scratch.vim'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'Shougo/unite.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'Soares/fish.vim'
+Plugin 'unblevable/quick-scope'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-markdown'
+" Plugin 'xolox/vim-misc'
+" Plugin 'xolox/vim-notes'
+Plugin 'vimwiki/vimwiki'
+Plugin 'vim-scripts/vim-auto-save'
+
+call vundle#end()
+filetype plugin indent on
 
 """"""""""""""""""""""""""""""
 " general vim stuff
@@ -94,7 +95,7 @@ set fileencodings=utf-8
 """"""""""""""""""""""""""""""
 " filetype settings
 """"""""""""""""""""""""""""""
-filetype on
+filetype off
 filetype plugin on
 filetype indent on
 syntax on
