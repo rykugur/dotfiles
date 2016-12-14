@@ -10,6 +10,7 @@ alias glg          "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white
 alias gll          "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias gls          "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
 alias git_clean    "git branch --merged development | grep -v development | xargs git branch -d"
+alias jedi         "git push --force"
 alias jsonify      "xclip -o | python -m json.tool"
 alias notes        "cd $HOME/.notes"
 alias pingtest     "ping google.com"
