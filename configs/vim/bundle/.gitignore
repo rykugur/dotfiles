@@ -37,6 +37,7 @@ vim-notes
 vim-airline-themes
 vimwiki
 vim-auto-save
+neocomplete.vim
 
 # ignore Vundle.vim, it should be checked out in ~/gits/Vundle.vim instaed
 Vundle.vim
