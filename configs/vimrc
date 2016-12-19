@@ -64,7 +64,6 @@ Plugin 'tpope/vim-markdown'
 " Plugin 'xolox/vim-notes'
 Plugin 'vimwiki/vimwiki'
 Plugin 'vim-scripts/vim-auto-save'
-Plugin 'Shougo/neocomplete.vim.git'
 
 call vundle#end()
 filetype plugin indent on
