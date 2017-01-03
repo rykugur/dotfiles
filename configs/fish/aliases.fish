@@ -1,7 +1,8 @@
 ### misc aliases
 alias compare_dirs "rsync --dry-run -v -r -c --delete"
 alias docs         "cd $HOME/docs"
-alias dots         "cd $HOME/.dotfiles"
+alias dots         "gits -d"
+alias dots.fish    "gits -f"
 alias dush         "du -sh"
 alias getmyip      "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep         "grep --color"
@@ -53,7 +54,7 @@ end
 
 ### arch specific aliases
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
-alias pacmir  "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
-alias vboxmp  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
-alias vboxrm  "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
+alias pac.mirror "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+alias vboxmp     "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
+alias vboxrm     "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
 
