@@ -99,3 +99,4 @@ set fish_user_abbreviations $fish_user_abbreviations grhh='git reset --hard HEAD
 set fish_user_abbreviations $fish_user_abbreviations grm='git remote'
 set fish_user_abbreviations $fish_user_abbreviations grv='git remote -v'
 set fish_user_abbreviations $fish_user_abbreviations gss='git status --short'
+set fish_user_abbreviations $fish_user_abbreviations gssg='git status --short | grep'
