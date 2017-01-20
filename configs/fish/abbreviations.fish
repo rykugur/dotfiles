@@ -96,6 +96,7 @@ set fish_user_abbreviations $fish_user_abbreviations grbc='git rebase --continue
 set fish_user_abbreviations $fish_user_abbreviations gr='git reset'
 set fish_user_abbreviations $fish_user_abbreviations grh='git reset HEAD'
 set fish_user_abbreviations $fish_user_abbreviations grhh='git reset --hard HEAD'
+set fish_user_abbreviations $fish_user_abbreviations grho='git reset --hard origin/(_git_branch_name)'
 set fish_user_abbreviations $fish_user_abbreviations grm='git remote'
 set fish_user_abbreviations $fish_user_abbreviations grv='git remote -v'
 set fish_user_abbreviations $fish_user_abbreviations gss='git status --short'
