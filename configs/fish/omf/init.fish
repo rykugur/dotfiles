@@ -16,6 +16,25 @@ if not set -q GOBIN
 end
 set PATH $PATH $GOBIN
 
+# set GITS
+if not set -q GITS
+  set -gx GITS "$HOME/gits"
+end
+
+# set DROPBOX_DIR
+if not set -q DROPBOX_DIR
+  set -gx DROPBOX_DIR "$HOME/dropbox/Dropbox"
+end
+
+# set PASTECMD/COPYCMD based on OS
+if getos --mac
+  set -gx PASTECMD 'pbpaste'
+  set -gx COPYCMD  'pbcopy'
+else
+  set -gx PASTECMD 'xclip -o'
+  set -gx COPYCMD  'xclip -i'
+end
+
 # source our exports file
 source $HOME/.dotfiles/configs/fish/exports.fish
 
