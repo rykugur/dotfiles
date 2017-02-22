@@ -1,9 +1,0 @@
-#!/usr/bin/fish
-
-set -l local_hostname (hostname)
-
-if test $local_hostname = "ds9"
-  urxvt -e ssh ds9
-else
-  urxvt -e ssh rollhax.asuscomm.com
-end

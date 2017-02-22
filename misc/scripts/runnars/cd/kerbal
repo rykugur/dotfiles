@@ -1,3 +1,0 @@
-#!/usr/bin/fish
-
-eval $URXVT_CMD -cd "/home/dusty/.local/share/Steam/SteamApps/common/Kerbal\ Space\ Program"
