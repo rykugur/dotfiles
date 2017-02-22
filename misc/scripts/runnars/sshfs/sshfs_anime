@@ -1,0 +1,3 @@
+#!/usr/bin/fish
+
+sshfs balescream:/media/anime/ $HOME/mnt/anime
