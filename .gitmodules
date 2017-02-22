@@ -25,3 +25,6 @@
 [submodule "deps/phallus_fonts"]
 	path = deps/phallus_fonts
 	url = https://github.com/phallus/fonts.git
+[submodule "deps/Font-Awesome"]
+	path = deps/Font-Awesome
+	url = https://github.com/FortAwesome/Font-Awesome.git
