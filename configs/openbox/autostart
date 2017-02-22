@@ -14,10 +14,10 @@ compton --config ~/.dotfiles/configs/compton.conf -b
 xbindkeys &
 
 # start tint2
-tint2 &
+# tint2 &
 
 # start the bar
-$HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
+# $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
 
 # source the home file
 # use this to start an app for only one machine (for example, kodi/xbmc)
