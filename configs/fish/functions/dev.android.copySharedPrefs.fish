@@ -4,15 +4,14 @@ function dev.android.copySharedPrefs --description "Copies shared prefs for the 
   set -l argc (count $argv)
 
   # sane defaults
-  set -l package_base "com.rollhax.io"
-  set -l package "$package_base.debug"
+  set -l package "io.rollhax"
   set -l target_dir "."
 
   if test $argc -ge 1
     getopts $argv | while read -l key value
       switch $key
         case p or package
-          set package "$package_base.$value"
+          set package $value
         case d or dir or output
           set target_dir $value
       end # end switch
