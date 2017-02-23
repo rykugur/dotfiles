@@ -39,8 +39,8 @@ ln -s $DOTFILES_DIR/configs/openbox $HOME/.config/openbox
 ln -s $DOTFILES_DIR/configs/tmux.conf $HOME/.tmux.conf
 ln -s $DOTFILES_DIR/configs/vim $HOME/.vim
 ln -s $DOTFILES_DIR/configs/vimrc $HOME/.vimrc
-ln -s $DOTFILES_DIR/configs/xbindkeysrc $HOME/.xbindkeysrc
-ln -s $DOTFILES_DIR/configs/xinitrc $HOME/.xinitrc
-ln -s $DOTFILES_DIR/configs/Xresources $HOME/.Xresources
+ln -s $DOTFILES_DIR/configs/x/xbindkeysrc $HOME/.xbindkeysrc
+ln -s $DOTFILES_DIR/configs/x/xinitrc $HOME/.xinitrc
+ln -s $DOTFILES_DIR/configs/x/Xresources $HOME/.Xresources
 
 echo "Don't forget to set your desktop background, e.g. \"ln -s /path/to/background/image ~/.desktop_bg\"".
