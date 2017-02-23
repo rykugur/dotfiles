@@ -36,5 +36,5 @@ if [ -e ~/.xinitrc.local ]; then
 fi
 
 # DO THIS AT THE END: fire up window manager
-exec ssh-agent i3
-# exec ssh-agent openbox-session
+# exec ssh-agent i3
+exec ssh-agent openbox-session
