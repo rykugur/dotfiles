@@ -18,7 +18,7 @@ border_color = #D64937 100
 # S = Systray
 # B = Battery
 # C = Clock
-panel_items = TS
+panel_items = TSC
 panel_monitor = all
 panel_position =  bottom left horizontal
 panel_size = 100% 20
@@ -71,7 +71,7 @@ task_urgent_icon_asb = 100 0 0
 task_iconified_icon_asb = 100 0 0
 
 # Fonts
-task_font = GohuFont 8
+task_font = artwiz lemon 8
 #task_font_color = #dcdcdc 100
 task_font_color = #bbbbbb 100
 task_active_font_color = #FFFFFF 100
@@ -81,7 +81,7 @@ font_shadow = 0
 
 # System Tray
 systray = 1
-systray_padding = 0 6 15
+# systray_padding = 0 6 15
 systray_sort = left2right
 systray_background_id = 0
 systray_icon_size = 0
@@ -91,13 +91,13 @@ systray_icon_asb = 100 0 0
 time1_format = %a %b %e, %H:%M
 time1_font = GohuFont 9
 clock_font_color = #dedede 100
-clock_tooltip = 
+clock_tooltip =
 clock_padding = 10 6
 clock_background_id = 1
 clock_lclick_command = gsimplecal
-time1_timezone = 
-time2_timezone = 
-clock_tooltip_timezone = 
+time1_timezone =
+time2_timezone =
+clock_tooltip_timezone =
 
 # Tooltips
 tooltip = 0
