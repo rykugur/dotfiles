@@ -89,7 +89,7 @@ systray_icon_asb = 100 0 0
 
 # Clock
 time1_format = %a %b %e, %H:%M
-time1_font = GohuFont 9
+time1_font = artwiz lemon 8
 clock_font_color = #dedede 100
 clock_tooltip =
 clock_padding = 10 6
