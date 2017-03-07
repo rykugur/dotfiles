@@ -1,4 +1,6 @@
 ### misc aliases
+alias cmd.copy     "eval $COPYCMD"
+alias cmd.paste    "eval $PASTECMD"
 alias compare_dirs "rsync --dry-run -v -r -c --delete"
 alias docs         "cd $HOME/docs"
 alias dots         "gits -d"
