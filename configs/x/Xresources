@@ -1,2 +1,3 @@
-#include "Xresources.colors"
-#include "Xresources.urxvt"
+#include "colors.xresources"
+#include "rofi.xresources"
+#include "urxvt.xresources"
