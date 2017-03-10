@@ -1,8 +1,7 @@
 #
 
-function to.json --description "Tries to parse stdin to json; requires python"A
+function to.json --description "Tries to parse stdin to json; requires python"
   set -l argc (count $argv)
-  set -l os (getos)
 
   if test $argc -ge 1
     getopts $argv | while read -l key value
