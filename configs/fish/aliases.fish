@@ -54,7 +54,7 @@ end
 
 ### arch specific aliases
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
-alias pac.mirror "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
-alias vboxmp     "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
-alias vboxrm     "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
+alias pac.mirror     "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+alias vbox.mod.load  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
+alias vbox.mod.rm    "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
 
