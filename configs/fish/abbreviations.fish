@@ -1,5 +1,5 @@
 ### misc
-set -gx fish_user_abbreviations $fish_user_abbreviations ..='cd ../..'
+set -gx fish_user_abbreviations $fish_user_abbreviations ..='cd ..'
 set fish_user_abbreviations $fish_user_abbreviations ...='cd ../../..'
 set fish_user_abbreviations $fish_user_abbreviations ....='cd ../../../..'
 set fish_user_abbreviations $fish_user_abbreviations .....='cd ../../../../..'
