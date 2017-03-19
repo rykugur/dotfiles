@@ -11,7 +11,7 @@ urxvtd -q -o -f
 compton --config ~/.dotfiles/configs/compton.conf -b
 
 # start xbindkeys
-xbindkeys &
+xbindkeys
 
 # start tint2
 tint2 &
