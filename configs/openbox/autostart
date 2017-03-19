@@ -14,7 +14,7 @@ compton --config ~/.dotfiles/configs/compton.conf -b
 xbindkeys
 
 # start tint2
-tint2 &
+tint2
 
 # start the bar
 # $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
