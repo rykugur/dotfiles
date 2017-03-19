@@ -9,7 +9,7 @@ URxvt*scrollTtyKeypress: true
 URxvt*termName: rxvt-unicode-256color
 URxvt*transparent: false
 ! set default window size for non-tiled window managers
-URxvt.geometry: 120x40
+URxvt.geometry: 140x60
 
 !!! appearance
 URxvt*font: xft:artwiz lemon:pixelsize=11:antialias=true,\
