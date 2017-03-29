@@ -1,6 +1,6 @@
 #
 
-function nvpy_notes --description "opens the selected note set in nvpy, uses dmenu as input if no arg passed; usage: nvpy_notes [personal|work]"
+function nvpy_notes --description "opens the selected note set in nvpy, uses rofi as input if no arg passed; usage: nvpy_notes [personal|work]"
   # make sure nvpy isn't already running... this could cause problems!
   if test (count (pgrep nvpy)) -ne 0
     echo 'nvpy already running, not continuing'
@@ -19,7 +19,7 @@ function nvpy_notes --description "opens the selected note set in nvpy, uses dme
 
   # present a list of note sets with which to work?
   if test -z $argv[1]
-    set selected_note_dir (echo personal\nwork | /usr/bin/dmenu)
+    set selected_note_dir (echo personal\nwork | /usr/bin/rofi -dmenu)
   else
     set selected_note_dir $argv[1]
   end
@@ -33,7 +33,7 @@ function nvpy_notes --description "opens the selected note set in nvpy, uses dme
   # kind of hacky... create a symlink to the nvpy cfg file in each respective work/personal dotfile repo
   if test $selected_note_dir = "work"
     rm $HOME/.nvpy
-    rm $HOME/.nvpy.cfg 
+    rm $HOME/.nvpy.cfg
 
     ln -s $WORK_NOTES_DIR/.nvpy $HOME/.nvpy
     ln -s $HOME/.workdotfiles/nvpy.cfg $HOME/.nvpy.cfg
