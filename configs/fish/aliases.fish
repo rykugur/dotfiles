@@ -2,31 +2,40 @@
 alias cmd.copy     "eval $COPYCMD"
 alias cmd.paste    "eval $PASTECMD"
 alias compare_dirs "rsync --dry-run -v -r -c --delete"
-alias docs         "cd $HOME/docs"
-alias dots         "gits -d"
-alias dots.fish    "gits -f"
 alias dush         "du -sh"
 alias getmyip      "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep         "grep --color"
-alias gbn          "git status | head -n1 | awk '{print \$3}'"
-alias glg          "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
-alias gll          "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
-alias gls          "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
-alias git_clean    "git branch --merged development | grep -v development | xargs git branch -d"
-alias jedi         "git push --force"
 alias jsonify      "to.json -p"
-alias notes        "cd $HOME/.notes"
 alias pingtest     "ping google.com"
 alias resrc        "source $HOME/.config/fish/config.fish"
-alias sclist       "systemctl --type=service"
-alias bale         "ssh balescream"
-alias ssh.bale     "ssh balescream"
-alias ssh.home     "ssh rollhax.io"
 alias vi           "vim"
 alias vimnotes     "vim -c VimwikiIndex"
 alias ytdl         "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
-
-### lazy-mode awk-aliases until I'm not lazy and write a proper script
+###### fast travel
+alias docs      "cd $HOME/docs"
+alias dots      "gits -d"
+alias dots.fish "gits -f"
+alias notes     "cd $HOME/.notes"
+###### git-specific
+alias gbn            "git status | head -n1 | awk '{print \$3}'"
+alias glg            "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
+alias gll            "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
+alias gls            "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
+alias git.clean      "git branch --merged development | grep -v development | xargs git branch -d"
+alias git.lastcommit "git log | head -n1 | awk '{print \$2}'"
+alias jedi           "git push --force"
+###### arch-specific
+#alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
+alias pac.mirror     "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+alias vbox.mod.load  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
+alias vbox.mod.rm    "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
+###### systemd-specific
+alias sclist "systemctl --type=service"
+###### ssh
+alias bale     "ssh balescream"
+alias ssh.bale "ssh balescream"
+alias ssh.home "ssh rollhax.io"
+###### lazy-mode awk-aliases until I'm not lazy and write a proper script
 alias awk1 "awk '{print \$1}'"
 alias awk2 "awk '{print \$2}'"
 alias awk3 "awk '{print \$3}'"
@@ -51,10 +60,3 @@ if which -a ls++ >> /dev/null
 else
   alias ll "ls -lh"
 end
-
-### arch specific aliases
-#alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
-alias pac.mirror     "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
-alias vbox.mod.load  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
-alias vbox.mod.rm    "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
-
