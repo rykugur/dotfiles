@@ -7,7 +7,7 @@ function umlauts --description "hacky script to print umlauts to wherever"
   if test $argc -ge 1
     set _umlaut $argv[1]
   else
-    set _umlaut (echo a\nA\no\nO\nu\nU\nss | dmenu)
+    set _umlaut (echo a\nA\no\nO\nu\nU\nss | rofi -dmenu)
   end # end if
 
   # ä|ö|ü|Ä|Ö|Ü|ß

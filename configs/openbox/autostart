@@ -11,10 +11,10 @@ urxvtd -q -o -f
 compton --config ~/.dotfiles/configs/compton.conf -b
 
 # start xbindkeys
-xbindkeys &
+xbindkeys
 
 # start tint2
-tint2 &
+tint2
 
 # start the bar
 # $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &

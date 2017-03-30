@@ -18,7 +18,7 @@ function snippets --description 'tool for pasting commonly used strings'
 
   cd $snippets_dir
 
-  set -l snippet_file (find -L . -type f | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/dmenu)
+  set -l snippet_file (find -L . -type f | grep -v '^\.$' | sed 's!\.\/!!' | /usr/bin/rofi -dmenu)
 
   if test -f "$snippets_dir/$snippet_file"
     # Put the contents of the selected file into the paste buffer
