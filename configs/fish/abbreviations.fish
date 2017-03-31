@@ -1,8 +1,8 @@
 ### misc
 set -gx fish_user_abbreviations $fish_user_abbreviations ..='cd ..'
-set fish_user_abbreviations $fish_user_abbreviations ...='cd ../../..'
-set fish_user_abbreviations $fish_user_abbreviations ....='cd ../../../..'
-set fish_user_abbreviations $fish_user_abbreviations .....='cd ../../../../..'
+set fish_user_abbreviations $fish_user_abbreviations ...='cd ../..'
+set fish_user_abbreviations $fish_user_abbreviations ....='cd ../../..'
+set fish_user_abbreviations $fish_user_abbreviations .....='cd ../../../..'
 set fish_user_abbreviations $fish_user_abbreviations cdc='cd ~/code'
 set fish_user_abbreviations $fish_user_abbreviations gensshkey='ssh-keygen -t rsa -b 4096 -C "rollhax@gmail.com"'
 set fish_user_abbreviations $fish_user_abbreviations pyhttp='python -m SimpleHTTPServer'
