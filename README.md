@@ -49,7 +49,7 @@ Install oh-my-fish:
 Create some symlinks (assumes ~/.dotfiles exists)
 
 ```
-~/dotfiles/misc/scripts/create_symlinks.fish
+~/.dotfiles/misc/scripts/create_symlinks.fish
 ```
 
 Optional but useful symlinks:
