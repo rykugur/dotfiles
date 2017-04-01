@@ -1,7 +1,8 @@
+set -gx CODE_DIR "$HOME/code"
 set -gx EDITOR "vim"
 set -gx GITS "$HOME/gits"
 set -gx VISUAL "vim"
-set -gx GOPATH "$HOME/code/go"
+set -gx GOPATH "$CODE_DIR/go"
 set -gx GOBIN "$GOPATH/bin"
 
 # set additional paths
