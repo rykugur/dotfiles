@@ -1,3 +1,0 @@
-#!/usr/bin/fish
-
-sshfs balescream:/media/movies/ $HOME/mnt/movies

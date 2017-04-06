@@ -1,3 +1,0 @@
-#!/usr/bin/fish
-
-sshfs balescream:/media/tv/ $HOME/mnt/tv
