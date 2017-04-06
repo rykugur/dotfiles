@@ -46,6 +46,12 @@ Install oh-my-fish:
 ~/.dotfiles/deps/oh-my-fish/bin/install
 ```
 
+Install fisher (subject to change, check the fisherman README.md):
+
+```
+curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
+```
+
 Create some symlinks (assumes ~/.dotfiles exists)
 
 ```
