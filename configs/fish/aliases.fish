@@ -24,7 +24,7 @@ alias gbn            "git branch | cut -d' ' -f2"
 alias glg            "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias gll            "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias gls            "git log --topo-order --stat --pretty=format:\"%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B\""
-alias git.clean      "git branch --merged development | grep -v development | xargs git branch -d"
+alias git.clean      "git branch --merged (git.branch) | grep -v (git.branch) | xargs git branch -d"
 alias git.lastcommit "git log | head -n1 | awk '{print \$2}' | trim.newlines"
 alias jedi           "git push --force"
 ###### arch-specific
