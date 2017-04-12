@@ -13,7 +13,6 @@ alias vi            "vim"
 alias vimnotes      "vim -c VimwikiIndex"
 alias ytdl          "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 ###### fast travel
-alias cdc       "cd $CODE_DIR"
 alias docs      "cd $HOME/docs"
 alias dots      "gits -d"
 alias dots.fish "gits -f"
