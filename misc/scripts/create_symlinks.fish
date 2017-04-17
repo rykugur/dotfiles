@@ -14,10 +14,9 @@ end
 
 # brute force it, YEAH!!
 
-rm $HOME/config/fish/config.fish
+rm $HOME/.config/fish/config.fish
 rm $HOME/.compton.conf
 rm $HOME/.dunstrc
-rm $HOME/.config/fish/config.fish
 rm $HOME/.gitconfig
 rm $HOME/.i3
 rm $HOME/.ls++.conf
