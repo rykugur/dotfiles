@@ -50,6 +50,7 @@ Install fisher (subject to change, check the fisherman README.md):
 
 ```
 curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
+fisher install
 ```
 
 Create some symlinks (assumes ~/.dotfiles exists)
