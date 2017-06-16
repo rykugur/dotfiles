@@ -104,3 +104,6 @@ set fish_user_abbreviations $fish_user_abbreviations gsub='git submodule'
 set fish_user_abbreviations $fish_user_abbreviations gsubf='git submodule foreach'
 set fish_user_abbreviations $fish_user_abbreviations gsubi='git submodule init'
 set fish_user_abbreviations $fish_user_abbreviations gsubu='git submodule update'
+
+## docker specific
+set fish_user_abbreviations $fish_user_abbreviations dock.clean='docker rmi (docker images -f "dangling=true" -q)'
