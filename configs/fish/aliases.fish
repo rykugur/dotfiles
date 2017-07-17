@@ -50,12 +50,12 @@ alias awk8 "awk '{print \$8}'"
 alias awk9 "awk '{print \$9}'"
 
 ### optional aliases, depend on a program being on the path
-if which -a pydf ^/dev/null
+if which -a pydf > /dev/null
   alias dfh "pydf"
 else
   alias dfh "df -h"
 end
-if which -a ls++ ^/dev/null
+if which -a ls++ > /dev/null
   alias ls "/usr/bin/ls++ --potsf"
   alias ll "/usr/bin/ls++ --potsf"
   alias llo "/usr/bin/ls -lh"
