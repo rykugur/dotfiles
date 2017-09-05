@@ -1,8 +1,16 @@
+# fix xrdb
+xrdb -I$HOME/.dotfiles/configs/x/ $HOME/.Xresources
+
 # set our background
 feh --bg-fill ~/.desktop_bg
 
 # increase key repeat rate
 xset r rate 190 40
+
+# disable screen blanking
+xset s off         # don't activate screensaver
+xset -dpms         # disable DPMS (Energy Star) features.
+xset s noblank     # don't blank the video device
 
 # start urxvt daemon
 urxvtd -q -o -f
