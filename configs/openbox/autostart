@@ -22,7 +22,11 @@ compton --config ~/.dotfiles/configs/compton.conf -b
 xbindkeys
 
 # start tint2
-tint2
+# tint2
+# start polybar
+# -q -> quiet
+# -r -> reload polybar on config change
+polybar -q -r top & disown
 
 # start the bar
 # $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
