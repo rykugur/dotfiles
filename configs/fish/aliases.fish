@@ -20,6 +20,11 @@ alias docs      "cd $HOME/docs"
 alias dots      "gits -d"
 alias dots.fish "gits -f"
 alias notes     "cd $HOME/.notes"
+###### onepassword-specific
+alias op.auth   'set -gx OP_SESSION_rollhax (op signin $OP_LOGIN_HOST.1password.com $OP_LOGIN_EMAIL $OP_LOGIN_KEY --output=raw)'
+alias op.reauth 'set -gx OP_SESSION_rollhax (op signin $OP_LOGIN_HOST --output=raw)'
+alias op.item   'op get item'
+alias jq.pass   'jq \'.details.fields[] | select(.designation=="password").value\' | tr -d "\""'
 ###### git-specific
 # alias gbn            "git status | head -n1 | awk '{print \$3}'"
 alias gbn            "git branch | cut -d' ' -f2"
