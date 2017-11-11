@@ -19,6 +19,8 @@ function gits --description "cd wrapper for gits dir"
           set _dir "sync"
         case dotfiles or df or dots or d
           set _dir "dotfiles"
+        case configs or conf or c
+          set _dir "dotfiles/configs"
         case fish or f
           set _dir "dotfiles/configs/fish"
       end # end switch
