@@ -1,381 +1,180 @@
+;---------------------------------------------
+;         Polybar Configuration              ;
+;               Openbox                      ;
+;           github.com/JLErvin               ;
+;---------------------------------------------
+
 [colors]
-background = #111111
-background-alt = #1a1a1a
-foreground = #C5C8C6
-foreground-alt = #B2B2B2
-red = #CC6666
-yellow = #F0C674
-green = #B3BB67
-blue = #7FA0BC
+; Define System colors from .Xresources
+background=${xrdb:background:#ffffff}
+black=${xrdb:color0:#ffffff}
+red=${xrdb:color1:#ffffff}
+grn=${xrdb:color2:#ffffff}
+ylw=${xrdb:color3:#ffffff}
+blu=${xrdb:color4:#ffffff}
+mag=${xrdb:color5:#ffffff}
+cyn=${xrdb:color6:#ffffff}
+wht=${xrdb:color7:#ffffff}
+foreground=${xrdb:foreground:#ffffff}
+
+; Define colors for each module
+; Easier to change here for each module
+obbg=${self.red}
+obibg=${self.foreground}
+cpubg=${self.red}
+winbg=${self.ylw}
+netbg=${self.ylw}
+volbg=${self.blu}
+
+obfg=${self.foreground}
+obifg=${self.background}
+cpufg=${self.foreground}
+winfg=${self.background}
+netfg=${self.background}
+volfg=${self.foreground}
+
+;--------------------------------------------
+; bars                                      ;
+;--------------------------------------------
 
 [bar/top]
-;monitor = ${env:MONITOR:HDMI-A-0}
-width = 100%
-height = 30
-;offset-x = 1%
-;offset-y = 1%
-;radius = 6.0
-fixed-center = false
-bottom = false
-background = ${colors.background}
-foreground = ${colors.foreground}
-line-size = 0
-;line-color = #f00
-border-size = 4
-border-color = ${colors.background}
-padding-left = 1
-padding-right = 1
-module-margin-left = 1
-module-margin-right = 1
-;locale = fr_FR.UTF-8
+dpi=192
+width=100%
+height=20
+offset-x=0
+offset-y=0
+foreground=${colors.foreground}
+background=${colors.background}
+border-top-size=7
+border-top-color= ${colors.background}
+border-bottom-size=7
+border-bottom-color= ${colors.background}
 font-0 = "artwiz lemon:pixelsize=11:antialias=true"
 font-1 = "fontawesome-webfont:pixelsize=11:antialias=true"
 font-2 = "DejaVu Sans Mono for Powerline:pixelsize=11:antialias=true"
-;font-1 = unifont:fontformat=truetype:size=12:antialias=false;0
-;font-2 = FontAwesome:size=15;1
-modules-left = workspace
-modules-center = xtitle
-modules-right = volume cpu memory eth time
-;tray-position =
-;tray-padding = 2
-;tray-background = ${colors.background-alt}
-;tray-transparent = true
-;tray-offset-x =
-;tray-detached = false
-;tray-maxsize = 24
+spacing=0
+padding-left=1
+padding-right=0
+module-margin-left=0
+module-margin-right=0
+modules-left=openbox padding xwindow padding
+modules-center=
+modules-right=padding volume padding date padding
 
-[module/scrot]
-type = custom/text
-content = 
-content-foreground = ${colors.foreground}
-click-left = scrot %F-%S_$wx$h_scrot.png -e 'mv $f ~/scrot' &
+;--------------------------------------------
+; modules                                   ;
+;--------------------------------------------
 
-[module/spotify]
-type = custom/text
-content = 
-content-foreground = ${colors.foreground}
-click-left = spotify --force-device-scale-factor=1.5
+[module/xwindow]
+y-offset=10
+type=internal/xwindow
+label=%title:0:120:...%
+label-padding=1
+label-foreground=${colors.winfg}
+label-background=${colors.winbg}
 
-[module/workspace]
-type = custom/script
-interval = 1
-label = %{A4:wmctrl -s "$(($(xprop -root _NET_CURRENT_DESKTOP | cut -d '=' -f 2 | cut -d ' ' -f 2)+1))":}%{A5:wmctrl -s "$(($(xprop -root _NET_CURRENT_DESKTOP | cut -d '=' -f 2 | cut -d ' ' -f 2)-1))":}%output% %{A}%{A}
-exec = echo "$(($(xprop -root _NET_CURRENT_DESKTOP | cut -d '=' -f 2 | cut -d ' ' -f 2)+1))"
-format = <label>
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-
-[module/xtitle]
-type = internal/xwindow
-interval = 1
-label = %title%
-label-maxlen = 40
-exec = echo "$(xtitle)"
-format = <label>
-; format-background = ${colors.background-alt}
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground}
-format-padding = 1
-
-[module/cpu]
-type = internal/cpu
-interval = 1
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-label = %{A1:urxvt --geometry 86x30 -e htop:}%percentage%%%{A}
-
-[module/memory]
-type = internal/memory
-interval = 3
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-label = %{A1:urxvt --geometry 86x30 -e htop:}%percentage_used%%%{A}
-
-;[module/date]
-;type = custom/script
-;interval = 60
-;exec = echo "$(date +%a) $(date +%d) $(date +%b)"
-;format = <label>
-;format-prefix = " "
-;format-prefix-foreground = ${colors.foreground-alt}
-;label = %{A1:gsimplecal &:}%output%%{A}
-
-[module/clock]
-type = custom/script
-interval = 5
-exec = echo "$(date +%R)"
-format = <label>
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-label = %{A1:gsimplecal &:}%output%%{A}
-
-[module/time]
-type = internal/date
-interval = 5
-label-foreground = ${colors.foreground-alt}
-date =
-date-alt = " %Y-%m-%d"
-
-time = %H:%M
-time-alt = %H:%M:%S
-
-format-prefix = 
-format-prefix-foreground = ${colors.foreground-alt}
-;format-underline = #0a6cf5
-
-label = %date% %time%
+[module/date]
+type=internal/date
+interval=1.0
+date=%a %b %d,
+time=%H:%M
+time-alt=%H:%M:%S
+label=%date% %time%
+format=<label>
+format-padding=0
+label-background=${colors.foreground}
+label-foreground=${colors.black}
+label-padding= 1
 
 [module/volume]
-type = internal/volume
-format-volume = <ramp-volume> <label-volume>
-label-volume = %percentage%%
-label-volume-foreground = ${root.foreground}
-format-muted = <label-muted>
-format-muted-foreground = ${colors.foreground-alt}
-label-muted =  mute
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-foreground = ${colors.foreground-alt}
+type=internal/volume
+format-volume =<label-volume>
+format-muted =<label-muted>
+ramp-volume-background=${colors.volbg}
+ramp-volume-foreground=${colors.volfg}
+ramp-volume-padding=1
+label-volume= %percentage%
+label-volume-background=${colors.volbg}
+label-volume-foreground=${colors.volfg}
+label-volume-padding=1
+label-muted= 0
+label-muted-foreground=${colors.volfg}
+label-muted-background=${colors.volbg}
+label-muted-padding=1
+format-volume-padding=0
+format-muted-padding=0
+ramp-headphones-0=
 
+[module/cpu]
+type=internal/cpu
+interval=0.5
+format=<label>
+label= %percentage%%
+label-background=${colors.cpubg}
+label-foreground=${colors.cpufg}
+label-padding=1
 
-[module/battery]
-type = internal/battery
-battery = BAT0
-adapter = AC
-full-at = 98
-format-charging = <animation-charging> <label-charging>
-format-discharging = <ramp-capacity> <label-discharging>
-format-full-prefix = " "
-format-full-prefix-foreground = ${colors.blue}
-ramp-capacity-0 = 
-ramp-capacity-0-foreground = ${colors.red}
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
-ramp-capacity-foreground = ${colors.foreground-alt}
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-3 = 
-animation-charging-4 = 
-animation-charging-foreground = ${colors.foreground-alt}
-animation-charging-framerate = 750
+[module/network]
+type=internal/network
+interface=br0
+interval=3.0
+format-connected=<label-connected>
+format-connected-underline=#9f78e1
+label-connected= %essid%
+label-connected-background=${colors.netbg}
+label-connected-foreground=${colors.netfg}
+label-connected-padding=1
+ramp-signal-background=${colors.netbg}
+ramp-connected-foreground=${colors.netfg}
+ramp-signal-padding=1
+format-disconnected= <label-disconnected>
+label-disconnected-background=${colors.netbg}
+label-disconnected-padding=1
+label-disconnected=DISCONNECTED
+ramp-signal-foreground=${colors.netfg}
 
-[module/networkmanager]
-type = custom/text
-content = net 
-content-foreground = ${colors.foreground}
-click-left = networkmanager_dmenu
+[module/padding]
+type=custom/text
+content=|
+content-foreground=${colors.background}
+content-background=${colors.background}
 
-[module/eth]
-type = internal/network
-interface = eth0
-interval = 3.0
-format-connected = <label-connected>
-format-connected-prefix = " "
-format-connected-prefix-foreground = ${colors.foreground-alt}
-format-disconnected = <label-disconnected>
-label-connected = %{A1:networkmanager_dmenu:}%downspeed%%{A}
-label-connected-foreground = ${colors.foreground}
-label-disconnected = no connection
+[module/openbox]
+type=internal/xworkspaces
+pin-workspaces=true
+enable-click=false
+enable-scroll=false
+format=<label-state>
+label-monitor=%name%
+label-active =%icon%%name%
+label-active-foreground =${colors.obfg}
+label-active-background =${colors.obbg}
+label-active-underline=#fba922
+label-active-padding=1
+label-occupied =%name%
+label-occupied-background=${colors.obbg}
+label-occupied-padding=1
+label-urgent=%index%
+label-urgent-foreground=#000000
+label-urgent-background=#bd2c40
+label-urgent-underline=#9b0a20
+label-empty =%name%
+label-empty-padding=1
+label-empty-background=${colors.obibg}
+label-empty-foreground=${colors.obifg}
 
-[module/wlan]
-type = internal/network
-interface = wlan0
-interval = 3.0
-format-connected = <label-connected>
-format-connected-prefix = " "
-format-connected-prefix-foreground = ${colors.foreground-alt}
-format-disconnected = <label-disconnected>
-label-connected = %{A1:networkmanager_dmenu:}%downspeed%%{A}
-label-connected-foreground = ${colors.foreground}
-label-disconnected =
-
-[module/mail]
-type = custom/script
-interval = 30
+[module/backlight]
+type = internal/xbacklight
+output = eDP-1
+enable-scroll = false
 format = <label>
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-exec = ~/.config/polybar/mail
-click-left = chromium https://mail.google.com &
-
-[module/play]
-type = custom/script
-exec = python3 ~/.config/polybar/Play.py
-format-padding = 1
-interval = 2
-format = <label>
-format-foreground = ${colors.foreground}
-;format-background = ${colors.foreground-alt}
-click-left = playerctl play
-
-[module/next]
-type = custom/script
-exec = echo 
-format-padding = 1
-format = <label>
-format-foreground = ${colors.foreground}
-;format-background = ${colors.foreground-alt}
-click-left = playerctl next
-
-[module/previous]
-type = custom/script
-exec = echo 
-format-padding = 1
-format = <label>
-format-foreground = ${colors.foreground}
-;format-background = ${colors.foreground-alt}
-click-left = playerctl previous
-
-[module/pause]
-type = custom/script
-exec = python3 ~/.config/polybar/Pause.py
-format-padding = 1
-format = <label>
-interval = 2
-format-foreground = ${colors.foreground}
-;format-background = ${colors.foreground-alt}
-click-left = playerctl pause
-
-; [module/music2]
-; type = custom/script
-; interval = 2
-; label = %output:0:305:...%
-; label-padding = 1
-; exec = ~/.config/polybar/mpris.sh
-
-; [module/love]
-; type = custom/script
-; interval = 2
-; format = <label>
-; ;format-prefix = "❤"
-; format-prefix-foreground = ${colors.foreground}
-; exec = echo "❤"
-; click-left = /bin/love
-
-[module/menu]
-type = custom/menu
-
-format-spacing = 1
-label-open = "  "
-label-open-foreground = ${colors.red}
-label-close = "  "
-label-close-foreground = ${colors.red}
-label-separator = "│"
-label-separator-foreground = ${colors.foreground-alt}
-menu-0-0 = Top
-menu-0-0-exec = menu-open-1
-menu-0-1 = Extra
-menu-0-1-exec = menu-open-2
-menu-0-2 = Music
-menu-0-2-exec = menu-open-3
-menu-0-3 = Power
-menu-0-3-exec = menu-open-4
-
-menu-1-0 = "  "
-menu-1-0-exec = exo-open --launch WebBrowser
-menu-1-1 = "  "
-menu-1-1-exec = exo-open --launch TerminalEmulator
-menu-1-2 = "  "
-menu-1-2-exec = exo-open --launch FileManager
-menu-1-3 = "  "
-menu-1-3-exec = subl3
-
-menu-2-0 = "  "
-menu-2-0-exec = gimp-2.8
-menu-2-1 = "  "
-menu-2-1-exec = audacious &
-menu-2-2 = "  "
-menu-2-2-exec = deluge
-menu-2-3 = "  "
-menu-2-3-exec = claws-mail
-menu-2-4 = "  "
-menu-2-4-exec = steam-runtime
-menu-2-5 = "  "
-menu-2-5-exec = scrot %F-%S_$wx$h_scrot.png -e 'mv $f ~/images'
-
-menu-3-0 = "  "
-menu-3-0-exec = audacious &
-menu-3-1 = "  "
-menu-3-1-exec = playerctl previous
-menu-3-2 = "  "
-menu-3-2-exec = playerctl stop
-menu-3-3 = "  "
-menu-3-3-exec = playerctl play-pause
-menu-3-4 = "  "
-menu-3-4-exec = playerctl next
-
-menu-4-0 = "  "
-menu-4-0-exec = slimlock
-menu-4-1 = "  "
-menu-4-1-exec = systemctl reboot
-menu-4-2 = "  "
-menu-4-2-exec = systemctl poweroff
-
-[module/powermenu]
-type = custom/menu
-format-spacing = 1
-label-open = 
-label-open-font = 2
-label-open-foreground = ${colors.red}
-label-close = 
-label-close-foreground = ${colors.foreground}
-label-separator = |
-label-separator-foreground = ${colors.foreground-alt}
-menu-0-0 = 
-menu-0-0-foreground = ${colors.blue}
-menu-0-0-exec = menu-open-1
-menu-0-1 = 
-menu-0-1-foreground = ${colors.red}
-menu-0-1-exec = menu-open-2
-menu-1-0 = restart?
-menu-1-0-exec = /sbin/reboot
-menu-1-1 = 
-menu-1-1-exec = menu-open-0
-menu-2-0 = 
-menu-2-0-exec = menu-open-0
-menu-2-1 = shutdown?
-menu-2-1-exec = /sbin/poweroff
-
-[module/mpd2]
-type                  = internal/mpd
-label-song            = %artist% - %title%
-label-song-maxlen     = 65
-label-song-ellipsis   = true
-format-online = <icon-prev> <icon-stop> <toggle> <icon-next>  <icon-random> <label-song> <bar-progress>
-label-song-foreground = ${colors.blue}
-label-padding = 1
-label-song-background = ${colors.background}
-icon-pause-background = ${self.label-song-background}
-icon-play-background  = ${self.label-song-background}
-icon-pause-foreground = ${self.label-song-foreground}
-icon-stop-foreground = ${self.label-song-foreground}
-icon-play-foreground  = ${self.label-song-foreground}
-label-song-padding = 1
-icon-prev  = ""
-icon-stop  = ""
-icon-pause = ""
-icon-play  = ""
-icon-next  = ""
-icon-random = ""
-toggle-off-foreground = ${colors.blue}
-toggle-on-foreground  = ${colors.red}
-bar-progress-width = 20
-bar-progress-indicator = 
-bar-progress-fill = 
-bar-progress-empty = 
-bar-progress-fill-foreground = ${colors.blue}
-bar-progress-indicator-foreground = ${colors.blue}
-
-[settings]
-screenchange-reload = true
-;compositing-background = xor
-;compositing-background = screen
-;compositing-foreground = source
-;compositing-border = over
-
-;[global/wm]
-;margin-top = 0
-;margin-bottom = 0
+label = %percentage%%
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+bar-width = 10
+bar-indicator = |
+bar-fill = ─
+bar-empty = ─
