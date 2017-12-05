@@ -1,7 +1,6 @@
 ;---------------------------------------------
 ;         Polybar Configuration              ;
 ;               Openbox                      ;
-;           github.com/JLErvin               ;
 ;---------------------------------------------
 
 [colors]
@@ -59,7 +58,7 @@ module-margin-left=0
 module-margin-right=0
 modules-left=openbox padding xwindow padding
 modules-center=
-modules-right=padding volume padding date padding
+modules-right=cpu padding volume padding date padding
 
 ;--------------------------------------------
 ; modules                                   ;
@@ -93,7 +92,7 @@ format-muted =<label-muted>
 ramp-volume-background=${colors.volbg}
 ramp-volume-foreground=${colors.volfg}
 ramp-volume-padding=1
-label-volume= %percentage%
+label-volume=[vol] %percentage%
 label-volume-background=${colors.volbg}
 label-volume-foreground=${colors.volfg}
 label-volume-padding=1
@@ -109,7 +108,7 @@ ramp-headphones-0=
 type=internal/cpu
 interval=0.5
 format=<label>
-label= %percentage%%
+label=[cpu] %percentage%%
 label-background=${colors.cpubg}
 label-foreground=${colors.cpufg}
 label-padding=1
@@ -162,19 +161,3 @@ label-empty =%name%
 label-empty-padding=1
 label-empty-background=${colors.obibg}
 label-empty-foreground=${colors.obifg}
-
-[module/backlight]
-type = internal/xbacklight
-output = eDP-1
-enable-scroll = false
-format = <label>
-label = %percentage%%
-ramp-0 = 🌕
-ramp-1 = 🌔
-ramp-2 = 🌓
-ramp-3 = 🌒
-ramp-4 = 🌑
-bar-width = 10
-bar-indicator = |
-bar-fill = ─
-bar-empty = ─

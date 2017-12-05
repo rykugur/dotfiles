@@ -337,7 +337,7 @@
     <!-- Misc Keys -->
     <keybind key="A-Pause">
       <action name="Execute">
-        <command>pixellock</command>
+        <command>slock</command>
       </action>
     </keybind>
     <keybind key="A-S-Pause">
