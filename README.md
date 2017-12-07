@@ -74,9 +74,28 @@ ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish ~/.config/fish/function
 ln -s ~/.dotfiles/configs/fish/functions/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish
 ```
 
-# Local Config
+# Misc
+
+## Local Config
 
 You can create a file that is sourced on fish startup to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
+
+## Install ls++
+
+```
+cd /path/to/dotfiles/deps/Term-ExtendedColor
+perl Makefile.PL
+make
+make test
+sudo make install
+cd ~
+```
+
+If you didn't run `create_symlinks.fish` earlier:
+
+```
+ln -s /path/to/dotfiles/configs/ls++.conf ~/.ls++.conf
+```
 
 # TODO
 
