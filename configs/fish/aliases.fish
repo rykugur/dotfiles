@@ -16,7 +16,6 @@ alias vi               "vim"
 alias vimnotes         "vim -c VimwikiIndex"
 alias ytdl             "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 ###### fast travel
-alias configs   "gits -c"
 alias docs      "cd $HOME/docs"
 alias notes     "cd $HOME/.notes"
 ###### onepassword-specific
