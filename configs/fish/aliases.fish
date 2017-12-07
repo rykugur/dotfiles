@@ -66,8 +66,8 @@ else
   alias dfh "df -h"
 end
 if which -a ls++ > /dev/null
-  alias ls "/usr/bin/ls++ --potsf"
-  alias ll "/usr/bin/ls++ --potsf"
+  alias ls "ls++ --potsf"
+  alias ll "ls++ --potsf"
   alias llo "/usr/bin/ls -lh"
   alias lso "/usr/bin/ls"
 else
