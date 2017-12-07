@@ -28,3 +28,7 @@ function getos --description "Returns the current os kernel (uname) OR true/fals
     echo (uname)
   end
 end
+
+complete -f -c getos -n 'getos' -a --linux
+complete -f -c getos -n 'getos' -a --win
+complete -f -c getos -n 'getos' -a --mac
