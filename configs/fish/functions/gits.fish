@@ -29,3 +29,8 @@ function gits --description "cd wrapper for gits dir"
 
   cd $_base_dir/$_dir
 end
+
+complete -f -c gits -n 'gits' -a --sync
+complete -f -c gits -n 'gits' -a --dotfiles
+complete -f -c gits -n 'gits' -a --configs
+complete -f -c gits -n 'gits' -a --fish
