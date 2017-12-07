@@ -17,12 +17,6 @@ function gits --description "cd wrapper for gits dir"
       switch $key
         case sync or s
           set _dir "sync"
-        case dotfiles or df or dots or d
-          set _dir "dotfiles"
-        case configs or conf or c
-          set _dir "dotfiles/configs"
-        case fish or f
-          set _dir "dotfiles/configs/fish"
       end # end switch
     end # end getopts
   end # end if
@@ -31,6 +25,3 @@ function gits --description "cd wrapper for gits dir"
 end
 
 complete -f -c gits -n 'gits' -a --sync
-complete -f -c gits -n 'gits' -a --dotfiles
-complete -f -c gits -n 'gits' -a --configs
-complete -f -c gits -n 'gits' -a --fish

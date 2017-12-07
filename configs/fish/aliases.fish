@@ -18,8 +18,6 @@ alias ytdl             "youtube-dl --no-playlist -x --audio-format mp3 --audio-q
 ###### fast travel
 alias configs   "gits -c"
 alias docs      "cd $HOME/docs"
-alias dots      "gits -d"
-alias dots.fish "gits -f"
 alias notes     "cd $HOME/.notes"
 ###### onepassword-specific
 alias op.auth   'set -gx OP_SESSION_rollhax (op signin $OP_LOGIN_HOST.1password.com $OP_LOGIN_EMAIL $OP_LOGIN_KEY --output=raw)'
@@ -44,10 +42,6 @@ alias vbox.mod.load  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
 alias vbox.mod.rm    "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
 ###### systemd-specific
 alias sclist "systemctl --type=service"
-###### ssh
-alias bale     "ssh balescream"
-alias ssh.bale "ssh balescream"
-alias ssh.home "ssh rollhax.io"
 ###### lazy-mode awk-aliases until I'm not lazy and write a proper script
 alias awk1 "awk '{print \$1}'"
 alias awk2 "awk '{print \$2}'"
