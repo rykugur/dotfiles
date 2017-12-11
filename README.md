@@ -63,15 +63,6 @@ Optional but useful symlinks:
 
 ```
 ln -s /path/to/desktop/background/img .desktop_bg
-
-# to replace the bobthefish prompt
-rm ~/.config/fish/functions/fish_prompt.fish
-ln -s ~/.dotfiles/configs/fish/omf/fish_prompt_bobthefish.fish ~/.config/fish/functions/fish_prompt.fish
-
-# overwrite certain odd functionality in some themes
-ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish ~/.config/fish/functions/fish_title.fish
-ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish ~/.config/fish/functions/prompt_pwd.fish
-ln -s ~/.dotfiles/configs/fish/functions/fish_greeting.fish ~/.config/fish/functions/fish_greeting.fish
 ```
 
 # Misc
