@@ -28,6 +28,8 @@ compton --config ~/.dotfiles/configs/compton.conf -b -C
 # -r -> reload polybar on config change
 polybar -q -r top & disown
 
+megasync & disown
+
 # start the bar
 # $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
 
