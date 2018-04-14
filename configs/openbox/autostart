@@ -19,7 +19,7 @@ urxvtd -q -o -f
 xbindkeys
 
 # start compton, -C to remove shadow on docks (e.g. latte-dock)
-compton --config ~/.dotfiles/configs/compton.conf -b -C
+# compton --config ~/.dotfiles/configs/compton.conf -b -C
 
 # start tint2
 # tint2
