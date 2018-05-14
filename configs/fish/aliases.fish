@@ -2,6 +2,7 @@
 alias cmd.copy         "eval $COPYCMD"
 alias cmd.paste        "eval $PASTECMD"
 alias compare_dirs     "rsync --dry-run -v -r -c --delete"
+alias cp.renamer       "curl -X GET http://$COUCHPOTATO_URL/api/$COUCHPOTATO_API_KEY/renamer.scan"
 alias dush             "du -sh"
 alias getmyip          "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep             "grep --color"
