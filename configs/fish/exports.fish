@@ -2,20 +2,9 @@ set -gx CODE_DIR "$HOME/code"
 set -gx EDITOR "vim"
 set -gx GITS "$HOME/gits"
 set -gx VISUAL "vim"
-set -gx GOPATH "$CODE_DIR/go"
-set -gx GOBIN "$GOPATH/bin"
 
 # set additional paths
 set PATH $PATH $HOME/bin
-
-# golang!
-if not set -q GOPATH
-  set -gx GOPATH "$HOME/code/go"
-end
-if not set -q GOBIN
-  set -gx GOBIN "$GOPATH/bin"
-end
-set PATH $PATH $GOBIN
 
 # set GITS
 if not set -q GITS
