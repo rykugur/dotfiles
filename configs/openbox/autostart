@@ -1,5 +1,8 @@
+#!/usr/bin/fish
+
 # fix xrdb
-xrdb -I$HOME/.dotfiles/configs/x/ $HOME/.Xresources
+#xrdb -I$HOME/.dotfiles/configs/x/ $HOME/.Xresources
+update_xrdb
 
 # set our background
 feh --bg-fill ~/.desktop_bg
@@ -8,9 +11,9 @@ feh --bg-fill ~/.desktop_bg
 xset r rate 190 40
 
 # disable screen blanking
-xset s off         # don't activate screensaver
-xset -dpms         # disable DPMS (Energy Star) features.
-xset s noblank     # don't blank the video device
+# xset s off         # don't activate screensaver
+# xset -dpms         # disable DPMS (Energy Star) features.
+# xset s noblank     # don't blank the video device
 
 # start urxvt daemon
 urxvtd -q -o -f
@@ -21,17 +24,18 @@ xbindkeys
 # start compton, -C to remove shadow on docks (e.g. latte-dock)
 # compton --config ~/.dotfiles/configs/compton.conf -b -C
 
-# start tint2
-# tint2
-# start polybar
-# -q -> quiet
-# -r -> reload polybar on config change
-polybar -q -r top & disown
-
-megasync & disown
-
 # start the bar
+polybar -q -r top & disown
 # $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
+
+# call screenlayout script file if present
+if test -e ~/.screenlayout.sh
+  echo calling screenlayout
+  ~/.screenlayout.sh
+end
+
+autocutsel -selection CLIPBOARD -fork
+autocutsel -selection PRIMARY -fork
 
 # source the home file
 # use this to start an app for only one machine (for example, kodi/xbmc)
