@@ -12,17 +12,17 @@ URxvt*transparent: false
 URxvt.geometry: 140x60
 
 !!! appearance
-URxvt*font: xft:artwiz lemon:pixelsize=11:antialias=true,\
+URxvt*font: xft:lemon:pixelsize=11:antialias=true,\
             xft:DejaVu Sans Mono for Powerline:pixelsize=11:antialias=true,\
-            xft:fontawesome-webfont:pixelsize=11:antialias=true,\
+            xft:FontAwesome:pixelsize=11:antialias=true,\
             xft:Source Code Pro for Powerline:pixelsize=11:antialias=true
-URxvt*boldFont: xft:artwiz lemon:pixelsize=11:antialias=true,\
+URxvt*boldFont: xft:lemon:pixelsize=11:antialias=true,\
                 xft:DejaVu Sans Mono for Powerline:pixelsize=11:antialias=true,\
-                xft:fontawesome-webfont:pixelsize=11:antialias=true,\
+                xft:FontAwesome:pixelsize=11:antialias=true,\
                 xft:Source Code Pro for Powerline:pixelsize=11:antialias=true
-URxvt*italicFont: xft:artwiz lemon:pixelsize=11:antialias=true,\
+URxvt*italicFont: xft:lemon:pixelsize=11:antialias=true,\
                   xft:DejaVu Sans Mono for Powerline:pixelsize=11:antialias=true,\
-                  xft:fontawesome-webfont:pixelsize=11:antialias=true,\
+                  xft:FontAwesome:pixelsize=11:antialias=true,\
                   xft:Source Code Pro for Powerline:pixelsize=11:antialias=true
 URxvt*cursorBlink: true
 URxvt*cursorUnderline: false
