@@ -1,11 +1,14 @@
-#!/usr/bin/fish
+# todo: why is term=dumb when autostart is called?
+# todo: figure out how to source env variables from fish during autostart
+# todo: after ^^^ figure out how to call update_xrdb below instead of calling xrdb directly with paths
 
-# fix xrdb
-#xrdb -I$HOME/.dotfiles/configs/x/ $HOME/.Xresources
-update_xrdb
+# source .Xresources file/update xrdb
+xrdb -I$HOME/.dotfiles/configs/x/ $HOME/.Xresources
 
 # set our background
-feh --bg-fill ~/.desktop_bg
+if test -f ~/.desktop_bg
+  feh --bg-fill ~/.desktop_bg
+end
 
 # increase key repeat rate
 xset r rate 190 40
@@ -19,24 +22,25 @@ xset r rate 190 40
 urxvtd -q -o -f
 
 # start xbindkeys
-xbindkeys
+xbindkeys &
 
 # start compton, -C to remove shadow on docks (e.g. latte-dock)
-# compton --config ~/.dotfiles/configs/compton.conf -b -C
+compton --config ~/.dotfiles/configs/compton.conf -b -C
 
 # start the bar
-polybar -q -r top & disown
+# polybar -q -r top & disown
 # $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
 
 # call screenlayout script file if present
 if test -e ~/.screenlayout.sh
-  echo calling screenlayout
   ~/.screenlayout.sh
 end
 
+# setup autocutsel to merge clipboard and primary
 autocutsel -selection CLIPBOARD -fork
 autocutsel -selection PRIMARY -fork
 
-# source the home file
-# use this to start an app for only one machine (for example, kodi/xbmc)
-. ~/.autostart.local
+# source local autostart if it exists
+if test -e ~/.autostart.local
+	. ~/.autostart.local
+end

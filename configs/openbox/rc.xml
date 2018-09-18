@@ -25,16 +25,16 @@
        mouse into it, also raise the window -->
   </focus>
   <placement>
-    <policy>UnderMouse</policy>
+    <policy>Smart</policy>
     <!-- 'Smart' or 'UnderMouse' -->
     <center>yes</center>
     <!-- whether to place windows in the center of the free area found or
        the top left corner -->
-    <monitor>Mouse</monitor>
+    <monitor>Active</monitor>
     <!-- with Smart placement on a multi-monitor system, try to place new windows
        on: 'Any' - any monitor, 'Mouse' - where the mouse is, 'Active' - where
        the active window is, 'Primary' - only on the primary monitor -->
-    <primaryMonitor>1</primaryMonitor>
+    <primaryMonitor>Active</primaryMonitor>
     <!-- The monitor where Openbox should place popup dialogs such as the
        focus cycling popup, or the desktop switch popup.  It can be an index
        from 1, specifying a particular monitor.  Or it can be one of the
@@ -42,9 +42,8 @@
                   'Active' - where the active window is -->
   </placement>
   <theme>
-    <name>Orang</name>
-    <!-- <titleLayout>NDLSIMC</titleLayout> -->
-    <titleLayout>L</titleLayout>
+    <name>Numix</name>
+    <titleLayout>NLIMSDC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
       N: window icon
@@ -77,7 +76,7 @@
     </font>
     <font place="MenuHeader">
       <name>lemon</name>
-      <size>8</size>
+      <size>9</size>
       <!-- font size in points -->
       <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
@@ -86,7 +85,7 @@
     </font>
     <font place="MenuItem">
       <name>lemon</name>
-      <size>8</size>
+      <size>9</size>
       <!-- font size in points -->
       <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
@@ -95,7 +94,7 @@
     </font>
     <font place="ActiveOnScreenDisplay">
       <name>lemon</name>
-      <size>8</size>
+      <size>9</size>
       <!-- font size in points -->
       <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
@@ -104,7 +103,7 @@
     </font>
     <font place="InactiveOnScreenDisplay">
       <name>lemon</name>
-      <size>8</size>
+      <size>9</size>
       <!-- font size in points -->
       <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
@@ -124,10 +123,6 @@
     <number>4</number>
     <firstdesk>1</firstdesk>
     <names>
-      <name>eins</name>
-      <name>zwei</name>
-      <name>drei</name>
-      <name>vier</name>
       <!-- set names up here if you want to, like this:
     <name>desktop 1</name>
     <name>desktop 2</name>
@@ -183,7 +178,7 @@
   </dock>
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
-    <!-- desktop switching -->
+    <!-- Keybindings for desktop switching -->
     <keybind key="C-A-Left">
       <action name="GoToDesktop">
         <to>left</to>
@@ -208,7 +203,6 @@
         <wrap>no</wrap>
       </action>
     </keybind>
-    <!-- move windows to other desktops -->
     <keybind key="S-A-Left">
       <action name="SendToDesktop">
         <to>left</to>
@@ -233,11 +227,30 @@
         <wrap>no</wrap>
       </action>
     </keybind>
-    <!-- show desktop -> meta-d -->
+    <keybind key="W-F1">
+      <action name="GoToDesktop">
+        <to>1</to>
+      </action>
+    </keybind>
+    <keybind key="W-F2">
+      <action name="GoToDesktop">
+        <to>2</to>
+      </action>
+    </keybind>
+    <keybind key="W-F3">
+      <action name="GoToDesktop">
+        <to>3</to>
+      </action>
+    </keybind>
+    <keybind key="W-F4">
+      <action name="GoToDesktop">
+        <to>4</to>
+      </action>
+    </keybind>
     <keybind key="W-d">
       <action name="ToggleShowDesktop"/>
     </keybind>
-    <!-- windows -->
+    <!-- Keybindings for windows -->
     <keybind key="A-F4">
       <action name="Close"/>
     </keybind>
@@ -251,7 +264,7 @@
         <menu>client-menu</menu>
       </action>
     </keybind>
-    <!-- for window switching -->
+    <!-- Keybindings for window switching -->
     <keybind key="A-Tab">
       <action name="NextWindow">
         <finalactions>
@@ -261,25 +274,7 @@
         </finalactions>
       </action>
     </keybind>
-    <keybind key="A-j">
-      <action name="NextWindow">
-        <finalactions>
-          <action name="Focus"/>
-          <action name="Raise"/>
-          <action name="Unshade"/>
-        </finalactions>
-      </action>
-    </keybind>
     <keybind key="A-S-Tab">
-      <action name="PreviousWindow">
-        <finalactions>
-          <action name="Focus"/>
-          <action name="Raise"/>
-          <action name="Unshade"/>
-        </finalactions>
-      </action>
-    </keybind>
-    <keybind key="A-semicolon">
       <action name="PreviousWindow">
         <finalactions>
           <action name="Focus"/>
@@ -299,7 +294,7 @@
         </finalactions>
       </action>
     </keybind>
-    <!-- window switching with the arrow keys -->
+    <!-- Keybindings for window switching with the arrow keys -->
     <keybind key="W-S-Right">
       <action name="DirectionalCycleWindows">
         <direction>right</direction>
@@ -320,56 +315,131 @@
         <direction>down</direction>
       </action>
     </keybind>
-    <!-- running applications -->
-    <keybind key="W-e">
-      <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
-          <name>Konqueror</name>
-        </startupnotify>
-        <command>kfmclient openProfile filemanagement</command>
+
+    <!-- ==================================================== -->
+    <!-- custom keybinds -->
+    <!-- ==================================================== -->
+
+    <!-- directional window cycling -->
+    <keybind key="A-S-semicolon">
+      <action name="DirectionalCycleWindows">
+        <direction>right</direction>
       </action>
     </keybind>
-    <!-- ================== -->
-    <!-- CUSTOM KEYBINDS -->
-    <!-- ================== -->
-    <!-- ================== -->
-    <!-- Misc Keys -->
-    <keybind key="A-Pause">
-      <action name="Execute">
-        <command>slock</command>
+    <keybind key="A-S-j">
+      <action name="DirectionalCycleWindows">
+        <direction>left</direction>
       </action>
     </keybind>
-    <keybind key="A-S-Pause">
-      <action name="ShowMenu">
-        <menu>logout-menu</menu>
+    <keybind key="A-S-l">
+      <action name="DirectionalCycleWindows">
+        <direction>up</direction>
       </action>
     </keybind>
-    <!-- Open a new vim window and call 'VimwikiIndex' immediately, which -->
-    <!-- opens our vimwiki index file. -->
-    <keybind key="A-S-n">
-      <action name="Execute">
-        <command>urxvtc -e vim -c VimwikiIndex</command>
+    <keybind key="A-S-k">
+      <action name="DirectionalCycleWindows">
+        <direction>down</direction>
       </action>
     </keybind>
-    <!-- ================== -->
-    <!-- Media Keys -->
-    <keybind key="XF86AudioMute">
+
+    <!-- app launchers -->
+    <keybind key="A-r">
       <action name="Execute">
-        <!-- <command>pactl set-sink-mute 1 toggle</command> -->
-        <command>amixer -D pulse set Master toggle</command>
+        <command>rofi -combi-modi window,ssh,run -show combi -modi combi</command>
+      </action>
+    </keybind>
+    <keybind key="A-Return">
+      <action name="Execute">
+        <command>urxvtc</command>
+      </action>
+    </keybind>
+    <keybind key="A-e">
+      <action name="Execute">
+        <command>thunar</command>
+      </action>
+    </keybind>
+    <keybind key="A-S-r">
+      <action name="Execute">
+        <command>fish -c runnar</command>
+      </action>
+    </keybind>
+    <keybind key="A-S-v">
+      <action name="Execute">
+        <command>fish -c snippets</command>
+      </action>
+    </keybind>
+    <keybind key="A-S-u">
+      <action name="Execute">
+        <command>fish -c umlauts</command>
+      </action>
+    </keybind>
+
+    <!-- workspace binds -->
+    <keybind key="A-1">
+      <action name="GoToDesktop">
+        <to>1</to>
+      </action>
+    </keybind>
+    <keybind key="A-2">
+      <action name="GoToDesktop">
+        <to>2</to>
+      </action>
+    </keybind>
+    <keybind key="A-3">
+      <action name="GoToDesktop">
+        <to>3</to>
+      </action>
+    </keybind>
+    <keybind key="A-S-1">
+      <action name="SendToDesktop">
+        <to>1</to>
+      </action>
+    </keybind>
+    <keybind key="A-S-2">
+      <action name="SendToDesktop">
+        <to>2</to>
+      </action>
+    </keybind>
+    <keybind key="A-S-3">
+      <action name="SendToDesktop">
+        <to>3</to>
+      </action>
+    </keybind>
+
+    <!-- misc window binds -->
+    <keybind key="A-S-w">
+      <action name="Close" />
+    </keybind>
+    <keybind key="A-S-f">
+      <action name="ToggleMaximize" />
+    </keybind>
+    <keybind key="A-C-S-f">
+      <action name="ToggleFullscreen" />
+    </keybind>
+    <keybind key="A-S-m">
+      <action name="Iconify" />
+    </keybind>
+    <keybind key="A-S-h">
+      <action name="ToggleShade" />
+    </keybind>
+
+    <!-- media keys -->
+		<keybind key="XF86AudioMute">
+      <action name="Execute">
+        <command>pactl set-sink-mute 1 toggle</command>
+        <!-- <command>amixer -D pulse set Master toggle</command> -->
       </action>
     </keybind>
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
-        <!-- <command>pactl set-sink-volume 1 +5%</command> -->
-        <command>amixer -D pulse set Master 5%+ unmute</command>
+        <command>pactl set-sink-volume 1 +5%</command>
+        <!-- <command>amixer -D pulse set Master 5%+ unmute</command> -->
       </action>
     </keybind>
     <keybind key="XF86AudioLowerVolume">
       <action name="Execute">
-        <!-- <command>pactl set-sink-volume 1 -5%</command> -->
-        <command>amixer -D pulse set Master 5%- unmute</command>
+        <command>pactl set-sink-volume 1 -5%</command>
+        <!-- <command>amixer -D pulse set Master 5%- unmute</command> -->
       </action>
     </keybind>
     <keybind key="XF86AudioPlay">
@@ -402,128 +472,22 @@
         <command>xbacklight -dec 5</command>
       </action>
     </keybind>
-    <!-- ================== -->
-    <!-- Apps and Whatnots -->
-    <keybind key="A-S-r">
+
+    <!-- misc binds -->
+    <keybind key="A-Pause">
       <action name="Execute">
-        <command>fish -c runnar</command>
+        <command>~/.dotfiles/misc/scripts/pixellock</command>
       </action>
     </keybind>
-    <keybind key="A-S-v">
-      <action name="Execute">
-        <command>fish -c snippets</command>
-      </action>
-    </keybind>
-    <keybind key="A-S-u">
-      <action name="Execute">
-        <command>fish -c umlauts</command>
-      </action>
-    </keybind>
-    <!-- ================== -->
-    <!-- Misc Openbox Stuff -->
-    <keybind key="A-C-S-r">
-      <action name="Reconfigure"/>
-    </keybind>
-    <keybind key="A-S-space">
+    <keybind key="A-S-Pause">
       <action name="ShowMenu">
-        <menu>root-menu</menu>
+        <menu>logout_menu</menu>
       </action>
     </keybind>
-    <keybind key="A-S-d">
-      <action name="ToggleShowDesktop"/>
-    </keybind>
-    <!-- ================== -->
-    <!-- Window Stuff -->
-    <keybind key="A-S-f">
-      <action name="ToggleMaximize"/>
-    </keybind>
-    <keybind key="A-C-S-f">
-      <action name="ToggleFullscreen"/>
-    </keybind>
-    <!-- Iconify means minimize -->
-    <keybind key="A-S-m">
-      <action name="Iconify"/>
-    </keybind>
-    <keybind key="A-S-h">
-      <action name="ToggleShade"/>
-    </keybind>
-    <keybind key="A-S-w">
-      <action name="Close"/>
-    </keybind>
-    <!-- ================== -->
-    <!-- Workspace Stuff -->
-    <keybind key="A-1">
-      <action name="GoToDesktop">
-        <to>1</to>
-      </action>
-    </keybind>
-    <keybind key="A-2">
-      <action name="GoToDesktop">
-        <to>2</to>
-      </action>
-    </keybind>
-    <keybind key="A-3">
-      <action name="GoToDesktop">
-        <to>3</to>
-      </action>
-    </keybind>
-    <keybind key="A-4">
-      <action name="GoToDesktop">
-        <to>4</to>
-      </action>
-    </keybind>
-    <keybind key="A-S-1">
-      <action name="SendToDesktop">
-        <to>1</to>
-      </action>
-    </keybind>
-    <keybind key="A-S-2">
-      <action name="SendToDesktop">
-        <to>2</to>
-      </action>
-    </keybind>
-    <keybind key="A-S-3">
-      <action name="SendToDesktop">
-        <to>3</to>
-      </action>
-    </keybind>
-    <keybind key="A-S-4">
-      <action name="SendToDesktop">
-        <to>4</to>
-      </action>
-    </keybind>
-    <!-- <keybind key="A-S-j"> -->
-    <!--   <action name="SendToDesktop"> -->
-    <!--     <to>left</to> -->
-    <!--     <wrap>no</wrap> -->
-    <!--   </action> -->
-    <!-- </keybind> -->
-    <!-- <keybind key="A-S-semicolon"> -->
-    <!--   <action name="SendToDesktop"> -->
-    <!--     <to>right</to> -->
-    <!--     <wrap>no</wrap> -->
-    <!--   </action> -->
-    <!-- </keybind> -->
-    <!-- ================== -->
-    <!-- Applications -->
-    <keybind key="A-r">
-      <action name="Execute">
-        <!-- <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -z</command> -->
-        <!-- <command>dmenu_run -w 500 -l 10 -x 400 -y 300 -i</command> -->
-        <command>rofi -combi-modi window,ssh,run -show combi -modi combi</command>
-      </action>
-    </keybind>
-    <keybind key="A-Return">
-      <action name="Execute">
-        <command>urxvtc</command>
-      </action>
-    </keybind>
-    <keybind key="A-e">
-      <action name="Execute">
-        <command>thunar</command>
-      </action>
-    </keybind>
-    <!-- ================== -->
+
+    <!--  -->
+    <!--  -->
+
   </keyboard>
   <mouse>
     <dragThreshold>1</dragThreshold>
