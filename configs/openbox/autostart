@@ -6,9 +6,7 @@
 xrdb -I$HOME/.dotfiles/configs/x/ $HOME/.Xresources
 
 # set our background
-if test -f ~/.desktop_bg
-  feh --bg-fill ~/.desktop_bg
-end
+feh --bg-fill ~/.desktop_bg
 
 # increase key repeat rate
 xset r rate 190 40
@@ -27,20 +25,13 @@ xbindkeys &
 # start compton, -C to remove shadow on docks (e.g. latte-dock)
 compton --config ~/.dotfiles/configs/compton.conf -b -C
 
-# start the bar
-# polybar -q -r top & disown
-# $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
-
-# call screenlayout script file if present
-if test -e ~/.screenlayout.sh
-  ~/.screenlayout.sh
-end
-
 # setup autocutsel to merge clipboard and primary
 autocutsel -selection CLIPBOARD -fork
 autocutsel -selection PRIMARY -fork
 
-# source local autostart if it exists
-if test -e ~/.autostart.local
-	. ~/.autostart.local
-end
+# start the bar
+# polybar -q -r top & disown
+# $HOME/.dotfiles/configs/lemonbar/start_lemonbar.sh &
+
+# source local autostart
+. ~/.autostart.local
