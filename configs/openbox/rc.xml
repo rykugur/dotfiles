@@ -120,13 +120,12 @@
 
        use obconf if you want to change these without having to log out
        and back in -->
-    <number>4</number>
+    <number>3</number>
     <firstdesk>1</firstdesk>
     <names>
-      <!-- set names up here if you want to, like this:
-    <name>desktop 1</name>
-    <name>desktop 2</name>
-    -->
+      <name>misc</name>
+      <name>code</name>
+      <name>game</name>
     </names>
     <popupTime>875</popupTime>
     <!-- The number of milliseconds to show the popup for when switching
@@ -315,11 +314,9 @@
         <direction>down</direction>
       </action>
     </keybind>
-
     <!-- ==================================================== -->
     <!-- custom keybinds -->
     <!-- ==================================================== -->
-
     <!-- directional window cycling -->
     <keybind key="A-S-semicolon">
       <action name="DirectionalCycleWindows">
@@ -341,7 +338,6 @@
         <direction>down</direction>
       </action>
     </keybind>
-
     <!-- app launchers -->
     <keybind key="A-r">
       <action name="Execute">
@@ -373,7 +369,6 @@
         <command>fish -c umlauts</command>
       </action>
     </keybind>
-
     <!-- workspace binds -->
     <keybind key="A-1">
       <action name="GoToDesktop">
@@ -405,26 +400,24 @@
         <to>3</to>
       </action>
     </keybind>
-
     <!-- misc window binds -->
     <keybind key="A-S-w">
-      <action name="Close" />
+      <action name="Close"/>
     </keybind>
     <keybind key="A-S-f">
-      <action name="ToggleMaximize" />
+      <action name="ToggleMaximize"/>
     </keybind>
     <keybind key="A-C-S-f">
-      <action name="ToggleFullscreen" />
+      <action name="ToggleFullscreen"/>
     </keybind>
     <keybind key="A-S-m">
-      <action name="Iconify" />
+      <action name="Iconify"/>
     </keybind>
     <keybind key="A-S-h">
-      <action name="ToggleShade" />
+      <action name="ToggleShade"/>
     </keybind>
-
     <!-- media keys -->
-		<keybind key="XF86AudioMute">
+    <keybind key="XF86AudioMute">
       <action name="Execute">
         <command>pactl set-sink-mute 1 toggle</command>
         <!-- <command>amixer -D pulse set Master toggle</command> -->
@@ -472,7 +465,6 @@
         <command>xbacklight -dec 5</command>
       </action>
     </keybind>
-
     <!-- misc binds -->
     <keybind key="A-Pause">
       <action name="Execute">
@@ -484,10 +476,8 @@
         <menu>logout_menu</menu>
       </action>
     </keybind>
-
     <!--  -->
     <!--  -->
-
   </keyboard>
   <mouse>
     <dragThreshold>1</dragThreshold>
