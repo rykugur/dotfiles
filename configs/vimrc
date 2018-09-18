@@ -177,14 +177,8 @@ command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 nnoremap <silent> <leader>pp :set paste!<CR>
 " copy line to system clipboard (middle click)
 nnoremap <leader>y "*y
-" copy line to system clipboard that can be used in Windows VM (this is
-" retarded)
-nnoremap <leader>wy "+y
 " copy entire file to system clipboard (middle click)
 nnoremap <leader>Y ggVG"*y
-" copy entire file to system clipboard that can be used in Windows VM (this is
-" still retarded)
-nnoremap <leader>WY ggVG"+y
 
 " Home key
 imap <esc>OH <esc>0i
@@ -270,6 +264,7 @@ map q: :q
 """"""""""""""""""""""""""""""
 """ IndentLines
 let g:indentLine_color_term = 239
+let g:indentLine_char = '|'
 
 """ RainbowParentheses
 au VimEnter * RainbowParenthesesToggle
