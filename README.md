@@ -8,6 +8,8 @@ Requirements
 
 # base
 
+# 
+
 * dmenu2
 * feh
 * urxvt (rxvt-unicode)
@@ -51,12 +53,22 @@ Install fisher (subject to change, check the fisherman README.md):
 ```
 curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
 fisher install
+fisher add < ~/.dotfiles/configs/fish/fisherfile
 ```
 
-Create some symlinks (assumes ~/.dotfiles exists)
+Create some dirs/symlinks (assumes ~/.dotfiles exists)
 
 ```
 ~/.dotfiles/misc/scripts/create_symlinks.fish
+# TODO: add these to above script
+
+mkdir ~/bin
+
+ln -s ~/.dotfiles/configs/fish/functions/fish_greeting.fish
+ln -s ~/.dotfiles/configs/fish/functions/fish_prompt.fish
+ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish
+ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish
+
 ```
 
 Optional but useful symlinks:
