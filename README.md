@@ -64,11 +64,12 @@ Create some dirs/symlinks (assumes ~/.dotfiles exists)
 
 mkdir ~/bin
 
+cd ~/.config/fish/functions
 ln -s ~/.dotfiles/configs/fish/functions/fish_greeting.fish
 ln -s ~/.dotfiles/configs/fish/functions/fish_prompt.fish
 ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish
 ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish
-
+cd -
 ```
 
 Optional but useful symlinks:
