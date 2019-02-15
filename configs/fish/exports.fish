@@ -12,13 +12,13 @@ if not set -q GITS
 end
 
 # set paste/copy aliases
-if getos --mac
-  set -gx PASTECMD 'pbpaste'
-  set -gx COPYCMD  'pbcopy'
-else
-  set -gx PASTECMD 'xclip -o'
-  set -gx COPYCMD  'xclip -i'
-end
+# if getos --mac
+#   set -gx PASTECMD 'pbpaste'
+#   set -gx COPYCMD  'pbcopy'
+# else
+#   set -gx PASTECMD 'xclip -o'
+#   set -gx COPYCMD  'xclip -i'
+# end
 
 # set DROPBOX_DIR
 if not set -q DROPBOX_DIR
