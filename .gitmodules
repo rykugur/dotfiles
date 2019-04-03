@@ -28,3 +28,9 @@
 [submodule "deps/Font-Awesome"]
 	path = deps/Font-Awesome
 	url = https://github.com/FortAwesome/Font-Awesome.git
+[submodule "deps/theme-robbyrussel-rollhax"]
+	path = deps/theme-robbyrussel-rollhax
+	url = git@github.com:rykugur/theme-robbyrussell.git
+[submodule "deps/theme-bobthefish-rollhax"]
+	path = deps/theme-bobthefish-rollhax
+	url = git@github.com:rykugur/theme-bobthefish.git

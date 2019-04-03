@@ -13,8 +13,10 @@ source $HOME/.dotfiles/configs/fish/exports.fish
 # source our aliases file
 source $HOME/.dotfiles/configs/fish/aliases.fish
 
-# source our abbreviations file
-source $HOME/.dotfiles/configs/fish/abbreviations.fish
+# source our abbreviations files
+for file in $HOME/.dotfiles/configs/fish/abbr*
+  source $file
+end
 
 # Load any local configs
 # Do this last, since we might want to append to/override abbreviations, aliases, etc.

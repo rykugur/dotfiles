@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# vncserver -geometry 1920x1080 -alwaysshared -dpi 96 :1
-vncserver -geometry 1440x900 -alwaysshared -dpi 96 :1
+vncserver -geometry 1920x1080 -alwaysshared -dpi 96 :1
+#vncserver -geometry 1440x900 -alwaysshared -dpi 96 :1
