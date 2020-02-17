@@ -47,3 +47,5 @@ abbr --add --global gsub 'git submodule'
 abbr --add --global gsubf 'git submodule foreach'
 abbr --add --global gsubi 'git submodule init'
 abbr --add --global gsubu 'git submodule update'
+
+abbr --add --global git.contains 'git branch --contains'
