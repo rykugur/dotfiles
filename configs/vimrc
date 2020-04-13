@@ -170,6 +170,9 @@ command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 " better handling of large files (still testing)
 " set synmaxcol=120
 
+" disable obnoxious bell in vim
+set visualbell
+
 """"""""""""""""""""""""""""""
 " maps
 """"""""""""""""""""""""""""""
