@@ -8,7 +8,7 @@ Requirements
 
 # base
 
-# 
+#
 
 * dmenu2
 * feh
@@ -84,7 +84,7 @@ ln -s /path/to/desktop/background/img .desktop_bg
 
 You can create a file that is sourced on fish startup to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
 
-## Install ls++
+## Install ls--
 
 ```
 cd /path/to/dotfiles/deps/Term-ExtendedColor
@@ -93,6 +93,12 @@ make
 make test
 sudo make install
 cd ~
+```
+
+Alternatively, you can install `cpanminus` and use the following command:
+
+```
+# cpanm Term::ExtendedColor File::LsColor
 ```
 
 If you didn't run `create_symlinks.fish` earlier:
