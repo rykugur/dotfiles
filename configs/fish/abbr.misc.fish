@@ -21,6 +21,3 @@ abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global sv 'sudo vim'
 abbr --add --global svec 'sudo vim /etc/hosts'
 abbr --add --global taill 'tail -Fn 999'
-
-### docker specific but not enough to warrant their own file
-abbr --add --global docker.clean 'docker rmi (docker images -f "dangling=true" -q)'
