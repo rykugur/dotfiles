@@ -34,3 +34,6 @@
 [submodule "deps/theme-bobthefish-rollhax"]
 	path = deps/theme-bobthefish-rollhax
 	url = git@github.com:rykugur/theme-bobthefish.git
+[submodule "deps/oh-my-tmux"]
+	path = deps/oh-my-tmux
+	url = https://github.com/gpakosz/.tmux.git
