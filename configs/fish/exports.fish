@@ -11,14 +11,9 @@ if not set -q GITS
   set -gx GITS "$HOME/gits"
 end
 
-# set paste/copy aliases
-# if getos --mac
-#   set -gx PASTECMD 'pbpaste'
-#   set -gx COPYCMD  'pbcopy'
-# else
-#   set -gx PASTECMD 'xclip -o'
-#   set -gx COPYCMD  'xclip -i'
-# end
+# manually override this in ~/.fish_local.fish if needed
+set -gx COPYCMD  'xclip -i'
+set -gx PASTECMD 'xclip -o'
 
 # set DROPBOX_DIR
 if not set -q DROPBOX_DIR
