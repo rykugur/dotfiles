@@ -11,7 +11,7 @@ set -gx fish_function_path $HOME/.dotfiles/configs/fish/functions $fish_function
 source $HOME/.dotfiles/configs/fish/exports.fish
 
 # source our aliases file
-source $HOME/.dotfiles/configs/fish/aliases.fish
+source $HOME/.dotfiles/configs/fish/alias*
 
 # source our abbreviations files
 for file in $HOME/.dotfiles/configs/fish/abbr*
