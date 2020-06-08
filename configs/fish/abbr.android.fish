@@ -1,1 +1,1 @@
-abbr --add --global asas adb shell am start
+abbr --add --global adb.start adb shell am start
