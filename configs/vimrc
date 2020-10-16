@@ -37,33 +37,50 @@ call vundle#begin('~/.dotfiles/configs/vim/bundle')
 " required!
 Plugin 'VundleVim/Vundle.vim'
 
+" Displays code tags in a sidebar
 Plugin 'majutsushi/tagbar'
+" Provides automatic closing quotes/brackets/...
 Plugin 'Raimondi/delimitMate'
+" Tree file explorer
 Plugin 'scrooloose/nerdtree'
+" Changes surrounding tags
 Plugin 'tpope/vim-surround'
+" Git in vim
 Plugin 'tpope/vim-fugitive'
+" Add/remove comments
 Plugin 'tpope/vim-commentary'
+" Date manipulation
 Plugin 'tpope/vim-speeddating'
+" Adds an indent line visual aid
 Plugin 'Yggdroot/indentLine'
+" Multiple colored parents visual aid
 Plugin 'kien/rainbow_parentheses.vim'
+" Syntax checking
 Plugin 'scrooloose/syntastic'
+" Airline
 Plugin 'vim-airline/vim-airline'
+" Themes for airline
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'fatih/vim-go'
+" Plugin 'fatih/vim-go'
+" Autocomplete in vim
 Plugin 'Valloric/YouCompleteMe'
+" Tabs/spacing
 Plugin 'godlygeek/tabular'
+" Scratch notes
 Plugin 'mtth/scratch.vim'
+" Execute commands in vim
 Plugin 'Shougo/vimproc.vim'
-Plugin 'Shougo/unite.vim'
-Plugin 'terryma/vim-multiple-cursors'
+" Plugin 'Shougo/unite.vim'
+" Plugin 'terryma/vim-multiple-cursors'
+" Edit fish scripts
 Plugin 'Soares/fish.vim'
+" Unique character highlighter (line)
 Plugin 'unblevable/quick-scope'
-Plugin 'kien/ctrlp.vim'
-Plugin 'tpope/vim-markdown'
+" Plugin 'tpope/vim-markdown'
 " Plugin 'xolox/vim-misc'
 " Plugin 'xolox/vim-notes'
-Plugin 'vimwiki/vimwiki'
-Plugin 'vim-scripts/vim-auto-save'
+" Plugin 'vimwiki/vimwiki'
+" Plugin 'vim-scripts/vim-auto-save'
 
 call vundle#end()
 filetype plugin indent on
