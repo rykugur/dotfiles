@@ -37,3 +37,6 @@
 [submodule "deps/oh-my-tmux"]
 	path = deps/oh-my-tmux
 	url = https://github.com/gpakosz/.tmux.git
+[submodule "deps/iosevka_font-containers"]
+	path = deps/iosevka_font-containers
+	url = git@github.com:rykugur/containers.git
