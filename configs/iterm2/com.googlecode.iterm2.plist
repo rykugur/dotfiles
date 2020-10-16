@@ -5449,7 +5449,7 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>504 711 928 394 0 0 1920 1177 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>583 175 1763 799 0 0 2560 1057 </string>
+	<string>451 99 1627 824 0 0 2560 1057 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>3 589 570 425 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -5463,6 +5463,8 @@
 		<dict>
 			<key>ASCII Anti Aliased</key>
 			<true/>
+			<key>ASCII Ligatures</key>
+			<false/>
 			<key>Ambiguous Double Width</key>
 			<false/>
 			<key>Ansi 0 Color</key>
@@ -6119,7 +6121,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>RobotoMonoForPowerline-Regular 12</string>
+			<string>Iosevka-Term 13</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -6199,20 +6201,33 @@
 		<string>3.3.6</string>
 		<string>3.3.8</string>
 		<string>3.3.11</string>
-		<string>3.3.2</string>
 		<string>3.3.12</string>
+		<string>3.2.9</string>
 		<string>3.3.7</string>
 		<string>3.3.9</string>
 		<string>3.3.0</string>
-		<string>3.2.9</string>
+		<string>3.3.2</string>
 		<string>3.3.4</string>
+	</array>
+	<key>NoSyncBFPFavorites</key>
+	<array>
+		<string>Iosevka</string>
+		<string>Iosevka Term</string>
+		<string>Iosevka Nerd Font</string>
+		<string>Iosevka Fixed</string>
+	</array>
+	<key>NoSyncBFPRecents</key>
+	<array>
+		<string>Iosevka Fixed</string>
+		<string>Iosevka</string>
+		<string>Iosevka Term</string>
 	</array>
 	<key>NoSyncFrame_SharedPreferences</key>
 	<dict>
 		<key>screenFrame</key>
 		<string>{{0, 0}, {2560, 1080}}</string>
 		<key>topLeft</key>
-		<string>{269, 595}</string>
+		<string>{811, 743}</string>
 	</dict>
 	<key>NoSyncHaveRequestedFullDiskAccess</key>
 	<true/>
@@ -6223,7 +6238,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>EA086905-00FA-44F2-9540-CE668672326F</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>21</integer>
+	<integer>23</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -6994,7 +7009,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-08-04T14:45:41Z</date>
+	<date>2020-09-24T14:35:53Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateGroupIdentifier</key>
@@ -7002,13 +7017,13 @@
 	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<true/>
+	<false/>
 	<key>SoundForEsc</key>
 	<false/>
 	<key>TabStyleWithAutomaticOption</key>
 	<integer>5</integer>
 	<key>TabViewType</key>
-	<integer>2</integer>
+	<integer>0</integer>
 	<key>TmuxUsesDedicatedProfile</key>
 	<false/>
 	<key>UseTmuxStatusBar</key>
