@@ -5,6 +5,7 @@ set -gx VISUAL "vim"
 
 # set additional paths
 set PATH $PATH $HOME/bin
+set PATH $PATH "/usr/bin/vendor_perl/"
 
 # set GITS
 if not set -q GITS
