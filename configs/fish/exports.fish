@@ -3,9 +3,10 @@ set -gx EDITOR "vim"
 set -gx GITS "$HOME/gits"
 set -gx VISUAL "vim"
 
-# set additional paths
+### set additional paths
 set PATH $PATH $HOME/bin
-set PATH $PATH "/usr/bin/vendor_perl/"
+# required for ls++ if installed from arch repo
+set PATH $PATH /usr/bin/vendor_perl
 
 # set GITS
 if not set -q GITS

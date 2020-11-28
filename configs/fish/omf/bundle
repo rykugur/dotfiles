@@ -1,4 +1,8 @@
 package getopts
+package vcs
 theme bobthefish
+theme cbjohnson
+theme chain
 theme default
 theme robbyrussell
+theme shellder

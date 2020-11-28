@@ -1,1 +1,0 @@
-../../../deps/theme-robbyrussel-rollhax/fish_prompt.fish

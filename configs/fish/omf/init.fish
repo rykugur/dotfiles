@@ -1,8 +1,8 @@
 # source fisherman
-set -gx fisher_home ~/.dotfiles/deps/fisherman
-set -gx fisher_config ~/.config/fisherman
-set -gx fisher_file ~/.dotfiles/configs/fish/fisherfile
-source $fisher_home/fisher.fish
+#set -gx fisher_home ~/.dotfiles/deps/fisherman
+#set -gx fisher_config ~/.config/fisherman
+#set -gx fisher_file ~/.dotfiles/configs/fish/fisherfile
+#source $fisher_home/fisher.fish
 
 # set -gx fish_function_path $fish_function_path $HOME/.dotfiles/configs/fish/functions
 set -gx fish_function_path $HOME/.dotfiles/configs/fish/functions $fish_function_path
