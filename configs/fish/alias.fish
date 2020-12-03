@@ -22,17 +22,10 @@ alias ytdl             "youtube-dl --no-playlist -x --audio-format mp3 --audio-q
 alias docs      "cd $HOME/docs"
 alias notes     "cd $HOME/.notes"
 
-###### onepassword-specific
-alias op.auth   'set -gx OP_SESSION_rollhax (op signin $OP_LOGIN_HOST.1password.com $OP_LOGIN_EMAIL $OP_LOGIN_KEY --output=raw)'
-alias op.reauth 'set -gx OP_SESSION_rollhax (op signin $OP_LOGIN_HOST --output=raw)'
-alias op.item   'op get item'
-alias jq.pass   'jq \'.details.fields[] | select(.designation=="password").value\' | tr -d "\""'
-
 ###### arch-specific
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
-alias pac.mirror     "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
-alias vbox.mod.load  "sudo modprobe vboxdrv vboxnetadp vboxnetflt vboxpci"
-alias vbox.mod.rm    "sudo rmmod vvboxdrv vboxnetadp vboxnetflt vboxpci"
+alias pac.mirror "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+alias get.mobo "dmidecode -t 2"
 ###### systemd-specific
 alias sclist "systemctl --type=service"
 ###### lazy-mode awk-aliases until I'm not lazy and write a proper script
