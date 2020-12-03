@@ -8,22 +8,9 @@ Requirements
 
 # base
 
-#
-
-* dmenu2
-* feh
-* urxvt (rxvt-unicode)
-* compton
-* xdotool
-* pactl
-* playerctl
-* xorg-xbacklight
-
-# for i3
-
-* i3blocks
-
-# for openbox
+* `fish`
+* `which`
+* `hostname` (arch users install package `inetutils`)
 
 Getting Started
 ===============
@@ -38,6 +25,7 @@ ln -s [path to dotfiles] .dotfiles
 Then, checkout the submodule dependencies:
 
 ```
+cd ~/.dotfiles
 git submodule init
 git submodule update
 ```
@@ -48,36 +36,6 @@ Install oh-my-fish:
 ~/.dotfiles/deps/oh-my-fish/bin/install
 ```
 
-Install fisher (subject to change, check the fisherman README.md):
-
-```
-curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs git.io/fisher
-fisher install
-fisher add < ~/.dotfiles/configs/fish/fisherfile
-```
-
-Create some dirs/symlinks (assumes ~/.dotfiles exists)
-
-```
-~/.dotfiles/misc/scripts/create_symlinks.fish
-# TODO: add these to above script
-
-mkdir ~/bin
-
-cd ~/.config/fish/functions
-ln -s ~/.dotfiles/configs/fish/functions/fish_greeting.fish
-ln -s ~/.dotfiles/configs/fish/functions/fish_prompt.fish
-ln -s ~/.dotfiles/configs/fish/functions/fish_title.fish
-ln -s ~/.dotfiles/configs/fish/functions/prompt_pwd.fish
-cd -
-```
-
-Optional but useful symlinks:
-
-```
-ln -s /path/to/desktop/background/img .desktop_bg
-```
-
 # Misc
 
 ## Local Config
@@ -85,6 +43,8 @@ ln -s /path/to/desktop/background/img .desktop_bg
 You can create a file that is sourced on fish startup to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
 
 ## Install ls--
+
+If using arch, there is an `ls--` package available to install which will also install Term-ExtendedColor.
 
 ```
 cd /path/to/dotfiles/deps/Term-ExtendedColor
