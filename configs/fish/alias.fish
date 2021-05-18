@@ -45,7 +45,11 @@ if which -a pydf > /dev/null 2>&1
 else
   alias dfh "df -h"
 end
-if which -a ls++ > /dev/null 2>&1
+
+if which -a exa > /dev/null 2>&1
+  alias ls "exa"
+  alias ll "exa --long --header --git"
+else if which -a ls++ > /dev/null 2>&1
   alias ls "ls++ --potsf"
   alias ll "ls++ --potsf"
   alias llo "/usr/bin/ls -lh"
