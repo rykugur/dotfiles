@@ -1,5 +1,7 @@
 package getopts
 package vcs
+theme agnoster
+theme batman
 theme bobthefish
 theme cbjohnson
 theme chain
