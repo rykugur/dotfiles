@@ -42,31 +42,6 @@ Install oh-my-fish:
 
 You can create a file that is sourced on fish startup to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
 
-## Install ls--
-
-If using arch, there is an `ls--` package available to install which will also install Term-ExtendedColor.
-
-```
-cd /path/to/dotfiles/deps/Term-ExtendedColor
-perl Makefile.PL
-make
-make test
-sudo make install
-cd ~
-```
-
-Alternatively, you can install `cpanminus` and use the following command:
-
-```
-# cpanm Term::ExtendedColor File::LsColor
-```
-
-If you didn't run `create_symlinks.fish` earlier:
-
-```
-ln -s /path/to/dotfiles/configs/ls++.conf ~/.ls++.conf
-```
-
 # TODO
 
 - Work out order of import for functions.

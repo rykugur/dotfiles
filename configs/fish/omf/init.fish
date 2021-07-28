@@ -25,3 +25,7 @@ end
 if test -e $HOME/.fish_local.fish
   source $HOME/.fish_local.fish
 end
+
+if which -a starship > /dev/null 2>&1
+  starship init fish | source
+end
