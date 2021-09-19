@@ -6,14 +6,22 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 Requirements
 ============
 
-* `fish`
+## Terminal
 
-# Optional
+* `fish`
+* `git`
+* a font with a wide array of icons and symbols; see [Nerd Fonts](https://www.nerdfonts.com) to get your favorite font patched with extra symbols.
+
+### Optional
 
 * `which`
 * `hostname` (arch users install package `inetutils`)
 * [`exa`](https://github.com/ogham/exa)
 * [`starship`](https://starship.rs)
+
+## Vim
+
+* [`vundle`](https://github.com/VundleVim/Vundle.vim)
 
 Getting Started
 ===============
