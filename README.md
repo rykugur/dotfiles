@@ -7,6 +7,9 @@ Requirements
 ============
 
 * `fish`
+
+# Optional
+
 * `which`
 * `hostname` (arch users install package `inetutils`)
 * [`exa`](https://github.com/ogham/exa)
