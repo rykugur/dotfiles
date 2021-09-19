@@ -9,6 +9,7 @@ Requirements
 ## Terminal
 
 * `fish`
+* [`oh-my-fish`](https://github.com/oh-my-fish/oh-my-fish) (optional)
 * `git`
 * a font with a wide array of icons and symbols; see [Nerd Fonts](https://www.nerdfonts.com) to get your favorite font patched with extra symbols.
 
@@ -23,14 +24,8 @@ Requirements
 
 * [`vundle`](https://github.com/VundleVim/Vundle.vim)
 
-Getting Started
+Local Config
 ===============
-
-# Install oh-my-fish:
-
-Install omf via the curl listed [here](https://github.com/oh-my-fish/oh-my-fish).
-
-## Local Config
 
 OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
 
