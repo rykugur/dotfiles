@@ -6,43 +6,21 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 Requirements
 ============
 
-# base
-
 * `fish`
 * `which`
 * `hostname` (arch users install package `inetutils`)
+* [`exa`](https://github.com/ogham/exa)
+* [`starship`](https://starship.rs)
 
 Getting Started
 ===============
 
-First things first, create a symlink to the dotfiles repo you just cloned. Skip this step if you don't want to do this, but you'll need to keep that in mind for later steps.
+# Install oh-my-fish:
 
-```
-cd ~
-ln -s [path to dotfiles] .dotfiles
-```
-
-Then, checkout the submodule dependencies:
-
-```
-cd ~/.dotfiles
-git submodule init
-git submodule update
-```
-
-Install oh-my-fish:
-
-```
-~/.dotfiles/deps/oh-my-fish/bin/install
-```
-
-# Misc
+Install omf via the curl listed [here](https://github.com/oh-my-fish/oh-my-fish).
 
 ## Local Config
 
-You can create a file that is sourced on fish startup to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
+OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
 
 # TODO
-
-- Work out order of import for functions.
-- Update this damn readme.
