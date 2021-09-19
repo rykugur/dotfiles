@@ -7,6 +7,7 @@ set -gx VISUAL "vim"
 set PATH $PATH $HOME/bin
 # required for ls++ if installed from arch repo
 set PATH $PATH /usr/bin/vendor_perl
+set PATH $PATH /usr/local/bin
 
 # set GITS
 if not set -q GITS
