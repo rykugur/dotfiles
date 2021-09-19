@@ -1,9 +1,6 @@
 [submodule "deps/fisherman"]
 	path = deps/fisherman
 	url = https://github.com/fisherman/fisherman.git
-[submodule "deps/oh-my-fish"]
-	path = deps/oh-my-fish
-	url = https://github.com/oh-my-fish/oh-my-fish.git
 [submodule "deps/powerline"]
 	path = deps/powerline
 	url = https://github.com/powerline/powerline.git
