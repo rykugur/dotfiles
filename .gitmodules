@@ -7,9 +7,6 @@
 [submodule "configs/vim/bundle/Vundle.vim"]
 	path = configs/vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
-[submodule "deps/Vundle.vim"]
-	path = deps/Vundle.vim
-	url = https://github.com/VundleVim/Vundle.vim.git
 [submodule "deps/phallus_fonts"]
 	path = deps/phallus_fonts
 	url = https://github.com/phallus/fonts.git
