@@ -24,9 +24,18 @@ Requirements
 
 * [`vundle`](https://github.com/VundleVim/Vundle.vim)
 
-Local Config
-===============
+Installation
+============
 
-OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create a file in your homedir called `.fish_local.fish` and put your custom/overrides there.
+* Ensure you have the requirements listed above.
+* Install OMF.
+* Create symlink to `[dotfiles]/configs/omf` in your `$HOME/.config` directory: `ln -s [dotfiles]/configs/omf $HOME/.config/omf`
+
+Local Config
+============
+
+OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create a file called `$HOME/.fish_local.fish` and put your custom/overrides there.
+
+In order for this to work, ensure that `$HOME/.config/omf` is pointing to your OMF config directory OR the `[dotfiles]/configs/omf` directory.
 
 # TODO
