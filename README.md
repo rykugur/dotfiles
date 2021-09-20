@@ -28,8 +28,8 @@ Installation
 ============
 
 * Ensure you have the requirements listed above.
-* Install OMF.
 * Create symlink to `[dotfiles]/configs/omf` in your `$HOME/.config` directory: `ln -s [dotfiles]/configs/omf $HOME/.config/omf`
+* Install OMF.
 
 Local Config
 ============
