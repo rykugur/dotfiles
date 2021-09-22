@@ -9,19 +9,9 @@ set PATH $PATH $HOME/bin
 set PATH $PATH /usr/bin/vendor_perl
 set PATH $PATH /usr/local/bin
 
-# set GITS
-if not set -q GITS
-  set -gx GITS "$HOME/gits"
-end
-
 # manually override this in ~/.fish_local.fish if needed
 set -gx COPYCMD  'xclip -i'
 set -gx PASTECMD 'xclip -o'
-
-# set DROPBOX_DIR
-if not set -q DROPBOX_DIR
-  set -gx DROPBOX_DIR "$HOME/dropbox/Dropbox"
-end
 
 # don't greet me!
 set fish_greeting ""

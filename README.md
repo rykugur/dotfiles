@@ -17,6 +17,7 @@ Requirements
 
 * `which`
 * `hostname` (arch users install package `inetutils`)
+* `curl`
 * [`exa`](https://github.com/ogham/exa)
 * [`starship`](https://starship.rs)
 
@@ -28,8 +29,9 @@ Installation
 ============
 
 * Ensure you have the requirements listed above.
-* Create symlink to `[dotfiles]/configs/omf` in your `$HOME/.config` directory: `ln -s [dotfiles]/configs/omf $HOME/.config/omf`
+* Create symlink to `[dotfiles]/configs/omf` in your `$HOME/.config` directory: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 * Install OMF.
+* Run `./scripts/intall_vundle.fish`.
 
 Local Config
 ============

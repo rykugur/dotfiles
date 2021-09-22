@@ -1,22 +1,18 @@
-# source fisherman
-#set -gx fisher_home ~/.dotfiles/deps/fisherman
-#set -gx fisher_config ~/.config/fisherman
-#set -gx fisher_file ~/.dotfiles/configs/fish/fisherfile
-#source $fisher_home/fisher.fish
+set script_path (dirname (realpath (dirname (status -f))))
 
 # set -gx fish_function_path $fish_function_path $HOME/.dotfiles/configs/fish/functions
-set -gx fish_function_path $HOME/.dotfiles/configs/fish/functions $fish_function_path
+set -gx fish_function_path $script_path/functions $fish_function_path
 
 # source our exports file
-source $HOME/.dotfiles/configs/fish/exports.fish
+source $script_path/exports.fish
 
 # source our aliases file(s)
-for file in $HOME/.dotfiles/configs/fish/alias*
+for file in $script_path/alias*
   source $file
 end
 
 # source our abbreviations file(s)
-for file in $HOME/.dotfiles/configs/fish/abbr*
+for file in $script_path/abbr*
   source $file
 end
 
