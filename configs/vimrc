@@ -24,8 +24,8 @@ endif
 set shell=bash
 
 " enable vundle
-set rtp+=~/.dotfiles/deps/Vundle.vim
-call vundle#begin('~/.dotfiles/configs/vim/bundle')
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/bundle')
 
 " enable powerline
 "set rtp+=~/.dotfiles/powerline/powerline/bindings/vim
@@ -81,6 +81,7 @@ Plugin 'unblevable/quick-scope'
 " Plugin 'xolox/vim-notes'
 " Plugin 'vimwiki/vimwiki'
 " Plugin 'vim-scripts/vim-auto-save'
+Plugin 'sjl/badwolf'
 
 call vundle#end()
 filetype plugin indent on
@@ -112,6 +113,7 @@ set fileencodings=utf-8
 """"""""""""""""""""""""""""""
 " filetype settings
 """"""""""""""""""""""""""""""
+" required for vundle
 filetype off
 filetype plugin on
 filetype indent on
@@ -142,6 +144,7 @@ au FileType go nmap <leader>dt <Plug>(go-def-tab)
 """"""""""""""""""""""""""""""
 set hidden
 set modelines=0
+" required for vundle
 set nocompatible
 set nobackup
 set noswapfile
