@@ -25,3 +25,5 @@ end
 if which -a starship > /dev/null 2>&1
   starship init fish | source
 end
+
+set -gx DOTFILES_DIR (get_dots_dir)
