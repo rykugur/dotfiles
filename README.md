@@ -11,7 +11,13 @@ Requirements
 * `fish`
 * [`oh-my-fish`](https://github.com/oh-my-fish/oh-my-fish) (optional)
 * `git`
-* a font with a wide array of icons and symbols; see [Nerd Fonts](https://www.nerdfonts.com) to get your favorite font patched with extra symbols.
+* a font with a wide array of icons and symbols; see [Nerd Fonts](https://www.nerdfonts.com) to get your favorite font patched with extra symbols. Iosevka is used specifically in this repo.
+
+## Sway
+
+* `sway`
+* `brightnessctl`
+* `dmenu`
 
 ### Optional
 

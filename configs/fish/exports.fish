@@ -14,4 +14,4 @@ set -gx COPYCMD  'xclip -i'
 set -gx PASTECMD 'xclip -o'
 
 # don't greet me!
-set fish_greeting ""
+set -gx fish_greeting
