@@ -1,9 +1,3 @@
-[submodule "deps/fisherman"]
-	path = deps/fisherman
-	url = https://github.com/fisherman/fisherman.git
-[submodule "deps/oh-my-fish"]
-	path = deps/oh-my-fish
-	url = https://github.com/oh-my-fish/oh-my-fish.git
 [submodule "deps/powerline"]
 	path = deps/powerline
 	url = https://github.com/powerline/powerline.git
@@ -13,24 +7,12 @@
 [submodule "configs/vim/bundle/Vundle.vim"]
 	path = configs/vim/bundle/Vundle.vim
 	url = https://github.com/VundleVim/Vundle.vim.git
-[submodule "deps/Vundle.vim"]
-	path = deps/Vundle.vim
-	url = https://github.com/VundleVim/Vundle.vim.git
 [submodule "deps/phallus_fonts"]
 	path = deps/phallus_fonts
 	url = https://github.com/phallus/fonts.git
 [submodule "deps/Font-Awesome"]
 	path = deps/Font-Awesome
 	url = https://github.com/FortAwesome/Font-Awesome.git
-[submodule "deps/theme-robbyrussel-rollhax"]
-	path = deps/theme-robbyrussel-rollhax
-	url = git@github.com:rykugur/theme-robbyrussell.git
-[submodule "deps/theme-bobthefish-rollhax"]
-	path = deps/theme-bobthefish-rollhax
-	url = git@github.com:rykugur/theme-bobthefish.git
-[submodule "deps/oh-my-tmux"]
-	path = deps/oh-my-tmux
-	url = https://github.com/gpakosz/.tmux.git
 [submodule "deps/iosevka_font-containers"]
 	path = deps/iosevka_font-containers
 	url = git@github.com:rykugur/containers.git

@@ -48,7 +48,7 @@ end
 
 if which -a exa > /dev/null 2>&1
   alias ls "exa"
-  alias ll "exa --long --header --git"
+  alias ll "exa -g --long --header --git"
 else if which -a ls++ > /dev/null 2>&1
   alias ls "ls++ --potsf"
   alias ll "ls++ --potsf"
