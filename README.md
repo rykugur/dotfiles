@@ -45,8 +45,8 @@ Installation
 Local Config
 ============
 
-OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create a file called `$HOME/.fish_local.fish` and put your custom/overrides there.
+OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create folder: `mkdir -p $HOME/.local/fish`. Inside this folder you can place a `config.fish` file for any custom local overrides, and you can create a `functions` directory for any local-only custom (override) functions.
 
-In order for this to work, ensure that `$HOME/.config/omf` is pointing to your OMF config directory OR the `[dotfiles]/configs/omf` directory.
+In order for this to work, ensure that `$HOME/.config/omf` is pointing to your OMF config directory.
 
 # TODO
