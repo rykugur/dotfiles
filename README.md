@@ -39,7 +39,8 @@ Installation
 * If on a mac, and using homebrew, add brew to your path: `set PATH /opt/homebrew/bin $PATH`
 * Create symlink to `[dotfiles]/configs/omf` in your `$HOME/.config` directory: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 * Install OMF: `./misc/scripts/install_omf.fish`
-* (optional) Run `./scripts/intall_vundle.fish`.
+* (optional) Run `./misc/scripts/intall_vundle.fish`.
+* (optional) Sym-link vimrc: `ln -s [dotfiles]/configs/vimrc $HOME/.vimrc`
 * (optional) Install vim plugins: `vim +BundleInstall`
 
 Local Config
