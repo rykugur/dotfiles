@@ -26,6 +26,7 @@ alias notes     "cd $HOME/.notes"
 ###### arch-specific
 #alias pacdeps "pacman -Qi | sed '/^Depends On/,/^Required By/{ s/^Required By.*$//; H; d }; /^Name/!d; /^Name/{ n;x;}'| sed '/^$/s//==================================================================================/'"
 alias pac.mirror "sudo reflector --verbose --country 'United States' -l 200 -p http --sort rate --save /etc/pacman.d/mirrorlist"
+alias pac.update "sudo pacman -Sy archlinux-keyring; and sudo pacman -Su"
 alias get.mobo "dmidecode -t 2"
 ###### systemd-specific
 alias sclist "systemctl --type=service"
