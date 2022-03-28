@@ -1,34 +1,31 @@
-#
+#!/usr/bin/fish
 
 function dots --description "cd wrapper for dots dir"
   set -l argc (count $argv)
-  set -l _usage "Usage: dots"
 
-  if test -z $DOTFILES_DIR
-    echo "DOTFILES_DIR env variable not set, exiting"
-    return 1
+  set -l _dots_dir $DOTFILES_DIR
+  if test ! -d $_dots_dir
+    set _dots_dir (get_dots_dir)
+    if test ! -d $_dots_dir
+      echo "couldn't find dots dir, exiting"
+      return 1
+    end
+  else
+    set _dots_dir $DOTFILES_DIR
   end
 
-  if test ! -d $DOTFILES_DIR
-    echo "DOTFILES_DIR doesn't exist, exiting"
-    return 1
+  if test $argc -eq 0
+    cd $_dots_dir
+    return
   end
 
-  set -l _base_dir $DOTFILES_DIR
-  set -l _dir ""
+  set -l options (fish_opt -s h -l help) (fish_opt -s c -l configs) (fish_opt -s f -l fish)
 
-  if test $argc -ge 1
-    getopts $argv | while read -l key value
-      switch $key
-        case configs or c
-          set _dir "configs"
-        case fish or f
-          set _dir "configs/fish"
-      end # end switch
-    end # end getopts
-  end # end if
+  argparse $options -- $argv
+  or return
 
-  cd $_base_dir/$_dir
+  test -n "$_flag_c"; or test -n "$_flag_configs"; and cd $_dots_dir/configs; and return
+  test -n "$_flag_f"; or test -n "$_flag_fish"; and cd $_dots_dir/configs/fish; and return
 end
 
 complete -f -c dots -n 'dots' -a --configs
