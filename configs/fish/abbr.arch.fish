@@ -17,6 +17,8 @@ abbr --add --global supacsyu 'sudo pacman -Syu'
 abbr --add --global supacsyy 'sudo pacman -Syy'
 abbr --add --global supacsyyu 'sudo pacman -Syyu'
 abbr --add --global supacu 'sudo pacman -U'
+abbr --add --global supac.update "sudo pacman -Sy archlinux-keyring; and sudo pacman -Su"
+
 abbr --add --global sc 'systemctl'
 abbr --add --global sce 'systemctl enable --now'
 abbr --add --global scd 'systemctl disable --now'
@@ -31,3 +33,4 @@ abbr --add --global sscdn 'sudo systemctl disable --now'
 abbr --add --global sscr 'sudo systemctl restart'
 abbr --add --global sscs 'sudo systemctl start'
 abbr --add --global sscst 'sudo systemctl status'
+
