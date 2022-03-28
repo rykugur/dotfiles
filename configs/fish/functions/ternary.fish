@@ -7,7 +7,7 @@ function ternary --description "Returns the value of the first arg if non-empty/
     set -l _first $argv[1]
     set -l _default $argv[2]
 
-    if test -z $_first
+    if test -z "$_first"
       echo $_default
       return 0
     end
