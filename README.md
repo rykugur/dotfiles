@@ -37,10 +37,11 @@ Installation
 ============
 
 * Ensure you have the requirements listed above.
-* Ensure that fish exists on your path: `which -a fish`
-  * If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
-* Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
-* Install OMF: `./misc/scripts/install_omf.fish`
+* Terminal setup
+  * Ensure that fish exists on your path: `which -a fish`
+    * If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
+  * Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
+  * Install OMF: `./misc/scripts/install_omf.fish`
 * (optional) Install vim:
   * Run `./misc/scripts/intall_vundle.fish`.
   * Sym-link vimrc: `ln -s [dotfiles]/configs/vimrc $HOME/.vimrc`
