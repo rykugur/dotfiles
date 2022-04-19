@@ -17,7 +17,9 @@ Requirements
 
 * `sway`
 * `brightnessctl`
-* `dmenu`
+* `pactl` - for controlling pulseaudio
+* `playerctl` - for controlling audio
+* `rofi` - launcher
 
 ### Optional
 
@@ -37,11 +39,12 @@ Installation
 * Ensure you have the requirements listed above.
 * Ensure that fish exists on your path: `which -a fish`
   * If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
-* Create symlink to `[dotfiles]/configs/omf` in your `$HOME/.config` directory: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
+* Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 * Install OMF: `./misc/scripts/install_omf.fish`
-* (optional) Run `./misc/scripts/intall_vundle.fish`.
-* (optional) Sym-link vimrc: `ln -s [dotfiles]/configs/vimrc $HOME/.vimrc`
-* (optional) Install vim plugins: `vim +BundleInstall`
+* (optional) Install vim:
+  * Run `./misc/scripts/intall_vundle.fish`.
+  * Sym-link vimrc: `ln -s [dotfiles]/configs/vimrc $HOME/.vimrc`
+  * Install vim plugins: `vim +BundleInstall`
 
 Local Config
 ============
