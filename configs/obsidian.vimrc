@@ -1,6 +1,3 @@
-" disable obnoxious bell in vim
-set visualbell
-
 """"""""""""""""""""""""""""""
 " maps
 """"""""""""""""""""""""""""""
@@ -9,6 +6,3 @@ noremap ; l
 noremap l k
 noremap k j
 noremap j h
-
-" select all
-nnoremap aa ggVG
