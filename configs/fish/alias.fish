@@ -36,16 +36,18 @@ alias awk8 "awk '{print \$8}'"
 alias awk9 "awk '{print \$9}'"
 
 ### optional aliases, depend on a program being on the path
-if which -a pydf > /dev/null 2>&1
+if which -a duf &> /dev/null
+  alias dfh "duf"
+else if which -a pydf &> /dev/null
   alias dfh "pydf"
 else
   alias dfh "df -h"
 end
 
-if which -a exa > /dev/null 2>&1
+if which -a exa &> /dev/null
   alias ls "exa"
   alias ll "exa -g --long --header --git"
-else if which -a ls++ > /dev/null 2>&1
+else if which -a ls++ &> /dev/null
   alias ls "ls++ --potsf"
   alias ll "ls++ --potsf"
   alias llo "/usr/bin/ls -lh"
