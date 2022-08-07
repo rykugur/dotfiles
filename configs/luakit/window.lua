@@ -1,5 +1,5 @@
 ------------------
--- Window class --
+n-- Window class --
 ------------------
 
 require "lfs"
