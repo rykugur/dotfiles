@@ -1,9 +1,0 @@
-#!/usr/bin/fish
-
-if pgrep synergys >/dev/null 2>&1
-  echo "Synergy already running, killing it..."
-  killall -9 synergys
-end
-
-echo "Starting synergy..."
-/usr/bin/synergys --daemon --config $HOME/.synergy.conf
