@@ -35,6 +35,10 @@ alias awk7 "awk '{print \$7}'"
 alias awk8 "awk '{print \$8}'"
 alias awk9 "awk '{print \$9}'"
 
+if test -e $HOME/.local/fish/config.fish
+  alias fish.local "$EDITOR $HOME/.local/fish/config.fish"
+end
+
 ### optional aliases, depend on a program being on the path
 if which -a duf &> /dev/null
   alias dfh "duf"
