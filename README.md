@@ -15,6 +15,7 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 - Install OMF: `./misc/scripts/install_omf.fish`
 - Install [`exa`](https://github.com/ogham/exa)
 - Install [`starship`](https://starship.rs)
+  - Symlink to starship config: `ln -s [dotfiles]/configs/starship/starship.toml $HOME/.config/starship.toml`
 
 ### Local Config
 
