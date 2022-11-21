@@ -13,16 +13,8 @@ set -gx PASTECMD 'xclip -o'
 set -gx fish_greeting
 
 ### set an editor
-if which -a gedit &> /dev/null
-  set -gx EDITOR "gedit"
-  set -gx VISUAL "gedit"
-else if which -a code &> /dev/null
-  set -gx EDITOR "code"
-  set -gx VISUAL "code"
-else if which -a vim &> /dev/null
-  set -gx EDITOR "vim"
-  set -gx VISUAL "vim"
-end
+set -gx EDITOR "vim"
+set -gx VISUAL "vim"
 
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/pure-preset.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/pastel-powerline.toml"

@@ -59,3 +59,5 @@ else if which -a ls++ &> /dev/null
 else
   alias ll "ls -lh"
 end
+
+alias .local "cd ~/.local/fish"
