@@ -276,7 +276,7 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 # Redirect sound to headphones
-bindsym $mod+p exec /usr/local/bin/switch-audio-port
+# bindsym $mod+p exec /usr/local/bin/switch-audio-port
 
 ## App shortcuts
 #bindsym $mod+w exec /usr/bin/firefox
@@ -295,9 +295,9 @@ bindsym $mod+Shift+p exec ~/.config/i3/scripts/power-profiles
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1:"
 set $ws2 "2:"
-set $ws3 "3:"
+set $ws3 "3:"
 set $ws4 "4:"
-set $ws5 "5"
+set $ws5 "5:"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
@@ -307,22 +307,7 @@ set $ws10 "10:"
 # use workspaces on different displays:
 # where you have to replace VGA-0/HDMI-0 with the names for your displays
 # you can get from xrandr command
-#workspace $ws1 output VGA-0
-#workspace $ws2 output VGA-0
-#workspace $ws3 output HDMI-0
-#workspace $ws4 output HDMI-0
-#workspace $ws5 output HDMI-0
-
-# bind program to workspace and focus to them on startup:
-# assign [class="Xfce4-terminal"] $ws1
-assign [class="(?i)firefox"] $ws2
-# assign [class="Thunar"] $ws3
-
-# automatic set focus new window if it opens on another workspace then the current:
-for_window [class=Xfce4-terminal] focus
-for_window [class=(?i)firefox] focus
-for_window [class=Thunar] focus
-for_window [class=Thunderbird] focus
+#workspace $ws1 output VGA-0Who here is planning on playing DF on release? If it's just me and @Jerikko#0962 I may try for a refund. focus
 for_window [class=TelegramDesktop] focus
 
 ##############
@@ -427,34 +412,6 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 
 # clipman-applet
 #exec --no-startup-id xfce4-clipman
-
-##################
-# floating rules #
-##################
-
-# set floating (nontiling) for apps needing it
-for_window [class="Yad" instance="yad"] floating enable
-for_window [class="Galculator" instance="galculator"] floating enable
-for_window [class="Blueberry.py" instance="blueberry.py"] floating enable
-
-# set floating (nontiling) for special apps
-for_window [class="Xsane" instance="xsane"] floating enable
-for_window [class="Pavucontrol" instance="pavucontrol"] floating enable
-for_window [class="qt5ct" instance="qt5ct"] floating enable
-for_window [class="Blueberry.py" instance="blueberry.py"] floating enable
-for_window [class="Bluetooth-sendto" instance="bluetooth-sendto"] floating enable
-for_window [class="Pamac-manager"] floating enable
-for_window [window_role="About"] floating enable
-
-# set border of floating window
-for_window [class="urxvt"] border pixel 1
-
-# set size of floating window
-#for_window [window_role="(?i)GtkFileChooserDialog"] resize set 640 480 #to set size of file choose dialog
-#for_window [class=".*"] resize set 640 480 #to change size of all floating windows
-
-# set position of floating window
-#for_window [class=".*"] move position center
 
 ######################################
 # color settings for bar and windows #
@@ -575,32 +532,19 @@ bindsym $mod+t exec rofi -show window \
 
 ### custom/personal stuff
 ## misc
+# setup autocutsel to merge clipboard and primary
+exec_always autocutsel -selection CLIPBOARD -fork
+exec_always autocutsel -selection PRIMARY -fork
 # update key repeat rate
 exec_always "xset r rate 190 40"
 exec 1password
+exec firefox
+exec discord
+exec signal-desktop
+exec steam-runtime
 
 ## binds
 # gets class and name of the window under the cursor and displays it as a notification
 bindsym --release $mod+F1 exec --no-startup-id notify-send "$(xprop | grep -v "NET_WM_NAME" | grep "WM_NAME\|WM_CLASS")"
 
-## window assigns
-assign [class="(?i)Steam"] $ws9
-# dota
-set $dota_class "(?i)dota2"
-assign [class=$dota_class] $ws10
-for_window [class=$dota_class] fullscreen enable
-for_window [class=$dota_class] focus
-set $rimworld_class "(?i)rimworldlinux"
-set $pz_class "(?i)project zomboid"
-assign [class=$pz_class] $ws10
-for_window [class=$pz_class] fullscreen enable
-set $sc_class "(?i)starcitizen.exe"
-assign [class=$sc_class] $ws10
-for_window [class=$sc_class] fullscreen enable
-assign [class=$rimworld_class] $ws10
-
-assign [class="(?i)discord"] $ws5
-assign [class="(?i)signal"] $ws5
-assign [class="(?i)prusaslicer"] $ws6
-assign [class="(?i)superslicer"] $ws6
-assign [class="(?i)battle.net.exe"] $ws9
+include assigns.conf
