@@ -538,6 +538,9 @@ bindsym $mod+t exec rofi -show window \
 # https://i3wm.org/docs/userguide.html#workspace_auto_back_and_forth
 workspace_auto_back_and_forth yes
 
+# update key repeat rate
+exec_always "xset r rate 190 40"
+
 include assigns.conf
 include startup.conf
 include binds.conf
