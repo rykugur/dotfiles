@@ -4,6 +4,10 @@ set -gx VISUAL "vim"
 
 ### set additional paths
 set PATH $PATH $HOME/bin
+# add yarn global if yarn exists
+if which -a yarn &> /dev/null
+  set PATH $PATH $(yarn global bin)
+end
 
 # manually override this in ~/.fish_local.fish if needed
 set -gx COPYCMD  'xclip -i'

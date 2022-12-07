@@ -307,7 +307,7 @@ set $ws10 "10:"
 # use workspaces on different displays:
 # where you have to replace VGA-0/HDMI-0 with the names for your displays
 # you can get from xrandr command
-#workspace $ws1 output VGA-0Who here is planning on playing DF on release? If it's just me and @Jerikko#0962 I may try for a refund. focus
+#workspace $ws1 output VGA-0
 for_window [class=TelegramDesktop] focus
 
 ##############
@@ -530,21 +530,14 @@ bindsym $mod+t exec rofi -show window \
 #bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard \
 #		-config ~/.config/rofi/rofidmenu.rasi
 
-### custom/personal stuff
-## misc
-# setup autocutsel to merge clipboard and primary
-exec_always autocutsel -selection CLIPBOARD -fork
-exec_always autocutsel -selection PRIMARY -fork
-# update key repeat rate
-exec_always "xset r rate 190 40"
-exec 1password
-exec firefox
-exec discord
-exec signal-desktop
-exec steam-runtime
+################################
+# inclue custom/personal stuff #
+################################
+# I did it this way so as to not mess with the "default" i3 config from endeavour as much as possible
 
-## binds
-# gets class and name of the window under the cursor and displays it as a notification
-bindsym --release $mod+F1 exec --no-startup-id notify-send "$(xprop | grep -v "NET_WM_NAME" | grep "WM_NAME\|WM_CLASS")"
+# https://i3wm.org/docs/userguide.html#workspace_auto_back_and_forth
+workspace_auto_back_and_forth yes
 
 include assigns.conf
+include startup.conf
+include binds.conf
