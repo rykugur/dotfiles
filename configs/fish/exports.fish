@@ -3,10 +3,10 @@ set -gx GITS "$HOME/gits"
 set -gx VISUAL "vim"
 
 ### set additional paths
-set PATH $PATH $HOME/bin
+fish_add_path -a $HOME/bin
 # add yarn global if yarn exists
 if which -a yarn &> /dev/null
-  set PATH $PATH $(yarn global bin)
+  fish_add_path -a $(yarn global bin)
 end
 
 # manually override this in ~/.fish_local.fish if needed
