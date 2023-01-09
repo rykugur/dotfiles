@@ -22,8 +22,8 @@ end
 
 # Load any local configs
 # Do this last, since we might want to append to/override abbreviations, aliases, etc.
-if test -e $HOME/.local/fish/config.fish
-  source $HOME/.local/fish/config.fish
+for file in $HOME/.local/fish/*.fish
+  source $file
 end
 
 if which -a starship > /dev/null 2>&1
