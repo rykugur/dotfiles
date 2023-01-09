@@ -19,7 +19,7 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 
 ### Local Config
 
-OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create folder: `mkdir -p $HOME/.local/fish`. Inside this folder you can place a `config.fish` file for any custom local overrides, and you can create a `functions` directory for any local-only custom (override) functions.
+OMF allows a custom local configuration file. Use this file for anything that needs to be local only to your current device, or to override some base configuration. Create folder: `mkdir -p $HOME/.local/fish`. Inside this folder you can place any file named `*.fish` for any custom local overrides.
 
 In order for this to work, ensure that `$HOME/.config/omf` is pointing to your OMF config directory.
 
