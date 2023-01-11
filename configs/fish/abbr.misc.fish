@@ -21,3 +21,7 @@ abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global sv 'sudo vim'
 abbr --add --global svec 'sudo vim /etc/hosts'
 abbr --add --global taill 'tail -Fn 999'
+
+if which -a ag &> /dev/null
+  abbr --add --global agb 'ag --ignore build'
+end

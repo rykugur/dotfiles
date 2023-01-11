@@ -61,3 +61,5 @@ else
 end
 
 alias .local "cd ~/.local/fish"
+
+alias whatthecommit "curl -s https://whatthecommit.com/index.txt"
