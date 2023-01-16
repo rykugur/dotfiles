@@ -16,6 +16,7 @@ abbr --add --global grc 'gource --stop-at-end -c 2 --disable-auto-rotate --hide 
 abbr --add --global grn 'grep -n'
 abbr --add --global grin 'grep -ni'
 abbr --add --global grine 'grep -niRE'
+abbr --add --global gw './gradlew'
 abbr --add --global pagi 'ps aux | grep -v grep | grep -i'
 abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global sv 'sudo vim'
