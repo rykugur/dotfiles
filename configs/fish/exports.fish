@@ -2,6 +2,13 @@ set -gx CODE_DIR "$HOME/code"
 set -gx GITS "$HOME/gits"
 set -gx VISUAL "vim"
 
+switch (uname)
+  case Darwin
+    set -gx SSH_AUTH_SOCK ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  case Linux
+    set -gx SSH_AUTH_SOCK ~/.1password/agent.sock
+end
+
 ### set additional paths
 fish_add_path -a $HOME/bin
 # add yarn global if yarn exists
