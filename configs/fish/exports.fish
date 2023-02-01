@@ -27,5 +27,6 @@ set -gx fish_greeting
 set -gx EDITOR "vim"
 set -gx VISUAL "vim"
 
-set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/pure-preset.toml"
-# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/pastel-powerline.toml"
+set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pure.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/tokyo-night.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pastel-powerline.toml"
