@@ -282,7 +282,6 @@ bindsym XF86AudioPrev exec playerctl previous
 #bindsym $mod+w exec /usr/bin/firefox
 #bindsym $mod+n exec /usr/bin/thunar
 #bindsym Print exec scrot ~/%Y-%m-%d-%T-screenshot.png && notify-send "Screenshot saved to ~/$(date +"%Y-%m-%d-%T")-screenshot.png"
-bindsym $mod+Shift+s exec flameshot gui --clipboard --accept-on-select
 
 # Power Profiles menu switcher (rofi)
 bindsym $mod+Shift+p exec ~/.config/i3/scripts/power-profiles
