@@ -4,6 +4,7 @@ abbr --add --global .. 'cd ..'
 abbr --add --global ... 'cd ../..'
 abbr --add --global .... 'cd ../../..'
 abbr --add --global ..... 'cd ../../../..'
+abbr --add --global agb 'ag --ignore-dir build --ignore-dir node_modules --ignore-dir __tests__'
 abbr --add --global gensshkey 'ssh-keygen -t rsa -b 4096 -C "rollhax@gmail.com"'
 abbr --add --global pyhttp 'python -m SimpleHTTPServer'
 abbr --add --global pyjson 'python -m json.tool'
@@ -22,7 +23,3 @@ abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global sv 'sudo vim'
 abbr --add --global svec 'sudo vim /etc/hosts'
 abbr --add --global taill 'tail -Fn 999'
-
-if which -a ag &> /dev/null
-  abbr --add --global agb 'ag --ignore build'
-end
