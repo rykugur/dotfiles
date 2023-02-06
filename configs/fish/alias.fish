@@ -50,4 +50,10 @@ else
   alias ll "ls -lh"
 end
 
+if which -a bashtop &> /dev/null
+  alias top "bashtop"
+else if which -a bpytop &> /dev/null
+  alias top "bpytop"
+end
+
 alias whatthecommit "curl -s https://whatthecommit.com/index.txt"
