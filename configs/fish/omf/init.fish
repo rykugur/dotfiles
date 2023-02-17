@@ -26,6 +26,10 @@ for file in $HOME/.local/fish/*.fish
   source $file
 end
 
+if test -d $HOME/.local/fish/functions
+  set -gx fish_function_path $HOME/.local/fish/functions $fish_function_path
+end
+
 if which -a starship > /dev/null 2>&1
   starship init fish | source
 end
