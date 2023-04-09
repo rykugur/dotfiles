@@ -30,3 +30,4 @@ function snippets --description 'tool for pasting commonly used strings'
     xdotool type --delay 0 (xsel -o)
   end
 end
+xsel
