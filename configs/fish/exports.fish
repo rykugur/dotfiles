@@ -17,8 +17,13 @@ set -gx PASTECMD 'xclip -o'
 set -gx fish_greeting
 
 ### set an editor
-set -gx EDITOR vim
-set -gx VISUAL vim
+if which -a nvim &>/dev/null
+    set -gx EDITOR nvim
+    set -gx VISUAL nvim
+else
+    set -gx EDITOR vim
+    set -gx VISUAL vim
+end
 
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pure.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/tokyo-night.toml"
