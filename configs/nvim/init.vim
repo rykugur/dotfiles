@@ -22,7 +22,6 @@ set shell=bash
 """""""""""
 " plugins "
 """""""""""
-"  call plug#begin()
 call plug#begin('~/.vim/plugged')
 
 " Displays code tags in a sidebar
