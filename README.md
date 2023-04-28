@@ -6,16 +6,15 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 
 ## Terminal
 
-- Install fish: https://fishshell.com/
+- Install [fish shell](https://fishshell.com/) (should be in your distro's repositories).
 - Ensure fish exists on your path: `which -a fish`
   - If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
 - Set fish as your default shell: `chsh -s $(which -a fish)`
   - This is optional, fish can be manually started from a bash shell.
 - Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 - Install OMF: `./misc/scripts/install_omf.fish`
-- Install [`exa`](https://github.com/ogham/exa)
-- Install [`starship`](https://starship.rs)
-  - Symlink to starship config: `ln -s [dotfiles]/configs/starship/starship.toml $HOME/.config/starship.toml`
+- (Optional) Install [`exa`](https://github.com/ogham/exa)
+- (Optional) Install [`starship`](https://starship.rs)
 
 ### Local Config
 
@@ -23,10 +22,31 @@ OMF allows a custom local configuration file. Use this file for anything that ne
 
 In order for this to work, ensure that `$HOME/.config/omf` is pointing to your OMF config directory.
 
-## Vim
+## Neovim
 
-- Install vim
-- Use the included scripts to install `vundle`:
-  - Run `./misc/scripts/intall_vundle.fish`.
-- Sym-link vimrc: `ln -s [dotfiles]/configs/vimrc $HOME/.vimrc`
-- Install vim plugins: `vim +BundleInstall`
+- Install `neovim`
+- Run the included script to install `vim-plug`:
+  - `./misc/scripts/install_vim-plug.fish`
+- Install vim plugins: `nvim +PlugInstall`
+
+## WM
+
+Fonts in use:
+
+- `feather` (aur/ttf-icomoon-feather)
+- `Iosevka` (nerd)
+- `FontAwesome` (nerd)
+
+Download nerd fonts from [nerdfonts](https://www.nerdfonts.com/) (if you run Arch or a derivative, many of these are available in the community repository).
+
+### i3
+
+TBD
+
+### bspwm
+
+TBD
+
+### polybar
+
+TBD

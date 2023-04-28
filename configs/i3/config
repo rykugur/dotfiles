@@ -18,6 +18,12 @@
 # config starts here: #
 #######################
 
+include assigns.conf
+include binds.conf
+include colors.conf
+include startup.conf
+include workspaces.conf
+
 set $monitor_one DP-0
 set $monitor_two HDMI-1
 
@@ -25,7 +31,8 @@ set $monitor_two HDMI-1
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango: Noto Sans Regular 10
+# font pango: Noto Sans Regular 10
+font pango: Iosevka Nerd Font 10
 
 # set the mod key to the winkey:
 set $mod Mod4
@@ -44,6 +51,25 @@ workspace_layout default
 # i3 tabbed layout:
 # Each new window will open fullscreen as a tab (left to right)
 #workspace_layout tabbed
+
+##########################################
+# configuration for workspace behaviour: #
+##########################################
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws0 "~:"
+set $ws1 "1:"
+set $ws2 "2:"
+# set $ws2 "2:"
+set $ws3 "3:"
+set $ws4 "4:"
+set $ws5 "5:"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10:"
 
 ##############################
 # extra options for windows: #
@@ -114,7 +140,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 ######################################
 
 # start a terminal
-bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+Return exec wezterm
 
 # kill focused window
 bindsym $mod+q kill
@@ -195,29 +221,11 @@ bindsym $mod+a focus parent
 # Power Profiles menu switcher (rofi)
 bindsym $mod+Shift+p exec ~/.config/i3/scripts/power-profiles
 
-##########################################
-# configuration for workspace behaviour: #
-##########################################
-
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
-set $ws0 "~:"
-set $ws1 "1:"
-set $ws2 "2:"
-set $ws3 "3:"
-set $ws4 "4:"
-set $ws5 "5:"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9:"
-set $ws10 "10:"
-
 ##############
 # compositor #
 ##############
 
-exec_always --no-startup-id picom --config  ~/.config/picom.conf
+exec_always --no-startup-id picom --config ~/.config/picom.conf
 
 #############################################
 # autostart applications/services on login: #
@@ -248,7 +256,7 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id ~/.screenlayout/monitor.sh
 
 # set wallpaper
-exec --no-startup-id sleep 2 && nitrogen --restore
+# exec --no-startup-id sleep 2 && nitrogen --restore
 #exec --no-startup-id feh --bg-fill /usr/share/endeavouros/backgrounds/endeavouros_i3.png
 
 # disable power saving (for example if using xscreensaver)
@@ -257,7 +265,6 @@ exec --no-startup-id sleep 2 && nitrogen --restore
 # use xautolock to use autosuspend rules for mobile devices
 # https://wiki.archlinux.org/title/Session_lock#xautolock
 #exec --no-startup-id xautolock -time 60 -locker "systemctl suspend"
-
 
 # xscreensaver
 # https://www.jwz.org/xscreensaver
@@ -268,19 +275,11 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 # alternative if you installed aside with XFCE4:
 # exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd &
 
-# autotiling script
-# https://github.com/nwg-piotr/autotiling
-# `yay -S autotiling ;) (it is in AUR)
-#exec_always --no-startup-id autotiling
-
 ###############
 # system tray #
 ###############
 # if you do not use dex: exec --no-startup-id dex --autostart --environment i3
 # you need to have tray apps started manually one by one:
-
-# start blueberry app for managing bluetooth devices from tray:
-#exec --no-startup-id blueberry-tray
 
 # networkmanager-applet
 #exec --no-startup-id nm-applet
@@ -288,105 +287,15 @@ exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
 # clipman-applet
 #exec --no-startup-id xfce4-clipman
 
-######################################
-# color settings for bar and windows #
-######################################
-
-# Define colors variables:
-set $darkbluetrans	#08052be6
-set $darkblue		#08052b
-set $lightblue		#5294e2
-set $urgentred		#e53935
-set $white		#ffffff
-set $black		#000000
-set $purple		#e345ff
-set $darkgrey		#383c4a
-set $grey		#b0b5bd
-set $mediumgrey		#8b8b8b
-set $yellowbrown	#e1b700
-
-# define colors for windows:
-#class		        	border		bground		text		indicator	child_border
-client.focused		    	$lightblue	$darkblue	$white		$mediumgrey	$mediumgrey
-client.unfocused	    	$darkblue	$darkblue	$grey		$darkgrey	$darkgrey
-client.focused_inactive		$darkblue	$darkblue	$grey		$black		$black
-client.urgent		    	$urgentred	$urgentred	$white		$yellowbrown	$yellowbrown
-
-############################################
-# bar settings (input comes from i3blocks) #
-############################################
-
-# Start i3bar to display a workspace bar
-# (plus the system information i3status finds out, if available)
-#bar {
-#		font pango: Nerd Font, Noto Sans Regular 10
-#		status_command i3blocks -c ~/.config/i3/i3blocks.conf
-#	    	position bottom
-##	    	i3bar_command i3bar --transparency
-## it could be that you have no primary display set: set one (xrandr --output <output> --primary)
-## reference: https://i3wm.org/docs/userguide.html#_tray_output
-#		    tray_output primary
-#		    tray_padding 0
-
-## When strip_workspace_numbers is set to yes,
-## any workspace that has a name of the form
-## “[n][:][NAME]” will display only the name.
-#strip_workspace_numbers yes
-###strip_workspace_name no
-
-#		    colors {
-#		    separator          $purple
-#		    background         $darkgrey
-#		    statusline         $white
-##                          		border 		        bg		txt		indicator
-#		focused_workspace	$mediumgrey	   	$grey		$darkgrey	$purple
-#		active_workspace	$lightblue      	$mediumgrey	$darkgrey	$purple
-#		inactive_workspace	$darkgrey   		$darkgrey	$grey		$purple
-#		urgent_workspace	$urgentred	    	$urgentred	$white		$purple
-#	}
-#}
-
-# you can add different bars for multidisplay setups on each display:
-# set output HDMI-0 to the display you want the bar, --transparency can be set.
-# Transparency needs rgba color codes to be used where the last two letters are the transparency factor see here:
-# https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4
-# #08052be6 --> e6=90%
-
-# bar {
-#	font pango: Noto Sans Regular 10
-#	status_command i3blocks -c ~/.config/i3/i3blocks-2.conf
-#	i3bar_command i3bar --transparency
-#	output HDMI-0
-#	position bottom
-#
-# When strip_workspace_numbers is set to yes,
-# any workspace that has a name of the form
-# “[n][:][NAME]” will display only the name.
-#strip_workspace_numbers yes
-##strip_workspace_name no
-#
-#	colors {
-#		separator          $purple
-#		background         $darkbluetrans
-#        	statusline         $white
-#					border		bg		txt		indicator
-#		focused_workspace	$lighterblue	$lighterblue	$darkblue	$purple
-#		active_workspace	$lightdblue	$lightdblue	$darkblue	$purple
-#		inactive_workspace	$darkblue	$darkblue	$lightdblue	$purple
-#		urgent_workspace	$urgentred	$urgentred	$white		$purple
-#	}
-#}
-
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-
 #####################################
 # Application menu handled by rofi: #
 #####################################
 
 ## rofi bindings fancy application menu ($mod+d /F9 optional disabled)
 
-bindsym $mod+d exec rofi -modi drun -show drun \
-		-config ~/.config/rofi/rofidmenu.rasi
+# bindsym $mod+d exec rofi -modi drun -show drun \
+# -config ~/.config/rofi/rofidmenu.rasi
+bindsym $mod+d exec rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/polybar/scripts/rofi/launcher.rasi
 
 #bindsym F9 exec rofi -modi drun -show drun \
 #		-config ~/.config/rofi/rofidmenu.rasi
@@ -394,7 +303,7 @@ bindsym $mod+d exec rofi -modi drun -show drun \
 ## rofi bindings for window menu ($mod+t /F10 optional disabled)
 
 bindsym $mod+t exec rofi -show window \
-		-config ~/.config/rofi/rofidmenu.rasi
+  -config ~/.config/rofi/rofidmenu.rasi
 
 #bindsym F10 exec rofi -show window \
 #		-config ~/.config/rofi/rofidmenu.rasi
@@ -405,16 +314,11 @@ bindsym $mod+t exec rofi -show window \
 #bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard \
 #		-config ~/.config/rofi/rofidmenu.rasi
 
-################################
-# inclue custom/personal stuff #
-################################
-# I did it this way so as to not mess with the "default" i3 config from endeavour as much as possible
+#################################
+# include custom/personal stuff #
+#################################
 
 # https://i3wm.org/docs/userguide.html#workspace_auto_back_and_forth
 workspace_auto_back_and_forth yes
 
 focus_follows_mouse no
-
-include assigns.conf
-include startup.conf
-include binds.conf

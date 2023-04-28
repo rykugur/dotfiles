@@ -44,11 +44,6 @@ Plug 'Yggdroot/indentLine'
 Plug 'kien/rainbow_parentheses.vim'
 " Syntax checking
 Plug 'scrooloose/syntastic'
-" Airline
-Plug 'vim-airline/vim-airline'
-" Themes for airline
-Plug 'vim-airline/vim-airline-themes'
-" Plug 'fatih/vim-go'
 " Autocomplete in vim
 Plug 'Valloric/YouCompleteMe'
 " Tabs/spacing
@@ -57,18 +52,11 @@ Plug 'godlygeek/tabular'
 Plug 'mtth/scratch.vim'
 " Execute commands in vim
 Plug 'Shougo/vimproc.vim'
-" Plug 'Shougo/unite.vim'
-" Plug 'terryma/vim-multiple-cursors'
-" Edit fish scripts
+" Fish syntax highlighting
 Plug 'Soares/fish.vim'
 " Unique character highlighter (line)
 Plug 'unblevable/quick-scope'
-" Plug 'tpope/vim-markdown'
-" Plug 'xolox/vim-misc'
-" Plug 'xolox/vim-notes'
-" Plug 'vimwiki/vimwiki'
-" Plug 'vim-scripts/vim-auto-save'
-Plug 'sjl/badwolf'
+Plug 'decaycs/decay.nvim', { 'as': 'decay' }
 
 call plug#end()
 
@@ -93,7 +81,7 @@ set clipboard=unnamed
 " syntax and colorscheme specifics "
 """"""""""""""""""""""""""""""""""""
 syntax enable
-colorscheme badwolf
+colorscheme decay
 set fileencodings=utf-8
 
 """""""""""""""""""""
@@ -139,6 +127,10 @@ set number
 set wildmenu " visual autocomplete for command menu
 set lazyredraw " don't always redraw if not needed
 set showmatch " highlight matching brackets/parens
+
+" enable hybrid line numbers
+set nu
+set rnu
 
 " general settings
 let mapleader=","
@@ -342,44 +334,6 @@ let g:tagbar_type_go = {
     \ 'ctagsbin'  : 'gotags',
     \ 'ctagsargs' : '-sort -silent'
 \ }
-
-""" airline
-let g:airline_theme = 'badwolf'
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
-" let g:airline_branch_prefix = '<'
-" let g:airline_readonly_symbol = '<'
-" let g:airline_linecolumn_prefix = '<'
-"let g:airline_left_sep = '▶'
-"let g:airline_left_alt_sep = '>'
-"let g:airline_right_sep = '◀'
-"let g:airline_right_alt_sep = '<'
-"if !exists('g:airline_symbols')
-    "let g:airline_symbols = {}
-"endif
-"let g:airline_symbols.linenr = '␊'
-"let g:airline_symbols.linenr = '␤'
-"let g:airline_symbols.linenr = '¶'
-"let g:airline_symbols.branch = '⎇'
-"let g:airline_symbols.paste = 'ρ'
-"let g:airline_symbols.paste = 'Þ'
-"let g:airline_symbols.paste = '∥'
-"let g:airline_symbols.whitespace = 'Ξ'
-"let g:airline#extensions#branch#enabled = 1
-"let g:airline#extensions#syntastic#enabled = 1
-let g:airline_powerline_fonts = 1
-
-""" vim-notes
-let g:notes_directories = ['~/.notes']
-let g:notes_suffix = ".txt"
-let g:notes_title_sync = 0
-
-""" vimwiki
-let g:vimwiki_list = [{'path': '~/.notes/'}]
-" don't shorten URL's
-let g:vimwiki_url_maxsave = 0
 
 let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('ag')
