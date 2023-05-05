@@ -41,7 +41,7 @@ Download nerd fonts from [nerdfonts](https://www.nerdfonts.com/) (if you run Arc
 
 ### i3
 
-TBD
+Create a symlink in your `$HOME/.config` to the i3 dir: `ln -s [dotfiles]/configs/i3 $HOME/.config/i3`.
 
 ### bspwm
 
@@ -50,3 +50,5 @@ TBD
 ### polybar
 
 TBD
+
+TODO: add note about `.polybarcurrent` symlink

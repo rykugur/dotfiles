@@ -56,7 +56,9 @@ Plug 'Shougo/vimproc.vim'
 Plug 'Soares/fish.vim'
 " Unique character highlighter (line)
 Plug 'unblevable/quick-scope'
-Plug 'decaycs/decay.nvim', { 'as': 'decay' }
+"  Plug 'decaycs/decay.nvim', { 'as': 'decay' }
+" Plug 'jacoborus/tender.vim'
+Plug 'bluz71/vim-nightfly-colors', { 'as': 'nightfly' }
 
 call plug#end()
 
@@ -81,7 +83,7 @@ set clipboard=unnamed
 " syntax and colorscheme specifics "
 """"""""""""""""""""""""""""""""""""
 syntax enable
-colorscheme decay
+colorscheme nightfly
 set fileencodings=utf-8
 
 """""""""""""""""""""
