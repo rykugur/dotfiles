@@ -25,6 +25,9 @@ else
     set -gx VISUAL vim
 end
 
-set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pure.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/bracketed-segments.toml"
+set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/plain-text-symbols.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/nerd-font-symbols.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pure.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/tokyo-night.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pastel-powerline.toml"
