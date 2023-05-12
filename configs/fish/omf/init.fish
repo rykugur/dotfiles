@@ -5,7 +5,7 @@ set -gx fish_function_path $script_path/functions $fish_function_path
 set -gx DOTFILES_DIR (get_dots_dir)
 
 # need to add homebrew to the path here so files that are sourced below see installed apps
-fish_add_path -p /opt/homebrew/bin
+set -gx PATH $PATH /opt/homebrew/bin
 
 # source our exports file
 source $script_path/exports.fish
