@@ -11,6 +11,8 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
   - If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
 - Set fish as your default shell: `chsh -s $(which -a fish)`
   - This is optional, fish can be manually started from a bash shell.
+  - If this doesn't work, `chsh -s /path/to/fish` (note that sometimes you'll need to add `/path/to/fish` to `/etc/shells`).
+    - Again `which -a fish` will list any `fish` executables on your `PATH`.
 - Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 - Install OMF: `./misc/scripts/install_omf.fish`
 - (Optional) Install [`exa`](https://github.com/ogham/exa)
@@ -25,9 +27,9 @@ In order for this to work, ensure that `$HOME/.config/omf` is pointing to your O
 ## Neovim
 
 - Install `neovim`
-- Run the included script to install `vim-plug`:
-  - `./misc/scripts/install_vim-plug.fish`
-- Install vim plugins: `nvim +PlugInstall`
+- Install [`nvhad`](https://nvchad.com/).
+  - `git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim`
+- Update symlinks: `rm -rf $HOME/.config/nvim/custom; ln -s [dotfiles]/configs/nvim/nvchad/custom $HOME/.config/nvim/lua/custom`
 
 ## WM
 
@@ -49,6 +51,10 @@ TBD
 
 ### polybar
 
-TBD
+Clone the [adi1090x/polybar-themes](https://github.com/adi1090x/polybar-themes) repo and run the install script (it will attempt to backup your existing polybar config). Bar startup is handled in [startup.conf](configs/polybar/launch.fish) (just change the path to use a different bar).
 
-TODO: add note about `.polybarcurrent` symlink
+Any module customization should be done in your `~/.config/polybar` directory.
+
+### rofi
+
+Clone the [rofi(-themes)](https://github.com/adi1090x/rofi) repo and run the install script (it should again backup your existing configs). Binds handled in [binds.conf](configs/i3/binds.conf).
