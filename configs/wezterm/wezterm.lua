@@ -18,7 +18,8 @@ config.hide_tab_bar_if_only_one_tab = true
 -- For example, changing the color scheme:
 --config.color_scheme = 'Afterglow'
 --config.font = wezterm.font 'ShureTechMono Nerd Font Mono'
-config.font = wezterm.font 'TerminessTTF Nerd Font Mono'
+--config.font = wezterm.font 'TerminessTTF Nerd Font Mono'
+config.font = wezterm.font('Iosevka Nerd Font Mono')
 config.font = wezterm.font_with_fallback {
   'Iosevka Nerd Font',
   'feather',
