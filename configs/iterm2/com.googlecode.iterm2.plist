@@ -6,6 +6,28 @@
 	<string>E022FF59-F31D-4D70-BB2B-6BF6DCB3C796</string>
 	<key>GlobalKeyMap</key>
 	<dict>
+		<key>0x19-0x60000-0x30</key>
+		<dict>
+			<key>Action</key>
+			<integer>2</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string></string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+		<key>0x3b-0x100000-0x29</key>
+		<dict>
+			<key>Action</key>
+			<integer>19</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string></string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
 		<key>0x5b-0x100000-0x21</key>
 		<dict>
 			<key>Action</key>
@@ -18,6 +40,50 @@
 			<integer>0</integer>
 		</dict>
 		<key>0x5d-0x100000-0x1e</key>
+		<dict>
+			<key>Action</key>
+			<integer>0</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string></string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+		<key>0x6a-0x100000-0x26</key>
+		<dict>
+			<key>Action</key>
+			<integer>18</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string></string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+		<key>0x6b-0x100000-0x28</key>
+		<dict>
+			<key>Action</key>
+			<integer>21</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string></string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+		<key>0x6c-0x100000-0x25</key>
+		<dict>
+			<key>Action</key>
+			<integer>20</integer>
+			<key>Label</key>
+			<string></string>
+			<key>Text</key>
+			<string></string>
+			<key>Version</key>
+			<integer>1</integer>
+		</dict>
+		<key>0x9-0x40000-0x30</key>
 		<dict>
 			<key>Action</key>
 			<integer>0</integer>
@@ -314,7 +380,7 @@
 			<key>Columns</key>
 			<integer>235</integer>
 			<key>Command</key>
-			<string></string>
+			<string>/opt/homebrew/bin/fish</string>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -347,7 +413,7 @@
 				<string>0</string>
 			</dict>
 			<key>Custom Command</key>
-			<string>No</string>
+			<string>Yes</string>
 			<key>Custom Directory</key>
 			<string>No</string>
 			<key>Default Bookmark</key>
