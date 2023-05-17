@@ -1,11 +1,6 @@
 ---@type MappingsTable
 local M = {}
 
-M.general = {
-  n = {
-  },
-}
-
 -- more keybinds!
 M.dusty = {
   n = {
@@ -21,6 +16,7 @@ M.dusty = {
     ["k"] = {"<down>"},
     ["l"] = {"<up>"},
     [";"] = {"<right>"},
+    ["<leader>t"] = {"Tabularize /="}
   }
 }
 
