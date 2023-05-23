@@ -1,12 +1,4 @@
 ### misc aliases
-if test (uname) = Darwin
-    alias cmd.copy pbcopy
-    alias cmd.paste pbpaste
-else
-    alias cmd.copy "xclip -i"
-    alias cmd.copy "xclip -o"
-end
-
 alias cmd.paste "eval $PASTECMD"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
@@ -18,11 +10,17 @@ alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
 alias vi vim
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
-###### fast travel
-alias .local "cd ~/.local/fish"
-if test -e $HOME/.local/fish/config.fish
-    alias fish.local "$EDITOR $HOME/.local/fish/config.fish"
+###### os-based copy/paste
+if test (uname) = Darwin
+    alias cmd.copy pbcopy
+    alias cmd.paste pbpaste
+else
+    alias cmd.copy "xclip -i"
+    alias cmd.copy "xclip -o"
 end
+
+###### fast travel
+alias fish.local "$EDITOR $HOME/.local/fish/config.fish"
 
 ###### lazy-mode awk-aliases until I'm not lazy and write a proper script
 alias awk1 "awk '{print \$1}'"
