@@ -1,5 +1,12 @@
 ### misc aliases
-alias cmd.copy "eval $COPYCMD"
+if test (uname) = Darwin
+    alias cmd.copy pbcopy
+    alias cmd.paste pbpaste
+else
+    alias cmd.copy "xclip -i"
+    alias cmd.copy "xclip -o"
+end
+
 alias cmd.paste "eval $PASTECMD"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
