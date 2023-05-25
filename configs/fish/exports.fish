@@ -6,7 +6,7 @@ set -gx VISUAL vim
 set -gx PATH $PATH $HOME/bin
 # add yarn global if yarn exists
 if which -a yarn &>/dev/null
-    set -gx PATH $PATH $(yarn global bin)
+    set -gx PATH $PATH (yarn global bin)
 end
 
 # manually override this in ~/.fish_local.fish if needed
