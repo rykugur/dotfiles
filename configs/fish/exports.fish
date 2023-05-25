@@ -9,10 +9,6 @@ if which -a yarn &>/dev/null
     set -gx PATH $PATH (yarn global bin)
 end
 
-# manually override this in ~/.fish_local.fish if needed
-set -gx COPYCMD 'xclip -i'
-set -gx PASTECMD 'xclip -o'
-
 # don't greet me!
 set -gx fish_greeting
 
@@ -25,8 +21,8 @@ else
     set -gx VISUAL vim
 end
 
-set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
-# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/bracketed-segments.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
+set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/bracketed-segments.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/plain-text-symbols.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/nerd-font-symbols.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/pure.toml"
