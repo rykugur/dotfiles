@@ -31,6 +31,8 @@ In order for this to work, ensure that `$HOME/.config/omf` is pointing to your O
   - `git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim`
 - Update symlinks: `rm -rf $HOME/.config/nvim/custom; ln -s [dotfiles]/configs/nvim/nvchad/custom $HOME/.config/nvim/lua/custom`
 
+NOTE: use [`neovide`](https://neovide.dev/) for slick animations.
+
 ## WM
 
 Fonts in use:
