@@ -2,21 +2,21 @@
 local M = {}
 
 -- more keybinds!
-M.dusty = {
+M.movement = {
   n = {
+    ["h"] = {"<nop>"},
     ["j"] = {"<left>"},
     ["k"] = {"<down>"},
     ["l"] = {"<up>"},
     [";"] = {"<right>"},
   },
-  i = {
-  },
-  v = {
+  x = {
+    ["h"] = {"<nop>"},
     ["j"] = {"<left>"},
     ["k"] = {"<down>"},
     ["l"] = {"<up>"},
     [";"] = {"<right>"},
-    ["<leader>t"] = {"Tabularize /="}
+    ["<leader>t="] = {":Tabularize /=<CR>", "Tabularize on assignment (equals) operator"},
   }
 }
 
