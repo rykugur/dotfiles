@@ -60,3 +60,7 @@ Any module customization should be done in your `~/.config/polybar` directory.
 ### rofi
 
 Clone the [rofi(-themes)](https://github.com/adi1090x/rofi) repo and run the install script (it should again backup your existing configs). Binds handled in [binds.conf](configs/i3/binds.conf).
+
+### picom
+
+Makes use of the pijulius' fork of picom; install `picom-pijulius-git` (or your distro's analog).
