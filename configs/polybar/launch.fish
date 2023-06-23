@@ -1,7 +1,5 @@
 #!/usr/bin/env fish
 
-set -l DIR $HOME/.config/polybar/$POLYBAR_THEME
-
 # kill any existing bars
 polybar-msg cmd quit
 
