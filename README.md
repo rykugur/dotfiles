@@ -13,8 +13,9 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
   - This is optional, fish can be manually started from a bash shell.
   - If this doesn't work, `chsh -s /path/to/fish` (note that sometimes you'll need to add `/path/to/fish` to `/etc/shells`).
     - Again `which -a fish` will list any `fish` executables on your `PATH`.
+  - You need to log out and back in for this to take effect.
 - Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
-- Install OMF: `./misc/scripts/install_omf.fish`
+- Install [`oh-my-fish`](https://github.com/oh-my-fish/oh-my-fish)
 - (Optional) Install [`exa`](https://github.com/ogham/exa)
 - (Optional) Install [`starship`](https://starship.rs)
 
@@ -27,9 +28,7 @@ In order for this to work, ensure that `$HOME/.config/omf` is pointing to your O
 ## Neovim
 
 - Install `neovim`
-- Install [`nvhad`](https://nvchad.com/).
-  - `git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim`
-- Update symlinks: `rm -rf $HOME/.config/nvim/custom; ln -s [dotfiles]/configs/nvim/nvchad/custom $HOME/.config/nvim/lua/custom`
+- Symlink to LazyVim config: `mv $HOME/.config/nvim $HOME/.config/nvim.bak; ln -s [dotfiles]/configs/nvim/lazyvim $HOME/.config/nvim`
 
 NOTE: use [`neovide`](https://neovide.dev/) for slick animations.
 
