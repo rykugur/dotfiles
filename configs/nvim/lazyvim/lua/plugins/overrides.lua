@@ -17,25 +17,24 @@ return {
 		name = "window-picker",
 		event = "VeryLazy",
 		version = "2.*",
-		config = function()
-			require("window-picker").setup({
-				hint = "floating-big-letter",
-			})
-		end,
+		opts = {
+			hint = "floating-big-letter",
+		},
 	},
 	{
 		"nvim-neo-tree/neo-tree.nvim",
-		config = function()
-			require("neo-tree").setup({
-				filesystem = {
-					window = {
-						mappings = {
-							-- revert 'l' key to movement
-							["l"] = "noop",
-						},
+		opts = {
+			filesystem = {
+				filtered_items = {
+					visible = true,
+				},
+				window = {
+					mappings = {
+						-- revert 'l' key to movement
+						["l"] = "noop",
 					},
 				},
-			})
-		end,
+			},
+		},
 	},
 }
