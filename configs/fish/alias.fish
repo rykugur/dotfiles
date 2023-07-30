@@ -1,5 +1,6 @@
 ### misc aliases
 alias cmd.paste "eval $PASTECMD"
+alias ndots "nvim ~/gits/dotfiles/"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
