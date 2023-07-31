@@ -39,4 +39,7 @@ n_keymap("<S-k>", "<S-w>j")
 n_keymap("<S-l>", "<S-w>k")
 n_keymap("<S-;>", "<S-w>l")
 
+n_keymap("<leader>bj", ":bprevious<CR>")
+n_keymap("<leader>b;", ":bnext<CR>")
+
 x_keymap("<leader>t", ":Tabularize /=<CR>")
