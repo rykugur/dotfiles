@@ -25,6 +25,8 @@ OMF allows a custom local configuration file. Use this file for anything that ne
 
 In order for this to work, ensure that `$HOME/.config/omf` is pointing to your OMF config directory.
 
+Note that the sourcing of local config files happens last in the initialization chain; this is done to allow overriding of default values.
+
 ## Neovim
 
 - Install `neovim`
