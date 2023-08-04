@@ -90,6 +90,9 @@ disabled = true
 [julia]
 disabled = true
 
+[lua]
+disabled = true
+
 [memory_usage]
 disabled = true
 
