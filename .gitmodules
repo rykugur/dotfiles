@@ -1,0 +1,3 @@
+[submodule "configs/rofi"]
+	path = configs/rofi
+	url = git@github.com:rykugur/rofi.git
