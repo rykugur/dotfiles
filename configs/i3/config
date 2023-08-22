@@ -23,8 +23,8 @@ include binds.conf
 include colors.conf
 include startup.conf
 
-set $monitor_one DP-0
-set $monitor_two HDMI-1
+set $monitor_one DP-2
+set $monitor_two HDMI-0
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -86,21 +86,17 @@ new_window pixel 1
 # hide_edge_borders both
 
 # Set inner/outer gaps
-gaps inner 6
+gaps inner 2
 gaps outer 1
 
 # show window title bars (not officially supported with i3gaps)
-#default_border normal
+# default_border normal
 
 # window title alignment
 #title_align center
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
-
-# switch/iterate between workspaces
-bindsym $mod+Tab workspace next
-bindsym $mod+Shift+Tab workspace prev
 
 # switch to workspace
 bindcode $mod+49 workspace $ws0
@@ -223,10 +219,3 @@ exec --no-startup-id ~/.screenlayout/monitors.sh
 
 # Desktop notifications
 exec --no-startup-id dbus-launch dunst --config ~/.config/dunst/dunstrc
-
-#####################################
-# Application menu handled by rofi: #
-#####################################
-
-bindsym $mod+t exec rofi -show window \
-  -config ~/.config/rofi/rofidmenu.rasi

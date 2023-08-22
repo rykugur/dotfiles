@@ -4,6 +4,8 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 
 # Installation
 
+- First run `git submodule update --init --remote --recursive` to initialize the rofi/polybar submodules
+
 ## Terminal
 
 - Install [fish shell](https://fishshell.com/) (should be in your distro's repositories).
@@ -48,20 +50,18 @@ Download nerd fonts from [nerdfonts](https://www.nerdfonts.com/) (if you run Arc
 
 Create a symlink in your `$HOME/.config` to the i3 dir: `ln -s [dotfiles]/configs/i3 $HOME/.config/i3`.
 
-### bspwm
-
-TBD
-
 ### polybar
 
-Clone the [adi1090x/polybar-themes](https://github.com/adi1090x/polybar-themes) repo and run the install script (it will attempt to backup your existing polybar config). Bar startup is handled in [startup.conf](configs/polybar/launch.fish) (just change the path to use a different bar).
+Polybar themes are handled via a personal fork of the [amazing polybar-themes repo from adi1090x](https://github.com/adi1090x/polybar-themes). Just make sure the submodule is initialized (see [Installation](#installation)).
 
-Any module customization should be done in your `~/.config/polybar` directory.
+There is no need to run the included `setup.sh` script unless you want it installed locally (will default to `~/.config`).
 
 ### rofi
 
-Clone the [rofi(-themes)](https://github.com/adi1090x/rofi) repo and run the install script (it should again backup your existing configs). Binds handled in [binds.conf](configs/i3/binds.conf).
+Rofi themes are handled via a personal fork of the [amazing rofi(-themes) repo from adi1090x](https://github.com/adi1090x/rofi). Just make sure the submodule is initialized (see [Installation](#installation)).
+
+There is no need to run the included `setup.sh` script unless you want it installed locally (will default to `~/.config`).
 
 ### picom
 
-Makes use of the pijulius' fork of picom; install `picom-pijulius-git` (or your distro's analog).
+TBD
