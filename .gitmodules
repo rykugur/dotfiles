@@ -1,3 +1,6 @@
 [submodule "configs/rofi"]
 	path = configs/rofi
 	url = git@github.com:rykugur/rofi.git
+[submodule "configs/polybar-themes"]
+	path = configs/polybar-themes
+	url = git@github.com:rykugur/polybar-themes.git
