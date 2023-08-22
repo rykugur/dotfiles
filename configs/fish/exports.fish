@@ -13,13 +13,8 @@ end
 set -gx fish_greeting
 
 ### set an editor
-if which -a nvim &>/dev/null
-    set -gx EDITOR nvim
-    set -gx VISUAL nvim
-else
-    set -gx EDITOR vim
-    set -gx VISUAL vim
-end
+set -gx EDITOR nvim
+set -gx VISUAL nvim
 
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/bracketed-segments.toml"
