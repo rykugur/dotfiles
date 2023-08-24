@@ -27,3 +27,5 @@ map("n", "<leader>bj", ":bprevious<CR>", { desc = "move to next buffer" })
 map("n", "<leader>b;", ":bnext<CR>", { desc = "move to previous buffer" })
 
 map("x", "<leader>t=", ":Tabularize /=<CR>", { desc = "Tabularize on =" })
+
+map({ "n", "x" }, "<C-/>", "<nop>")
