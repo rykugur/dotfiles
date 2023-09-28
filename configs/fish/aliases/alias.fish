@@ -17,7 +17,7 @@ if test (uname) = Darwin
     alias cmd.paste pbpaste
 else
     alias cmd.copy "xclip -i"
-    alias cmd.copy "xclip -o"
+    alias cmd.paste "xclip -o"
 end
 
 ###### fast travel

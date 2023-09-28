@@ -22,4 +22,4 @@ abbr --add --global gw './gradlew'
 abbr --add --global pagi 'ps aux | grep -v grep | grep -i'
 abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global sv 'sudo nvim'
-
+abbr --add --global taill 'tail -Fn 999'

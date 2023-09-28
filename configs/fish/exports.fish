@@ -4,7 +4,7 @@ set -gx VISUAL vim
 
 ### set additional paths
 set -gx PATH $PATH $HOME/bin
-# add yarn global if yarn exists
+# add yarn global if yarn exists b
 if which -a yarn &>/dev/null
     set -gx PATH $PATH (yarn global bin)
 end
@@ -15,6 +15,9 @@ set -gx fish_greeting
 ### set an editor
 set -gx EDITOR nvim
 set -gx VISUAL nvim
+
+# TODO: set rofi launcher theme?
+# set -gx ROFI_LAUNCHER_THEME_PATH "$DOTFILES_DIR/configs/rofi/files/launchers/"
 
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/bracketed-segments.toml"

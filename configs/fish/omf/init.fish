@@ -11,12 +11,12 @@ set -gx PATH $PATH /opt/homebrew/bin
 source $script_path/exports.fish
 
 # source our aliases file(s)
-for file in $script_path/alias*
+for file in $script_path/aliases/*
     source $file
 end
 
 # source our abbreviations file(s)
-for file in $script_path/abbr*
+for file in $script_path/abbreviations/*
     source $file
 end
 
