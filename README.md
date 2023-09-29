@@ -36,6 +36,8 @@ Note that the sourcing of local config files happens last in the initialization 
 
 NOTE: use [`neovide`](https://neovide.dev/) for slick animations.
 
+You may define in `~/.local/fish/config.fish` (or elsewhere) a variable called `LOCAL_NVIM_DIRS`, this should be a comma-delimited string of directories that will show as options to open as the working dir in `nvim`.
+
 ## WM
 
 Fonts in use:
