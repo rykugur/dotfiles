@@ -1,0 +1,5 @@
+return {
+	{
+		"kovetskiy/sxhkd-vim",
+	},
+}
