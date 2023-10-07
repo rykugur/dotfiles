@@ -42,7 +42,8 @@ config.window_padding = {
 	bottom = 2,
 }
 
-config.color_scheme = "Tokyo Night (Gogh)"
+config.color_scheme = "Catppuccin Mocha"
+-- config.color_scheme = "Tokyo Night (Gogh)"
 -- config.color_scheme = 'Dracula (Official)'
 -- config.color_scheme = "Dracula+"
 -- config.color_scheme = 'zenbones_dark'
