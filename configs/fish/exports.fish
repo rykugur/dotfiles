@@ -1,4 +1,5 @@
 set -gx CODE_DIR "$HOME/code"
+set -gx DOTFILES_DIR (get_dots_dir)
 set -gx GITS "$HOME/gits"
 set -gx VISUAL vim
 
@@ -15,9 +16,6 @@ set -gx fish_greeting
 ### set an editor
 set -gx EDITOR nvim
 set -gx VISUAL nvim
-
-# TODO: set rofi launcher theme?
-# set -gx ROFI_LAUNCHER_THEME_PATH "$DOTFILES_DIR/configs/rofi/files/launchers/"
 
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
 # set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/presets/bracketed-segments.toml"
