@@ -16,8 +16,8 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
   - If this doesn't work, `chsh -s /path/to/fish` (note that sometimes you'll need to add `/path/to/fish` to `/etc/shells`).
     - Again `which -a fish` will list any `fish` executables on your `PATH`.
   - You need to log out and back in for this to take effect.
-- Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 - Install [`oh-my-fish`](https://github.com/oh-my-fish/oh-my-fish)
+- Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
 - (Optional) Install [`exa`](https://github.com/ogham/exa)
 - (Optional) Install [`starship`](https://starship.rs)
 
