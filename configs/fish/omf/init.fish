@@ -1,9 +1,5 @@
 set script_path (dirname (realpath (dirname (status -f))))
 
-# TODO: figure out why items on the path are showing up multiple times even before this file is sourced
-# echo $PATH | string split ' ' | sort | uniq -c >>~/path_fun
-echo 'sourcing init.fish' >>~/fish_trace
-
 # set -gx fish_function_path $fish_function_path $HOME/.dotfiles/configs/fish/functions
 set -gx fish_function_path $script_path/functions $fish_function_path
 set -gx DOTFILES_DIR (get_dots_dir)
