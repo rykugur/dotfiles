@@ -45,7 +45,7 @@ end
 
 if which -a eza &>/dev/null
     alias ls eza
-    alias ll "eza -g --long --header --git"
+    alias ll "eza --long --git --git-repos-no-status --header"
 else
     alias ll "ls -lh"
 end
