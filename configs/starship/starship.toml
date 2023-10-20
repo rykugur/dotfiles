@@ -39,7 +39,7 @@ error_symbol = "[❯](red)"
 vimcmd_symbol = "[❮](green)"
 
 [git_branch]
-symbol = " "
+symbol = "  "
 format = "[$symbol$branch]($style) "
 style = "bright-black"
 
@@ -63,6 +63,7 @@ disabled = false
 [cmd_duration]
 format = "[$duration]($style)"
 style = "yellow"
+min_time = 5000
 
 [memory_usage]
 symbol = " "
