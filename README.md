@@ -17,9 +17,9 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
     - Again `which -a fish` will list any `fish` executables on your `PATH`.
   - You need to log out and back in for this to take effect.
 - Install [`oh-my-fish`](https://github.com/oh-my-fish/oh-my-fish)
-  - Run `omf install` 
+  - Run `omf install`
 - Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
-- (Optional) Install [`exa`](https://github.com/ogham/exa)
+- (Optional) Install [`eza`](https://github.com/eza-community/eza)
 - (Optional) Install [`starship`](https://starship.rs)
 
 ### Local Config
@@ -68,3 +68,8 @@ There is no need to run the included `setup.sh` script unless you want it instal
 ### picom
 
 TBD
+
+### tmux
+
+- Install [TPM](https://github.com/tmux-plugins/tpm)
+- Create symlink: `ln -s [dotfiles]/configs/tmux $HOME/.config/tmux`
