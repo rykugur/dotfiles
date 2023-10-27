@@ -43,14 +43,9 @@ else
     alias dfh "df -h"
 end
 
-if which -a exa &>/dev/null
-    alias ls exa
-    alias ll "exa -g --long --header --git"
-else if which -a ls++ &>/dev/null
-    alias ls "ls++ --potsf"
-    alias ll "ls++ --potsf"
-    alias llo "/usr/bin/ls -lh"
-    alias lso /usr/bin/ls
+if which -a eza &>/dev/null
+    alias ls eza
+    alias ll "eza --long --git --git-repos-no-status --header"
 else
     alias ll "ls -lh"
 end

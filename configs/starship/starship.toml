@@ -24,22 +24,34 @@ command_timeout = 1000
 format = "[$symbol($version )]($style)"
 
 [fill]
-symbol = "-"
+symbol = ""
 
 [directory]
 style = "blue"
 read_only = " "
 truncation_length = 4
-truncate_to_repo = false
+truncate_to_repo = true
 
 [character]
 # ﬦ
-success_symbol = "[❯](mauve)"
-error_symbol = "[❯](red)"
-vimcmd_symbol = "[❮](green)"
+# 
+# 
+# ❯
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# vimcmd_symbol = "[❮](green)"
+success_symbol = "[](mauve)"
+error_symbol = "[](red)"
 
 [git_branch]
-symbol = " "
+symbol = "  "
 format = "[$symbol$branch]($style) "
 style = "bright-black"
 
@@ -61,14 +73,15 @@ style = "bright-black"
 disabled = false
 
 [cmd_duration]
-format = " [$duration]($style)"
+format = "[$duration]($style)"
 style = "yellow"
+min_time = 5000
 
 [memory_usage]
 symbol = " "
 
 [rust]
-symbol = " "
+disabled = true
 
 [time]
 disabled = false
