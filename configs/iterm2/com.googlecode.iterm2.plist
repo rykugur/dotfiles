@@ -111,6 +111,8 @@
 	<false/>
 	<key>HotkeyMigratedFromSingleToMulti</key>
 	<true/>
+	<key>NavigatePanesInReadingOrder</key>
+	<false/>
 	<key>NeverWarnAboutShortLivedSessions_E022FF59-F31D-4D70-BB2B-6BF6DCB3C796</key>
 	<true/>
 	<key>NeverWarnAboutShortLivedSessions_E022FF59-F31D-4D70-BB2B-6BF6DCB3C796_selection</key>
@@ -436,6 +438,17 @@
 					<key>Text</key>
 					<string>0x7f</string>
 				</dict>
+				<key>0xd-0x100000-0x24</key>
+				<dict>
+					<key>Action</key>
+					<integer>13</integer>
+					<key>Label</key>
+					<string></string>
+					<key>Text</key>
+					<string></string>
+					<key>Version</key>
+					<integer>1</integer>
+				</dict>
 				<key>0xf700-0x220000</key>
 				<dict>
 					<key>Action</key>
@@ -727,7 +740,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>IosevkaNFM 11</string>
+			<string>EnvyCodeRNFM 11</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
