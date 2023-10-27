@@ -55,15 +55,11 @@ Create a symlink in your `$HOME/.config` to the i3 dir: `ln -s [dotfiles]/config
 
 ### polybar
 
-Polybar themes are handled via a personal fork of the [amazing polybar-themes repo from adi1090x](https://github.com/adi1090x/polybar-themes). Just make sure the submodule is initialized (see [Installation](#installation)).
-
-There is no need to run the included `setup.sh` script unless you want it installed locally (will default to `~/.config`).
+TBD
 
 ### rofi
 
-Rofi themes are handled via a personal fork of the [amazing rofi(-themes) repo from adi1090x](https://github.com/adi1090x/rofi). Just make sure the submodule is initialized (see [Installation](#installation)).
-
-There is no need to run the included `setup.sh` script unless you want it installed locally (will default to `~/.config`).
+TBD
 
 ### picom
 
