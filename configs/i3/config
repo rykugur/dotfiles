@@ -31,7 +31,7 @@ set $monitor_two HDMI-0
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 # font pango: Noto Sans Regular 10
-font pango: Iosevka Nerd Font 10
+font pango: Iosevka Nerd Font 12px
 
 # set the mod key to the winkey:
 set $mod Mod4
@@ -75,7 +75,7 @@ set $ws7 "7"
 ##############################
 
 #border indicator on windows:
-new_window pixel 1
+default_border pixel 1
 
 # thin borders
 # hide_edge_borders both
@@ -100,8 +100,6 @@ bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
-# special case - mod+tilde
-bindcode $mod+49 workspace $ws6
 bindsym $mod+7 workspace $ws7
 
 # move focused container to workspace
@@ -111,8 +109,6 @@ bindsym $mod+Shift+3 move container to workspace $ws3
 bindsym $mod+Shift+4 move container to workspace $ws4
 bindsym $mod+Shift+5 move container to workspace $ws5
 bindsym $mod+Shift+6 move container to workspace $ws6
-# special case - mod+shift+tilde
-bindcode $mod+Shift+49 move container to workspace $ws6
 bindsym $mod+Shift+7 move container to workspace $ws7
 
 # resize window (you can also use the mouse for that):
@@ -131,7 +127,7 @@ bindsym $mod+Shift+7 move container to workspace $ws7
 ######################################
 
 # kill focused window
-bindsym $mod+q kill
+bindsym $mod+Shift+q kill
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -175,9 +171,6 @@ bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
-
-# focus the parent container
-bindsym $mod+a focus parent
 
 # Power Profiles menu switcher (rofi)
 bindsym $mod+Shift+p exec ~/.config/i3/scripts/power-profiles
