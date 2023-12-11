@@ -5,7 +5,7 @@ alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep "grep --color"
-alias pingtest "ping google.com"
+alias pingtest "ping -D -O google.com"
 alias replace.newlines "awk '{printf \"%s\\n\", \$0}'"
 alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
 alias vi vim
