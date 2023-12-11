@@ -1,8 +1,6 @@
 return {
 	"nvim-neorg/neorg",
-	cond = function()
-		return string.find(vim.fn.getcwd(), "neorg_notes")
-	end,
+	event = "VeryLazy",
 	opts = {
 		load = {
 			["core.defaults"] = {},
@@ -15,7 +13,8 @@ return {
 				config = {
 					workspaces = {
 						notes = "~/gits/neorg_notes/",
-						gaming = "~/gits/neorg_notes/gaming",
+						dev = "~/gits/neorg_notes/dev",
+						games = "~/gits/neorg_notes/games",
 						linux = "~/gits/neorg_notes/linux",
 						misc = "~/gits/neorg_notes/misc",
 					},

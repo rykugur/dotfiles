@@ -6,6 +6,10 @@ return {
 				filtered_items = {
 					visible = false,
 				},
+				update_focused_file = {
+					enable = true,
+					update_cwd = true,
+				},
 				window = {
 					mappings = {
 						-- revert 'l' key to movement
