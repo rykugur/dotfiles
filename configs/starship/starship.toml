@@ -24,7 +24,8 @@ command_timeout = 1000
 format = "[$symbol($version )]($style)"
 
 [fill]
-symbol = ""
+# symbol = ""
+symbol = " "
 
 [directory]
 style = "blue"

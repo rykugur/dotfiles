@@ -27,9 +27,10 @@ config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
 config.font = wezterm.font_with_fallback({
-	"EnvyCodeR Nerd Font Mono",
-	"FiraCode Nerd Font Mono",
 	"Iosevka Nerd Font",
+	"JetBrainsMono Nerd Font",
+	"FiraCode Nerd Font Mono",
+	"EnvyCodeR Nerd Font Mono",
 	"feather",
 })
 config.font_size = 12.0
@@ -44,6 +45,8 @@ config.window_padding = {
 config.color_scheme = "Catppuccin Mocha"
 
 config.window_background_opacity = 0.8
+
+config.enable_wayland = true
 
 -- and finally, return the configuration to wezterm
 return config
