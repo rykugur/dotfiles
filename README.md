@@ -9,16 +9,16 @@ This is a very poorly named repo, as it now contains more than just dotfiles. Ev
 ## Terminal
 
 - Install [fish shell](https://fishshell.com/) (should be in your distro's repositories).
-- Ensure fish exists on your path: `which -a fish`
-  - If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
-- Set fish as your default shell: `chsh -s $(which -a fish)`
-  - This is optional, fish can be manually started from a bash shell.
-  - If this doesn't work, `chsh -s /path/to/fish` (note that sometimes you'll need to add `/path/to/fish` to `/etc/shells`).
-    - Again `which -a fish` will list any `fish` executables on your `PATH`.
-  - You need to log out and back in for this to take effect.
-- Install [`oh-my-fish`](https://github.com/oh-my-fish/oh-my-fish)
-  - Run `omf install`
-- Create symlink to omf config: `ln -s [dotfiles]/configs/fish/omf $HOME/.config/omf`
+  - Ensure fish exists on your path: `which -a fish`
+    - If on a mac, and using homebrew, add brew to your path: `PATH=/opt/homebrew/bin:$PATH`
+  - Set fish as your default shell: `chsh -s $(which -a fish)`
+    - This is optional, fish can be manually started from a bash shell.
+    - If this doesn't work, `chsh -s /path/to/fish` (note that sometimes you'll need to add `/path/to/fish` to `/etc/shells`).
+      - Again `which -a fish` will list any `fish` executables on your `PATH`.
+    - You need to log out and back in for this to take effect.
+  - Create symlink: `rm $HOME/.config/fish/config.fish, ln -s $DOTFILES_DIR/configs/fish/config.fish $HOME/.config/fish/config.fish`
+  - Install [`fisher`](https://github.com/jorgebucaran/fisher)
+    - Create symlink: `ln -s $DOTFILES_DIR/configs/fish/fish_plugins $HOME/.config/fish/fish_plugins`
 - (Optional) Install [`eza`](https://github.com/eza-community/eza)
 - (Optional) Install [`starship`](https://starship.rs)
 

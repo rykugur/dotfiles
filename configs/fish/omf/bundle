@@ -1,5 +1,0 @@
-package bass
-package foreign-env
-package getopts
-package nvm
-package rvm

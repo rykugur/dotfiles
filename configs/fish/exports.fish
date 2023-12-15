@@ -1,11 +1,7 @@
-set -gx CODE_DIR "$HOME/code"
-set -gx DOTFILES_DIR (get_dots_dir)
-set -gx GITS "$HOME/gits"
-set -gx VISUAL vim
-
 ### set additional paths
 set -gx PATH $PATH $HOME/bin
-# add yarn global if yarn exists b
+
+# add yarn global if yarn exists
 if which -a yarn &>/dev/null
     set -gx PATH $PATH (yarn global bin)
 end

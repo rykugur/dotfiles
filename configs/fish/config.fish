@@ -1,24 +1,31 @@
-set script_path (dirname (realpath (dirname (status -f))))
-
-# set -gx fish_function_path $fish_function_path $HOME/.dotfiles/configs/fish/functions
-set -gx fish_function_path $script_path/functions $fish_function_path
-set -gx DOTFILES_DIR (get_dots_dir)
-
-# need to add homebrew to the path here so files that are sourced below see installed apps
-if which -a brew &>/dev/null
-    set -gx PATH $PATH /opt/homebrew/bin
+if status is-interactive
+    # Commands to run in interactive sessions can go here
+    echo derpy
 end
 
+set -gx DOTFILES_DIR $HOME/gits/dotfiles
+set -l fish_conf_dir $DOTFILES_DIR/configs/fish
+
+set script_path (dirname (realpath (dirname (status -f))))
+
+# # set -gx fish_function_path $fish_function_path $HOME/.dotfiles/configs/fish/functions
+set -gx fish_function_path $fish_conf_dir/functions $fish_function_path
+
+# need to add homebrew to the path here so files that are sourced below see installed apps
+# if which -a brew &>/dev/null
+#     set -gx PATH $PATH /opt/homebrew/bin
+# end
+
 # source our exports file
-source $script_path/exports.fish
+source $fish_conf_dir/exports.fish
 
 # source our aliases file(s)
-for file in $script_path/aliases/*
+for file in $fish_conf_dir/aliases/*
     source $file
 end
 
 # source our abbreviations file(s)
-for file in $script_path/abbreviations/*
+for file in $fish_conf_dir/abbreviations/*
     source $file
 end
 
