@@ -8,7 +8,8 @@ alias grep "grep --color"
 alias pingtest "ping -D -O google.com"
 alias replace.newlines "awk '{printf \"%s\\n\", \$0}'"
 alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
-alias vi vim
+alias v nvim
+alias vi nvim
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
 ###### os-based copy/paste
@@ -16,8 +17,8 @@ if test (uname) = Darwin
     alias cmd.copy pbcopy
     alias cmd.paste pbpaste
 else
-    alias cmd.copy "xclip -i"
-    alias cmd.paste "xclip -o"
+    alias cmd.copy wl-copy
+    alias cmd.paste wl-paste
 end
 
 ###### fast travel
