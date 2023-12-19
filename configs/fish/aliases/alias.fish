@@ -1,4 +1,5 @@
 ### misc aliases
+alias cmd.copy "eval $COPYCMD"
 alias cmd.paste "eval $PASTECMD"
 alias ndots "nvim ~/gits/dotfiles/"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
@@ -11,15 +12,6 @@ alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
 alias v nvim
 alias vi nvim
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
-
-###### os-based copy/paste
-if test (uname) = Darwin
-    alias cmd.copy pbcopy
-    alias cmd.paste pbpaste
-else
-    alias cmd.copy wl-copy
-    alias cmd.paste wl-paste
-end
 
 ###### fast travel
 alias fish.local "$EDITOR $HOME/.local/fish/config.fish"
