@@ -1,5 +1,4 @@
 return {
-	"theRealCarneiro/hyprland-vim-syntax",
-	dependencies = { "nvim-treesitter/nvim-treesitter" },
-	ft = "hypr",
+	{ "luckasRanarison/tree-sitter-hypr" },
+	{ "theRealCarneiro/hyprland-vim-syntax", dependencies = { "nvim-treesitter/nvim-treesitter" }, ft = "hypr" },
 }
