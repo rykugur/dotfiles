@@ -3,7 +3,7 @@
 palette = "catppuccin_mocha"
 
 format = """
-$username
+$username\
 $hostname\
 $directory\
 $fill\
