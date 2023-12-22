@@ -1,4 +1,5 @@
 ### misc aliases
+alias cmd.copy "eval $COPYCMD"
 alias cmd.paste "eval $PASTECMD"
 alias ndots "nvim ~/gits/dotfiles/"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
@@ -8,17 +9,9 @@ alias grep "grep --color"
 alias pingtest "ping -D -O google.com"
 alias replace.newlines "awk '{printf \"%s\\n\", \$0}'"
 alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
-alias vi vim
+alias v nvim
+alias vi nvim
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
-
-###### os-based copy/paste
-if test (uname) = Darwin
-    alias cmd.copy pbcopy
-    alias cmd.paste pbpaste
-else
-    alias cmd.copy "xclip -i"
-    alias cmd.paste "xclip -o"
-end
 
 ###### fast travel
 alias fish.local "$EDITOR $HOME/.local/fish/config.fish"
@@ -45,7 +38,7 @@ end
 
 if which -a eza &>/dev/null
     alias ls eza
-    alias ll "eza --long --git --git-repos-no-status --header"
+    alias ll "eza --long --git --git-repos-no-status --header --icons"
 else
     alias ll "ls -lh"
 end

@@ -21,6 +21,11 @@ config.keys = {
 		mods = "CTRL|SUPER",
 		action = wezterm.action.Nop,
 	},
+	{
+		key = "v",
+		mods = "CTRL",
+		action = wezterm.action.Nop,
+	},
 }
 
 config.use_fancy_tab_bar = false
@@ -46,7 +51,7 @@ config.color_scheme = "Catppuccin Mocha"
 
 config.window_background_opacity = 0.8
 
-config.enable_wayland = true
+config.enable_wayland = false
 
 -- and finally, return the configuration to wezterm
 return config

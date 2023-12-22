@@ -1,20 +1,27 @@
-set -gx CODE_DIR "$HOME/code"
-set -gx DOTFILES_DIR (get_dots_dir)
-set -gx GITS "$HOME/gits"
-set -gx VISUAL vim
+set -gx fish_function_path $fish_conf_dir/functions $fish_function_path
+set -gx fisher_path $DOTFILES_DIR/configs/fish
 
 ### set additional paths
-set -gx PATH $PATH $HOME/bin
-# add yarn global if yarn exists b
+fish_add_path $HOME/bin
+
+# add yarn global if yarn exists
 if which -a yarn &>/dev/null
-    set -gx PATH $PATH (yarn global bin)
+    fish_add_path (yarn global bin)
 end
 
 # don't greet me!
 set -gx fish_greeting
 
 ### set an editor
-set -gx EDITOR nvim
-set -gx VISUAL nvim
+set -gx EDITOR (which nvim)
+set -gx VISUAL $EDITOR
+set -gx SUDO_EDITOR $EDITOR
+
+# Cursor styles
+set -gx fish_vi_force_cursor 1
+set -gx fish_cursor_default block
+set -gx fish_cursor_insert line blink
+set -gx fish_cursor_visual block
+set -gx fish_cursor_replace_one underscore
 
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
