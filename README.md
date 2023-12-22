@@ -49,21 +49,15 @@ Fonts in use:
 
 Download nerd fonts from [nerdfonts](https://www.nerdfonts.com/) (if you run Arch or a derivative, many of these are available in the community repository).
 
-### i3
+### hyprland
 
-Create a symlink in your `$HOME/.config` to the i3 dir: `ln -s [dotfiles]/configs/i3 $HOME/.config/i3`.
-
-### polybar
-
-TBD
-
-### rofi
-
-TBD
-
-### picom
-
-TBD
+- Install dependencies:
+  - `[pacman/yay/...] -S hyprland waybar swaylock swayidle`
+- Create symlinks:
+  - `ln -s [dotfiles]/configs/hyprland $HOME/.config/hypr`
+  - `ln -s [dotfiles]/configs/waybar $HOME/.config/waybar`
+- Optional: install [`hyprload`](https://github.com/Duckonaut/hyprload)
+  - Optional: install [`hyprxprimary`](https://github.com/zakk4223/hyprXPrimary) and set your default/primary monitor if running more than one monitor.
 
 ### tmux
 

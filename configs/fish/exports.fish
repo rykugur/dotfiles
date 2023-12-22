@@ -2,11 +2,11 @@ set -gx fish_function_path $fish_conf_dir/functions $fish_function_path
 set -gx fisher_path $DOTFILES_DIR/configs/fish
 
 ### set additional paths
-set -gx PATH $PATH $HOME/bin
+fish_add_path $HOME/bin
 
 # add yarn global if yarn exists
 if which -a yarn &>/dev/null
-    set -gx PATH $PATH (yarn global bin)
+    fish_add_path (yarn global bin)
 end
 
 # don't greet me!

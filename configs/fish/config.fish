@@ -29,4 +29,7 @@ if which -a starship >/dev/null 2>&1
     starship init fish | source
 end
 
+# don't insert a space at the end of abbreviations
+# bind " " expand-abbr or self-insert
+
 fzf_configure_bindings
