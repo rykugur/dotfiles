@@ -4,4 +4,9 @@
   programs.starship = {
     enable = true;
   };
+
+  home.file.".config/fish/config.fish" = {
+    source = ../../../configs/fish/config.fish;
+    force = true;
+  };
 }
