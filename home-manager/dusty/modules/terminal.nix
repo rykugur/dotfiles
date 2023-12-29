@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }: {
+{ config, inputs, lib, pkgs, username, ... }: {
   home.packages = [ pkgs.kitty ];
 
   programs.starship = {

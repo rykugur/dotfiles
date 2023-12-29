@@ -4,5 +4,10 @@
     storageDriver = "btrfs";
   };
 
+  environment.systemPackages = [
+    docker
+    docker-compose
+  ];
+
   users.users."${username}".extraGroups = [ "docker" ];
 }

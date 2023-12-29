@@ -11,6 +11,8 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
 
+    rust-overlay.url = "github:oxalica/rust-overlay";
+
     # Shameless plug: looking for a way to nixify your themes and make
     # everything match nicely? Try nix-colors!
     # nix-colors.url = "github:misterio77/nix-colors";
@@ -20,6 +22,7 @@
     { self
     , nixpkgs
     , home-manager
+    , rust-overlay
     , ...
     } @ inputs:
     let
@@ -27,6 +30,8 @@
 
       username = "dusty";
       hostname = "jezrien";
+
+      overlays = { rust-overlay = rust-overlay; };
 
       wm = "hyprland";
 
@@ -36,7 +41,7 @@
       nixosConfigurations = {
         ${hostname} = nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit inputs username hostname; };
+          specialArgs = { inherit inputs username hostname overlays wm; };
           modules = [
             ./nixos/${hostname}/configuration.nix
           ];

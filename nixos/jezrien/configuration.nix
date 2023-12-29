@@ -5,6 +5,8 @@
 , pkgs
 , username
 , hostname
+, overlays
+, wm
 , ...
 }: {
   imports = [
@@ -15,14 +17,19 @@
     ./hardware-configuration.nix
 
     ../modules/audio.nix
+    ../modules/fish.nix
     ../modules/ssh.nix
+    ../modules/wm/${wm}.nix
+
     ../modules/gaming.nix
+    ../modules/rust.nix
   ];
 
   nixpkgs = {
     overlays = [
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
+      # rust-overlay.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {

@@ -16,10 +16,10 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-    ../modules/git.nix
-    ../modules/nvim.nix
-    ../modules/terminal.nix
-    ../modules/wm/${wm}.nix
+    ./modules/git.nix
+    ./modules/nvim.nix
+    ./modules/terminal.nix
+    ./modules/wm/${wm}.nix
   ];
 
   nixpkgs = {
