@@ -1,5 +1,9 @@
 {
-  description = "Your new nix config";
+  description = "Swoleflake";
+
+  # TODO: fish plugins?
+  # TODO: btrfs test with multiple devices
+  # TODO: figure out any gotchas with nvidia
 
   inputs = {
     # Nixpkgs

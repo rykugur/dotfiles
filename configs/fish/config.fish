@@ -2,7 +2,12 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
-set -gx DOTFILES_DIR $HOME/gits/dotfiles
+if test -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+    cat $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh | babelfish | source
+end
+
+set -gx DOTFILES_DIR $HOME/.dotfiles
+# set -gx DOTFILES_DIR $HOME/gits/dotfiles/
 set -l fish_conf_dir $DOTFILES_DIR/configs/fish
 
 source $fish_conf_dir/exports.fish

@@ -58,11 +58,6 @@
     xz
     p7zip
 
-    ripgrep
-    jq
-    eza
-    fzf
-
     dnsutils
     ldns
     nmap
@@ -76,6 +71,8 @@
     lm_sensors
     pciutils
     usbutils
+
+    gcc
   ];
 
   programs.home-manager.enable = true;
