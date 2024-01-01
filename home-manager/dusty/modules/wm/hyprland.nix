@@ -1,4 +1,4 @@
-{ config, inputs, lib, ... }: {
+{ config, inputs, lib, pkgs, ... }: {
   home.packages = with pkgs; [
     cliphist
     swayidle
