@@ -58,6 +58,7 @@
     neofetch
     obsidian
     pavucontrol
+    spotify
 
     p7zip
     unzip
