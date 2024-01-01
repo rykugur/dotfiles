@@ -3,7 +3,6 @@
 { inputs
 , lib
 , config
-, home-manager
 , pkgs
 , username
 , hostname
@@ -75,13 +74,6 @@
     gcc
     vscode
   ];
-
-  home-manager.users.${username} = {
-    dconf = {
-      enable = true;
-      settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-    };
-  };
 
   programs.home-manager.enable = true;
 
