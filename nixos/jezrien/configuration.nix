@@ -39,7 +39,12 @@
       #   });
       # })
     ];
-    config.allowUnfree = true;
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        "electron-25.9.0"
+      ];
+    };
   };
 
   # This will add each flake input as a registry
