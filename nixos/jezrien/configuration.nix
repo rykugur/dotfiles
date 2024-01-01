@@ -73,6 +73,10 @@
 
   programs.fish.enable = true;
 
+  environment.systemPackages = with pkgs; [
+    home-manager
+  ];
+
   users.users = {
     ${username} = {
       isNormalUser = true;
