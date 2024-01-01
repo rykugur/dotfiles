@@ -72,11 +72,15 @@
 
   boot.loader.systemd-boot.enable = true;
 
+  programs.fish.enable = true;
+
   users.users = {
     ${username} = {
-      initialPassword = "pass123"; # change after first login with `passwd`
       isNormalUser = true;
+      initialPassword = "pass123"; # change after first login with `passwd`
+      home = "/home/${username}";
       extraGroups = [ "wheel" "networkmanager" ];
+      shell = pkgs.fish;
     };
   };
 
