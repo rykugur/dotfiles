@@ -1,6 +1,6 @@
 { config, inputs, lib, ... }: {
   services = {
-    trim = {
+    fstrim = {
       enable = true;
       interval = "weekly";
     };
