@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ (modulesPath + "/profiles/qemu-guest.nix")
+    [
+      (modulesPath + "/profiles/qemu-guest.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
@@ -14,25 +15,29 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/16cacee7-5c5a-435e-b24c-1158c4c55705";
+    {
+      device = "/dev/disk/by-uuid/16cacee7-5c5a-435e-b24c-1158c4c55705";
       fsType = "btrfs";
-      options = [ "subvol=root" "compress=zstd" ];
+      options = [ "subvol=root" "compress=zstd" "discard=async" ];
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/16cacee7-5c5a-435e-b24c-1158c4c55705";
+    {
+      device = "/dev/disk/by-uuid/16cacee7-5c5a-435e-b24c-1158c4c55705";
       fsType = "btrfs";
       options = [ "subvol=home" "compress=zstd" ];
     };
 
   fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/16cacee7-5c5a-435e-b24c-1158c4c55705";
+    {
+      device = "/dev/disk/by-uuid/16cacee7-5c5a-435e-b24c-1158c4c55705";
       fsType = "btrfs";
       options = [ "subvol=nix" "compress=zstd" "noatime" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/12CE-A600";
+    {
+      device = "/dev/disk/by-uuid/12CE-A600";
       fsType = "vfat";
     };
 

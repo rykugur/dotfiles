@@ -15,6 +15,7 @@
     # inputs.nix-colors.homeManagerModule
 
     # You can also split up your configuration and import pieces of it here:
+    ./modules/gaming.nix
     ./modules/git.nix
     ./modules/nvim.nix
     ./modules/terminal.nix
@@ -53,6 +54,8 @@
   home.packages = with pkgs; [
     neofetch
 
+    obsidian
+
     zip
     unzip
     xz
@@ -62,12 +65,15 @@
     ldns
     nmap
 
-    tree
     cinnamon.nemo
+    duf
+    tree
 
     btop
     iotop
     iftop
+    nvtop
+
     lm_sensors
     pciutils
     usbutils

@@ -16,6 +16,8 @@
 
     ./hardware-configuration.nix
 
+    ../modules/btrfs.nix
+
     ../modules/audio.nix
     ../modules/fish.nix
     ../modules/ssh.nix
