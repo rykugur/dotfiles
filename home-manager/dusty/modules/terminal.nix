@@ -1,11 +1,22 @@
 { config, inputs, lib, pkgs, ... }: {
   home.packages = with pkgs; [
     babelfish
+    duf
     eza
     fzf
     jq
     kitty
+    lm_sensors
+    pciutils
     ripgrep
+    silver-searcher
+    tree
+    usbutils
+
+    btop
+    iotop
+    iftop
+    nvtop
   ];
 
   programs.starship = {

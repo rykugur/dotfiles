@@ -1,4 +1,11 @@
 { config, inputs, lib, ... }: {
+  home.packages = with pkgs; [
+    cliphist
+    swayidle
+    swaylock
+    waybar
+    wl-clipboard
+  ];
   home.file = {
     ".config/hypr" = {
       source = ../../../../configs/hypr;

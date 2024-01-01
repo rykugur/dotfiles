@@ -2,5 +2,8 @@
   home.packages = with pkgs; [
     discord
     betterdiscordctl
+
+    obs-studio
+    obs-cli
   ];
 }

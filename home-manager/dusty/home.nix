@@ -52,33 +52,27 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
+    "1password"
+    "1password-gui"
+    firefox
     neofetch
-
     obsidian
+    pavucontrol
 
-    zip
+    p7zip
     unzip
     xz
-    p7zip
+    zip
 
     dnsutils
     ldns
     nmap
 
+    baobab
     cinnamon.nemo
-    duf
-    tree
-
-    btop
-    iotop
-    iftop
-    nvtop
-
-    lm_sensors
-    pciutils
-    usbutils
 
     gcc
+    vscode
   ];
 
   programs.home-manager.enable = true;
