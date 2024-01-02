@@ -17,6 +17,8 @@
     iotop
     iftop
     nvtop
+
+    nodejs_21
   ];
 
   programs.starship = {
