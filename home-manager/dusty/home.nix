@@ -78,6 +78,9 @@
 
     gcc
     vscode
+
+    fira-code-nerdfont
+    font-awesome
   ];
 
   programs.home-manager.enable = true;
