@@ -1,0 +1,10 @@
+[user]
+	email = rollhax@gmail.com
+	name = rykugur
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKcd6tFE57ACXk/hPy73FEwRUd3xQwIzDC6GXnk8AVx/
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /opt/1Password/op-ssh-sign
+[commit]
+  gpgsign = true
