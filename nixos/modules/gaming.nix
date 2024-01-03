@@ -10,6 +10,5 @@
   environment.systemPackages = [
     pkgs.gamescope
     pkgs.gamemode
-    pkgs.python3 # for eve online -> pyfa
   ];
 }

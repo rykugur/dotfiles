@@ -5,6 +5,6 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
-	program = /opt/1Password/op-ssh-sign
+	program = /run/current-system/sw/bin/op-ssh-sign
 [commit]
   gpgsign = true

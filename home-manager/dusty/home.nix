@@ -19,6 +19,7 @@
     ./modules/git.nix
     ./modules/nvim.nix
     ./modules/terminal.nix
+    ./modules/theme.nix
     ./modules/wm/${wm}.nix
   ];
 
@@ -56,8 +57,6 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
-    _1password
-    _1password-gui
     firefox
     neofetch
     obsidian
@@ -72,17 +71,22 @@
     dnsutils
     ldns
     nmap
+    psmisc
 
     baobab
     cinnamon.nemo
+    gnome.seahorse
 
     gcc
+    gnumake
     vscode
 
-    fira-code-nerdfont
     font-awesome
+
+    gnome.adwaita-icon-theme
   ];
 
+  ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
 
   # Nicely reload system units when changing configs

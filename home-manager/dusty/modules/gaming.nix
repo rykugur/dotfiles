@@ -3,6 +3,8 @@
     discord
     betterdiscordctl
 
+    protontricks
+
     obs-studio
     obs-cli
   ];

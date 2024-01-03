@@ -24,4 +24,6 @@ set -gx fish_cursor_insert line blink
 set -gx fish_cursor_visual block
 set -gx fish_cursor_replace_one underscore
 
+set -gx SSH_AUTH_SOCK ~/.1password/agent.sock
+
 set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"

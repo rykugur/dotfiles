@@ -22,15 +22,41 @@
     ../modules/ssh.nix
     ../modules/wm/${wm}.nix
 
+    ../modules/1password.nix
     ../modules/gaming.nix
     ../modules/rust.nix
   ];
+
+  hardware = {
+    nvidia = {
+      modesetting.enable = true; #required
+
+      powerManagement = {
+        enable = false;
+        finegrained = false;
+      };
+
+      open = false; # don't use open source kernel module
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.production;
+    };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+  };
+
+  services = {
+    gnome.gnome-keyring.enable = true;
+    gvfs.enable = true;
+    xserver.videoDrivers = [ "nvidia" ];
+  };
 
   nixpkgs = {
     overlays = [
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
-      # rust-overlay.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {
@@ -57,14 +83,18 @@
       })
       config.nix.registry;
 
-  nix.settings = {
-    # Enable flakes and new 'nix' command
-    experimental-features = "nix-command flakes";
-    # Deduplicate and optimize nix store
-    auto-optimise-store = true;
+  nix = {
+    optimise.automatic = true;
 
-    substituters = [ "https://hyprland.cachix.org" ];
-    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    settings = {
+      # Enable flakes and new 'nix' command
+      experimental-features = "nix-command flakes";
+      # Deduplicate and optimize nix store
+      auto-optimise-store = true;
+
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    };
   };
 
   networking.hostName = hostname;
