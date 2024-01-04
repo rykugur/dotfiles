@@ -32,7 +32,7 @@
       modesetting.enable = true; #required
 
       powerManagement = {
-        enable = false;
+        enable = true;
         finegrained = false;
       };
 
@@ -48,7 +48,10 @@
   };
 
   services = {
-    gnome.gnome-keyring.enable = true;
+    gnome = {
+      gnome-browser-connector.enable = true;
+      gnome-keyring.enable = true;
+    };
     gvfs.enable = true;
     xserver.videoDrivers = [ "nvidia" ];
   };
@@ -118,6 +121,8 @@
       shell = pkgs.fish;
     };
   };
+
+  time.timeZone = "America/Chicago";
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";

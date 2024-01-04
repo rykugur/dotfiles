@@ -4,20 +4,28 @@
     dunst
     libnotify
     grim
-    (pkgs.callPackage ../../derivations/hyprprop.nix { })
+    #(pkgs.callPackage ../../derivations/hyprprop.nix { })
+    inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
     pywal
     slurp
     swappy
     swayidle
     swaylock
-    (waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    }))
+    #(waybar.overrideAttrs (oldAttrs: {
+    #  mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+    #}))
     wl-clipboard
     wlogout
     wofi
     xorg.xrandr
   ];
+
+  programs.waybar = {
+    enable = true;
+    package = pkgs.waybar.overrideAttrs (oldAttrs: {
+      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+    });
+  };
 
   home.file = {
     ".config/hypr" = {

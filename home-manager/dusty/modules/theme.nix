@@ -10,6 +10,12 @@
     volantes-cursors
   ];
 
+  home.pointerCursor = {
+    gtk.enable = true;
+    name = "Bibata-Modern-Ice";
+    package = pkgs.bibata-cursors;
+    size = 16;
+  };
 
   gtk = {
     enable = true;
@@ -27,13 +33,13 @@
     };
 
     cursorTheme = {
-      name = "Bibata";
+      name = "Bibata-Modern-Ice";
       package = pkgs.bibata-cursors;
     };
 
     iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+      name = "Vimix-dark";
+      package = pkgs.vimix-icon-theme;
     };
 
     gtk3.extraConfig = {
@@ -49,21 +55,19 @@
     };
   };
 
-  #gtk = {
-  #  enable = true;
-  #  cursorTheme = {
-  #    name = "Volantes";
-  #    package = pkgs.volantes-cursors;
-  #  };
-  #  theme = {
-  #    name = "Catppuccin-Mocha-Compact-Blue-Dark";
-  #    package = pkgs.catppuccin-gtk.override {
-  #      accents = [ "blue" ];
-  #      size = "compact";
-  #      tweaks = [ "rimless" "black" ];
-  #      variant = "mocha";
-  #    };
-  #  };
-  #};
+  programs.firefox = {
+    enable = true;
+    enableGnomeExtensions = true;
 
+    profiles = {
+      default = {
+        id = 0;
+        userChrome = ''
+          #TabsToolbar {
+            display: none;
+          }
+        '';
+      };
+    };
+  };
 }

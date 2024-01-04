@@ -25,10 +25,10 @@
     enable = true;
   };
 
-  programs.fish.plugins = with pkgs.fishPlugins; [
-    fzf-fish
-    grc
-    z
+  programs.fish.plugins = [
+    pkgs.fishPlugins.fzf-fish
+    pkgs.fishPlugins.grc
+    pkgs.fishPlugins.z
   ];
 
   home.file = {

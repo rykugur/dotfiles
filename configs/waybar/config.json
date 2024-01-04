@@ -6,7 +6,7 @@
     "height": 30,
     "spacing": 4,
     "include": [
-      "~/gits/dotfiles/configs/waybar/modules.json"
+      "~/.config/waybar/modules.json"
     ],
     "modules-left": [
       "hyprland/workspaces"
@@ -37,7 +37,7 @@
     "height": 30,
     "spacing": 4,
     "include": [
-      "~/gits/dotfiles/configs/waybar/modules.json"
+      "~/.config/waybar/modules.json"
     ],
     "modules-left": [
       "hyprland/workspaces"

@@ -1,4 +1,3 @@
-# hello.nix
 { lib
 , stdenv
 , fetchFromGitHub

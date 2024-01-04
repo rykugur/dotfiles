@@ -1,11 +1,13 @@
 { config, inputs, lib, pkgs, ... }: {
-  home.packages = with pkgs; [
-    discord
-    betterdiscordctl
+  home.packages = [
+    (pkgs.discord.override {
+      nss = pkgs.nss_latest;
+    })
+    pkgs.betterdiscordctl
 
-    protontricks
+    pkgs.protontricks
 
-    obs-studio
-    obs-cli
+    pkgs.obs-studio
+    pkgs.obs-cli
   ];
 }

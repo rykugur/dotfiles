@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-killall waybar
+kill (ps aux | grep -v grep | grep -i waybar | awk2)
 sleep 0.5
 
-waybar -c $DOTFILES_DIR/configs/waybar/config.json
+waybar -c $HOME/.config/waybar/config.json & disown

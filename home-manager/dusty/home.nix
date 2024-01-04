@@ -57,11 +57,15 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
-    firefox
+    baobab
+    cinnamon.nemo
+    gnome.seahorse
     neofetch
     obsidian
     pavucontrol
+    solaar
     spotify
+    xdg-utils
 
     p7zip
     unzip
@@ -72,10 +76,6 @@
     ldns
     nmap
     psmisc
-
-    baobab
-    cinnamon.nemo
-    gnome.seahorse
 
     gcc
     gnumake
