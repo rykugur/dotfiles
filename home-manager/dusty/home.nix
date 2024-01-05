@@ -15,6 +15,7 @@
     # inputs.nix-colors.homeManagerModule
 
     # You can also split up your configuration and import pieces of it here:
+    ./modules/firefox.nix
     ./modules/gaming.nix
     ./modules/git.nix
     ./modules/nvim.nix
@@ -58,6 +59,7 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     baobab
+    brave
     cinnamon.nemo
     gnome.seahorse
     neofetch
@@ -66,6 +68,9 @@
     solaar
     spotify
     xdg-utils
+
+    prettierd
+    stylua
 
     p7zip
     unzip

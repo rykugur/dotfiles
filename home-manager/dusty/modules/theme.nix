@@ -27,7 +27,7 @@
       package = pkgs.catppuccin-gtk.override {
         accents = [ "blue" ];
         size = "compact";
-        tweaks = [ "rimless" "black" ];
+        tweaks = [ "rimless" ];
         variant = "mocha";
       };
     };
@@ -52,22 +52,6 @@
       Settings = ''
         gtk-application-prefer-dark-theme=1
       '';
-    };
-  };
-
-  programs.firefox = {
-    enable = true;
-    enableGnomeExtensions = true;
-
-    profiles = {
-      default = {
-        id = 0;
-        userChrome = ''
-          #TabsToolbar {
-            display: none;
-          }
-        '';
-      };
     };
   };
 }

@@ -4,7 +4,6 @@
     dunst
     libnotify
     grim
-    #(pkgs.callPackage ../../derivations/hyprprop.nix { })
     inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
     pywal
     slurp
