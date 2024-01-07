@@ -30,11 +30,9 @@ if test -d $HOME/.local/fish/functions
     set -gx fish_function_path $HOME/.local/fish/functions $fish_function_path
 end
 
-if which -a starship >/dev/null 2>&1
-    starship init fish | source
-end
+# if which -a starship >/dev/null 2>&1
+#     starship init fish | source
+# end
 
 # don't insert a space at the end of abbreviations
 # bind " " expand-abbr or self-insert
-
-fzf_configure_bindings

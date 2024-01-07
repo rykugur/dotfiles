@@ -2,8 +2,6 @@
   description = "Swoleflake";
 
   # TODO: fish plugins?
-  # TODO: btrfs test with multiple devices
-  # TODO: figure out any gotchas with nvidia
 
   inputs = {
     # Nixpkgs
@@ -36,6 +34,8 @@
     let
       inherit (self) outputs;
 
+      pkgs = nixpkgs.legacyPackages.${system};
+
       username = "dusty";
       hostname = "jezrien";
 
@@ -58,10 +58,21 @@
 
       homeConfigurations = {
         "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${system}; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = { inherit inputs username hostname wm; };
+          inherit pkgs;
+          extraSpecialArgs = {
+            inherit inputs outputs;
+            inherit username hostname wm;
+          };
           modules = [
             ./home-manager/${username}/home.nix
+          ];
+        };
+      };
+
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          nativeBuildInputs = [
+            pkgs.nodejs_21
           ];
         };
       };

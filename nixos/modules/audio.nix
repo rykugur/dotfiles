@@ -1,5 +1,9 @@
-{ config, inputs, libs, username, ... }: {
+{ pkgs, username, ... }: {
   hardware.pulseaudio.enable = false;
+
+  environment.systemPackages = [
+    pkgs.pulseaudio
+  ];
 
   services = {
     pipewire = {

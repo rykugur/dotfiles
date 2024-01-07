@@ -1,9 +1,8 @@
-{ config, inputs, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     babelfish
     duf
     eza
-    fzf
     jq
     kitty
     lm_sensors
@@ -18,26 +17,31 @@
     iftop
     nvtop
 
-    nodejs_21
+    fishPlugins.tide
   ];
 
   programs.starship = {
     enable = true;
+    enableFishIntegration = false;
   };
 
-  programs.fish.plugins = [
-    pkgs.fishPlugins.fzf-fish
-    pkgs.fishPlugins.grc
-    pkgs.fishPlugins.z
-  ];
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      echo derp!
+    '';
+    plugins = [
+      { name = "tide"; src = pkgs.fishPlugins.tide; }
+    ];
+  };
 
   home.file = {
-    ".config/fish/config.fish" = {
-      source = ../../../configs/fish/config.fish;
-    };
-    ".config/fish/fish_plugins" = {
-      source = ../../../configs/fish/fish_plugins;
-    };
+    # ".config/fish/config.fish" = {
+    #   source = ../../../configs/fish/config.fish;
+    # };
+    # ".config/fish/fish_plugins" = {
+    #   source = ../../../configs/fish/fish_plugins;
+    # };
     ".config/kitty" = {
       source = ../../../configs/kitty;
       recursive = true;

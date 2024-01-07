@@ -24,7 +24,6 @@
 
     ../modules/1password.nix
     ../modules/gaming.nix
-    ../modules/rust.nix
   ];
 
   hardware = {
@@ -104,7 +103,9 @@
 
   boot.loader.systemd-boot.enable = true;
 
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
     git
