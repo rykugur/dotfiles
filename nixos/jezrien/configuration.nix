@@ -3,10 +3,6 @@
 , lib
 , config
 , pkgs
-, username
-, hostname
-, overlays
-, wm
 , ...
 }: {
   imports = [
@@ -16,14 +12,16 @@
 
     ./hardware-configuration.nix
 
-    ../modules/btrfs.nix
+    outputs.nixosModules.base
 
-    ../modules/audio.nix
-    ../modules/ssh.nix
-    ../modules/wm/${wm}.nix
+    outputs.nixosModules.btrfs
 
-    ../modules/1password.nix
-    ../modules/gaming.nix
+    outputs.nixosModules.pipewire
+    outputs.nixosModules.ssh
+    outputs.nixosModules.hyprland
+
+    outputs.nixosModules._1password
+    outputs.nixosModules.gaming
   ];
 
   hardware = {
@@ -99,7 +97,7 @@
     };
   };
 
-  networking.hostName = hostname;
+  networking.hostName = "jezrien";
 
   boot.loader.systemd-boot.enable = true;
 
@@ -114,10 +112,10 @@
   ];
 
   users.users = {
-    ${username} = {
+    dusty = {
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
-      home = "/home/${username}";
+      home = "/home/dusty";
       extraGroups = [ "wheel" "networkmanager" ];
       shell = pkgs.fish;
     };

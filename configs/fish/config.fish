@@ -2,9 +2,9 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
-if test -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
-    cat $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh | babelfish | source
-end
+# if test -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+#     cat $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh | babelfish | source
+# end
 
 set -gx DOTFILES_DIR $HOME/.dotfiles
 # set -gx DOTFILES_DIR $HOME/gits/dotfiles/

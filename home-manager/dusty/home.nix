@@ -1,27 +1,32 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { inputs
+, outputs
 , lib
 , config
 , pkgs
-, username
-, hostname
-, wm
 , ...
 }: {
   # You can import other home-manager modules here
-  imports = [
+  imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
 
     # You can also split up your configuration and import pieces of it here:
-    ./modules/firefox.nix
-    ./modules/gaming.nix
-    ./modules/git.nix
-    ./modules/nvim.nix
-    ./modules/terminal.nix
-    ./modules/theme.nix
-    ./modules/wm/${wm}.nix
+    firefox
+    gaming
+    git
+    nvim
+    terminal
+    theme
+    hyprland
+    # ./modules/firefox.nix
+    # ./modules/gaming.nix
+    # ./modules/git.nix
+    # ./modules/nvim.nix
+    # ./modules/terminal.nix
+    # ./modules/theme.nix
+    # ./modules/wm/${wm}.nix
   ];
 
   nixpkgs = {
@@ -51,15 +56,14 @@
   };
 
   home = {
-    username = username;
-    homeDirectory = "/home/${username}";
+    username = "dusty";
+    homeDirectory = "/home/dusty";
   };
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     baobab
-    brave
     cinnamon.nemo
     gnome.seahorse
     neofetch
