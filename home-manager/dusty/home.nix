@@ -71,6 +71,7 @@
     pavucontrol
     solaar
     spotify
+    vlc
     xdg-utils
 
     prettierd

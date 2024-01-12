@@ -1,4 +1,4 @@
-set -gx fish_function_path $fish_conf_dir/functions $fish_function_path
+# set -gx fish_function_path $fish_conf_dir/functions $fish_function_path
 # set -gx fisher_path $DOTFILES_DIR/configs/fish
 
 ### set additional paths

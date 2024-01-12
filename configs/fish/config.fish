@@ -2,12 +2,10 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
-# if test -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
-#     cat $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh | babelfish | source
-# end
+set -q __fish_personal_dotfiles_sourced; and exit
+set -g __fish_personal_dotfiles_sourced 1
 
 set -gx DOTFILES_DIR $HOME/.dotfiles
-# set -gx DOTFILES_DIR $HOME/gits/dotfiles/
 set -l fish_conf_dir $DOTFILES_DIR/configs/fish
 
 source $fish_conf_dir/exports.fish
@@ -30,9 +28,4 @@ if test -d $HOME/.local/fish/functions
     set -gx fish_function_path $HOME/.local/fish/functions $fish_function_path
 end
 
-# if which -a starship >/dev/null 2>&1
-#     starship init fish | source
-# end
-
-# don't insert a space at the end of abbreviations
-# bind " " expand-abbr or self-insert
+# TODO: figure out why adding my dotfiles functions folder to fish_function_path breaks things

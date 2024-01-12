@@ -103,6 +103,7 @@
 
   programs.fish = {
     enable = true;
+    vendor.functions.enable = true;
   };
 
   environment.systemPackages = with pkgs; [

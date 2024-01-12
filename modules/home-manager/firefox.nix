@@ -1,7 +1,11 @@
 { config, inputs, lib, pkgs, ... }: {
   programs.firefox = {
     enable = true;
-    enableGnomeExtensions = true;
+    package = pkgs.firefox.override {
+      cfg = {
+        enableGnomeExtensions = true;
+      };
+    };
 
     profiles = {
       default = {
