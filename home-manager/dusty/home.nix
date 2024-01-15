@@ -11,8 +11,7 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-
-    # You can also split up your configuration and import pieces of it here:
+    #
     firefox
     gaming
     git
@@ -20,13 +19,6 @@
     terminal
     theme
     hyprland
-    # ./modules/firefox.nix
-    # ./modules/gaming.nix
-    # ./modules/git.nix
-    # ./modules/nvim.nix
-    # ./modules/terminal.nix
-    # ./modules/theme.nix
-    # ./modules/wm/${wm}.nix
   ];
 
   nixpkgs = {
@@ -67,10 +59,13 @@
     cinnamon.nemo
     gnome.seahorse
     neofetch
+    nitch
     obsidian
     pavucontrol
     solaar
     spotify
+    via
+    vial
     vlc
     xdg-utils
 
@@ -86,6 +81,7 @@
     ldns
     nmap
     psmisc
+    wget
 
     gcc
     gnumake

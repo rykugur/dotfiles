@@ -17,14 +17,18 @@
     outputs.nixosModules.btrfs
 
     outputs.nixosModules.pipewire
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
+
     outputs.nixosModules.ssh
     outputs.nixosModules.hyprland
+    outputs.nixosModules.libvirtd
 
     outputs.nixosModules._1password
     outputs.nixosModules.gaming
   ];
 
   hardware = {
+    keyboard.zsa.enable = true;
     nvidia = {
       modesetting.enable = true; #required
 
@@ -100,11 +104,14 @@
   networking.hostName = "jezrien";
 
   boot.loader.systemd-boot.enable = true;
+  # TODO: update kernel to more recent version
 
   programs.fish = {
     enable = true;
     vendor.functions.enable = true;
   };
+
+  programs.nix-ld.enable = true;
 
   environment.systemPackages = with pkgs; [
     git

@@ -8,6 +8,7 @@
   gaming = import ./gaming.nix;
   gnome = import ./gnome.nix;
   hyprland = import ./hyprland.nix;
+  libvirtd = import ./libvirtd.nix;
   pipewire = import ./pipewire.nix;
   rust = import ./rust.nix;
   ssh = import ./ssh.nix;

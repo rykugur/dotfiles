@@ -20,6 +20,8 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
     # rust-overlay.url = "github:oxalica/rust-overlay";
 
     # Shameless plug: looking for a way to nixify your themes and make
