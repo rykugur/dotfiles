@@ -9,6 +9,7 @@
   gnome = import ./gnome.nix;
   hyprland = import ./hyprland.nix;
   nvim = import ./nvim.nix;
+  star-citizen = import ./star-citizen.nix;
   terminal = import ./terminal.nix;
   theme = import ./theme.nix;
 }

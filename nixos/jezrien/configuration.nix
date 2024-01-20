@@ -103,7 +103,16 @@
 
   networking.hostName = "jezrien";
 
-  boot.loader.systemd-boot.enable = true;
+  boot = {
+    kernel = {
+      sysctl = {
+        # for Star Citizen
+        "vm.max_map_count" = 16777216;
+        "fs.file-max" = 524288;
+      };
+    };
+    loader.systemd-boot.enable = true;
+  };
   # TODO: update kernel to more recent version
 
   programs.fish = {

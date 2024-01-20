@@ -2,9 +2,10 @@
   hardware.pulseaudio = {
     enable = false;
 
-    extraConfig = ''
-      load-module module-echo-cancel
-    '';
+    # extraConfig = ''
+    #   load-module module-echo-cancel
+    # '';
+    extraConfig = "load-module module-echo-cancel";
   };
 
   environment.systemPackages = [
@@ -21,13 +22,13 @@
       };
       pulse.enable = true;
 
-      lowLatency = {
-        # enable this module
-        enable = true;
-        # defaults (no need to be set unless modified)
-        quantum = 64;
-        rate = 48000;
-      };
+      # lowLatency = {
+      #   # enable this module
+      #   enable = true;
+      #   # defaults (no need to be set unless modified)
+      #   quantum = 64;
+      #   rate = 48000;
+      # };
     };
   };
 

@@ -15,10 +15,11 @@
     firefox
     gaming
     git
+    hyprland
     nvim
+    star-citizen
     terminal
     theme
-    hyprland
   ];
 
   nixpkgs = {
