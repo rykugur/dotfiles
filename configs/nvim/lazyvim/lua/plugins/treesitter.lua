@@ -6,8 +6,6 @@ return {
 				vim.list_extend(opts.ensure_installed, {
 					"fish",
 					"norg",
-					"typescript",
-					"tsx",
 					"http",
 					"json",
 					"nix",

@@ -18,6 +18,10 @@ for file in $fish_conf_dir/abbreviations/*
     source $file
 end
 
+for file in $fish_conf_dir/functions/*
+    source $file
+end
+
 # Load any local configs
 # Do this last, since we might want to override abbreviations, aliases, etc.
 for file in $HOME/.local/fish/*.fish
@@ -27,5 +31,3 @@ end
 if test -d $HOME/.local/fish/functions
     set -gx fish_function_path $HOME/.local/fish/functions $fish_function_path
 end
-
-# TODO: figure out why adding my dotfiles functions folder to fish_function_path breaks things
