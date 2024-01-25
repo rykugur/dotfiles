@@ -84,8 +84,6 @@
     psmisc
     wget
 
-    gcc
-    gnumake
     vscode
 
     font-awesome

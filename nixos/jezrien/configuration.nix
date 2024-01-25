@@ -104,6 +104,7 @@
   networking.hostName = "jezrien";
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
     kernel = {
       sysctl = {
         # for Star Citizen
