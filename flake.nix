@@ -1,8 +1,6 @@
 {
   description = "Swoleflake";
 
-  # TODO: fish plugins?
-
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -38,13 +36,19 @@
     let
       inherit (self) outputs;
 
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = nixpkgs.legacyPackages."x86_64-linux";
     in
     {
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       homeManagerModules = import ./modules/home-manager;
+
+      devShells."x86_64-linux" =
+        {
+          default = pkgs.mkShell {
+            nativeBuildInputs = with pkgs; [ nodejs_21 ];
+          };
+        };
 
       nixosConfigurations = {
         # primary/gaming desktop
@@ -70,14 +74,6 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/dusty/home.nix
-          ];
-        };
-      };
-
-      devShells.${system} = {
-        default = pkgs.mkShell {
-          nativeBuildInputs = [
-            pkgs.nodejs_21
           ];
         };
       };
