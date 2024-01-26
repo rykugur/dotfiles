@@ -38,10 +38,8 @@
     let
       inherit (self) outputs;
 
-      systems = [
-        "x86_64-linux"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
     in
     {
       overlays = import ./overlays { inherit inputs; };
@@ -50,10 +48,15 @@
 
       nixosConfigurations = {
         # primary/gaming desktop
-        jezrien = nixpkgs.lib.nixosSystem {
+        "jezrien" = nixpkgs.lib.nixosSystem {
           modules = [ ./nixos/jezrien/configuration.nix ];
           specialArgs = { inherit inputs outputs; };
         };
+        # # laptop
+        # taln = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./nixos/taln/configuration.nix];
+        #   specialArgs = { inherit inputs outputs; };
+        # };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
         #   modules = [ ./nixos/tanavast/configuration.nix];
@@ -63,12 +66,7 @@
 
       homeConfigurations = {
         "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
-          # modules = [ ./home-manager/dusty/home.nix ];
-          # pkgs = nixpkgs.legacyPackages."x86_64-linux";
-          # extraSpecialArgs = {
-          #   inherit inputs outputs;
-          # };
-          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          inherit pkgs;
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/dusty/home.nix
@@ -76,13 +74,13 @@
         };
       };
 
-      # devShells.${system} = {
-      #   default = pkgs.mkShell {
-      #     nativeBuildInputs = [
-      #       pkgs.nodejs_21
-      #     ];
-      #   };
-      # };
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          nativeBuildInputs = [
+            pkgs.nodejs_21
+          ];
+        };
+      };
     };
 }
 

@@ -87,8 +87,6 @@
     vscode
 
     font-awesome
-
-    gnome.adwaita-icon-theme
   ];
 
   ################## other stuff you shouldn't need to touch
