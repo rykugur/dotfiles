@@ -69,6 +69,7 @@
     vial
     vlc
     xdg-utils
+    xfce.thunar
 
     prettierd
     stylua

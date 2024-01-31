@@ -36,19 +36,15 @@
     let
       inherit (self) outputs;
 
-      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      systems = [ "x86_64-linux" ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
+      packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
+
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules/nixos;
       homeManagerModules = import ./modules/home-manager;
-
-      devShells."x86_64-linux" =
-        {
-          default = pkgs.mkShell {
-            nativeBuildInputs = with pkgs; [ nodejs_21 ];
-          };
-        };
 
       nixosConfigurations = {
         # primary/gaming desktop
@@ -70,7 +66,7 @@
 
       homeConfigurations = {
         "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
+          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/dusty/home.nix
