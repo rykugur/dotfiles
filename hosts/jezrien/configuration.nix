@@ -6,10 +6,6 @@
 , ...
 }: {
   imports = [
-    # If you want to use modules from other flakes (such as nixos-hardware):
-    # inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-ssd
-
     ./hardware-configuration.nix
 
     outputs.nixosModules.base
@@ -28,7 +24,10 @@
   ];
 
   hardware = {
+    cpu.amd.updateMicrocode = true;
+
     keyboard.zsa.enable = true;
+
     nvidia = {
       modesetting.enable = true; #required
 
@@ -48,13 +47,34 @@
     };
   };
 
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
+    kernel = {
+      sysctl = {
+        # for Star Citizen
+        "vm.max_map_count" = 16777216;
+        "fs.file-max" = 524288;
+      };
+    };
+    loader.systemd-boot.enable = true;
+  };
+
+  networking.hostName = "jezrien";
+
   services = {
+    printing.enable = true;
+
     gnome = {
       gnome-browser-connector.enable = true;
       gnome-keyring.enable = true;
     };
     gvfs.enable = true;
-    xserver.videoDrivers = [ "nvidia" ];
+    xserver = {
+      layout = "us";
+      xkbVariant = "";
+
+      videoDrivers = [ "nvidia" ];
+    };
   };
 
   nixpkgs = {
@@ -101,21 +121,6 @@
       trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
     };
   };
-
-  networking.hostName = "jezrien";
-
-  boot = {
-    kernelPackages = pkgs.linuxPackages_6_6;
-    kernel = {
-      sysctl = {
-        # for Star Citizen
-        "vm.max_map_count" = 16777216;
-        "fs.file-max" = 524288;
-      };
-    };
-    loader.systemd-boot.enable = true;
-  };
-  # TODO: update kernel to more recent version
 
   programs.fish = {
     enable = true;

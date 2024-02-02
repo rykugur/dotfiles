@@ -1,0 +1,167 @@
+{ inputs
+, outputs
+, lib
+, config
+, pkgs
+, ...
+}: {
+  imports =
+    [
+      ./hardware-configuration.nix
+
+      outputs.nixosModules.base
+
+      outputs.nixosModules.btrfs
+
+      outputs.nixosModules.pipewire
+      inputs.nix-gaming.nixosModules.pipewireLowLatency
+
+      outputs.nixosModules.gnome
+      outputs.nixosModules.ssh
+
+      outputs.nixosModules._1password
+      outputs.nixosModules.gaming
+    ];
+
+  hardware = {
+    cpu.intel.updateMicrocode = true;
+
+    nvidia = {
+      modesetting.enable = true; #required
+
+      powerManagement = {
+        # TODO: this was causing the monitor to go to sleep after waking; fix?
+        enable = false;
+        finegrained = false;
+      };
+
+      open = false; # don't use open source kernel module
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.production;
+
+      prime = {
+        # offload = {
+        #   enable = true;
+        #   enableOffloadCmd = true;
+        # };
+        sync.enable = true;
+        intelBusId = "PCI:00:02:0";
+        nvidiaBusId = "PCI:59:00:0";
+      };
+    };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+  };
+
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
+    kernel = {
+      sysctl = {
+        # for Star Citizen
+        "vm.max_map_count" = 16777216;
+        "fs.file-max" = 524288;
+      };
+    };
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
+
+  networking = {
+    hostName = "taln";
+    networkmanager.enable = true;
+  };
+
+  services = {
+    printing.enable = true;
+
+    xserver = {
+      layout = "us";
+      xkbVariant = "";
+
+      videoDrivers = [ "nvidia" ];
+    };
+  };
+
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
+
+  nixpkgs = {
+    overlays = [
+      # If you want to use overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+      # outputs.overlays.additions
+    ];
+    config.allowUnfree = true;
+  };
+
+  # This will add each flake input as a registry
+  # To make nix3 commands consistent with your flake
+  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+
+  # This will additionally add your inputs to the system's legacy channels
+  # Making legacy nix commands consistent as well, awesome!
+  nix.nixPath = [ "/etc/nix/path" ];
+  environment.etc =
+    lib.mapAttrs'
+      (name: value: {
+        name = "nix/path/${name}";
+        value.source = value.flake;
+      })
+      config.nix.registry;
+
+  nix = {
+    optimise.automatic = true;
+
+    settings = {
+      # Enable flakes and new 'nix' command
+      experimental-features = "nix-command flakes";
+      # Deduplicate and optimize nix store
+      auto-optimise-store = true;
+
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    };
+  };
+
+  programs.fish = {
+    enable = true;
+    vendor.functions.enable = true;
+  };
+
+  programs.nix-ld.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    git
+    home-manager
+    neovim
+  ] ++ [
+    (import ../../scripts/nvidia-offload.nix { inherit pkgs; })
+  ];
+
+  users.users = {
+    dusty = {
+      isNormalUser = true;
+      initialPassword = "pass123"; # change after first login with `passwd`
+      home = "/home/dusty";
+      extraGroups = [ "wheel" "networkmanager" ];
+      shell = pkgs.fish;
+    };
+  };
+
+  time.timeZone = "America/Chicago";
+
+  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+  system.stateVersion = "23.11";
+}

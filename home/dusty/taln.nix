@@ -13,11 +13,11 @@
     # inputs.nix-colors.homeManagerModule
     #
     firefox
+    fish
     gaming
     git
-    hyprland
+    kitty
     nvim
-    star-citizen
     terminal
     theme
   ];
