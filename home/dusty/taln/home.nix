@@ -11,10 +11,10 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    #
     firefox
     fish
     gaming
+    hyprland
     git
     kitty
     nvim
@@ -51,6 +51,20 @@
   home = {
     username = "dusty";
     homeDirectory = "/home/dusty";
+
+    file = {
+      ".config/hypr" = {
+        source = ./hypr;
+      };
+      ".config/waybar" = {
+        source = ./waybar;
+        recursive = true;
+      };
+      ".config/swappy" = {
+        source = ../../../configs/swappy;
+        recursive = true;
+      };
+    };
   };
 
   # Add stuff for your user as you see fit:

@@ -73,14 +73,14 @@
           inherit pkgs;
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
-            ./home/dusty/jezrien.nix
+            ./home/dusty/jezrien/home.nix
           ];
         };
         "dusty@taln" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
-            ./home/dusty/taln.nix
+            ./home/dusty/taln/home.nix
           ];
         };
       };

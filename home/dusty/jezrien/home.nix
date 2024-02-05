@@ -53,6 +53,20 @@
   home = {
     username = "dusty";
     homeDirectory = "/home/dusty";
+
+    file = {
+      ".config/hypr" = {
+        source = ./hypr;
+      };
+      ".config/waybar" = {
+        source = ./waybar;
+        recursive = true;
+      };
+      ".config/swappy" = {
+        source = ../../../configs/swappy;
+        recursive = true;
+      };
+    };
   };
 
   # Add stuff for your user as you see fit:

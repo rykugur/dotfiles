@@ -16,7 +16,7 @@
       outputs.nixosModules.pipewire
       inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-      outputs.nixosModules.gnome
+      outputs.nixosModules.hyprland
       outputs.nixosModules.ssh
 
       outputs.nixosModules._1password
@@ -40,11 +40,11 @@
       package = config.boot.kernelPackages.nvidiaPackages.production;
 
       prime = {
-        # offload = {
-        #   enable = true;
-        #   enableOffloadCmd = true;
-        # };
-        sync.enable = true;
+        offload = {
+          enable = true;
+          enableOffloadCmd = true;
+        };
+        # sync.enable = true;
         intelBusId = "PCI:00:02:0";
         nvidiaBusId = "PCI:59:00:0";
       };
@@ -78,6 +78,12 @@
 
   services = {
     printing.enable = true;
+
+    gnome = {
+      gnome-browser-connector.enable = true;
+      gnome-keyring.enable = true;
+    };
+    gvfs.enable = true;
 
     xserver = {
       layout = "us";
@@ -148,6 +154,7 @@
     neovim
   ] ++ [
     (import ../../scripts/nvidia-offload.nix { inherit pkgs; })
+    (import ../../scripts/hyprland-suspend.nix { inherit pkgs; })
   ];
 
   users.users = {

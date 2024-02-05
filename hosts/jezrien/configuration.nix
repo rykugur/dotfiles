@@ -69,6 +69,7 @@
       gnome-keyring.enable = true;
     };
     gvfs.enable = true;
+
     xserver = {
       layout = "us";
       xkbVariant = "";
