@@ -102,7 +102,10 @@
     };
   };
 
-  networking.hostName = "jezrien";
+  networking = {
+    hostName = "jezrien";
+    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+  };
 
   boot = {
     kernelPackages = pkgs.linuxPackages_6_6;
