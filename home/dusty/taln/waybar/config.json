@@ -22,7 +22,6 @@
       "memory",
       "temperature",
       "backlight",
-      "keyboard-state",
       "battery",
       "battery#bat2",
       "clock",

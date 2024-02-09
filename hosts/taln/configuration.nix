@@ -77,6 +77,10 @@
   };
 
   services = {
+    logind = {
+      lidSwitch = "suspend";
+    };
+
     printing.enable = true;
 
     gnome = {
