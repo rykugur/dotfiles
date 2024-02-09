@@ -123,6 +123,24 @@
     };
   };
 
+  networking = {
+    hostName = "jezrien";
+    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+  };
+
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
+    kernel = {
+      sysctl = {
+        # for Star Citizen
+        "vm.max_map_count" = 16777216;
+        "fs.file-max" = 524288;
+      };
+    };
+    loader.systemd-boot.enable = true;
+  };
+  # TODO: update kernel to more recent version
+
   programs.fish = {
     enable = true;
     vendor.functions.enable = true;

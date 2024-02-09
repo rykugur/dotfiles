@@ -11,8 +11,11 @@
     swayidle
     swaylock
     wl-clipboard
+    wl-clipboard-x11
     wlogout
     wofi
+    wofi-emoji
+    wtype
     xorg.xrandr
     xorg.xbacklight
   ];

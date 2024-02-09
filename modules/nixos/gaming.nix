@@ -1,4 +1,4 @@
-{ inputs, config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   programs = {
     steam = {
       enable = true;

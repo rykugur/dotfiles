@@ -9,9 +9,11 @@ alias grep "grep --color"
 alias pingtest "ping -D -O google.com"
 alias replace.newlines "awk '{printf \"%s\\n\", \$0}'"
 alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
+alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
+
+alias nv nvim
 alias v nvim
 alias vi nvim
-alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
 ###### fast travel
 alias fish.local "$EDITOR $HOME/.local/fish/config.fish"
