@@ -1,6 +1,5 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    babelfish
     duf
     eza
     grc
@@ -17,24 +16,11 @@
     iotop
     iftop
     nvtop
-
-    fishPlugins.autopair
-    fishPlugins.grc
-    fishPlugins.fzf-fish
-    fishPlugins.tide
-    fishPlugins.z
   ];
 
   programs.starship = {
     enable = true;
     enableFishIntegration = false;
-  };
-
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      source ~/.dotfiles/configs/fish/config.fish
-    '';
   };
 
   programs.ssh = {

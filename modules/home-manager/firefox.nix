@@ -10,6 +10,9 @@
     profiles = {
       default = {
         id = 0;
+        settings = {
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        };
         userChrome = ''
           #TabsToolbar {
             display: none;

@@ -10,6 +10,7 @@
 
   environment.systemPackages = [
     pkgs.pulseaudio
+    pkgs.alsa-utils # for amixer
   ];
 
   services = {

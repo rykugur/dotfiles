@@ -5,41 +5,49 @@
 , pkgs
 , ...
 }: {
-  imports = [
-    # If you want to use modules from other flakes (such as nixos-hardware):
-    # inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-ssd
+  imports =
+    [
+      ./hardware-configuration.nix
 
-    ./hardware-configuration.nix
+      outputs.nixosModules.base
 
-    outputs.nixosModules.base
+      outputs.nixosModules.btrfs
 
-    outputs.nixosModules.btrfs
+      outputs.nixosModules.pipewire
+      inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-    outputs.nixosModules.pipewire
-    inputs.nix-gaming.nixosModules.pipewireLowLatency
+      outputs.nixosModules.hyprland
+      outputs.nixosModules.ssh
 
-    outputs.nixosModules.ssh
-    outputs.nixosModules.hyprland
-    outputs.nixosModules.libvirtd
-
-    outputs.nixosModules._1password
-    outputs.nixosModules.gaming
-  ];
+      outputs.nixosModules._1password
+      outputs.nixosModules.gaming
+    ];
 
   hardware = {
-    keyboard.zsa.enable = true;
+    cpu.intel.updateMicrocode = true;
+
     nvidia = {
       modesetting.enable = true; #required
 
       powerManagement = {
-        enable = true;
+        # TODO: this was causing the monitor to go to sleep after waking; fix?
+        enable = false;
         finegrained = false;
       };
 
       open = false; # don't use open source kernel module
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.production;
+
+      prime = {
+        offload = {
+          enable = true;
+          enableOffloadCmd = true;
+        };
+        # sync.enable = true;
+        intelBusId = "PCI:00:02:0";
+        nvidiaBusId = "PCI:59:00:0";
+      };
     };
     opengl = {
       enable = true;
@@ -48,14 +56,49 @@
     };
   };
 
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
+    kernel = {
+      sysctl = {
+        # for Star Citizen
+        "vm.max_map_count" = 16777216;
+        "fs.file-max" = 524288;
+      };
+    };
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
+
+  networking = {
+    hostName = "taln";
+    networkmanager.enable = true;
+  };
+
   services = {
+    logind = {
+      lidSwitch = "suspend";
+    };
+
+    printing.enable = true;
+
     gnome = {
       gnome-browser-connector.enable = true;
       gnome-keyring.enable = true;
     };
     gvfs.enable = true;
-    xserver.videoDrivers = [ "nvidia" ];
+
+    xserver = {
+      layout = "us";
+      xkbVariant = "";
+
+      videoDrivers = [ "nvidia" ];
+    };
   };
+
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
 
   nixpkgs = {
     overlays = [
@@ -102,24 +145,6 @@
     };
   };
 
-  networking = {
-    hostName = "jezrien";
-    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
-  };
-
-  boot = {
-    kernelPackages = pkgs.linuxPackages_6_6;
-    kernel = {
-      sysctl = {
-        # for Star Citizen
-        "vm.max_map_count" = 16777216;
-        "fs.file-max" = 524288;
-      };
-    };
-    loader.systemd-boot.enable = true;
-  };
-  # TODO: update kernel to more recent version
-
   programs.fish = {
     enable = true;
     vendor.functions.enable = true;
@@ -131,6 +156,9 @@
     git
     home-manager
     neovim
+  ] ++ [
+    (import ../../scripts/nvidia-offload.nix { inherit pkgs; })
+    (import ../../scripts/hyprland-suspend.nix { inherit pkgs; })
   ];
 
   users.users = {

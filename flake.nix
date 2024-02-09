@@ -49,17 +49,17 @@
       nixosConfigurations = {
         # primary/gaming desktop
         "jezrien" = nixpkgs.lib.nixosSystem {
-          modules = [ ./nixos/jezrien/configuration.nix ];
+          modules = [ ./hosts/jezrien/configuration.nix ];
           specialArgs = { inherit inputs outputs; };
         };
-        # # laptop
-        # taln = nixpkgs.lib.nixosSystem {
-        #   modules = [ ./nixos/taln/configuration.nix];
-        #   specialArgs = { inherit inputs outputs; };
-        # };
+        # laptop
+        "taln" = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/taln/configuration.nix ];
+          specialArgs = { inherit inputs outputs; };
+        };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
-        #   modules = [ ./nixos/tanavast/configuration.nix];
+        #   modules = [ ./hosts/tanavast/configuration.nix];
         #   specialArgs = { inherit inputs outputs; };
         # };
       };
@@ -69,7 +69,14 @@
           pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
-            ./home-manager/dusty/home.nix
+            ./home/dusty/jezrien/home.nix
+          ];
+        };
+        "dusty@taln" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            ./home/dusty/taln/home.nix
           ];
         };
       };

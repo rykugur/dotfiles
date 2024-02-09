@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }: {
+{ config, inputs, lib, pkgs, hostname, ... }: {
   home.packages = with pkgs; [
     cliphist
     dunst
@@ -17,6 +17,7 @@
     wofi-emoji
     wtype
     xorg.xrandr
+    xorg.xbacklight
   ];
 
   programs.waybar = {
@@ -24,19 +25,5 @@
     package = pkgs.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     });
-  };
-
-  home.file = {
-    ".config/hypr" = {
-      source = ../../configs/hypr;
-    };
-    ".config/waybar" = {
-      source = ../../configs/waybar;
-      recursive = true;
-    };
-    ".config/swappy" = {
-      source = ../../configs/swappy;
-      recursive = true;
-    };
   };
 }
