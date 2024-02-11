@@ -14,9 +14,10 @@
     firefox
     fish
     gaming
-    hyprland
     git
+    hyprland
     kitty
+    nvidia
     nvim
     terminal
     theme
@@ -73,6 +74,7 @@
     baobab
     cinnamon.nemo
     gnome.seahorse
+    google-chrome
     neofetch
     nitch
     obsidian
