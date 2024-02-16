@@ -10,5 +10,8 @@
   environment.systemPackages = [
     pkgs.gamescope
     pkgs.gamemode
+
+    pkgs.steamcmd
+    pkgs.steam-tui
   ];
 }
