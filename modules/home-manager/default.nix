@@ -11,6 +11,7 @@
   gnome = import ./gnome.nix;
   kitty = import ./kitty.nix;
   hyprland = import ./hyprland.nix;
+  nvidia = import ./nvidia.nix;
   nvim = import ./nvim.nix;
   obs = import ./obs.nix;
   star-citizen = import ./star-citizen.nix;

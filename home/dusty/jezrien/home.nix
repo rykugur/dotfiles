@@ -18,6 +18,7 @@
     git
     hyprland
     kitty
+    nvidia
     nvim
     obs
     star-citizen
