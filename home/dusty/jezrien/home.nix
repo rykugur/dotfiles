@@ -13,6 +13,7 @@
     # inputs.nix-colors.homeManagerModule
     #
     firefox
+    fish
     gaming
     git
     hyprland
@@ -21,6 +22,7 @@
     obs
     star-citizen
     terminal
+    # 
     theme
   ];
 
@@ -72,6 +74,8 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
+    google-chrome
+
     baobab
     cinnamon.nemo
     gnome.seahorse

@@ -3,6 +3,7 @@
 {
   # List your module files here
   # my-module = import ./my-module.nix;
+  base = import ./base.nix;
   firefox = import ./firefox.nix;
   fish = import ./fish.nix;
   gaming = import ./gaming.nix;

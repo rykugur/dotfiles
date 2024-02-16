@@ -47,20 +47,6 @@
     };
   };
 
-  boot = {
-    kernelPackages = pkgs.linuxPackages_6_6;
-    kernel = {
-      sysctl = {
-        # for Star Citizen
-        "vm.max_map_count" = 16777216;
-        "fs.file-max" = 524288;
-      };
-    };
-    loader.systemd-boot.enable = true;
-  };
-
-  networking.hostName = "jezrien";
-
   services = {
     printing.enable = true;
 
@@ -126,6 +112,9 @@
   networking = {
     hostName = "jezrien";
     search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+    extraHosts = ''
+      127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
+    '';
   };
 
   boot = {
