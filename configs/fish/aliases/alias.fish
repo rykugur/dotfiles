@@ -1,11 +1,12 @@
 ### misc aliases
 alias cmd.copy "eval $COPYCMD"
 alias cmd.paste "eval $PASTECMD"
-alias ndots "nvim ~/gits/dotfiles/"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
 alias grep "grep --color"
+alias murder "kill -9"
+alias ndots "nvim ~/gits/dotfiles/"
 alias pingtest "ping -D -O google.com"
 alias replace.newlines "awk '{printf \"%s\\n\", \$0}'"
 alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"

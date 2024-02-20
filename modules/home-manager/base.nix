@@ -1,5 +1,6 @@
 { pkgs, ... }: {
-  home.packages = [
+  home.packages = with pkgs; [
+    mousai
     speedtest-cli
   ];
 }

@@ -11,11 +11,12 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    #
+    base
     firefox
     fish
     gaming
     git
+    google-chrome
     hyprland
     kitty
     nvidia
@@ -23,7 +24,6 @@
     obs
     star-citizen
     terminal
-    # 
     theme
   ];
 
@@ -75,8 +75,6 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
-    google-chrome
-
     baobab
     cinnamon.nemo
     gnome.seahorse
