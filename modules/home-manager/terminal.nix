@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     duf
     eza
+    fzf
     grc
     jq
     kitty

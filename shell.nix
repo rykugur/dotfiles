@@ -3,6 +3,7 @@
     NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
     nativeBuildInputs = with pkgs; [
       nodejs_21
+      prettierd
       yarn
 
       cargo

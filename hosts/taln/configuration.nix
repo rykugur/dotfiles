@@ -30,8 +30,7 @@
       modesetting.enable = true; #required
 
       powerManagement = {
-        # TODO: this was causing the monitor to go to sleep after waking; fix?
-        enable = false;
+        enable = true;
         finegrained = false;
       };
 
