@@ -56,12 +56,12 @@
       nixosConfigurations = {
         # primary/gaming desktop
         "jezrien" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/jezrien/configuration.nix ];
+          modules = [ ./hosts/jezrien ];
           specialArgs = { inherit inputs outputs; };
         };
         # laptop
         "taln" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taln/configuration.nix ];
+          modules = [ ./hosts/taln ];
           specialArgs = { inherit inputs outputs; };
         };
         # # homelab
