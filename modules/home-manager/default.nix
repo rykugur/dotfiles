@@ -9,6 +9,7 @@
   gaming = import ./gaming.nix;
   git = import ./git.nix;
   gnome = import ./gnome.nix;
+  google-chrome = import ./google-chrome.nix;
   kitty = import ./kitty.nix;
   hyprland = import ./hyprland.nix;
   nvidia = import ./nvidia.nix;
