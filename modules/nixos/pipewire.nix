@@ -1,13 +1,4 @@
 { inputs, pkgs, ... }: {
-  hardware.pulseaudio = {
-    enable = false;
-
-    # extraConfig = ''
-    #   load-module module-echo-cancel
-    # '';
-    extraConfig = "load-module module-echo-cancel";
-  };
-
   environment.systemPackages = [
     pkgs.pulseaudio
     pkgs.alsa-utils # for amixer
