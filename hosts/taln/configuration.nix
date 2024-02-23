@@ -111,7 +111,7 @@
       #     patches = [ ./change-hello-to-hi.patch ];
       #   });
       # })
-      # outputs.overlays.additions
+      outputs.overlays.additions
     ];
     config.allowUnfree = true;
   };

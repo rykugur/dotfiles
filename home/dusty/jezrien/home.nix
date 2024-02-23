@@ -22,9 +22,11 @@
     nvidia
     nvim
     obs
-    star-citizen
     terminal
     theme
+
+    star-citizen
+    starsector
   ];
 
   nixpkgs = {

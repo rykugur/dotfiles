@@ -1,24 +1,20 @@
-{ config, inputs, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   home.packages = [
-    # (pkgs.discord.override {
-    #   # fixes links not opening in firefox
-    #   nss = pkgs.nss_latest;
-    # })
     pkgs.discord
     pkgs.betterdiscordctl
 
+    pkgs.gamemode
     pkgs.lutris
+
+    pkgs.gamescope
+    pkgs.steamcmd
+    pkgs.steam-tui
 
     pkgs.protontricks
     pkgs.protonup-ng
     pkgs.protonup-qt
 
-    pkgs.prismlauncher
-    pkgs.starsector
-
-    # pkgs.wine
     pkgs.wineWowPackages.waylandFull
-    # pkgs.wineWowPackages.stable
     pkgs.winetricks
   ];
 }
