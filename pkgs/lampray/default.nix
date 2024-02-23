@@ -40,10 +40,6 @@ stdenv.mkDerivation rec {
     sed -i 's|const lampString baseDataPath = "Lamp_Data/";|const lampString baseDataPath = ((std::string)std::getenv("HOME")) + "/.lamp/";|g' Lampray/Control/lampConfig.h
   '';
 
-  preBuild = ''
-    grep baseDataPath /build/source/Lampray/Control/lampConfig.h
-  '';
-
   installPhase = ''
     runHook preInstall
 
