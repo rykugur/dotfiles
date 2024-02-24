@@ -46,7 +46,6 @@
       });
     in
     {
-      packages = forEachSystem (pkgs: import ./pkgs { inherit pkgs; });
       devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs; });
 
       overlays = import ./overlays { inherit inputs; };
