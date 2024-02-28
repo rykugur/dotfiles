@@ -26,7 +26,6 @@
     theme
 
     star-citizen
-    starsector
   ];
 
   nixpkgs = {

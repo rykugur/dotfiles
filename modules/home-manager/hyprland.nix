@@ -4,6 +4,7 @@
     dunst
     libnotify
     grim
+    grimblast
     inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
     pywal
     slurp
