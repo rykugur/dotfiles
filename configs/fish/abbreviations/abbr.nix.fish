@@ -1,5 +1,5 @@
 abbr --add --global nb nix build
-abbr --add --global n-b nix build
+abbr --add --global n-b nix-build
 abbr --add --global n-s nix-shell --command fish
 
 abbr --add --global nd nix develop $DOTFILES_DIR --command fish
