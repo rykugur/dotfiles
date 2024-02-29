@@ -90,8 +90,10 @@
     gvfs.enable = true;
 
     xserver = {
-      layout = "us";
-      xkbVariant = "";
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
 
       videoDrivers = [ "nvidia" ];
     };

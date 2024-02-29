@@ -12,6 +12,7 @@
     silver-searcher
     tree
     usbutils
+    warp-terminal
 
     btop
     iotop

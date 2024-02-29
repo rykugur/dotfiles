@@ -57,8 +57,10 @@
     gvfs.enable = true;
 
     xserver = {
-      layout = "us";
-      xkbVariant = "";
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
 
       videoDrivers = [ "nvidia" ];
     };
@@ -75,7 +77,7 @@
       #     patches = [ ./change-hello-to-hi.patch ];
       #   });
       # })
-      # outputs.overlays.additions
+      outputs.overlays.additions
     ];
     config.allowUnfree = true;
   };
