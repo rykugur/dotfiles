@@ -36,7 +36,8 @@
 
       open = false; # don't use open source kernel module
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.production;
+      # staying on 535 for now since it's known working (i.e. no flickering in DOTA2, other weird gfx glitches)
+      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
 
       prime = {
         offload = {
