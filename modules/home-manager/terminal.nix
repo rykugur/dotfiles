@@ -27,10 +27,18 @@
 
   programs.ssh = {
     enable = true;
-    forwardAgent = true;
-    extraConfig = ''
-      	IdentityAgent ~/.1password/agent.sock
-    '';
+
+    matchBlocks = {
+      "jezrien taln tanavast" = {
+        forwardAgent = true;
+        extraOptions = {
+          "IdentityAgent" = "~/.1password/agent.sock";
+        };
+        # extraOptions = [
+        #   "IdentityAgent ~/.1password/agent.sock"
+        # ];
+      };
+    };
   };
 
   home.file = {

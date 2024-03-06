@@ -31,6 +31,7 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
+      outputs.overlays.additions
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
 
@@ -79,6 +80,7 @@
     baobab
     cinnamon.nemo
     gnome.seahorse
+    lampray
     neofetch
     nitch
     obsidian
