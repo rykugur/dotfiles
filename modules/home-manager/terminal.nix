@@ -34,17 +34,20 @@
         extraOptions = {
           "IdentityAgent" = "~/.1password/agent.sock";
         };
-        # extraOptions = [
-        #   "IdentityAgent ~/.1password/agent.sock"
-        # ];
       };
     };
   };
 
-  home.file = {
-    ".config/kitty" = {
-      source = ../../configs/kitty;
-      recursive = true;
+  home = {
+    file = {
+      ".config/kitty" = {
+        source = ../../configs/kitty;
+        recursive = true;
+      };
     };
+
+    # sessionVariables = {
+    #   SSH_AUTH_SOCK = "~/.1password/agent.sock";
+    # };
   };
 }

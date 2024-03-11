@@ -18,4 +18,5 @@
   star-citizen = import ./star-citizen.nix;
   terminal = import ./terminal.nix;
   theme = import ./theme.nix;
+  wayland = import ./wayland.nix;
 }

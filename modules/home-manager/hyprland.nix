@@ -1,24 +1,20 @@
-{ config, inputs, lib, pkgs, hostname, ... }: {
+{ inputs, outputs, pkgs, ... }: {
+  imports = [
+    outputs.homeManagerModules.wayland
+  ];
+
   home.packages = with pkgs; [
-    cliphist
     dunst
     libnotify
     grim
     grimblast
+    hyprlock
     inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
-    pywal
     slurp
     swappy
     swayidle
     swaylock
-    wl-clipboard
-    wl-clipboard-x11
     wlogout
-    wofi
-    wofi-emoji
-    wtype
-    xorg.xrandr
-    xorg.xbacklight
   ];
 
   programs.waybar = {
