@@ -18,5 +18,6 @@
   star-citizen = import ./star-citizen.nix;
   terminal = import ./terminal.nix;
   theme = import ./theme.nix;
+  tmux = import ./tmux.nix;
   wayland = import ./wayland.nix;
 }

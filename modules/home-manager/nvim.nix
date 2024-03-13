@@ -5,6 +5,8 @@
 , ...
 }: {
   home.packages = [
+    pkgs.fd
+    pkgs.lazygit
     pkgs.neovide
   ];
 
