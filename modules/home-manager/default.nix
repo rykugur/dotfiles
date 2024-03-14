@@ -16,6 +16,7 @@
   nvim = import ./nvim.nix;
   obs = import ./obs.nix;
   star-citizen = import ./star-citizen.nix;
+  starsector = import ./starsector.nix;
   terminal = import ./terminal.nix;
   theme = import ./theme.nix;
   tmux = import ./tmux.nix;
