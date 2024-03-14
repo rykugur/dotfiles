@@ -1,14 +1,17 @@
 { puts, pkgs, ... }: {
   programs.tmux = {
     enable = true;
-    shortcut = "a";
-    # aggressiveResize = true; -- Disabled to be iTerm-friendly
+
     baseIndex = 1;
-    newSession = true;
-    # Stop tmux+escape craziness.
+    clock24 = true;
     escapeTime = 0;
-    # Force tmux to use /tmp for sockets (WSL2 compat)
-    secureSocket = false;
+    mouse = true;
+    newSession = true;
+    prefix = "C-b";
+
+    extraConfig = ''
+      set -g @catppuccin_flavour 'mocha' # latte, frappe, macchiato, mocha
+    '';
 
     plugins = with pkgs; [
       tmuxPlugins.better-mouse-mode
@@ -16,11 +19,5 @@
       tmuxPlugins.sensible
       tmuxPlugins.yank
     ];
-  };
-
-  home.file = {
-    ".tmux.conf" = {
-      source = ../../configs/tmux/tmux.conf;
-    };
   };
 }
