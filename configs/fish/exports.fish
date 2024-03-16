@@ -13,7 +13,7 @@ end
 set -gx fish_greeting
 
 ### set an editor
-set -gx EDITOR (which nvim)
+set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
 set -gx SUDO_EDITOR $EDITOR
 
