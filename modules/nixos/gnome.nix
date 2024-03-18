@@ -10,4 +10,6 @@
 
     gnomeExtensions.dash-to-panel
   ];
+
+  hardware.pulseaudio.enable = false;
 }

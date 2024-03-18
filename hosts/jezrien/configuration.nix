@@ -15,9 +15,10 @@
     outputs.nixosModules.pipewire
     inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-    outputs.nixosModules.ssh
     outputs.nixosModules.hyprland
+    outputs.nixosModules.gnome
     outputs.nixosModules.libvirtd
+    outputs.nixosModules.ssh
 
     outputs.nixosModules._1password
     outputs.nixosModules.gaming

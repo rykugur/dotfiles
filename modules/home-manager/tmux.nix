@@ -31,13 +31,14 @@ in
       bind -N "Select pane to the right of the active pane" \; select-pane -R
 
       bind -r -N "Resize the pane left by ${toString cfg.resizeAmount}" \
-        H resize-pane -L ${toString cfg.resizeAmount}
+        j resize-pane -L ${toString cfg.resizeAmount}
       bind -r -N "Resize the pane down by ${toString cfg.resizeAmount}" \
-        J resize-pane -D ${toString cfg.resizeAmount}
+        k resize-pane -D ${toString cfg.resizeAmount}
       bind -r -N "Resize the pane up by ${toString cfg.resizeAmount}" \
-        K resize-pane -U ${toString cfg.resizeAmount}
+        l resize-pane -U ${toString cfg.resizeAmount}
       bind -r -N "Resize the pane right by ${toString cfg.resizeAmount}" \
-        L resize-pane -R ${toString cfg.resizeAmount}
+        \; resize-pane -R ${toString cfg.resizeAmount}
+
       # bind r to re-source config
       # bind-key r source-file ~/.config/tmux/tmux.conf
       bind r source-file ~/.config/tmux/tmux.conf \; display "RELOADED"
@@ -47,6 +48,7 @@ in
       tmuxPlugins.better-mouse-mode
       tmuxPlugins.catppuccin
       tmuxPlugins.sensible
+      tmuxPlugins.vim-tmux-navigator
       tmuxPlugins.yank
     ];
 
