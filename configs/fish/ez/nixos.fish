@@ -1,7 +1,8 @@
 abbr --add --global nb nix build
 abbr --add --global nd nix derivation
 abbr --add --global nr 'nix repl'
-abbr --add --global nrn "nix repl '<nixpkgs>'"
+abbr --add --global nrn "nix repl --file '<nixpkgs>'"
+abbr --add --global nr. "nix repl --file ."
 
 abbr --add --global n-b nix-build
 abbr --add --global n-i nix-instantiate

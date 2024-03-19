@@ -1,6 +1,7 @@
-{ fetchurl, pkgs, name, src, stdenv, ... }: stdenv.mkDerivation
+{ fetchurl, pkgs, src, stdenv, ... }: stdenv.mkDerivation
 {
-  inherit name src;
+  name = "fetch7zip";
+  inherit src;
 
   nativeBuildInputs = [ pkgs.p7zip ];
 
