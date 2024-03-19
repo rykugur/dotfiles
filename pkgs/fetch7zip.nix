@@ -1,7 +1,7 @@
-{ fetchurl, pkgs, src, stdenv, ... }: stdenv.mkDerivation
+{ fetchurl, pkgs, stdenv, ... }: { url, sha256 }: stdenv.mkDerivation
 {
   name = "fetch7zip";
-  inherit src;
+  src = fetchurl { inherit url sha256; };
 
   nativeBuildInputs = [ pkgs.p7zip ];
 
@@ -10,6 +10,6 @@
   installPhase = ''
     mkdir -p $out
     cd $out
-    7za x $src
+    7za e $src -y -o$out
   '';
 }
