@@ -50,8 +50,8 @@ rec {
     deps = [ lazylib magiclib ];
   };
 
-  zz_graphicslib = mkStarsectorMod rec {
-    name = "zz_graphicslib";
+  graphicslib = mkStarsectorMod rec {
+    name = "graphicslib";
     src = fetch7zip {
       url = "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";
       sha256 = "sha256-LwLO5A0Af6vKJcnGWk9rylzhvwolWCJV5aqoaY+6ra4=";

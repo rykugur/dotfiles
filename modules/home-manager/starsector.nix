@@ -4,7 +4,7 @@ let
     lazylib
     magiclib
     nexerelin
-    zz_graphicslib
+    graphicslib
   ];
 in
 {
@@ -23,8 +23,8 @@ in
       ".local/share/starsector/mods/nexerelin" = {
         source = "${pkgs.starsectorMods.starsectorMods.nexerelin}";
       };
-      ".local/share/starsector/mods/zz_graphicslib" = {
-        source = "${pkgs.starsectorMods.starsectorMods.zz_graphicslib}";
+      ".local/share/starsector/mods/graphicslib" = {
+        source = "${pkgs.starsectorMods.starsectorMods.graphicslib}";
       };
     };
   };
