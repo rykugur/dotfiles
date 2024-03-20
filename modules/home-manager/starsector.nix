@@ -24,7 +24,7 @@ in
         source = "${pkgs.starsectorMods.starsectorMods.nexerelin}";
       };
       ".local/share/starsector/mods/graphicslib" = {
-        source = "${pkgs.starsectorMods.starsectorMods.graphicslib}";
+        source = "${pkgs.starsectorMods.starsectorMods.graphicslib}/GraphicsLib"; # temporary workaround
       };
     };
   };

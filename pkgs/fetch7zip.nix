@@ -10,6 +10,6 @@
   installPhase = ''
     mkdir -p $out
     cd $out
-    7za e $src -y -o$out
+    7za x $src -o$out
   '';
 }
