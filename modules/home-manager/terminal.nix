@@ -17,6 +17,7 @@
     tree
     usbutils
     warp-terminal
+    zoxide
 
     btop
     iotop

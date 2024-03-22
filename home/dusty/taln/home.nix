@@ -22,6 +22,8 @@
     nvim
     terminal
     theme
+
+    starsector
   ];
 
   nixpkgs = {
