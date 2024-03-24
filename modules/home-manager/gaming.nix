@@ -4,17 +4,17 @@
     pkgs.betterdiscordctl
 
     pkgs.gamemode
-    pkgs.lutris
-
     pkgs.gamescope
-    pkgs.steamcmd
-    pkgs.steam-tui
+    pkgs.lutris
 
     pkgs.protontricks
     pkgs.protonup-ng
     pkgs.protonup-qt
-
+    pkgs.steamcmd
+    pkgs.steam-tui
     pkgs.wineWowPackages.waylandFull
     pkgs.winetricks
+
+    pkgs.n0la_rcon
   ];
 }
