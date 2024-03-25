@@ -10,7 +10,7 @@ in
     clock24 = true;
     escapeTime = 0;
     keyMode = "vi";
-    mouse = true;
+    mouse = false;
     newSession = true;
     prefix = "C-b";
     terminal = "screen-256color";
@@ -21,6 +21,7 @@ in
 
     extraConfig = ''
       set -g @catppuccin_flavour 'mocha' # latte, frappe, macchiato, mocha
+      set -g mouse-select-pane on
 
       bind | split-window -h
       bind _ split-window -v
