@@ -25,6 +25,9 @@ abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global sv 'sudo nvim'
 abbr --add --global taill 'tail -Fn 999'
 
+abbr --add --global fnc function
+abbr --add --global fncs functions
+
 alias cmd.copy "eval $COPYCMD"
 alias cmd.paste "eval $PASTECMD"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
