@@ -15,9 +15,10 @@
     outputs.nixosModules.pipewire
     inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-    outputs.nixosModules.ssh
     outputs.nixosModules.hyprland
+    outputs.nixosModules.gnome
     outputs.nixosModules.libvirtd
+    outputs.nixosModules.ssh
 
     outputs.nixosModules._1password
     outputs.nixosModules.gaming
@@ -39,7 +40,7 @@
       open = false; # don't use open source kernel module
       nvidiaSettings = true;
       # staying on 535 for now since it's known working (i.e. no flickering in DOTA2, other weird gfx glitches)
-      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+      package = config.boot.kernelPackages.nvidiaPackages.production;
     };
     opengl = {
       enable = true;

@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{ outputs, pkgs, ... }: {
+  imports = [
+    outputs.homeManagerModules.tmux
+  ];
+
   home.packages = with pkgs; [
     duf
     eza
@@ -13,6 +17,7 @@
     tree
     usbutils
     warp-terminal
+    zoxide
 
     btop
     iotop

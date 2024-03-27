@@ -5,6 +5,8 @@
 , ...
 }: {
   home.packages = [
+    pkgs.fd
+    pkgs.lazygit
     pkgs.neovide
   ];
 
@@ -18,7 +20,5 @@
       source = ../../configs/nvim/lazyvim/lua;
       recursive = true;
     };
-    #".config/nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/configs/nvim/lazyvim/lazy-lock.json";
-    #".config/nvim/lazyvim.json".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/configs/nvim/lazyvim/lazyvim.json";
   };
 }

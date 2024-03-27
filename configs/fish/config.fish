@@ -10,11 +10,7 @@ set -l fish_conf_dir $DOTFILES_DIR/configs/fish
 
 source $fish_conf_dir/exports.fish
 
-for file in $fish_conf_dir/aliases/*
-    source $file
-end
-
-for file in $fish_conf_dir/abbreviations/*
+for file in $fish_conf_dir/ez/*
     source $file
 end
 
@@ -31,3 +27,5 @@ end
 if test -d $HOME/.local/fish/functions
     set -gx fish_function_path $HOME/.local/fish/functions $fish_function_path
 end
+
+zoxide init fish | source
