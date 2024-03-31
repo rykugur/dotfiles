@@ -1,5 +1,5 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
+    set -gx SSH_AUTH_SOCK ~/.1password/agent.sock
 end
 
 set -q __fish_personal_dotfiles_sourced; and exit
