@@ -54,6 +54,11 @@
       driSupport = true;
       driSupport32Bit = true;
     };
+
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
   };
 
   boot = {
@@ -78,6 +83,10 @@
   };
 
   services = {
+    blueman = {
+      enable = true;
+    };
+
     logind = {
       lidSwitch = "suspend";
     };
