@@ -61,6 +61,14 @@
     };
   };
 
+  security = {
+    pam = {
+      u2f = {
+        enable = true;
+      };
+    };
+  };
+
   boot = {
     kernelPackages = pkgs.linuxPackages_6_6;
     kernel = {

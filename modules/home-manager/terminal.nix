@@ -25,19 +25,24 @@
     nvtop
   ];
 
-  programs.starship = {
-    enable = true;
-    enableFishIntegration = false;
-  };
+  programs = {
+    starship = {
+      enable = true;
+      enableFishIntegration = false;
+    };
 
-  programs.ssh = {
-    enable = true;
+    ssh = {
+      enable = true;
 
-    matchBlocks = {
-      "jezrien taln tanavast" = {
-        forwardAgent = true;
-        extraOptions = {
-          "IdentityAgent" = "~/.1password/agent.sock";
+      matchBlocks = {
+        "jezrien taln tanavast" = {
+          forwardAgent = true;
+          extraOptions = {
+            "IdentityAgent" = "~/.1password/agent.sock";
+          };
+        };
+        "quadra" = {
+          user = "quadra";
         };
       };
     };
@@ -50,9 +55,5 @@
         recursive = true;
       };
     };
-
-    # sessionVariables = {
-    #   SSH_AUTH_SOCK = "~/.1password/agent.sock";
-    # };
   };
 }
