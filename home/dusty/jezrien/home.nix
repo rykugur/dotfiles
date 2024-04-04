@@ -70,6 +70,10 @@
       ".config/waybar/style.css" = {
         source = ../../../configs/waybar/style.css;
       };
+      ".config/waybar/launch.fish" = {
+        source = ../../../configs/waybar/launch.fish;
+        executable = true;
+      };
       ".config/swappy" = {
         source = ../../../configs/swappy;
         recursive = true;
