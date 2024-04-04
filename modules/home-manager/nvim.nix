@@ -8,6 +8,7 @@
     pkgs.fd
     pkgs.lazygit
     pkgs.neovide
+    pkgs.nodejs # required for many plugins
   ];
 
   programs.neovim = {

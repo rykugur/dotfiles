@@ -1,19 +1,21 @@
 {
   "hyprland/workspaces": {
-    "disable-scroll": true,
+    "on-click": "activate",
+    "active-only": false,
     "all-outputs": false,
-    "warp-on-scroll": false,
-    "format": "{icon}",
+    "format": "{}",
     "format-icons": {
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "󰍳",
-      "urgent": "",
-      "focused": "",
-      "default": ""
+      "urgent": "",
+      "active": "",
+      "default": ""
     }
+  },
+  "custom/cliphist": {
+    "format": "",
+    "on-click": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh",
+    "on-click-right": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh d",
+    "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
+    "tooltip": false
   },
   "keyboard-state": {
     "numlock": true,
@@ -24,76 +26,47 @@
       "unlocked": ""
     }
   },
-  "mpd": {
-    "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ",
-    "format-disconnected": "Disconnected ",
-    "format-stopped": "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ",
-    "unknown-tag": "N/A",
-    "interval": 2,
-    "consume-icons": {
-      "on": " "
-    },
-    "random-icons": {
-      "off": "<span color=\"#f53c3c\"></span> ",
-      "on": " "
-    },
-    "repeat-icons": {
-      "on": " "
-    },
-    "single-icons": {
-      "on": "1 "
-    },
-    "state-icons": {
-      "paused": "",
-      "playing": ""
-    },
-    "tooltip-format": "MPD (connected)",
-    "tooltip-format-disconnected": "MPD (disconnected)"
-  },
-  "idle_inhibitor": {
-    "format": "{icon}",
-    "format-icons": {
-      "activated": "",
-      "deactivated": ""
-    }
-  },
-  "tray": {
-    "spacing": 10
-  },
   "clock": {
     "timezone": "America/Chicago",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     "format-alt": "{:%Y-%m-%d}"
   },
-  "cpu": {
-    "format": "{usage}% ",
+  "custom/system": {
+    "format": "",
     "tooltip": false
   },
+  "cpu": {
+    "format": "/ CPU {usage}% ",
+    "on-click": "kitty -e btop"
+  },
   "memory": {
-    "format": "{}% "
+    "format": "/ MEM {}% ",
+    "on-click": "kitty -e btop"
+  },
+  "disk": {
+    "interval": 30,
+    "format": "DSK {percentage_used}% ",
+    "path": "/",
+    "on-click": "alacritty -e htop"
   },
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
     "critical-threshold": 80,
-    "format": "{temperatureC}°C {icon}",
-    "format-icons": [
-      "",
-      "",
-      ""
-    ]
+    "format": "{temperatureC}°C"
   },
-  "backlight": {
-    "format": "{percent}% {icon}",
-    "format-icons": [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
+  "group/hardware": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 300,
+      "children-class": "not-memory",
+      "transition-left-to-right": false
+    },
+    "modules": [
+      "custom/system",
+      "disk",
+      "cpu",
+      "memory",
+      "temperature"
     ]
   },
   "battery": {
@@ -146,15 +119,23 @@
     },
     "on-click": "pavucontrol"
   },
-  "custom/media": {
-    "format": "{icon} {}",
-    "return-type": "json",
-    "max-length": 40,
+  "bluetooth": {
+    "format-disabled": "",
+    "format-off": "",
+    "interval": 30,
+    "on-click": "blueman-manager",
+    "format-no-controller": ""
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "tooltip": true,
     "format-icons": {
-      "spotify": "",
-      "default": "🎜"
+      "activated": "",
+      "deactivated": ""
     },
-    "escape": true,
-    "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"
+    "on-click-right": "hyprlock"
+  },
+  "tray": {
+    "spacing": 10
   }
 }

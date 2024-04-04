@@ -1,12 +1,15 @@
 [
   {
     "name": "primary",
-    "layer": "top",
     "output": "DP-2",
+    "layer": "top",
     "height": 30,
     "spacing": 4,
+    "margin-bottom": 0,
+    "margin-left": 0,
+    "margin-right": 0,
     "include": [
-      "~/.config/waybar/modules.json"
+      "~/.dotfiles/configs/waybar/modules.json"
     ],
     "modules-left": [
       "hyprland/workspaces"
@@ -18,15 +21,13 @@
       "idle_inhibitor",
       "pulseaudio",
       "network",
-      "cpu",
-      "memory",
-      "temperature",
+      "group/hardware",
       "backlight",
       "keyboard-state",
       "battery",
       "battery#bat2",
-      "clock",
-      "tray"
+      "tray",
+      "clock"
     ]
   },
   {
@@ -36,7 +37,7 @@
     "height": 30,
     "spacing": 4,
     "include": [
-      "~/.config/waybar/modules.json"
+      "~/.dotfiles/configs/waybar/modules.json"
     ],
     "modules-left": [
       "hyprland/workspaces"
