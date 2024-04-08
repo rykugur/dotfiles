@@ -61,9 +61,15 @@
       ".config/hypr" = {
         source = ./hypr;
       };
-      ".config/waybar" = {
-        source = ./waybar;
-        recursive = true;
+      ".config/waybar/config.json" = {
+        source = ./waybar.json;
+      };
+      ".config/waybar/style.css" = {
+        source = ../../../configs/waybar/style.css;
+      };
+      ".config/waybar/launch.fish" = {
+        source = ../../../configs/waybar/launch.fish;
+        executable = true;
       };
       ".config/swappy" = {
         source = ../../../configs/swappy;

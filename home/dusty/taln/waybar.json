@@ -5,27 +5,27 @@
     "output": "eDP-1",
     "height": 30,
     "spacing": 4,
+    "margin-bottom": 0,
+    "margin-left": 0,
+    "margin-right": 0,
     "include": [
-      "~/.config/waybar/modules.json"
+      "~/.dotfiles/configs/waybar/modules.json"
     ],
     "modules-left": [
       "hyprland/workspaces"
     ],
-    "modules-center": [
-      "hyprland/window"
-    ],
+    "modules-center": [],
     "modules-right": [
       "idle_inhibitor",
       "pulseaudio",
       "network",
-      "cpu",
-      "memory",
-      "temperature",
+      "group/hardware",
       "backlight",
+      "keyboard-state",
       "battery",
       "battery#bat2",
-      "clock",
-      "tray"
+      "tray",
+      "clock"
     ]
   }
 ]
