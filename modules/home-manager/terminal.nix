@@ -1,5 +1,6 @@
 { outputs, pkgs, ... }: {
   imports = [
+    outputs.homeManagerModules.starship
     outputs.homeManagerModules.tmux
   ];
 
@@ -26,11 +27,6 @@
   ];
 
   programs = {
-    starship = {
-      enable = true;
-      enableFishIntegration = false;
-    };
-
     ssh = {
       enable = true;
 
