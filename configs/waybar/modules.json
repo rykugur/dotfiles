@@ -35,6 +35,12 @@
     "format": "",
     "tooltip": false
   },
+  "disk": {
+    "interval": 30,
+    "format": "DSK {percentage_used}% ",
+    "path": "/",
+    "on-click": "alacritty -e htop"
+  },
   "cpu": {
     "format": "/ CPU {usage}% ",
     "on-click": "kitty -e btop"
@@ -42,12 +48,6 @@
   "memory": {
     "format": "/ MEM {}% ",
     "on-click": "kitty -e btop"
-  },
-  "disk": {
-    "interval": 30,
-    "format": "DSK {percentage_used}% ",
-    "path": "/",
-    "on-click": "alacritty -e htop"
   },
   "temperature": {
     "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
