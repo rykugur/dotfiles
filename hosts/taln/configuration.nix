@@ -61,14 +61,6 @@
     };
   };
 
-  security = {
-    pam = {
-      u2f = {
-        enable = true;
-      };
-    };
-  };
-
   boot = {
     kernelPackages = pkgs.linuxPackages_6_6;
     kernel = {
@@ -81,6 +73,14 @@
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
+    };
+  };
+
+  security = {
+    pam = {
+      u2f = {
+        enable = true;
+      };
     };
   };
 

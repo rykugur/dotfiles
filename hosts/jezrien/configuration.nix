@@ -49,6 +49,34 @@
     };
   };
 
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
+    kernel = {
+      sysctl = {
+        # for Star Citizen
+        "vm.max_map_count" = 16777216;
+        "fs.file-max" = 524288;
+      };
+    };
+    loader.systemd-boot.enable = true;
+  };
+
+  security = {
+    pam = {
+      u2f = {
+        enable = true;
+      };
+    };
+  };
+
+  networking = {
+    hostName = "jezrien";
+    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+    extraHosts = ''
+      127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
+    '';
+  };
+
   services = {
     printing.enable = true;
 
@@ -112,27 +140,6 @@
       trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
     };
   };
-
-  networking = {
-    hostName = "jezrien";
-    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
-    extraHosts = ''
-      127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
-    '';
-  };
-
-  boot = {
-    kernelPackages = pkgs.linuxPackages_6_6;
-    kernel = {
-      sysctl = {
-        # for Star Citizen
-        "vm.max_map_count" = 16777216;
-        "fs.file-max" = 524288;
-      };
-    };
-    loader.systemd-boot.enable = true;
-  };
-  # TODO: update kernel to more recent version
 
   programs.fish = {
     enable = true;
