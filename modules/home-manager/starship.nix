@@ -8,7 +8,7 @@
       enableFishIntegration = true;
       settings = {
         # Other config here
-        # format = "$all"; # Remove this line to disable the default prompt format
+        format = "$all"; # Remove this line to disable the default prompt format
         # format = lib.concatStrings [
         #   "[](peach)"
         #   "$os"
@@ -41,7 +41,8 @@
         #   "style = bg:peach fg:blue"
         # ];
         palette = "catppuccin_${flavor}";
-      } // builtins.fromTOML (builtins.readFile ../../configs/starship/starship.toml)
+      }
+      # } // builtins.fromTOML (builtins.readFile ../../configs/starship/starship.toml)
       // builtins.fromTOML (builtins.readFile
         (pkgs.fetchFromGitHub
           {

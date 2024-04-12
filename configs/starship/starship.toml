@@ -15,7 +15,6 @@
 # color_bg3 = 
 # color_bg1 = 
 # color_fg0 = 
-#
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
