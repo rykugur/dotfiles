@@ -24,4 +24,4 @@ set -gx fish_cursor_insert line blink
 set -gx fish_cursor_visual block
 set -gx fish_cursor_replace_one underscore
 
-set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"
+# set -gx STARSHIP_CONFIG "$DOTFILES_DIR/configs/starship/starship.toml"

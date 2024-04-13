@@ -116,23 +116,23 @@ window#waybar.empty #window {
 }
 
 #custom-cliphist {
-    margin-right: 23px;
-    font-size: 20px;
-    font-weight: bold;
-    color: @iconcolor;
+  margin-right: 23px;
+  font-size: 20px;
+  font-weight: bold;
+  color: @iconcolor;
 }
- 
- #custom-waybarthemes,#custom-system {
-     margin-right:15px;
- }
 
+#custom-waybarthemes,
+#custom-system {
+  margin-right: 15px;
+}
 
- #idle_inhibitor {
-    margin-right: 15px;
-    font-size: 22px;
-    font-weight: bold;
-    opacity: 0.8;
-    color: @iconcolor;
+#idle_inhibitor {
+  margin-right: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  opacity: 0.8;
+  color: @iconcolor;
 }
 
 #idle_inhibitor.activated {

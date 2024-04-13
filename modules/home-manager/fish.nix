@@ -5,7 +5,6 @@
     fishPlugins.autopair
     fishPlugins.grc
     fishPlugins.fzf-fish
-    fishPlugins.tide
     fishPlugins.z
   ];
 
