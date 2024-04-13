@@ -17,15 +17,6 @@
     "on-click-middle": "sleep 0.1 && ~/dotfiles/scripts/cliphist.sh w",
     "tooltip": false
   },
-  "keyboard-state": {
-    "numlock": true,
-    "capslock": true,
-    "format": "{name} {icon}",
-    "format-icons": {
-      "locked": "",
-      "unlocked": ""
-    }
-  },
   "clock": {
     "timezone": "America/Chicago",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",

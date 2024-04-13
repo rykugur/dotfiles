@@ -23,7 +23,6 @@
       "network",
       "group/hardware",
       "backlight",
-      "keyboard-state",
       "battery",
       "battery#bat2",
       "tray",
