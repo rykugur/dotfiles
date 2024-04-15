@@ -4,12 +4,11 @@
   # List your module files here
   # my-module = import ./my-module.nix;
   base = import ./base.nix;
-  firefox = import ./firefox.nix;
+  browser = import ./browser.nix;
   fish = import ./fish.nix;
   gaming = import ./gaming.nix;
   git = import ./git.nix;
   gnome = import ./gnome.nix;
-  google-chrome = import ./google-chrome.nix;
   kitty = import ./kitty.nix;
   hyprland = import ./hyprland.nix;
   nvidia = import ./nvidia.nix;

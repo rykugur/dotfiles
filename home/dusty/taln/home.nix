@@ -12,7 +12,7 @@
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
     base
-    firefox
+    browser
     fish
     gaming
     git
@@ -84,7 +84,6 @@
     baobab
     cinnamon.nemo
     gnome.seahorse
-    google-chrome
     lampray
     neofetch
     nitch
