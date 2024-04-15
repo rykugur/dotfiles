@@ -16,6 +16,7 @@
       outputs.nixosModules.pipewire
       inputs.nix-gaming.nixosModules.pipewireLowLatency
 
+      outputs.nixosModules.gnome
       outputs.nixosModules.hyprland
       outputs.nixosModules.ssh
 
@@ -49,6 +50,7 @@
         nvidiaBusId = "PCI:59:00:0";
       };
     };
+
     opengl = {
       enable = true;
       driSupport = true;
@@ -58,6 +60,11 @@
     bluetooth = {
       enable = true;
       powerOnBoot = true;
+    };
+
+    openrazer = {
+      enable = true;
+      users = [ "dusty" ];
     };
   };
 
@@ -188,7 +195,7 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
-      extraGroups = [ "wheel" "networkmanager" ];
+      extraGroups = [ "wheel" "networkmanager" "openrazer" ];
       shell = pkgs.fish;
     };
   };
