@@ -36,8 +36,8 @@ rec {
   magiclib = mkStarsectorMod {
     name = "magiclib";
     src = fetchzip {
-      url = "https://github.com/MagicLibStarsector/MagicLib/releases/latest/download/MagicLib.zip";
-      sha256 = "sha256-ZoLyuoYbT2Lfm4cx6aR68ytbQDe+qgsHARZGIhNKvVQ=";
+      url = "https://github.com/MagicLibStarsector/MagicLib/releases/download/1.4.3/MagicLib.zip";
+      sha256 = "sha256-UaQbJ9EsxZr597CmUOIZeKi9mx2Y85IxqIo7y6gCPTc=";
     };
   };
 
@@ -50,7 +50,7 @@ rec {
     deps = [ lazylib magiclib ];
   };
 
-  graphicslib = mkStarsectorMod rec {
+  graphicslib = mkStarsectorMod {
     name = "graphicslib";
     src = fetch7zip {
       url = "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";

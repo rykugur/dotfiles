@@ -11,14 +11,12 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    base
     browser
     fish
     gaming
     git
     hyprland
     kitty
-    nvidia
     nvim
     terminal
     theme
@@ -86,14 +84,17 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     baobab
+    bottom
     cinnamon.nemo
     gnome.seahorse
     lampray
+    mousai
     neofetch
     nitch
     obsidian
     pavucontrol
     solaar
+    speedtest-cli
     spotify
     via
     vial

@@ -1,6 +1,6 @@
 { inputs, pkgs, ... }:
 let
-  scFaceTracking = pkgs.writeShellScriptBin "scFaceTracking" ''
+  faceTracking = pkgs.writeShellScriptBin "faceTracking" ''
     aitrack &disown
     opentrack &disown
   '';
@@ -9,7 +9,7 @@ in
   home.packages = [
     pkgs.aitrack
     pkgs.opentrack
-    scFaceTracking
+    faceTracking
   ];
 
 }

@@ -24,33 +24,21 @@
     outputs.nixosModules.gaming
   ];
 
-  hardware = {
-    cpu.amd.updateMicrocode = true;
+  hardware =
+    {
+      cpu.amd.updateMicrocode = true;
 
-    keyboard.zsa.enable = true;
+      keyboard.zsa.enable = true;
 
-    nvidia = {
-      modesetting.enable = true; #required
-
-      powerManagement = {
+      opengl = {
         enable = true;
-        finegrained = false;
+        driSupport = true;
+        driSupport32Bit = true;
       };
-
-      open = false; # don't use open source kernel module
-      nvidiaSettings = true;
-      # staying on 535 for now since it's known working (i.e. no flickering in DOTA2, other weird gfx glitches)
-      package = config.boot.kernelPackages.nvidiaPackages.production;
     };
-    opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-  };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_6;
+    kernelPackages = pkgs.linuxPackages_6_8;
     kernel = {
       sysctl = {
         # for Star Citizen
@@ -92,7 +80,7 @@
         variant = "";
       };
 
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = [ "amdgpu" ];
     };
   };
 
