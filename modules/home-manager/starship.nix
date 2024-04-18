@@ -8,7 +8,8 @@
       enableFishIntegration = true;
       settings = {
         palette = "catppuccin_${flavor}";
-      } // builtins.fromTOML (builtins.readFile ../../configs/starship/starship-jetpack.toml)
+      }
+      // builtins.fromTOML (builtins.readFile ../../configs/starship/starship-pure.toml)
       // builtins.fromTOML (builtins.readFile
         (pkgs.fetchFromGitHub
           {
