@@ -90,6 +90,7 @@
     lampray
     mousai
     neofetch
+    networkmanagerapplet
     nitch
     obsidian
     pavucontrol
