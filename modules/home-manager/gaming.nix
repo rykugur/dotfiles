@@ -6,6 +6,7 @@
     pkgs.gamemode
     pkgs.gamescope
     pkgs.lutris
+    pkgs.mangohud
 
     pkgs.protontricks
     pkgs.protonup-ng
@@ -16,5 +17,8 @@
     pkgs.winetricks
 
     pkgs.n0la_rcon
+
+    pkgs.dxvk
+    pkgs.vkd3d
   ];
 }

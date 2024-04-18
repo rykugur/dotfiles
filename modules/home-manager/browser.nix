@@ -1,6 +1,15 @@
-{ pkgs, ... }: {
-  home.packages = with pkgs; [
-    google-chrome
+{ pkgs, ... }:
+let
+  plexDesktop = pkgs.makeDesktopItem {
+    name = "Plex Media Player";
+    desktopName = "Plex Media Player";
+    exec = "${pkgs.firefox}/bin/firefox --P plex";
+  };
+in
+{
+  home.packages = [
+    pkgs.google-chrome
+    plexDesktop
   ];
 
   xdg = {
@@ -30,6 +39,17 @@
     profiles = {
       default = {
         id = 0;
+        settings = {
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        };
+        userChrome = ''
+          #TabsToolbar {
+            display: none;
+          }
+        '';
+      };
+      plex = {
+        id = 1;
         settings = {
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         };
