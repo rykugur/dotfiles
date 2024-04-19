@@ -19,6 +19,7 @@
     };
 
     nix-gaming.url = "github:fufexan/nix-gaming";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # rust-overlay.url = "github:oxalica/rust-overlay";
 
