@@ -97,8 +97,6 @@
     solaar
     speedtest-cli
     spotify
-    via
-    vial
     vlc
     xdg-utils
 

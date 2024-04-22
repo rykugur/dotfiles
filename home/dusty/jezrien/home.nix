@@ -95,11 +95,10 @@
     nitch
     obsidian
     pavucontrol
+    radeontop
     solaar
     speedtest-cli
     spotify
-    via
-    vial
     vlc
     xdg-utils
     xfce.thunar

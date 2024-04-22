@@ -3,7 +3,6 @@
     pkgs.discord
     pkgs.betterdiscordctl
 
-    pkgs.gamemode
     pkgs.gamescope
     pkgs.lutris
     pkgs.mangohud

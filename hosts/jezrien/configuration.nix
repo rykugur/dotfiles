@@ -17,6 +17,7 @@
 
     outputs.nixosModules.hyprland
     outputs.nixosModules.gnome
+    outputs.nixosModules.keebs
     outputs.nixosModules.libvirtd
     outputs.nixosModules.ssh
 
@@ -33,8 +34,6 @@
   hardware =
     {
       cpu.amd.updateMicrocode = true;
-
-      keyboard.zsa.enable = true;
 
       opengl = {
         enable = true;
@@ -147,6 +146,11 @@
     home-manager
     neovim
   ];
+
+  environment.variables = {
+    VDPAU_DRIVER = "radeonsi";
+    LIBVA_DRIVER_NAME = "radeonsi";
+  };
 
   users.users = {
     dusty = {

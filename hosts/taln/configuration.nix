@@ -22,7 +22,12 @@
 
       outputs.nixosModules._1password
       outputs.nixosModules.gaming
-    ];
+    ] ++ (with inputs.nixos-hardware.nixosModules; [
+      common-pc
+      common-pc-ssd
+      common-cpu-intel
+      common-gpu-nvidia-prime
+    ]);
 
   hardware = {
     cpu.intel.updateMicrocode = true;
