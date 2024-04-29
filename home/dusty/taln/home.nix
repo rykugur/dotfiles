@@ -87,6 +87,7 @@
     bottom
     cinnamon.nemo
     gnome.seahorse
+    gnome.zenity
     lampray
     mousai
     neofetch
@@ -94,6 +95,7 @@
     nitch
     obsidian
     pavucontrol
+    playerctl
     solaar
     speedtest-cli
     spotify

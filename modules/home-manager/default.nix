@@ -13,6 +13,7 @@
   hyprland = import ./hyprland.nix;
   nvim = import ./nvim.nix;
   obs = import ./obs.nix;
+  starcitizen = import ./starcitizen.nix;
   starsector = import ./starsector.nix;
   starship = import ./starship.nix;
   terminal = import ./terminal.nix;
