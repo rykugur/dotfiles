@@ -108,7 +108,11 @@
         ""
       ]
     },
-    "on-click": "pavucontrol"
+    "on-click": "pavucontrol",
+    "ignored-sinks": [
+      "Echo-Cancel Sink",
+      "Easy Effects Sink"
+    ]
   },
   "bluetooth": {
     "format-disabled": "",

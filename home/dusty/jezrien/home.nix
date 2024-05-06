@@ -11,7 +11,7 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    browser
+    firefox
     fish
     gaming
     git
@@ -94,6 +94,7 @@
     file
     gnome.seahorse
     gnome.zenity
+    google-chrome
     lampray
     mousai
     neofetch
