@@ -26,7 +26,6 @@
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
-    common-cpu-amd
     common-cpu-amd-pstate
     common-gpu-amd
   ]);
@@ -84,8 +83,6 @@
         layout = "us";
         variant = "";
       };
-
-      videoDrivers = [ "amdgpu" ];
     };
   };
 
@@ -134,6 +131,14 @@
     };
   };
 
+  programs.corectrl = {
+    enable = true;
+  };
+
+  programs.dconf = {
+    enable = true;
+  };
+
   programs.fish = {
     enable = true;
     vendor.functions.enable = true;
@@ -157,7 +162,7 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
-      extraGroups = [ "wheel" "networkmanager" ];
+      extraGroups = [ "wheel" "networkmanager" "corectrl" ];
       shell = pkgs.fish;
     };
   };

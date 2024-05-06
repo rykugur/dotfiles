@@ -11,8 +11,7 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    browser
-    face-tracking
+    firefox
     fish
     gaming
     git
@@ -22,6 +21,9 @@
     obs
     terminal
     theme
+
+    face-tracking
+    starcitizen
 
     starsector
   ];
@@ -88,13 +90,19 @@
     baobab
     bottom
     cinnamon.nemo
+    easyeffects
+    file
     gnome.seahorse
+    gnome.zenity
+    google-chrome
     lampray
     mousai
     neofetch
     nitch
     obsidian
+    opera
     pavucontrol
+    playerctl
     radeontop
     solaar
     speedtest-cli

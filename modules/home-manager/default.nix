@@ -3,8 +3,8 @@
 {
   # List your module files here
   # my-module = import ./my-module.nix;
-  browser = import ./browser.nix;
   face-tracking = import ./face-tracking.nix;
+  firefox = import ./firefox.nix;
   fish = import ./fish.nix;
   gaming = import ./gaming.nix;
   git = import ./git.nix;
@@ -13,6 +13,7 @@
   hyprland = import ./hyprland.nix;
   nvim = import ./nvim.nix;
   obs = import ./obs.nix;
+  starcitizen = import ./starcitizen.nix;
   starsector = import ./starsector.nix;
   starship = import ./starship.nix;
   terminal = import ./terminal.nix;
