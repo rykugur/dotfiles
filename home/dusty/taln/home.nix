@@ -93,6 +93,7 @@
     networkmanagerapplet
     nitch
     obsidian
+    opera
     pavucontrol
     solaar
     speedtest-cli

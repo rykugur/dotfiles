@@ -26,7 +26,7 @@
       common-pc
       common-pc-ssd
       common-cpu-intel
-      common-gpu-nvidia-prime
+      common-gpu-nvidia
     ]);
 
   hardware = {
@@ -42,15 +42,13 @@
 
       open = false; # don't use open source kernel module
       nvidiaSettings = true;
-      # staying on 535 for now since it's known working (i.e. no flickering in DOTA2, other weird gfx glitches)
-      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+      package = config.boot.kernelPackages.nvidiaPackages.production;
 
       prime = {
         offload = {
           enable = true;
           enableOffloadCmd = true;
         };
-        # sync.enable = true;
         intelBusId = "PCI:00:02:0";
         nvidiaBusId = "PCI:59:00:0";
       };
@@ -124,8 +122,6 @@
         layout = "us";
         variant = "";
       };
-
-      videoDrivers = [ "nvidia" ];
     };
   };
 
