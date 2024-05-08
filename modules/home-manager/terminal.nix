@@ -37,6 +37,7 @@
             "IdentityAgent" = "~/.1password/agent.sock";
           };
         };
+
         "quadra" = {
           user = "quadra";
         };
