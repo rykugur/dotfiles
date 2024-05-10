@@ -72,7 +72,7 @@
   };
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_6;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernel = {
       sysctl = {
         # for Star Citizen

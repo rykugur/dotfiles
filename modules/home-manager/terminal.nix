@@ -41,6 +41,11 @@
         "quadra" = {
           user = "quadra";
         };
+        "github.com" = {
+          extraOptions = {
+            "IdentityAgent" = "~/.1password/agent.sock";
+          };
+        };
       };
     };
   };
