@@ -47,6 +47,7 @@ in
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           "svg.context-properties.content.enabled" = true;
           "uc.tweak.popup-search" = true;
+          "uc.tweak.longer-sidebar" = true;
         };
         isDefault = true;
         search = {
