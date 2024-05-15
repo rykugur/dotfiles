@@ -8,16 +8,18 @@
     pipewire = {
       enable = true;
 
-      extraConfig.pipewire-pulse = {
-        "95-load-echo-cancel" = {
-          "pulse.cmd" = [
-            {
-              cmd = "load-module";
-              args = "module-echo-cancel";
-            }
-          ];
-        };
-      };
+      # doesn't seem to be necessary anymore with easy effects
+      # may remove later
+      # extraConfig.pipewire-pulse = {
+      #   "95-load-echo-cancel" = {
+      #     "pulse.cmd" = [
+      #       {
+      #         cmd = "load-module";
+      #         args = "module-echo-cancel";
+      #       }
+      #     ];
+      #   };
+      # };
 
       # alsa is not required but helpful for 32 bit apps, particularly older games
       alsa = {

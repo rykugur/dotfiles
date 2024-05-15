@@ -8,6 +8,9 @@
       enableFishIntegration = true;
       settings = {
         palette = "catppuccin_${flavor}";
+        hostname = {
+          ssh_symbol = "";
+        };
       }
       // builtins.fromTOML (builtins.readFile ../../configs/starship/starship-pure.toml)
       // builtins.fromTOML (builtins.readFile
