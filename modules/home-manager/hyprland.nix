@@ -9,6 +9,7 @@
     grim
     grimblast
     hyprlock
+    hyprpaper
     inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
     slurp
     swappy
