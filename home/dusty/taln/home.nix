@@ -93,6 +93,7 @@
     mousai
     neofetch
     networkmanagerapplet
+    nvtopPackages.full
     nitch
     obsidian
     opera
