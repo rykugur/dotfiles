@@ -22,7 +22,6 @@
     terminal
     theme
 
-    face-tracking
     starcitizen
 
     starsector
