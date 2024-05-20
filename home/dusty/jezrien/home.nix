@@ -11,18 +11,18 @@
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
+    face-tracking
     firefox
     fish
     gaming
     git
+    gnome
     hyprland
     kitty
     nvim
     obs
     terminal
     theme
-
-    starcitizen
 
     starsector
   ];
