@@ -24,7 +24,7 @@
       outputs.nixosModules.gaming
     ] ++ (with inputs.nixos-hardware.nixosModules; [
       common-pc
-      common-pc-ssd
+      common-pc-laptop-ssd
       common-cpu-intel
       common-gpu-nvidia
     ]);
