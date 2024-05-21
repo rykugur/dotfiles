@@ -23,7 +23,6 @@
     btop
     iotop
     iftop
-    nvtopPackages.full
   ];
 
   programs = {

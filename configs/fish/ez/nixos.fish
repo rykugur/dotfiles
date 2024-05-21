@@ -4,6 +4,7 @@ abbr --add --global ndr "nix develop ~/.dotfiles#react --command fish"
 abbr --add --global nr "nix repl"
 abbr --add --global nrn "nix repl --file '<nixpkgs>'"
 abbr --add --global nr. "nix repl --file ."
+abbr --add --global nrf 'nix repl --expr "builtins.getFlake \"$HOME/.dotfiles\""'
 
 abbr --add --global nixdev nix develop $DOTFILES_DIR --command fish
 

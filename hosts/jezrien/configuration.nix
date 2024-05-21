@@ -15,8 +15,8 @@
     outputs.nixosModules.pipewire
     inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-    outputs.nixosModules.hyprland
     outputs.nixosModules.gnome
+    outputs.nixosModules.hyprland
     outputs.nixosModules.keebs
     outputs.nixosModules.libvirtd
     outputs.nixosModules.ssh
@@ -42,19 +42,7 @@
     };
 
   boot = {
-    # kernelPackages = pkgs.linuxPackages_6_8;
-    # temporary fix for dota2 crashing due to regression in AMD GPU drivers
-    # can likely be reverted once AMD GPU drivers are updated
-    kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_8.override {
-      argsOverride = rec {
-        src = pkgs.fetchurl {
-          url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-          sha256 = "sha256-HEzcudVg+tH7ldssuK++3JIvnq2Eg3H+QDY7E/n2Mbo=";
-        };
-        version = "6.8.8";
-        modDirVersion = "6.8.8";
-      };
-    });
+    kernelPackages = pkgs.linuxPackages_6_9;
     kernel = {
       sysctl = {
         # for Star Citizen
@@ -90,7 +78,12 @@
     };
     gvfs.enable = true;
 
+    # displayManager.sddm.enable = true;
+    # desktopManager.plasma6.enable = true;
+
     xserver = {
+      enable = true;
+
       xkb = {
         layout = "us";
         variant = "";
@@ -130,6 +123,11 @@
       config.nix.registry;
 
   nix = {
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 10d";
+    };
+
     optimise.automatic = true;
 
     settings = {
@@ -138,8 +136,16 @@
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
 
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+      substituters = [
+        "https://hyprland.cachix.org"
+        "https://nix-gaming.cachix.org"
+        "https://nix-citizen.cachix.org"
+      ];
+      trusted-public-keys = [
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
+      ];
     };
   };
 

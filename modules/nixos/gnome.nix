@@ -8,7 +8,7 @@
   environment.systemPackages = with pkgs; [
     gnome.gnome-tweaks
 
-    gnomeExtensions.dash-to-panel
+    gnomeExtensions.dash-to-dock
   ];
 
   hardware.pulseaudio.enable = false;
