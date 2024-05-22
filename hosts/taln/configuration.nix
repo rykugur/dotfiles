@@ -185,16 +185,16 @@
     };
   };
 
-  programs.dconf = {
-    enable = true;
-  };
+  programs = {
+    dconf.enable = true;
 
-  programs.fish = {
-    enable = true;
-    vendor.functions.enable = true;
-  };
+    fish = {
+      enable = true;
+      vendor.functions.enable = true;
+    };
 
-  programs.nix-ld.enable = true;
+    nix-ld.enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
     git
