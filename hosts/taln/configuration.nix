@@ -5,29 +5,28 @@
 , pkgs
 , ...
 }: {
-  imports =
-    [
-      ./hardware-configuration.nix
+  imports = [
+    ./hardware-configuration.nix
 
-      outputs.nixosModules.base
+    outputs.nixosModules.base
 
-      outputs.nixosModules.btrfs
+    outputs.nixosModules.btrfs
 
-      outputs.nixosModules.pipewire
-      inputs.nix-gaming.nixosModules.pipewireLowLatency
+    outputs.nixosModules.pipewire
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-      outputs.nixosModules.gnome
-      outputs.nixosModules.hyprland
-      outputs.nixosModules.ssh
+    outputs.nixosModules.gnome
+    outputs.nixosModules.hyprland
+    outputs.nixosModules.ssh
 
-      outputs.nixosModules._1password
-      outputs.nixosModules.gaming
-    ] ++ (with inputs.nixos-hardware.nixosModules; [
-      common-pc
-      common-pc-laptop-ssd
-      common-cpu-intel
-      common-gpu-nvidia
-    ]);
+    outputs.nixosModules._1password
+    outputs.nixosModules.gaming
+  ] ++ (with inputs.nixos-hardware.nixosModules; [
+    common-pc
+    common-pc-laptop-ssd
+    common-cpu-intel
+    common-gpu-nvidia
+  ]);
 
   hardware = {
     nvidia = {
@@ -121,10 +120,10 @@
         variant = "";
       };
     };
-  };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+    # Enable touchpad support (enabled default in most desktopManager).
+    # services.xserver.libinput.enable = true;
+  };
 
   nixpkgs = {
     overlays = [
@@ -156,9 +155,14 @@
       config.nix.registry;
 
   nix = {
-    nixPath = [ "/etc/nix/path" ];
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 10d";
+    };
 
     optimise.automatic = true;
+
+    nixPath = [ "/etc/nix/path" ];
 
     registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
@@ -179,6 +183,10 @@
         "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
       ];
     };
+  };
+
+  programs.dconf = {
+    enable = true;
   };
 
   programs.fish = {
