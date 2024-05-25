@@ -5,32 +5,30 @@
 , pkgs
 , ...
 }: {
-  imports =
-    [
-      ./hardware-configuration.nix
+  imports = [
+    ./hardware-configuration.nix
 
-      outputs.nixosModules.base
+    outputs.nixosModules.base
 
-      outputs.nixosModules.btrfs
+    outputs.nixosModules.btrfs
 
-      outputs.nixosModules.pipewire
-      inputs.nix-gaming.nixosModules.pipewireLowLatency
+    outputs.nixosModules.pipewire
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-      outputs.nixosModules.hyprland
-      outputs.nixosModules.ssh
+    outputs.nixosModules.gnome
+    outputs.nixosModules.hyprland
+    outputs.nixosModules.ssh
 
-      outputs.nixosModules._1password
-      outputs.nixosModules.gaming
-    ] ++ (with inputs.nixos-hardware.nixosModules; [
-      common-pc
-      common-pc-ssd
-      common-cpu-intel
-      common-gpu-nvidia
-    ]);
+    outputs.nixosModules._1password
+    outputs.nixosModules.gaming
+  ] ++ (with inputs.nixos-hardware.nixosModules; [
+    common-pc
+    common-pc-laptop-ssd
+    common-cpu-intel
+    common-gpu-nvidia
+  ]);
 
   hardware = {
-    cpu.intel.updateMicrocode = true;
-
     nvidia = {
       modesetting.enable = true; #required
 
@@ -122,10 +120,10 @@
         variant = "";
       };
     };
-  };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+    # Enable touchpad support (enabled default in most desktopManager).
+    # services.xserver.libinput.enable = true;
+  };
 
   nixpkgs = {
     overlays = [
@@ -157,9 +155,14 @@
       config.nix.registry;
 
   nix = {
-    nixPath = [ "/etc/nix/path" ];
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 10d";
+    };
 
     optimise.automatic = true;
+
+    nixPath = [ "/etc/nix/path" ];
 
     registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
@@ -169,24 +172,35 @@
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
 
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+      substituters = [
+        "https://hyprland.cachix.org"
+        "https://nix-gaming.cachix.org"
+        "https://nix-citizen.cachix.org"
+      ];
+      trusted-public-keys = [
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
+      ];
     };
   };
 
-  programs.fish = {
-    enable = true;
-    vendor.functions.enable = true;
-  };
+  programs = {
+    dconf.enable = true;
 
-  programs.nix-ld.enable = true;
+    fish = {
+      enable = true;
+      vendor.functions.enable = true;
+    };
+
+    nix-ld.enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
     git
     home-manager
     neovim
   ] ++ [
-    (import ../../scripts/nvidia-offload.nix { inherit pkgs; })
     (import ../../scripts/hyprland-suspend.nix { inherit pkgs; })
   ];
 

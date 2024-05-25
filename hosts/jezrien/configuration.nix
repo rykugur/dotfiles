@@ -30,16 +30,15 @@
     common-gpu-amd
   ]);
 
-  hardware =
-    {
-      cpu.amd.updateMicrocode = true;
+  hardware = {
+    cpu.amd.updateMicrocode = true;
 
-      opengl = {
-        enable = true;
-        driSupport = true;
-        driSupport32Bit = true;
-      };
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
     };
+  };
 
   boot = {
     kernelPackages = pkgs.linuxPackages_6_9;
@@ -109,11 +108,9 @@
 
   # This will add each flake input as a registry
   # To make nix3 commands consistent with your flake
-  nix.registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
   # This will additionally add your inputs to the system's legacy channels
   # Making legacy nix commands consistent as well, awesome!
-  nix.nixPath = [ "/etc/nix/path" ];
   environment.etc =
     lib.mapAttrs'
       (name: value: {
@@ -129,6 +126,10 @@
     };
 
     optimise.automatic = true;
+
+    nixPath = [ "/etc/nix/path" ];
+
+    registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
     settings = {
       # Enable flakes and new 'nix' command
@@ -149,20 +150,18 @@
     };
   };
 
-  programs.corectrl = {
-    enable = true;
-  };
+  programs = {
+    corectrl.enable = true;
 
-  programs.dconf = {
-    enable = true;
-  };
+    dconf.enable = true;
 
-  programs.fish = {
-    enable = true;
-    vendor.functions.enable = true;
-  };
+    fish = {
+      enable = true;
+      vendor.functions.enable = true;
+    };
 
-  programs.nix-ld.enable = true;
+    nix-ld.enable = true;
+  };
 
   environment.systemPackages = with pkgs; [
     git
