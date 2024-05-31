@@ -6,7 +6,11 @@
 , config
 , pkgs
 , ...
-}: {
+}:
+let
+  host = "jezrien";
+in
+{
   # You can import other home-manager modules here
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):

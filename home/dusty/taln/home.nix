@@ -6,7 +6,11 @@
 , config
 , pkgs
 , ...
-}: {
+}:
+let
+  hostname = "taln";
+in
+{
   # You can import other home-manager modules here
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
@@ -56,9 +60,6 @@
     homeDirectory = "/home/dusty";
 
     file = {
-      ".config/hypr" = {
-        source = ./hypr;
-      };
       ".config/waybar/config.json" = {
         source = ./waybar.json;
       };

@@ -1,4 +1,8 @@
-{ inputs, outputs, lib, pkgs, ... }: {
+{ config, inputs, outputs, pkgs, ... }:
+let
+  host = "taln";
+in
+{
   imports = [
     outputs.homeManagerModules.wayland
   ];
@@ -37,6 +41,16 @@
         selection-text = "cdd6f4ff";
         border = "b4befeff";
       };
+    };
+  };
+
+  home.file = {
+    ".config/hypr" = {
+      source = ../../configs/hypr;
+      recursive = true;
+    };
+    ".config/hypr/host_custom.conf" = {
+      source = ../../home/dusty/${host}/hyprland.conf;
     };
   };
 }

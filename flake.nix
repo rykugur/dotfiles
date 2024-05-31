@@ -81,14 +81,14 @@
           pkgs = pkgsFor.x86_64-linux;
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
-            ./home/dusty/jezrien/home.nix
+            ./home/dusty/jezrien
           ];
         };
         "dusty@taln" = home-manager.lib.homeManagerConfiguration {
           pkgs = pkgsFor.x86_64-linux;
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
-            ./home/dusty/taln/home.nix
+            ./home/dusty/taln
           ];
         };
       };
