@@ -19,10 +19,7 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    nix-citizen.url = "github:LovingMelody/nix-citizen";
-
     nix-gaming.url = "github:fufexan/nix-gaming";
-    nix-citizen.inputs.nix-gaming.follows = "nix-gaming";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
