@@ -80,6 +80,9 @@
         source = ../../../configs/swappy;
         recursive = true;
       };
+      ".via-config-files/noodlepad-micro" = {
+        source = pkgs.keebs-via.madnoodle-micro-pad;
+      };
     };
   };
 
@@ -94,6 +97,7 @@
     gnome.seahorse
     gnome.zenity
     google-chrome
+    keebs-via.madnoodle-micro-pad
     lampray
     mousai
     neofetch
