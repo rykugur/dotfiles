@@ -19,6 +19,7 @@ in
     fish
     gaming
     git
+    gnome
     hyprland
     kitty
     nvim
