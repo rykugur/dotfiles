@@ -18,7 +18,8 @@ in {
     fish
     gaming
     git
-    (import hyprland {inherit host;})
+    gnome
+    hyprland
     kitty
     nvim
     terminal
