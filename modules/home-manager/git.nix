@@ -1,7 +1,8 @@
-{ inputs
-, lib
-, config
-, ...
+{
+  inputs,
+  lib,
+  config,
+  ...
 }: {
   programs.git = {
     enable = true;

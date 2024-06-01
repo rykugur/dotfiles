@@ -1,35 +1,40 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ inputs
-, outputs
-, lib
-, config
-, pkgs
-, ...
-}:
-let
-  host = "jezrien";
-in
 {
+  inputs,
+  outputs,
+  pkgs,
+  ...
+}: {
   # You can import other home-manager modules here
-  imports = with outputs.homeManagerModules; [
-    # If you want to use home-manager modules from other flakes (such as nix-colors):
-    # inputs.nix-colors.homeManagerModule
-    face-tracking
-    firefox
-    fish
-    gaming
-    git
-    gnome
-    hyprland
-    kitty
-    nvim
-    obs
-    terminal
-    theme
+  # imports = with outputs.homeManagerModules; [
+  #   # If you want to use home-manager modules from other flakes (such as nix-colors):
+  #   # inputs.nix-colors.homeManagerModule
+  #   face-tracking
+  #   firefox
+  #   fish
+  #   gaming
+  #   git
+  #   gnome
+  #   hyprland
+  #   kitty
+  #   nvim
+  #   obs
+  #   terminal
+  #   theme
+  #
+  #   gbar
+  #   swayfx
+  #
+  #   starsector
+  # ];
 
-    starsector
+  imports = [
+    outputs.homeManagerModules
   ];
+
+  # config.gbar.enable = true;
+  gbar.enable = true;
 
   nixpkgs = {
     # You can add overlays here
@@ -63,9 +68,6 @@ in
     homeDirectory = "/home/dusty";
 
     file = {
-      ".config/hypr" = {
-        source = ./hypr;
-      };
       ".config/waybar/config.json" = {
         source = ./waybar.json;
       };

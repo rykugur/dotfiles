@@ -1,13 +1,16 @@
-{ config, pkgs, ... }:
-let
-  modsDrv = with pkgs.starsectorMods.starsectorMods; mkModDirDrv [
-    lazylib
-    magiclib
-    nexerelin
-    graphicslib
-  ];
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  modsDrv = with pkgs.starsectorMods.starsectorMods;
+    mkModDirDrv [
+      lazylib
+      magiclib
+      nexerelin
+      graphicslib
+    ];
+in {
   home = {
     packages = [
       pkgs.starsector

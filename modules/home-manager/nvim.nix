@@ -1,10 +1,13 @@
-{ inputs
-, lib
-, config
-, pkgs
-, ...
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
 }: {
   home.packages = [
+    pkgs.alejandra
+    pkgs.cargo # required for some plugins
     pkgs.fd
     pkgs.lazygit
     pkgs.neovide

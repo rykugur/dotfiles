@@ -1,8 +1,14 @@
-{ config, inputs, outputs, pkgs, ... }:
-let
-  host = "taln";
-in
 {
+  config,
+  inputs,
+  outputs,
+  pkgs,
+  ...
+}: let
+  cfg = config.customOptions;
+  # host = cfg.host;
+  host = "jezrien";
+in {
   imports = [
     outputs.homeManagerModules.wayland
   ];
@@ -25,7 +31,7 @@ in
   programs.waybar = {
     enable = true;
     package = pkgs.waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
     });
   };
 

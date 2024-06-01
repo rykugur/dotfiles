@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   virtualisation.docker = {
     enable = true;
     storageDriver = "btrfs";
@@ -13,5 +13,5 @@
     docker-compose
   ];
 
-  users.users."dusty".extraGroups = [ "docker" ];
+  users.users."dusty".extraGroups = ["docker"];
 }

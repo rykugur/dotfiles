@@ -1,5 +1,4 @@
-{ pkgs, ... }: {
-
+{pkgs, ...}: {
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
@@ -17,7 +16,7 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
-  
+
   environment.systemPackages = with pkgs; [
     nix-search-cli
   ];

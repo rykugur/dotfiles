@@ -1,4 +1,11 @@
-{ lib, stdenv, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  fetchurl,
+  makeDesktopItem,
+  pkgs,
+}:
 stdenv.mkDerivation rec {
   name = "opentrack";
   version = "2023.3.0";
@@ -10,17 +17,17 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-C0jLS55DcLJh/e5yM8kLG7fhhKvBNllv5HkfCWRIfc4=";
   };
 
-  nativeBuildInputs = with pkgs; [ cmake pkg-config ninja copyDesktopItems ];
-  buildInputs = with pkgs; [
-    opencv4
-    procps
-    eigen
-    xorg.libXdmcp
-    libevdev
-    wineWowPackages.waylandFull
-  ]
-  ++ (with pkgs.libsForQt5.qt5;
+  nativeBuildInputs = with pkgs; [cmake pkg-config ninja copyDesktopItems];
+  buildInputs = with pkgs;
     [
+      opencv4
+      procps
+      eigen
+      xorg.libXdmcp
+      libevdev
+      wineWowPackages.waylandFull
+    ]
+    ++ (with pkgs.libsForQt5.qt5; [
       qtbase
       qttools
       wrapQtAppsHook
@@ -47,7 +54,7 @@ stdenv.mkDerivation rec {
       };
       desktopName = name;
       genericName = "Head tracking software";
-      categories = [ "Utility" ];
+      categories = ["Utility"];
     })
   ];
 }

@@ -1,4 +1,9 @@
-{ config, inputs, lib, ... }: {
+{
+  config,
+  inputs,
+  lib,
+  ...
+}: {
   services = {
     fstrim = {
       enable = true;
@@ -8,7 +13,7 @@
     btrfs.autoScrub = {
       enable = true;
       interval = "monthly";
-      fileSystems = [ "/" ];
+      fileSystems = ["/"];
     };
   };
 }

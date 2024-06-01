@@ -1,34 +1,37 @@
-{ inputs
-, outputs
-, lib
-, config
-, pkgs
-, ...
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
 }: {
-  imports = [
-    ./hardware-configuration.nix
+  imports =
+    [
+      ./hardware-configuration.nix
 
-    outputs.nixosModules.base
+      outputs.nixosModules.base
 
-    outputs.nixosModules.btrfs
+      outputs.nixosModules.btrfs
 
-    outputs.nixosModules.pipewire
-    inputs.nix-gaming.nixosModules.pipewireLowLatency
+      outputs.nixosModules.pipewire
+      inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-    outputs.nixosModules.gnome
-    outputs.nixosModules.hyprland
-    outputs.nixosModules.keebs
-    outputs.nixosModules.libvirtd
-    outputs.nixosModules.ssh
+      outputs.nixosModules.gnome
+      outputs.nixosModules.hyprland
+      outputs.nixosModules.keebs
+      outputs.nixosModules.libvirtd
+      outputs.nixosModules.ssh
 
-    outputs.nixosModules._1password
-    outputs.nixosModules.gaming
-  ] ++ (with inputs.nixos-hardware.nixosModules; [
-    common-pc
-    common-pc-ssd
-    common-cpu-amd-pstate
-    common-gpu-amd
-  ]);
+      outputs.nixosModules._1password
+      outputs.nixosModules.gaming
+    ]
+    ++ (with inputs.nixos-hardware.nixosModules; [
+      common-pc
+      common-pc-ssd
+      common-cpu-amd-pstate
+      common-gpu-amd
+    ]);
 
   hardware = {
     cpu.amd.updateMicrocode = true;
@@ -58,11 +61,12 @@
         enable = true;
       };
     };
+    polkit.enable = true;
   };
 
   networking = {
     hostName = "jezrien";
-    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+    search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
     extraHosts = ''
       127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
     '';
@@ -113,11 +117,11 @@
   # Making legacy nix commands consistent as well, awesome!
   environment.etc =
     lib.mapAttrs'
-      (name: value: {
-        name = "nix/path/${name}";
-        value.source = value.flake;
-      })
-      config.nix.registry;
+    (name: value: {
+      name = "nix/path/${name}";
+      value.source = value.flake;
+    })
+    config.nix.registry;
 
   nix = {
     gc = {
@@ -127,9 +131,9 @@
 
     optimise.automatic = true;
 
-    nixPath = [ "/etc/nix/path" ];
+    nixPath = ["/etc/nix/path"];
 
-    registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+    registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
     settings = {
       # Enable flakes and new 'nix' command
@@ -179,7 +183,7 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
-      extraGroups = [ "wheel" "networkmanager" "corectrl" ];
+      extraGroups = ["wheel" "networkmanager" "corectrl"];
       shell = pkgs.fish;
     };
   };

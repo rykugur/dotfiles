@@ -4,6 +4,7 @@ return {
 		formatters_by_ft = {
 			javascript = { "prettierd", "prettier" },
 			typescript = { "prettierd", "prettier" },
+			nix = { "alejandra" },
 		},
 	},
 }

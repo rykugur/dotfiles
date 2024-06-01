@@ -1,4 +1,10 @@
-{ config, inputs, lib, pkgs, ... }: {
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
   home.packages = [
     pkgs.obs-studio
     pkgs.obs-cli

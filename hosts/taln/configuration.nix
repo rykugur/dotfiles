@@ -1,32 +1,35 @@
-{ inputs
-, outputs
-, lib
-, config
-, pkgs
-, ...
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
 }: {
-  imports = [
-    ./hardware-configuration.nix
+  imports =
+    [
+      ./hardware-configuration.nix
 
-    outputs.nixosModules.base
+      outputs.nixosModules.base
 
-    outputs.nixosModules.btrfs
+      outputs.nixosModules.btrfs
 
-    outputs.nixosModules.pipewire
-    inputs.nix-gaming.nixosModules.pipewireLowLatency
+      outputs.nixosModules.pipewire
+      inputs.nix-gaming.nixosModules.pipewireLowLatency
 
-    outputs.nixosModules.gnome
-    outputs.nixosModules.hyprland
-    outputs.nixosModules.ssh
+      outputs.nixosModules.gnome
+      outputs.nixosModules.hyprland
+      outputs.nixosModules.ssh
 
-    outputs.nixosModules._1password
-    outputs.nixosModules.gaming
-  ] ++ (with inputs.nixos-hardware.nixosModules; [
-    common-pc
-    common-pc-laptop-ssd
-    common-cpu-intel
-    common-gpu-nvidia
-  ]);
+      outputs.nixosModules._1password
+      outputs.nixosModules.gaming
+    ]
+    ++ (with inputs.nixos-hardware.nixosModules; [
+      common-pc
+      common-pc-laptop-ssd
+      common-cpu-intel
+      common-gpu-nvidia
+    ]);
 
   hardware = {
     nvidia = {
@@ -64,7 +67,7 @@
 
     openrazer = {
       enable = true;
-      users = [ "dusty" ];
+      users = ["dusty"];
     };
   };
 
@@ -94,7 +97,7 @@
   networking = {
     hostName = "taln";
     networkmanager.enable = true;
-    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+    search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
   };
 
   services = {
@@ -148,11 +151,11 @@
   # Making legacy nix commands consistent as well, awesome!
   environment.etc =
     lib.mapAttrs'
-      (name: value: {
-        name = "nix/path/${name}";
-        value.source = value.flake;
-      })
-      config.nix.registry;
+    (name: value: {
+      name = "nix/path/${name}";
+      value.source = value.flake;
+    })
+    config.nix.registry;
 
   nix = {
     gc = {
@@ -162,9 +165,9 @@
 
     optimise.automatic = true;
 
-    nixPath = [ "/etc/nix/path" ];
+    nixPath = ["/etc/nix/path"];
 
-    registry = (lib.mapAttrs (_: flake: { inherit flake; })) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+    registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
     settings = {
       # Enable flakes and new 'nix' command
@@ -196,20 +199,22 @@
     nix-ld.enable = true;
   };
 
-  environment.systemPackages = with pkgs; [
-    git
-    home-manager
-    neovim
-  ] ++ [
-    (import ../../scripts/hyprland-suspend.nix { inherit pkgs; })
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      git
+      home-manager
+      neovim
+    ]
+    ++ [
+      (import ../../scripts/hyprland-suspend.nix {inherit pkgs;})
+    ];
 
   users.users = {
     dusty = {
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
-      extraGroups = [ "wheel" "networkmanager" "openrazer" ];
+      extraGroups = ["wheel" "networkmanager" "openrazer"];
       shell = pkgs.fish;
     };
   };

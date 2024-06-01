@@ -1,9 +1,4 @@
-{ outputs, pkgs, ... }: {
-  imports = [
-    outputs.homeManagerModules.starship
-    outputs.homeManagerModules.tmux
-  ];
-
+{pkgs, ...}: {
   home.packages = with pkgs; [
     duf
     eza

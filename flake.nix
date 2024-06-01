@@ -18,9 +18,10 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    swayfx.url = "github:WillPower3309/swayfx";
+    gBar.url = "github:scorpion-26/gBar";
 
     nix-gaming.url = "github:fufexan/nix-gaming";
-
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     # rust-overlay.url = "github:oxalica/rust-overlay";
@@ -30,65 +31,63 @@
     # nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , home-manager
-    , ...
-    } @ inputs:
-    let
-      inherit (self) outputs;
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: let
+    inherit (self) outputs;
 
-      lib = nixpkgs.lib // home-manager.lib;
+    lib = nixpkgs.lib // home-manager.lib;
 
-      systems = [ "x86_64-linux" ];
-      forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-      pkgsFor = lib.genAttrs systems (system: import nixpkgs {
+    systems = ["x86_64-linux"];
+    forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
+    pkgsFor = lib.genAttrs systems (system:
+      import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       });
-    in
-    {
-      devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs; });
+  in {
+    devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs;});
 
-      overlays = import ./overlays { inherit inputs; };
-      nixosModules = import ./modules/nixos;
-      homeManagerModules = import ./modules/home-manager;
+    overlays = import ./overlays {inherit inputs;};
+    nixosModules = import ./modules/nixos;
+    homeManagerModules = import ./modules/home-manager;
 
-      nixosConfigurations = {
-        # primary/gaming desktop
-        "jezrien" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/jezrien ];
-          specialArgs = { inherit inputs outputs; };
-        };
-        # laptop
-        "taln" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taln ];
-          specialArgs = { inherit inputs outputs; };
-        };
-        # # homelab
-        # tanavast = nixpkgs.lib.nixosSystem {
-        #   modules = [ ./hosts/tanavast/configuration.nix];
-        #   specialArgs = { inherit inputs outputs; };
-        # };
+    nixosConfigurations = {
+      # primary/gaming desktop
+      "jezrien" = nixpkgs.lib.nixosSystem {
+        modules = [./hosts/jezrien];
+        specialArgs = {inherit inputs outputs;};
       };
+      # laptop
+      "taln" = nixpkgs.lib.nixosSystem {
+        modules = [./hosts/taln];
+        specialArgs = {inherit inputs outputs;};
+      };
+      # # homelab
+      # tanavast = nixpkgs.lib.nixosSystem {
+      #   modules = [ ./hosts/tanavast/configuration.nix];
+      #   specialArgs = { inherit inputs outputs; };
+      # };
+    };
 
-      homeConfigurations = {
-        "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            ./home/dusty/jezrien
-          ];
-        };
-        "dusty@taln" = home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgsFor.x86_64-linux;
-          extraSpecialArgs = { inherit inputs outputs; };
-          modules = [
-            ./home/dusty/taln
-          ];
-        };
+    homeConfigurations = {
+      "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
+        pkgs = pkgsFor.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          ./home/dusty/jezrien
+        ];
+      };
+      "dusty@taln" = home-manager.lib.homeManagerConfiguration {
+        pkgs = pkgsFor.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          ./home/dusty/taln
+        ];
       };
     };
+  };
 }
-
