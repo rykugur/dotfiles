@@ -1,5 +1,5 @@
 # mechanical keyboards
-{ pkgs, ... }: {
+{pkgs, ...}: {
   hardware.keyboard.qmk.enable = true;
 
   environment.systemPackages = [
@@ -7,5 +7,5 @@
     pkgs.vial
   ];
 
-  services.udev.packages = [ pkgs.via pkgs.vial ];
+  services.udev.packages = [pkgs.via pkgs.vial];
 }

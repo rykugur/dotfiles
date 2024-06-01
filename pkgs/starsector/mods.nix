@@ -1,18 +1,19 @@
-{ pkgs
-, lib
-, stdenv
-, fetchzip
-, fetch7zip
-}:
-let
-  mkStarsectorMod =
-    { src
-    , name
-    , deps ? [ ]
-    }: stdenv.mkDerivation {
+{
+  pkgs,
+  lib,
+  stdenv,
+  fetchzip,
+  fetch7zip,
+}: let
+  mkStarsectorMod = {
+    src,
+    name,
+    deps ? [],
+  }:
+    stdenv.mkDerivation {
       inherit name src;
 
-      phases = [ "installPhase" ];
+      phases = ["installPhase"];
 
       installPhase = ''
         runHook preInstall
@@ -23,8 +24,7 @@ let
         runHook postInstall
       '';
     };
-in
-rec {
+in rec {
   lazylib = mkStarsectorMod {
     name = "lazylib";
     src = fetchzip {
@@ -47,7 +47,7 @@ rec {
       url = "https://github.com/Histidine91/Nexerelin/releases/download/v0.11.1b/Nexerelin_0.11.1b.zip";
       sha256 = "sha256-S7M4fAgwl4IxTPGle9RkzD00ElWNYGN+BLPaJMZLWoQ=";
     };
-    deps = [ lazylib magiclib ];
+    deps = [lazylib magiclib];
   };
 
   graphicslib = mkStarsectorMod {
@@ -56,25 +56,23 @@ rec {
       url = "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";
       sha256 = "sha256-LwLO5A0Af6vKJcnGWk9rylzhvwolWCJV5aqoaY+6ra4=";
     };
-    deps = [ lazylib ];
+    deps = [lazylib];
   };
 
-  mkModsDirDrv = mods:
-    let
-      recursiveDeps = modDrv: [ modDrv ] ++ map recursiveDeps modDrv.deps;
-      modDrvs = lib.unique (lib.flatten (map recursiveDeps mods));
-    in
-    {
-      modsDirDrv = stdenv.mkDerivation {
-        name = "starsector-mods";
-        preferLocalBuild = true;
-        buildCommand = ''
-          mkdir -p $out
-          cd $out
-          for modDrv in ${toString modDrvs}; do
-            ln -s $modDrv/* .
-          done
-        '';
-      };
+  mkModsDirDrv = mods: let
+    recursiveDeps = modDrv: [modDrv] ++ map recursiveDeps modDrv.deps;
+    modDrvs = lib.unique (lib.flatten (map recursiveDeps mods));
+  in {
+    modsDirDrv = stdenv.mkDerivation {
+      name = "starsector-mods";
+      preferLocalBuild = true;
+      buildCommand = ''
+        mkdir -p $out
+        cd $out
+        for modDrv in ${toString modDrvs}; do
+          ln -s $modDrv/* .
+        done
+      '';
     };
+  };
 }

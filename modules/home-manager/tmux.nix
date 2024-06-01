@@ -1,8 +1,11 @@
-{ config, inputs, pkgs, ... }:
-let
-  cfg = config.programs.tmux;
-in
 {
+  config,
+  inputs,
+  pkgs,
+  ...
+}: let
+  cfg = config.programs.tmux;
+in {
   programs.tmux = {
     enable = true;
 
@@ -52,7 +55,6 @@ in
       tmuxPlugins.vim-tmux-navigator
       tmuxPlugins.yank
     ];
-
   };
 
   home = {

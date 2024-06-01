@@ -1,12 +1,15 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ inputs
-, outputs
-, lib
-, config
-, pkgs
-, ...
-}: {
+{
+  inputs,
+  outputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}: let
+  host = "taln";
+in {
   # You can import other home-manager modules here
   imports = with outputs.homeManagerModules; [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
@@ -15,6 +18,7 @@
     fish
     gaming
     git
+    gnome
     hyprland
     kitty
     nvim
@@ -56,9 +60,6 @@
     homeDirectory = "/home/dusty";
 
     file = {
-      ".config/hypr" = {
-        source = ./hypr;
-      };
       ".config/waybar/config.json" = {
         source = ./waybar.json;
       };

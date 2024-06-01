@@ -1,4 +1,10 @@
-{ inputs, outputs, pkgs, system, ... }: {
+{
+  inputs,
+  outputs,
+  pkgs,
+  system,
+  ...
+}: {
   imports = [
     outputs.homeManagerModules.face-tracking
   ];

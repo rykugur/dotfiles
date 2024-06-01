@@ -1,4 +1,8 @@
-{ inputs, pkgs, ... }: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = [
     pkgs.pulseaudio
     pkgs.alsa-utils # for amixer
@@ -42,5 +46,5 @@
   # make pipewire realtime-capable
   security.rtkit.enable = true;
 
-  users.users."dusty".extraGroups = [ "audio" ];
+  users.users."dusty".extraGroups = ["audio"];
 }

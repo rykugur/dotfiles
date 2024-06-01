@@ -1,4 +1,14 @@
-{ inputs, outputs, lib, pkgs, ... }: {
+{
+  config,
+  inputs,
+  outputs,
+  pkgs,
+  ...
+}: let
+  cfg = config.customOptions;
+  # host = cfg.host;
+  host = "jezrien";
+in {
   imports = [
     outputs.homeManagerModules.wayland
   ];
@@ -21,7 +31,7 @@
   programs.waybar = {
     enable = true;
     package = pkgs.waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
     });
   };
 
@@ -37,6 +47,16 @@
         selection-text = "cdd6f4ff";
         border = "b4befeff";
       };
+    };
+  };
+
+  home.file = {
+    ".config/hypr" = {
+      source = ../../configs/hypr;
+      recursive = true;
+    };
+    ".config/hypr/host_custom.conf" = {
+      source = ../../home/dusty/${host}/hyprland.conf;
     };
   };
 }

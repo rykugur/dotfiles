@@ -1,8 +1,7 @@
-{ config, inputs, lib, pkgs, ... }: {
-
+{pkgs, ...}: {
   home.packages = with pkgs; [
     fira
-    (nerdfonts.override { fonts = [ "FiraCode" "FiraMono" ]; })
+    (nerdfonts.override {fonts = ["FiraCode" "FiraMono"];})
 
     catppuccin-gtk
     matcha-gtk-theme
@@ -25,9 +24,9 @@
     theme = {
       name = "Catppuccin-Mocha-Compact-Blue-Dark";
       package = pkgs.catppuccin-gtk.override {
-        accents = [ "blue" ];
+        accents = ["blue"];
         size = "compact";
-        tweaks = [ "rimless" ];
+        tweaks = ["rimless"];
         variant = "mocha";
       };
     };
