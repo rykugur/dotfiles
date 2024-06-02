@@ -81,13 +81,13 @@
           ./home/dusty/jezrien
         ];
       };
-      "dusty@taln" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          ./home/dusty/taln
-        ];
-      };
+      # "dusty@taln" = home-manager.lib.homeManagerConfiguration {
+      #   pkgs = pkgsFor.x86_64-linux;
+      #   extraSpecialArgs = {inherit inputs outputs;};
+      #   modules = [
+      #     ./home/dusty/taln
+      #   ];
+      # };
     };
   };
 }

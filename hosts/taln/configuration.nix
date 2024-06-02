@@ -10,6 +10,8 @@
     [
       ./hardware-configuration.nix
 
+      inputs.home-manager.nixosModules.home-manager
+
       outputs.nixosModules.base
 
       outputs.nixosModules.btrfs
@@ -202,7 +204,7 @@
   environment.systemPackages = with pkgs;
     [
       git
-      home-manager
+      inputs.home-manager.packages.${pkgs.system}.default
       neovim
     ]
     ++ [
@@ -216,6 +218,17 @@
       home = "/home/dusty";
       extraGroups = ["wheel" "networkmanager" "openrazer"];
       shell = pkgs.fish;
+    };
+  };
+
+  home-manager = {
+    extraSpecialArgs = {
+      inherit inputs outputs;
+      hostname = "taln";
+      username = "dusty";
+    };
+    users = {
+      dusty = import ./home.nix;
     };
   };
 

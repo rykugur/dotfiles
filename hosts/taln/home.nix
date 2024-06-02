@@ -1,10 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
-  inputs,
   outputs,
-  lib,
-  config,
   pkgs,
   ...
 }: {
@@ -44,24 +41,20 @@
     homeDirectory = "/home/dusty";
 
     file = {
-      ".config/waybar/config.json" = {
-        source = ./waybar.json;
-      };
-      ".config/waybar/style.css" = {
-        source = ../../../configs/waybar/style.css;
-      };
-      ".config/waybar/themes" = {
-        source = ../../../configs/waybar/themes;
-        recursive = true;
-      };
-      ".config/waybar/launch.fish" = {
-        source = ../../../configs/waybar/launch.fish;
-        executable = true;
-      };
-      ".config/swappy" = {
-        source = ../../../configs/swappy;
-        recursive = true;
-      };
+      # ".config/waybar/config.json" = {
+      #   source = ../../home/dusty/taln/waybar.json;
+      # };
+      # ".config/waybar/style.css" = {
+      #   source = ../../configs/waybar/style.css;
+      # };
+      # ".config/waybar/themes" = {
+      #   source = ../../configs/waybar/themes;
+      #   recursive = true;
+      # };
+      # ".config/waybar/launch.fish" = {
+      #   source = ../../configs/waybar/launch.fish;
+      #   executable = true;
+      # };
     };
   };
 

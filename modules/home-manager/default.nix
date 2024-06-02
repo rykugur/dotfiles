@@ -29,6 +29,7 @@
   imports = [
     ./firefox.nix
     ./git.nix
+    ./swappy.nix
 
     ./gbar.nix
     ./gnome.nix
