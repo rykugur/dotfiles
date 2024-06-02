@@ -1,25 +1,26 @@
 {
+  config,
+  lib,
   inputs,
   outputs,
-  pkgs,
-  system,
   ...
-}: {
-  imports = [
-    outputs.homeManagerModules.face-tracking
-  ];
+}: let
+  cfg = config.starcitizen;
+in {
+  # imports = [
+  #   outputs.homeManagerModules.face-tracking
+  # ];
 
-  home.packages = [
-    inputs.nix-citizen.packages.x86_64-linux.star-citizen
-    inputs.nix-citizen.packages.x86_64-linux.lug-helper
-  ];
-  # home.file = {
-  #   ".drirc" = {
-  #     text = ''
-  #       <application name="Star Citizen" executable="StarCitizen.exe" >
-  #         <option name="dual_color_blend_by_location" value="true" />
-  #       </application>
-  #     '';
-  #   };
-  # };
+  options = {
+    starcitizen.enable = lib.mkEnableOption "Enable Star Citizen (nix-citizen flake).";
+  };
+
+  config = lib.mkIf cfg.enable {
+    faceTracking.enable = true;
+
+    home.packages = [
+      inputs.nix-citizen.packages.x86_64-linux.star-citizen
+      inputs.nix-citizen.packages.x86_64-linux.lug-helper
+    ];
+  };
 }
