@@ -3,12 +3,9 @@
 {
   outputs,
   pkgs,
+  username,
   ...
 }: {
-  imports = [
-    outputs.homeManagerModules
-  ];
-
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -37,51 +34,34 @@
   };
 
   home = {
-    username = "dusty";
-    homeDirectory = "/home/dusty";
-
-    file = {
-      # ".config/waybar/config.json" = {
-      #   source = ../../home/dusty/taln/waybar.json;
-      # };
-      # ".config/waybar/style.css" = {
-      #   source = ../../configs/waybar/style.css;
-      # };
-      # ".config/waybar/themes" = {
-      #   source = ../../configs/waybar/themes;
-      #   recursive = true;
-      # };
-      # ".config/waybar/launch.fish" = {
-      #   source = ../../configs/waybar/launch.fish;
-      #   executable = true;
-      # };
-    };
+    inherit username;
+    homeDirectory = "/home/${username}";
   };
 
-  # Add stuff for your user as you see fit:
-  # programs.neovim.enable = true;
   home.packages = with pkgs; [
     baobab
     bottom
     cinnamon.nemo
+    easyeffects
+    file
     gnome.seahorse
     gnome.zenity
     google-chrome
     lampray
     mousai
     neofetch
-    networkmanagerapplet
-    nvtopPackages.full
     nitch
     obsidian
     opera
     pavucontrol
     playerctl
+    radeontop
     solaar
     speedtest-cli
     spotify
     vlc
     xdg-utils
+    xfce.thunar
 
     prettierd
     stylua
@@ -100,7 +80,108 @@
     vscode
 
     font-awesome
+
+    # TODO: find a place for these VVV
+    discord
+    betterdiscordctl
+    gamescope
+    lutris
+    mangohud
+    protontricks
+    protonup-ng
+    protonup-qt
+    steamcmd
+    steam-tui
+    wineWowPackages.waylandFull
+    winetricks
+    n0la_rcon
+    dxvk
+    vkd3d
+    # TODO: and these VVV
+    duf
+    eza
+    fzf
+    grc
+    jq
+    kitty
+    lm_sensors
+    pciutils
+    ripgrep
+    silver-searcher
+    tree
+    usbutils
+    warp-terminal
+    zoxide
+    btop
+    iotop
+    iftop
+    # TODO: and these VVV
+    fira
+    (nerdfonts.override {fonts = ["FiraCode" "FiraMono"];})
+
+    catppuccin-gtk
+    matcha-gtk-theme
+    papirus-icon-theme
+    volantes-cursors
+    # TODO: and these VVV
+    cliphist
+    pywal
+    wev
+    wl-clipboard
+    wl-clipboard-x11
+    wofi
+    wofi-emoji
+    wtype
+    xorg.xrandr
+    xorg.xbacklight
   ];
+
+  # TODO: find a spot for this VVV
+  home.pointerCursor = {
+    gtk.enable = true;
+    name = "Bibata-Modern-Ice";
+    package = pkgs.bibata-cursors;
+    size = 16;
+  };
+
+  # TODO: find a spot for this VVV
+  gtk = {
+    enable = true;
+
+    font.name = "FiraCode Nerd Font Mono 10";
+
+    theme = {
+      name = "Catppuccin-Mocha-Compact-Blue-Dark";
+      package = pkgs.catppuccin-gtk.override {
+        accents = ["blue"];
+        size = "compact";
+        tweaks = ["rimless"];
+        variant = "mocha";
+      };
+    };
+
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      package = pkgs.bibata-cursors;
+    };
+
+    iconTheme = {
+      name = "Vimix-dark";
+      package = pkgs.vimix-icon-theme;
+    };
+
+    gtk3.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+
+    gtk4.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+  };
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;

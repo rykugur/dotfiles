@@ -19,6 +19,10 @@ in {
       "fs.file-max" = 524288;
     };
 
+    networking.extraHosts = ''
+      127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
+    '';
+
     home-manager.users.${username}.home.packages = [
       inputs.nix-citizen.packages.x86_64-linux.star-citizen
       inputs.nix-citizen.packages.x86_64-linux.lug-helper

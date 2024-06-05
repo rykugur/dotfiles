@@ -64,15 +64,15 @@
           username = "dusty";
         };
       };
-      # laptop
-      # "taln" = nixpkgs.lib.nixosSystem {
-      #   modules = [./hosts/taln];
-      #   specialArgs = {
-      #     inherit inputs outputs;
-      #     hostname = "taln";
-      #     username = "dusty";
-      #   };
-      # };
+      # razer blade stealth laptop
+      "taln" = nixpkgs.lib.nixosSystem {
+        modules = [./hosts/taln];
+        specialArgs = {
+          inherit inputs outputs;
+          hostname = "taln";
+          username = "dusty";
+        };
+      };
       # # homelab
       # tanavast = nixpkgs.lib.nixosSystem {
       #   modules = [ ./hosts/tanavast/configuration.nix];

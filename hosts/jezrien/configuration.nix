@@ -24,19 +24,12 @@
       common-gpu-amd
     ]);
 
-  hardware = {
-    cpu.amd.updateMicrocode = true;
-
-    opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-  };
-
   boot = {
     kernelPackages = pkgs.linuxPackages_6_9;
-    loader.systemd-boot.enable = true;
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
   };
 
   security = {
@@ -50,11 +43,8 @@
   };
 
   networking = {
-    hostName = "jezrien";
+    hostName = hostname;
     search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
-    extraHosts = ''
-      127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
-    '';
   };
 
   services = {
@@ -144,7 +134,6 @@
 
     systemPackages = with pkgs; [
       git
-      home-manager
       neovim
       nix-search-cli
     ];
