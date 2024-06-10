@@ -48,6 +48,7 @@
         inherit system;
         config.allowUnfree = true;
       });
+    roles = import ./roles;
   in {
     devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs;});
 
@@ -59,7 +60,7 @@
       "jezrien" = nixpkgs.lib.nixosSystem {
         modules = [./hosts/jezrien];
         specialArgs = {
-          inherit inputs outputs;
+          inherit inputs outputs roles;
           hostname = "jezrien";
           username = "dusty";
         };
@@ -68,7 +69,7 @@
       "taln" = nixpkgs.lib.nixosSystem {
         modules = [./hosts/taln];
         specialArgs = {
-          inherit inputs outputs;
+          inherit inputs outputs roles;
           hostname = "taln";
           username = "dusty";
         };

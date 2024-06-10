@@ -6,6 +6,7 @@
   pkgs,
   hostname,
   username,
+  roles,
   ...
 }: {
   imports =
@@ -16,6 +17,7 @@
 
       inputs.nix-gaming.nixosModules.pipewireLowLatency
       outputs.nixosModules
+      roles
     ]
     ++ (with inputs.nixos-hardware.nixosModules; [
       common-pc
@@ -169,7 +171,6 @@
       extraGroups = ["wheel" "networkmanager" "corectrl"];
     };
   };
-  # swayfx.enable = true;
 
   home-manager = {
     extraSpecialArgs = {
@@ -179,6 +180,8 @@
       ${username} = import ./home.nix;
     };
   };
+
+  roles.gaming.enable = true;
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
