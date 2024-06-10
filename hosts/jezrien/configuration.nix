@@ -118,8 +118,6 @@
   programs = {
     corectrl.enable = true;
 
-    dconf.enable = true;
-
     nix-ld.enable = true;
   };
 
