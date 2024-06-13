@@ -59,11 +59,11 @@ in {
 
       home.file = {
         ".config/hypr" = {
-          source = ../configs/hypr;
+          source = ../../configs/hypr;
           recursive = true;
         };
         ".config/hypr/host_custom.conf" = {
-          source = ../hosts/${hostname}/hyprland.conf;
+          source = ../../hosts/${hostname}/hyprland.conf;
         };
       };
     };

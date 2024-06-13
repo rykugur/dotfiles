@@ -5,11 +5,11 @@
   username,
   ...
 }: let
-  cfg = config.programs.tmuxz;
+  cfg = config.programs.tmux;
 in {
   options.programs.tmuxz.enable = lib.mkEnableOption "Enable tmux";
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf config.programs.tmuxz.enable {
     home-manager.users.${username} = {
       programs.tmux = {
         enable = true;

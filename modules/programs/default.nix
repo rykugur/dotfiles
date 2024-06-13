@@ -11,6 +11,7 @@
     ./obs.nix
     ./starship.nix
     ./swappy.nix
+    ./tmux.nix
     ./waybar.nix
   ];
 }

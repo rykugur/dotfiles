@@ -1,6 +1,6 @@
 {
   imports = [
-    ./face-tracking.nix
+    ./faceTracking.nix
     ./gamemode.nix
     ./starcitizen.nix
     ./starsector.nix

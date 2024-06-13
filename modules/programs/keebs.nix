@@ -23,13 +23,15 @@ in {
     services.udev.packages = [pkgs.via pkgs.vial];
 
     home-manager.users.${username} = {
-      packages = [
-        pkgs.keebs-via.madnoodle-micro-pad
-      ];
+      home = {
+        packages = [
+          pkgs.keebs-via.madnoodle-micro-pad
+        ];
 
-      home.file = {
-        ".via-config-files/noodlepad-micro" = {
-          source = pkgs.keebs-via.madnoodle-micro-pad;
+        file = {
+          ".via-config-files/noodlepad-micro" = {
+            source = pkgs.keebs-via.madnoodle-micro-pad;
+          };
         };
       };
     };

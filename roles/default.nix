@@ -1,3 +1,6 @@
 {
-  imports = [./gaming.nix];
+  imports = [
+    ./desktop.nix
+    ./gaming.nix
+  ];
 }

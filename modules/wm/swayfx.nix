@@ -13,15 +13,12 @@ in {
   config = lib.mkIf cfg.enable {
     programs.sway = {
       enable = true;
-      package = swayfx;
+      package = swayfx.overrideAttrs (old: {passthru.providedSessions = ["sway"];});
       wrapperFeatures.gtk = true;
     };
 
     services.gnome.gnome-keyring.enable = true;
-    # gbar.enable = true;
-    # swappy.enable = true;
-    # wayland.enable = true;
-    #
+
     home-manager.users.${username} = {
       wayland.windowManager.sway = {
         enable = true;

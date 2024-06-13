@@ -49,25 +49,6 @@
     search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
   };
 
-  services = {
-    printing.enable = true;
-
-    gnome = {
-      gnome-browser-connector.enable = true;
-      gnome-keyring.enable = true;
-    };
-    gvfs.enable = true;
-
-    xserver = {
-      enable = true;
-
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-  };
-
   nixpkgs = {
     overlays = [
       # If you want to use overlays exported from other flakes:
@@ -113,12 +94,6 @@
         "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
       ];
     };
-  };
-
-  programs = {
-    corectrl.enable = true;
-
-    nix-ld.enable = true;
   };
 
   environment = {
@@ -180,6 +155,57 @@
   };
 
   roles.gaming.enable = true;
+  gaming = {
+    starcitizen.enable = true;
+    starsector.enable = true;
+  };
+
+  programs = {
+    corectrl.enable = true;
+    nix-ld.enable = true;
+
+    _1passwordz.enable = true;
+    firefoxz.enable = true;
+    fishz.enable = true;
+    gitz.enable = true;
+    keebs.enable = true;
+    kitty.enable = true;
+    nvim.enable = true;
+    obsz.enable = true;
+    starshipz.enable = true;
+    swappy.enable = true;
+    tmuxz.enable = true;
+  };
+
+  services = {
+    printing.enable = true;
+
+    gnome = {
+      gnome-browser-connector.enable = true;
+      gnome-keyring.enable = true;
+    };
+    gvfs.enable = true;
+
+    xserver = {
+      enable = true;
+
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
+
+    btrfs.enable = true;
+    easyeffectsz.enable = true;
+    pipewirez.enable = true;
+    ssh.enable = true;
+  };
+
+  wm = {
+    gnome.enable = true;
+    hyprland.enable = true;
+    swayfx.enable = true;
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
