@@ -4,6 +4,8 @@
   lib,
   config,
   pkgs,
+  hostname,
+  username,
   ...
 }: {
   imports =
@@ -12,19 +14,8 @@
 
       inputs.home-manager.nixosModules.home-manager
 
-      outputs.nixosModules.base
-
-      outputs.nixosModules.btrfs
-
-      outputs.nixosModules.pipewire
       inputs.nix-gaming.nixosModules.pipewireLowLatency
-
-      outputs.nixosModules.gnome
-      outputs.nixosModules.hyprland
-      outputs.nixosModules.ssh
-
-      outputs.nixosModules._1password
-      outputs.nixosModules.gaming
+      outputs.nixosModules
     ]
     ++ (with inputs.nixos-hardware.nixosModules; [
       common-pc
@@ -69,19 +60,12 @@
 
     openrazer = {
       enable = true;
-      users = ["dusty"];
+      users = ["${username}"];
     };
   };
 
   boot = {
     kernelPackages = pkgs.linuxPackages_6_9;
-    kernel = {
-      sysctl = {
-        # for Star Citizen
-        "vm.max_map_count" = 16777216;
-        "fs.file-max" = 524288;
-      };
-    };
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -94,23 +78,16 @@
         enable = true;
       };
     };
+    polkit.enable = true;
   };
 
   networking = {
-    hostName = "taln";
-    networkmanager.enable = true;
+    hostName = hostname;
     search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
+    networkmanager.enable = true;
   };
 
   services = {
-    blueman = {
-      enable = true;
-    };
-
-    logind = {
-      lidSwitch = "suspend";
-    };
-
     printing.enable = true;
 
     gnome = {
@@ -124,6 +101,14 @@
         layout = "us";
         variant = "";
       };
+    };
+
+    blueman = {
+      enable = true;
+    };
+
+    logind = {
+      lidSwitch = "suspend";
     };
 
     # Enable touchpad support (enabled default in most desktopManager).
@@ -145,19 +130,6 @@
     ];
     config.allowUnfree = true;
   };
-
-  # This will add each flake input as a registry
-  # To make nix3 commands consistent with your flake
-
-  # This will additionally add your inputs to the system's legacy channels
-  # Making legacy nix commands consistent as well, awesome!
-  environment.etc =
-    lib.mapAttrs'
-    (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    })
-    config.nix.registry;
 
   nix = {
     gc = {
@@ -191,25 +163,45 @@
   };
 
   programs = {
-    dconf.enable = true;
-
-    fish = {
-      enable = true;
-      vendor.functions.enable = true;
-    };
-
     nix-ld.enable = true;
   };
 
-  environment.systemPackages = with pkgs;
-    [
-      git
-      inputs.home-manager.packages.${pkgs.system}.default
-      neovim
-    ]
-    ++ [
-      (import ../../scripts/hyprland-suspend.nix {inherit pkgs;})
-    ];
+  environment = {
+    etc =
+      lib.mapAttrs'
+      (name: value: {
+        name = "nix/path/${name}";
+        value.source = value.flake;
+      })
+      config.nix.registry;
+
+    systemPackages = with pkgs;
+      [
+        git
+        neovim
+        nix-search-cli
+      ]
+      ++ [
+        (import ../../scripts/hyprland-suspend.nix {inherit pkgs;})
+      ];
+  };
+
+  time.timeZone = "America/Chicago";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
 
   users.users = {
     dusty = {
@@ -217,22 +209,17 @@
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
       extraGroups = ["wheel" "networkmanager" "openrazer"];
-      shell = pkgs.fish;
     };
   };
 
   home-manager = {
     extraSpecialArgs = {
-      inherit inputs outputs;
-      hostname = "taln";
-      username = "dusty";
+      inherit inputs outputs hostname username;
     };
     users = {
-      dusty = import ./home.nix;
+      ${username} = import ./home.nix;
     };
   };
-
-  time.timeZone = "America/Chicago";
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";

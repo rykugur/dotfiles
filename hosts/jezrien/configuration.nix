@@ -4,27 +4,20 @@
   lib,
   config,
   pkgs,
+  hostname,
+  username,
+  roles,
   ...
 }: {
   imports =
     [
       ./hardware-configuration.nix
 
-      outputs.nixosModules.base
+      inputs.home-manager.nixosModules.home-manager
 
-      outputs.nixosModules.btrfs
-
-      outputs.nixosModules.pipewire
       inputs.nix-gaming.nixosModules.pipewireLowLatency
-
-      outputs.nixosModules.gnome
-      outputs.nixosModules.hyprland
-      outputs.nixosModules.keebs
-      outputs.nixosModules.libvirtd
-      outputs.nixosModules.ssh
-
-      outputs.nixosModules._1password
-      outputs.nixosModules.gaming
+      outputs.nixosModules
+      roles
     ]
     ++ (with inputs.nixos-hardware.nixosModules; [
       common-pc
@@ -33,65 +26,27 @@
       common-gpu-amd
     ]);
 
-  hardware = {
-    cpu.amd.updateMicrocode = true;
-
-    opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
-  };
-
   boot = {
     kernelPackages = pkgs.linuxPackages_6_9;
-    kernel = {
-      sysctl = {
-        # for Star Citizen
-        "vm.max_map_count" = 16777216;
-        "fs.file-max" = 524288;
-      };
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
     };
-    loader.systemd-boot.enable = true;
   };
 
   security = {
     pam = {
       u2f = {
         enable = true;
+        cue = true;
       };
     };
     polkit.enable = true;
   };
 
   networking = {
-    hostName = "jezrien";
+    hostName = hostname;
     search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
-    extraHosts = ''
-      127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
-    '';
-  };
-
-  services = {
-    printing.enable = true;
-
-    gnome = {
-      gnome-browser-connector.enable = true;
-      gnome-keyring.enable = true;
-    };
-    gvfs.enable = true;
-
-    # displayManager.sddm.enable = true;
-    # desktopManager.plasma6.enable = true;
-
-    xserver = {
-      enable = true;
-
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
   };
 
   nixpkgs = {
@@ -109,19 +64,6 @@
     ];
     config.allowUnfree = true;
   };
-
-  # This will add each flake input as a registry
-  # To make nix3 commands consistent with your flake
-
-  # This will additionally add your inputs to the system's legacy channels
-  # Making legacy nix commands consistent as well, awesome!
-  environment.etc =
-    lib.mapAttrs'
-    (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    })
-    config.nix.registry;
 
   nix = {
     gc = {
@@ -154,41 +96,116 @@
     };
   };
 
-  programs = {
-    corectrl.enable = true;
+  environment = {
+    # This will additionally add your inputs to the system's legacy channels
+    # Making legacy nix commands consistent as well, awesome!
+    etc =
+      lib.mapAttrs'
+      (name: value: {
+        name = "nix/path/${name}";
+        value.source = value.flake;
+      })
+      config.nix.registry;
 
-    dconf.enable = true;
+    systemPackages = with pkgs; [
+      git
+      neovim
+      nix-search-cli
+    ];
 
-    fish = {
-      enable = true;
-      vendor.functions.enable = true;
-    };
-
-    nix-ld.enable = true;
-  };
-
-  environment.systemPackages = with pkgs; [
-    git
-    home-manager
-    neovim
-  ];
-
-  environment.variables = {
-    VDPAU_DRIVER = "radeonsi";
-    LIBVA_DRIVER_NAME = "radeonsi";
-  };
-
-  users.users = {
-    dusty = {
-      isNormalUser = true;
-      initialPassword = "pass123"; # change after first login with `passwd`
-      home = "/home/dusty";
-      extraGroups = ["wheel" "networkmanager" "corectrl"];
-      shell = pkgs.fish;
+    variables = {
+      VDPAU_DRIVER = "radeonsi";
+      LIBVA_DRIVER_NAME = "radeonsi";
     };
   };
 
   time.timeZone = "America/Chicago";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
+
+  users.users = {
+    ${username} = {
+      isNormalUser = true;
+      initialPassword = "pass123"; # change after first login with `passwd`
+      home = "/home/${username}";
+      extraGroups = ["wheel" "networkmanager" "corectrl"];
+    };
+  };
+
+  home-manager = {
+    extraSpecialArgs = {
+      inherit inputs outputs hostname username;
+    };
+    users = {
+      ${username} = import ./home.nix;
+    };
+  };
+
+  roles.gaming.enable = true;
+  gaming = {
+    starcitizen.enable = true;
+    starsector.enable = true;
+  };
+
+  programs = {
+    corectrl.enable = true;
+    nix-ld.enable = true;
+
+    _1passwordz.enable = true;
+    firefoxz.enable = true;
+    fishz.enable = true;
+    gitz.enable = true;
+    keebs.enable = true;
+    kitty.enable = true;
+    nvim.enable = true;
+    obsz.enable = true;
+    starshipz.enable = true;
+    swappy.enable = true;
+    tmuxz.enable = true;
+  };
+
+  services = {
+    printing.enable = true;
+
+    gnome = {
+      gnome-browser-connector.enable = true;
+      gnome-keyring.enable = true;
+    };
+    gvfs.enable = true;
+
+    xserver = {
+      enable = true;
+
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
+
+    btrfs.enable = true;
+    easyeffectsz.enable = true;
+    pipewirez.enable = true;
+    ssh.enable = true;
+  };
+
+  wm = {
+    gnome.enable = true;
+    # hyprland.enable = true;
+    swayfx.enable = true;
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";

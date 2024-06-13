@@ -48,23 +48,31 @@
         inherit system;
         config.allowUnfree = true;
       });
+    roles = import ./roles;
   in {
     devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs;});
 
     overlays = import ./overlays {inherit inputs;};
-    nixosModules = import ./modules/nixos;
-    homeManagerModules = import ./modules/home-manager;
+    nixosModules = import ./modules;
 
     nixosConfigurations = {
       # primary/gaming desktop
       "jezrien" = nixpkgs.lib.nixosSystem {
         modules = [./hosts/jezrien];
-        specialArgs = {inherit inputs outputs;};
+        specialArgs = {
+          inherit inputs outputs roles;
+          hostname = "jezrien";
+          username = "dusty";
+        };
       };
-      # laptop
+      # razer blade stealth laptop
       "taln" = nixpkgs.lib.nixosSystem {
         modules = [./hosts/taln];
-        specialArgs = {inherit inputs outputs;};
+        specialArgs = {
+          inherit inputs outputs roles;
+          hostname = "taln";
+          username = "dusty";
+        };
       };
       # # homelab
       # tanavast = nixpkgs.lib.nixosSystem {
@@ -73,21 +81,21 @@
       # };
     };
 
-    homeConfigurations = {
-      "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          ./home/dusty/jezrien
-        ];
-      };
-      # "dusty@taln" = home-manager.lib.homeManagerConfiguration {
-      #   pkgs = pkgsFor.x86_64-linux;
-      #   extraSpecialArgs = {inherit inputs outputs;};
-      #   modules = [
-      #     ./home/dusty/taln
-      #   ];
-      # };
-    };
+    # homeConfigurations = {
+    #   "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
+    #     pkgs = pkgsFor.x86_64-linux;
+    #     extraSpecialArgs = {inherit inputs outputs;};
+    #     modules = [
+    #       ./home/dusty/jezrien
+    #     #     ];
+    #       };
+    # "dusty@taln" = home-manager.lib.homeManagerConfiguration {
+    #   pkgs = pkgsFor.x86_64-linux;
+    #   extraSpecialArgs = {inherit inputs outputs;};
+    #   modules = [
+    #     ./home/dusty/taln
+    #   ];
+    #   # };
+    # };
   };
 }

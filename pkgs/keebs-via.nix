@@ -2,9 +2,8 @@
   lib,
   stdenv,
   fetchurl,
-  # , fetchFromGitHub
 }: {
-  madnoodle-micro-pad = stdenv.mkDerivation rec {
+  madnoodle-micro-pad = stdenv.mkDerivation {
     name = "madNoodleMicroPad";
     version = "1.0";
 

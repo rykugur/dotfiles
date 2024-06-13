@@ -183,6 +183,11 @@
     };
   };
 
+  # nvim.enable = true;
+  # obs.enable = true;
+  # swappy.enable = true;
+  # swayfx.enable = true;
+
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
 
