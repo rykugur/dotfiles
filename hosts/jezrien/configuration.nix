@@ -203,7 +203,7 @@
 
   wm = {
     gnome.enable = true;
-    hyprland.enable = true;
+    # hyprland.enable = true;
     swayfx.enable = true;
   };
 
