@@ -14,7 +14,7 @@ in {
             pkgs.fd
             pkgs.lazygit
             pkgs.neovide
-            pkgs.nixfmt
+            pkgs.nixfmt-classic
             pkgs.nodejs # required for many plugins
           ];
 
