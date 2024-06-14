@@ -186,6 +186,7 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs outputs hostname username; };
     users = { ${username} = import ./home.nix; };
+    backupFileExtension = "bak";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

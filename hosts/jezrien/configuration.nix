@@ -130,6 +130,7 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs outputs hostname username; };
     users = { ${username} = import ./home.nix; };
+    backupFileExtension = "bak";
   };
 
   roles.gaming.enable = true;
