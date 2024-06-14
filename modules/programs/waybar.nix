@@ -3,6 +3,7 @@
   lib,
   pkgs,
   username,
+  hostname,
   ...
 }: let
   cfg = config.programs.waybarz;
@@ -19,7 +20,7 @@ in {
       };
       home.file = {
         ".config/waybar/config.json" = {
-          source = ./waybar.json;
+          source = ../../hosts/${hostname}/waybar.conf;
         };
         ".config/waybar/style.css" = {
           source = ../../../configs/waybar/style.css;
