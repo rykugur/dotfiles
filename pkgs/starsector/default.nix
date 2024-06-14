@@ -1,3 +1,1 @@
-{pkgs}: {
-  starsectorMods = pkgs.callPackage ./mods.nix {};
-}
+{ pkgs }: { starsectorMods = pkgs.callPackage ./mods.nix { }; }

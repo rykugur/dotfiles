@@ -1,12 +1,4 @@
-{
-  lib,
-  stdenv,
-  fetchFromGitHub,
-  cmake,
-  pkg-config,
-  glib,
-  check,
-}:
+{ lib, stdenv, fetchFromGitHub, cmake, pkg-config, glib, check, }:
 stdenv.mkDerivation rec {
   name = "n0la_rcon";
   version = "0.6";
@@ -18,10 +10,5 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-bHm6JeWmpg42VZQXikHl+BMx9zimRLBQWemTqOxyLhw=";
   };
 
-  buildInputs = [
-    cmake
-    pkg-config
-    glib
-    check
-  ];
+  buildInputs = [ cmake pkg-config glib check ];
 }

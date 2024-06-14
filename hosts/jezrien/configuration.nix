@@ -1,30 +1,18 @@
-{
-  inputs,
-  outputs,
-  lib,
-  config,
-  pkgs,
-  hostname,
-  username,
-  roles,
-  ...
-}: {
-  imports =
-    [
-      ./hardware-configuration.nix
+{ inputs, outputs, lib, config, pkgs, hostname, username, roles, ... }: {
+  imports = [
+    ./hardware-configuration.nix
 
-      inputs.home-manager.nixosModules.home-manager
+    inputs.home-manager.nixosModules.home-manager
 
-      inputs.nix-gaming.nixosModules.pipewireLowLatency
-      outputs.nixosModules
-      roles
-    ]
-    ++ (with inputs.nixos-hardware.nixosModules; [
-      common-pc
-      common-pc-ssd
-      common-cpu-amd-pstate
-      common-gpu-amd
-    ]);
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
+    outputs.nixosModules
+    roles
+  ] ++ (with inputs.nixos-hardware.nixosModules; [
+    common-pc
+    common-pc-ssd
+    common-cpu-amd-pstate
+    common-gpu-amd
+  ]);
 
   boot = {
     kernelPackages = pkgs.linuxPackages_6_9;
@@ -46,7 +34,7 @@
 
   networking = {
     hostName = hostname;
-    search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
+    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
   };
 
   nixpkgs = {
@@ -73,9 +61,10 @@
 
     optimise.automatic = true;
 
-    nixPath = ["/etc/nix/path"];
+    nixPath = [ "/etc/nix/path" ];
 
-    registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+    registry = (lib.mapAttrs (_: flake: { inherit flake; }))
+      ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
     settings = {
       # Enable flakes and new 'nix' command
@@ -99,19 +88,12 @@
   environment = {
     # This will additionally add your inputs to the system's legacy channels
     # Making legacy nix commands consistent as well, awesome!
-    etc =
-      lib.mapAttrs'
-      (name: value: {
-        name = "nix/path/${name}";
-        value.source = value.flake;
-      })
-      config.nix.registry;
+    etc = lib.mapAttrs' (name: value: {
+      name = "nix/path/${name}";
+      value.source = value.flake;
+    }) config.nix.registry;
 
-    systemPackages = with pkgs; [
-      git
-      neovim
-      nix-search-cli
-    ];
+    systemPackages = with pkgs; [ git neovim nix-search-cli ];
 
     variables = {
       VDPAU_DRIVER = "radeonsi";
@@ -141,17 +123,13 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/${username}";
-      extraGroups = ["wheel" "networkmanager" "corectrl"];
+      extraGroups = [ "wheel" "networkmanager" "corectrl" ];
     };
   };
 
   home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs hostname username;
-    };
-    users = {
-      ${username} = import ./home.nix;
-    };
+    extraSpecialArgs = { inherit inputs outputs hostname username; };
+    users = { ${username} = import ./home.nix; };
   };
 
   roles.gaming.enable = true;

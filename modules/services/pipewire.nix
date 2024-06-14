@@ -1,11 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}: let
-  cfg = config.services.pipewirez;
+{ config, lib, pkgs, username, ... }:
+let cfg = config.services.pipewirez;
 in {
   options = {
     services.pipewirez.enable = lib.mkEnableOption "Enable pipewire.";
@@ -32,6 +26,6 @@ in {
     # make pipewire realtime-capable
     security.rtkit.enable = true;
 
-    users.users.${username}.extraGroups = ["audio"];
+    users.users.${username}.extraGroups = [ "audio" ];
   };
 }

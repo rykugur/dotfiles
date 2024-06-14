@@ -1,8 +1,1 @@
-{
-  imports = [
-    ./gaming
-    ./programs
-    ./services
-    ./wm
-  ];
-}
+{ imports = [ ./gaming ./programs ./services ./wm ]; }

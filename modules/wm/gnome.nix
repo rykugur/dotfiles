@@ -1,11 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}: let
-  cfg = config.wm.gnome;
+{ config, lib, pkgs, username, ... }:
+let cfg = config.wm.gnome;
 in {
   options.wm.gnome.enable = lib.mkEnableOption "Enable Gnome WM.";
 
@@ -27,9 +21,7 @@ in {
 
     home-manager.users.${username} = {
       dconf.settings = {
-        "org/gnome/mutter" = {
-          auto-maximize = false;
-        };
+        "org/gnome/mutter" = { auto-maximize = false; };
         "org/gnome/desktop/wm/preferences" = {
           audible-bell = false;
           visual-bell = false;

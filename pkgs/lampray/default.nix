@@ -1,17 +1,5 @@
-{
-  lib,
-  stdenv,
-  fetchFromGitHub,
-  cmake,
-  makeWrapper,
-  ninja,
-  pkg-config,
-  curl,
-  SDL2,
-  lz4,
-  p7zip,
-  gnome,
-}:
+{ lib, stdenv, fetchFromGitHub, cmake, makeWrapper, ninja, pkg-config, curl
+, SDL2, lz4, p7zip, gnome, }:
 stdenv.mkDerivation rec {
   name = "lampray";
 
@@ -22,20 +10,9 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-yZiH3YCO1HlBpQhaVehTZF8UHwZ8zbqAqcX2aRijH20=";
   };
 
-  nativeBuildInputs = [
-    cmake
-    makeWrapper
-    ninja
-    pkg-config
-  ];
+  nativeBuildInputs = [ cmake makeWrapper ninja pkg-config ];
 
-  buildInputs = [
-    curl
-    SDL2
-    lz4
-    p7zip
-    gnome.zenity
-  ];
+  buildInputs = [ curl SDL2 lz4 p7zip gnome.zenity ];
 
   prePatch = ''
     sed -i 's|const lampString baseDataPath = "Lamp_Data/";|const lampString baseDataPath = ((std::string)std::getenv("HOME")) + "/.lamp/";|g' Lampray/Control/lampConfig.h
@@ -48,7 +25,7 @@ stdenv.mkDerivation rec {
     cp ./Lampray $out/bin/Lampray
 
     makeWrapper $out/bin/Lampray $out/bin/lampray_wrapper \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [lz4]}
+      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ lz4 ]}
 
     runHook postInstall
   '';

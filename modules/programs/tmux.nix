@@ -1,11 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}: let
-  cfg = config.programs.tmux;
+{ config, lib, pkgs, username, ... }:
+let cfg = config.programs.tmux;
 in {
   options.programs.tmuxz.enable = lib.mkEnableOption "Enable tmux";
 
@@ -23,9 +17,7 @@ in {
         prefix = "C-b";
         terminal = "screen-256color";
 
-        tmuxinator = {
-          enable = true;
-        };
+        tmuxinator = { enable = true; };
 
         extraConfig = ''
           set -g @catppuccin_flavour 'mocha' # latte, frappe, macchiato, mocha

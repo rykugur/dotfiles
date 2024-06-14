@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}: let
+{ config, lib, pkgs, username, ... }:
+let
   cfg = config.programs.firefoxz;
   plexDesktop = pkgs.makeDesktopItem {
     name = "Plex Media Player";
@@ -33,21 +28,17 @@
     '';
   };
 in {
-  options.programs.firefoxz.enable = lib.mkEnableOption "Enable firefox (wrapper) module";
+  options.programs.firefoxz.enable =
+    lib.mkEnableOption "Enable firefox (wrapper) module";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
-      home.packages = [
-        plexDesktop
-      ];
+      home.packages = [ plexDesktop ];
 
       programs.firefox = {
         enable = true;
-        package = pkgs.firefox.override {
-          cfg = {
-            enableGnomeExtensions = true;
-          };
-        };
+        package =
+          pkgs.firefox.override { cfg = { enableGnomeExtensions = true; }; };
 
         profiles = {
           default = {
@@ -62,41 +53,48 @@ in {
             search = {
               force = true;
               default = "Google";
-              order = ["Google"];
+              order = [ "Google" ];
               engines = {
                 "Nix Packages" = {
-                  urls = [
-                    {
-                      template = "https://search.nixos.org/packages";
-                      params = [
-                        {
-                          name = "type";
-                          value = "packages";
-                        }
-                        {
-                          name = "query";
-                          value = "{searchTerms}";
-                        }
-                      ];
-                    }
-                  ];
-                  icon = "''${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-                  definedAliases = ["@np"];
+                  urls = [{
+                    template = "https://search.nixos.org/packages";
+                    params = [
+                      {
+                        name = "type";
+                        value = "packages";
+                      }
+                      {
+                        name = "query";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }];
+                  icon =
+                    "''${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                  definedAliases = [ "@np" ];
                 };
                 "NixOS Wiki" = {
-                  urls = [{template = "https://nixos.wiki/index.php?search={searchTerms}";}];
+                  urls = [{
+                    template =
+                      "https://nixos.wiki/index.php?search={searchTerms}";
+                  }];
                   iconUpdateURL = "https://nixos.wiki/favicon.png";
                   updateInterval = 24 * 60 * 60 * 1000; # every day
-                  definedAliases = ["@nw"];
+                  definedAliases = [ "@nw" ];
                 };
                 "Home-manager Options" = {
-                  urls = [{template = "https://home-manager-options.extranix.com/?query={searchTerms}&release=master";}];
-                  iconUpdateURL = "https://home-manager-options.extranix.com/favicon.png";
+                  urls = [{
+                    template =
+                      "https://home-manager-options.extranix.com/?query={searchTerms}&release=master";
+                  }];
+                  iconUpdateURL =
+                    "https://home-manager-options.extranix.com/favicon.png";
                   updateInterval = 24 * 60 * 60 * 1000; # every day
-                  definedAliases = ["@hm"];
+                  definedAliases = [ "@hm" ];
                 };
                 "Bing".metaData.hidden = true;
-                "Google".metaData.alias = "@g"; # builtin engines only support specifying one additional alias
+                "Google".metaData.alias =
+                  "@g"; # builtin engines only support specifying one additional alias
               };
             };
           };
@@ -123,11 +121,11 @@ in {
           enable = true;
 
           defaultApplications = {
-            "text/html" = ["firefox.desktop"];
-            "x-scheme-handler/http" = ["firefox.desktop"];
-            "x-scheme-handler/https" = ["firefox.desktop"];
-            "x-scheme-handler/about" = ["firefox.desktop"];
-            "x-scheme-handler/unknown" = ["firefox.desktop"];
+            "text/html" = [ "firefox.desktop" ];
+            "x-scheme-handler/http" = [ "firefox.desktop" ];
+            "x-scheme-handler/https" = [ "firefox.desktop" ];
+            "x-scheme-handler/about" = [ "firefox.desktop" ];
+            "x-scheme-handler/unknown" = [ "firefox.desktop" ];
           };
         };
       };

@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  username,
-  ...
-}: let
-  cfg = config.programs.gitz;
+{ config, lib, username, ... }:
+let cfg = config.programs.gitz;
 in {
   options.programs.gitz.enable = lib.mkEnableOption "enable git module";
 

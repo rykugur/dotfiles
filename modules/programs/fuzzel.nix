@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  username,
-  ...
-}: let
-  cfg = config.programs.fuzzelz;
+{ config, lib, username, ... }:
+let cfg = config.programs.fuzzelz;
 in {
   options.programs.fuzzelz.enable = lib.mkEnableOption "Enable fuzzel";
 

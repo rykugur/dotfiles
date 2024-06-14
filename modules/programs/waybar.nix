@@ -1,12 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  hostname,
-  ...
-}: let
-  cfg = config.programs.waybarz;
+{ config, lib, pkgs, username, hostname, ... }:
+let cfg = config.programs.waybarz;
 in {
   options.programs.waybarz.enable = lib.mkEnableOption "enable waybar";
 
@@ -15,7 +8,7 @@ in {
       programs.waybar = {
         enable = true;
         package = pkgs.waybar.overrideAttrs (oldAttrs: {
-          mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
+          mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
         });
       };
       home.file = {

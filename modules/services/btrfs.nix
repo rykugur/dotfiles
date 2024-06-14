@@ -1,13 +1,7 @@
-{
-  config,
-  lib,
-  ...
-}: let
-  cfg = config.services.btrfs;
+{ config, lib, ... }:
+let cfg = config.services.btrfs;
 in {
-  options = {
-    services.btrfs.enable = lib.mkEnableOption "Enable BTRFS";
-  };
+  options = { services.btrfs.enable = lib.mkEnableOption "Enable BTRFS"; };
 
   config = lib.mkIf cfg.enable {
     services = {
@@ -19,7 +13,7 @@ in {
       btrfs.autoScrub = {
         enable = true;
         interval = "monthly";
-        fileSystems = ["/"];
+        fileSystems = [ "/" ];
       };
     };
   };

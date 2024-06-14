@@ -1,13 +1,5 @@
-{
-  config,
-  lib,
-  inputs,
-  pkgs,
-  username,
-  hostname,
-  ...
-}: let
-  cfg = config.wm.hyprland;
+{ config, lib, inputs, pkgs, username, hostname, ... }:
+let cfg = config.wm.hyprland;
 in {
   options.wm.hyprland.enable = lib.mkEnableOption "Enable hyprland.";
 
@@ -18,9 +10,7 @@ in {
       xwayland.enable = true;
     };
 
-    xdg.portal = {
-      enable = true;
-    };
+    xdg.portal = { enable = true; };
 
     # environment.systemPackages = with pkgs; [
     #   xdg-desktop-portal-gtk
