@@ -17,7 +17,6 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.formatting.prettier" },
 		{ import = "lazyvim.plugins.extras.lang.json" },
 		{ import = "lazyvim.plugins.extras.ui.mini-animate" },
-		{ import = "lazyvim.plugins.extras.editor.navic" },
 		{ import = "lazyvim.plugins.extras.test.core" },
 		{ import = "lazyvim.plugins.extras.util.dot" },
 		-- import/override with your plugins
