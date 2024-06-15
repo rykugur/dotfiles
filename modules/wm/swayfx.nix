@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  inputs,
-  username,
-  ...
-}: let
+{ config, lib, inputs, username, ... }:
+let
   cfg = config.wm.swayfx;
   swayfx = inputs.swayfx.packages.x86_64-linux.default;
 in {
@@ -13,7 +8,8 @@ in {
   config = lib.mkIf cfg.enable {
     programs.sway = {
       enable = true;
-      package = swayfx.overrideAttrs (old: {passthru.providedSessions = ["sway"];});
+      package =
+        swayfx.overrideAttrs (old: { passthru.providedSessions = [ "sway" ]; });
       wrapperFeatures.gtk = true;
     };
 

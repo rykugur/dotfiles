@@ -31,71 +31,67 @@
     # nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+    let
+      inherit (self) outputs;
 
-    lib = nixpkgs.lib // home-manager.lib;
+      lib = nixpkgs.lib // home-manager.lib;
 
-    systems = ["x86_64-linux"];
-    forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-    pkgsFor = lib.genAttrs systems (system:
-      import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      });
-    roles = import ./roles;
-  in {
-    devShells = forEachSystem (pkgs: import ./shell.nix {inherit pkgs;});
+      systems = [ "x86_64-linux" ];
+      forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
+      pkgsFor = lib.genAttrs systems (system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        });
+      roles = import ./roles;
+    in {
+      devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs; });
 
-    overlays = import ./overlays {inherit inputs;};
-    nixosModules = import ./modules;
+      overlays = import ./overlays { inherit inputs; };
+      nixosModules = import ./modules;
 
-    nixosConfigurations = {
-      # primary/gaming desktop
-      "jezrien" = nixpkgs.lib.nixosSystem {
-        modules = [./hosts/jezrien];
-        specialArgs = {
-          inherit inputs outputs roles;
-          hostname = "jezrien";
-          username = "dusty";
+      nixosConfigurations = {
+        # primary/gaming desktop
+        "jezrien" = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/jezrien ];
+          specialArgs = {
+            inherit inputs outputs roles;
+            hostname = "jezrien";
+            username = "dusty";
+          };
         };
-      };
-      # razer blade stealth laptop
-      "taln" = nixpkgs.lib.nixosSystem {
-        modules = [./hosts/taln];
-        specialArgs = {
-          inherit inputs outputs roles;
-          hostname = "taln";
-          username = "dusty";
+        # razer blade stealth laptop
+        "taln" = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/taln ];
+          specialArgs = {
+            inherit inputs outputs roles;
+            hostname = "taln";
+            username = "dusty";
+          };
         };
+        # # homelab
+        # tanavast = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./hosts/tanavast/configuration.nix];
+        #   specialArgs = { inherit inputs outputs; };
+        # };
       };
-      # # homelab
-      # tanavast = nixpkgs.lib.nixosSystem {
-      #   modules = [ ./hosts/tanavast/configuration.nix];
-      #   specialArgs = { inherit inputs outputs; };
+
+      # homeConfigurations = {
+      #   "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
+      #     pkgs = pkgsFor.x86_64-linux;
+      #     extraSpecialArgs = {inherit inputs outputs;};
+      #     modules = [
+      #       ./home/dusty/jezrien
+      #     #     ];
+      #       };
+      # "dusty@taln" = home-manager.lib.homeManagerConfiguration {
+      #   pkgs = pkgsFor.x86_64-linux;
+      #   extraSpecialArgs = {inherit inputs outputs;};
+      #   modules = [
+      #     ./home/dusty/taln
+      #   ];
+      #   # };
       # };
     };
-
-    # homeConfigurations = {
-    #   "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
-    #     pkgs = pkgsFor.x86_64-linux;
-    #     extraSpecialArgs = {inherit inputs outputs;};
-    #     modules = [
-    #       ./home/dusty/jezrien
-    #     #     ];
-    #       };
-    # "dusty@taln" = home-manager.lib.homeManagerConfiguration {
-    #   pkgs = pkgsFor.x86_64-linux;
-    #   extraSpecialArgs = {inherit inputs outputs;};
-    #   modules = [
-    #     ./home/dusty/taln
-    #   ];
-    #   # };
-    # };
-  };
 }

@@ -1,4 +1,4 @@
-{pkgs}:
+{ pkgs }:
 pkgs.writeShellScriptBin "hyprland-suspend" ''
   swayidle -w \
   timeout 120 ' swaylock ' \

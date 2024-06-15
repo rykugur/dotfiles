@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  cfg = config.gaming.gamemode;
+{ config, lib, pkgs, ... }:
+let cfg = config.gaming.gamemode;
 in {
   options.gaming.gamemode.enable = lib.mkEnableOption "Enable Gamemode";
 

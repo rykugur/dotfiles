@@ -1,8 +1,1 @@
-{
-  imports = [
-    ./gbar.nix
-    ./gnome.nix
-    ./hyprland.nix
-    ./swayfx.nix
-  ];
-}
+{ imports = [ ./gbar.nix ./gnome.nix ./hyprland.nix ./swayfx.nix ]; }

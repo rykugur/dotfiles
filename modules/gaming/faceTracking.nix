@@ -1,10 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}: let
+{ config, lib, pkgs, username, ... }:
+let
   cfg = config.programs.faceTracking;
   faceTracking = pkgs.writeShellScriptBin "faceTracking" ''
     aitrack &disown
@@ -17,11 +12,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
-      home.packages = [
-        pkgs.aitrack
-        pkgs.opentrack
-        faceTracking
-      ];
+      home.packages = [ pkgs.aitrack pkgs.opentrack faceTracking ];
     };
   };
 }

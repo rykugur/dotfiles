@@ -7,7 +7,7 @@ return {
 		{ "<leader>rp", "<Plug>RestNvimPreview", desc = "Preview cURL command" },
 		{ "<leader>rl", "<Plug>RestNvimLast", desc = "Re-run the last request" },
 	},
-	config = {
+	opts = {
 		-- Open request results in a horizontal split
 		result_split_horizontal = false,
 		-- Keep the http file buffer above|left when split horizontal|vertical

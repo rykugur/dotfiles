@@ -1,7 +1,7 @@
 # This file defines overlays
-{inputs, ...}: {
+{ inputs, ... }: {
   # This one brings our custom packages from the 'pkgs' directory
-  additions = final: _prev: import ../pkgs {pkgs = final;};
+  additions = final: _prev: import ../pkgs { pkgs = final; };
 
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.
@@ -11,12 +11,10 @@
     # ...
     # });
     super-slicer = prev.super-slicer.overrideAttrs (o: {
-      patches =
-        (o.patches or [])
-        ++ [
-          # can be removed once https://github.com/NixOS/nixpkgs/pull/298652 is merged
-          ./patches/super-slicer.patch
-        ];
+      patches = (o.patches or [ ]) ++ [
+        # can be removed once https://github.com/NixOS/nixpkgs/pull/298652 is merged
+        ./patches/super-slicer.patch
+      ];
     });
   };
 

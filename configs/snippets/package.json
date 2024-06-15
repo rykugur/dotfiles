@@ -10,6 +10,12 @@
           "typescriptreact"
         ],
         "path": "./javascript-typescript.jsonc"
+      },
+      {
+        "language": [
+          "lua"
+        ],
+        "path": "./lua.json"
       }
     ]
   }

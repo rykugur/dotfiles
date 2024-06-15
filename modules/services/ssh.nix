@@ -1,14 +1,7 @@
-{
-  config,
-  lib,
-  username,
-  ...
-}: let
-  cfg = config.services.ssh;
+{ config, lib, username, ... }:
+let cfg = config.services.ssh;
 in {
-  options = {
-    services.ssh.enable = lib.mkEnableOption "Enable SSH.";
-  };
+  options = { services.ssh.enable = lib.mkEnableOption "Enable SSH."; };
 
   config = lib.mkIf cfg.enable {
     services.openssh = {
@@ -31,18 +24,12 @@ in {
           matchBlocks = {
             "jezrien taln tanavast" = {
               forwardAgent = true;
-              extraOptions = {
-                "IdentityAgent" = "~/.1password/agent.sock";
-              };
+              extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
             };
 
-            "quadra" = {
-              user = "quadra";
-            };
+            "quadra" = { user = "quadra"; };
             "github.com" = {
-              extraOptions = {
-                "IdentityAgent" = "~/.1password/agent.sock";
-              };
+              extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
             };
           };
         };

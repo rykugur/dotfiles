@@ -1,11 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{
-  outputs,
-  pkgs,
-  username,
-  ...
-}: {
+{ outputs, pkgs, username, ... }: {
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -27,9 +22,7 @@
       # Workaround for https://github.com/nix-community/home-manager/issues/2942
       allowUnfreePredicate = _: true;
       # workaround for obsidian
-      permittedInsecurePackages = [
-        "electron-25.9.0"
-      ];
+      permittedInsecurePackages = [ "electron-25.9.0" ];
     };
   };
 
@@ -117,7 +110,7 @@
     iftop
     # TODO: and these VVV
     fira
-    (nerdfonts.override {fonts = ["FiraCode" "FiraMono"];})
+    (nerdfonts.override { fonts = [ "FiraCode" "FiraMono" ]; })
 
     catppuccin-gtk
     matcha-gtk-theme
@@ -153,9 +146,9 @@
     theme = {
       name = "Catppuccin-Mocha-Compact-Blue-Dark";
       package = pkgs.catppuccin-gtk.override {
-        accents = ["blue"];
+        accents = [ "blue" ];
         size = "compact";
-        tweaks = ["rimless"];
+        tweaks = [ "rimless" ];
         variant = "mocha";
       };
     };

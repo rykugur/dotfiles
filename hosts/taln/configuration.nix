@@ -1,32 +1,21 @@
-{
-  inputs,
-  outputs,
-  lib,
-  config,
-  pkgs,
-  hostname,
-  username,
-  ...
-}: {
-  imports =
-    [
-      ./hardware-configuration.nix
+{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
+  imports = [
+    ./hardware-configuration.nix
 
-      inputs.home-manager.nixosModules.home-manager
+    inputs.home-manager.nixosModules.home-manager
 
-      inputs.nix-gaming.nixosModules.pipewireLowLatency
-      outputs.nixosModules
-    ]
-    ++ (with inputs.nixos-hardware.nixosModules; [
-      common-pc
-      common-pc-laptop-ssd
-      common-cpu-intel
-      common-gpu-nvidia
-    ]);
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
+    outputs.nixosModules
+  ] ++ (with inputs.nixos-hardware.nixosModules; [
+    common-pc
+    common-pc-laptop-ssd
+    common-cpu-intel
+    common-gpu-nvidia
+  ]);
 
   hardware = {
     nvidia = {
-      modesetting.enable = true; #required
+      modesetting.enable = true; # required
 
       powerManagement = {
         enable = true;
@@ -60,7 +49,7 @@
 
     openrazer = {
       enable = true;
-      users = ["${username}"];
+      users = [ "${username}" ];
     };
   };
 
@@ -73,17 +62,13 @@
   };
 
   security = {
-    pam = {
-      u2f = {
-        enable = true;
-      };
-    };
+    pam = { u2f = { enable = true; }; };
     polkit.enable = true;
   };
 
   networking = {
     hostName = hostname;
-    search = ["pihole.lan" "pihole" "8.8.8.8" "8.8.4.4"];
+    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
     networkmanager.enable = true;
   };
 
@@ -103,13 +88,9 @@
       };
     };
 
-    blueman = {
-      enable = true;
-    };
+    blueman = { enable = true; };
 
-    logind = {
-      lidSwitch = "suspend";
-    };
+    logind = { lidSwitch = "suspend"; };
 
     # Enable touchpad support (enabled default in most desktopManager).
     # services.xserver.libinput.enable = true;
@@ -139,9 +120,10 @@
 
     optimise.automatic = true;
 
-    nixPath = ["/etc/nix/path"];
+    nixPath = [ "/etc/nix/path" ];
 
-    registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+    registry = (lib.mapAttrs (_: flake: { inherit flake; }))
+      ((lib.filterAttrs (_: lib.isType "flake")) inputs);
 
     settings = {
       # Enable flakes and new 'nix' command
@@ -162,28 +144,17 @@
     };
   };
 
-  programs = {
-    nix-ld.enable = true;
-  };
+  programs = { nix-ld.enable = true; };
 
   environment = {
-    etc =
-      lib.mapAttrs'
-      (name: value: {
-        name = "nix/path/${name}";
-        value.source = value.flake;
-      })
-      config.nix.registry;
+    etc = lib.mapAttrs' (name: value: {
+      name = "nix/path/${name}";
+      value.source = value.flake;
+    }) config.nix.registry;
 
     systemPackages = with pkgs;
-      [
-        git
-        neovim
-        nix-search-cli
-      ]
-      ++ [
-        (import ../../scripts/hyprland-suspend.nix {inherit pkgs;})
-      ];
+      [ git neovim nix-search-cli ]
+      ++ [ (import ../../scripts/hyprland-suspend.nix { inherit pkgs; }) ];
   };
 
   time.timeZone = "America/Chicago";
@@ -208,17 +179,14 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
-      extraGroups = ["wheel" "networkmanager" "openrazer"];
+      extraGroups = [ "wheel" "networkmanager" "openrazer" ];
     };
   };
 
   home-manager = {
-    extraSpecialArgs = {
-      inherit inputs outputs hostname username;
-    };
-    users = {
-      ${username} = import ./home.nix;
-    };
+    extraSpecialArgs = { inherit inputs outputs hostname username; };
+    users = { ${username} = import ./home.nix; };
+    backupFileExtension = "bak";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

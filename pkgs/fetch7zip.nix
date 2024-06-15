@@ -1,20 +1,12 @@
-{
-  fetchurl,
-  pkgs,
-  stdenv,
-  ...
-}: {
-  url,
-  sha256,
-}:
-stdenv.mkDerivation
-{
+{ fetchurl, pkgs, stdenv, ... }:
+{ url, sha256, }:
+stdenv.mkDerivation {
   name = "fetch7zip";
-  src = fetchurl {inherit url sha256;};
+  src = fetchurl { inherit url sha256; };
 
-  nativeBuildInputs = [pkgs.p7zip];
+  nativeBuildInputs = [ pkgs.p7zip ];
 
-  phases = ["installPhase"];
+  phases = [ "installPhase" ];
 
   installPhase = ''
     mkdir -p $out

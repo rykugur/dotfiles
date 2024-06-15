@@ -1,11 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  username,
-  ...
-}: let
-  cfg = config.programs.fishz;
+{ config, lib, pkgs, username, ... }:
+let cfg = config.programs.fishz;
 in {
   options.programs.fishz.enable = lib.mkEnableOption "Enable fish.";
 

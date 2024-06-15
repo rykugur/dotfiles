@@ -1,19 +1,10 @@
-{
-  pkgs,
-  lib,
-  stdenv,
-  fetchzip,
-  fetch7zip,
-}: let
-  mkStarsectorMod = {
-    src,
-    name,
-    deps ? [],
-  }:
+{ pkgs, lib, stdenv, fetchzip, fetch7zip, }:
+let
+  mkStarsectorMod = { src, name, deps ? [ ], }:
     stdenv.mkDerivation {
       inherit name src;
 
-      phases = ["installPhase"];
+      phases = [ "installPhase" ];
 
       installPhase = ''
         runHook preInstall
@@ -28,7 +19,8 @@ in rec {
   lazylib = mkStarsectorMod {
     name = "lazylib";
     src = fetchzip {
-      url = "https://github.com/LazyWizard/lazylib/releases/download/2.8b/LazyLib.2.8b.zip";
+      url =
+        "https://github.com/LazyWizard/lazylib/releases/download/2.8b/LazyLib.2.8b.zip";
       sha256 = "sha256-0HypoB/ZW/1HdHJMTxEktnbSBWQBjvuxAgoq6c2uzbs=";
     };
   };
@@ -36,7 +28,8 @@ in rec {
   magiclib = mkStarsectorMod {
     name = "magiclib";
     src = fetchzip {
-      url = "https://github.com/MagicLibStarsector/MagicLib/releases/download/1.4.3/MagicLib.zip";
+      url =
+        "https://github.com/MagicLibStarsector/MagicLib/releases/download/1.4.3/MagicLib.zip";
       sha256 = "sha256-UaQbJ9EsxZr597CmUOIZeKi9mx2Y85IxqIo7y6gCPTc=";
     };
   };
@@ -44,35 +37,38 @@ in rec {
   nexerelin = mkStarsectorMod {
     name = "nexerelin";
     src = fetchzip {
-      url = "https://github.com/Histidine91/Nexerelin/releases/download/v0.11.1b/Nexerelin_0.11.1b.zip";
+      url =
+        "https://github.com/Histidine91/Nexerelin/releases/download/v0.11.1b/Nexerelin_0.11.1b.zip";
       sha256 = "sha256-S7M4fAgwl4IxTPGle9RkzD00ElWNYGN+BLPaJMZLWoQ=";
     };
-    deps = [lazylib magiclib];
+    deps = [ lazylib magiclib ];
   };
 
   graphicslib = mkStarsectorMod {
     name = "graphicslib";
     src = fetch7zip {
-      url = "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";
+      url =
+        "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";
       sha256 = "sha256-LwLO5A0Af6vKJcnGWk9rylzhvwolWCJV5aqoaY+6ra4=";
     };
-    deps = [lazylib];
+    deps = [ lazylib ];
   };
 
-  mkModsDirDrv = mods: let
-    recursiveDeps = modDrv: [modDrv] ++ map recursiveDeps modDrv.deps;
-    modDrvs = lib.unique (lib.flatten (map recursiveDeps mods));
-  in {
-    modsDirDrv = stdenv.mkDerivation {
-      name = "starsector-mods";
-      preferLocalBuild = true;
-      buildCommand = ''
-        mkdir -p $out
-        cd $out
-        for modDrv in ${toString modDrvs}; do
-          ln -s $modDrv/* .
-        done
-      '';
+  mkModsDirDrv = mods:
+    let
+      recursiveDeps = modDrv: [ modDrv ] ++ map recursiveDeps modDrv.deps;
+      modDrvs = lib.unique (lib.flatten (map recursiveDeps mods));
+    in {
+      modsDirDrv = stdenv.mkDerivation {
+        name = "starsector-mods";
+        preferLocalBuild = true;
+        buildCommand = ''
+          mkdir -p $out
+          cd $out
+          for modDrv in ${toString modDrvs}; do
+            ln -s $modDrv/* .
+          done
+        '';
+      };
     };
-  };
 }

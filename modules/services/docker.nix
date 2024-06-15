@@ -1,14 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  cfg = config.services.docker;
+{ config, lib, pkgs, ... }:
+let cfg = config.services.docker;
 in {
-  options = {
-    services.docker.enable = lib.mkEnableOption "Enable docker";
-  };
+  options = { services.docker.enable = lib.mkEnableOption "Enable docker"; };
 
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {
@@ -20,11 +13,8 @@ in {
     # TODO: pass these args to docker
     # --runtime=nvidia -e NVIDIA_DRIVER_CAPABILITIES=compute,utility -e NVIDIA_VISIBLE_DEVICES=al
 
-    environment.systemPackages = with pkgs; [
-      docker
-      docker-compose
-    ];
+    environment.systemPackages = with pkgs; [ docker docker-compose ];
 
-    users.users."dusty".extraGroups = ["docker"];
+    users.users."dusty".extraGroups = [ "docker" ];
   };
 }
