@@ -1,4 +1,4 @@
-{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
+{ inputs, outputs, lib, config, pkgs, hostname, username, roles, ... }: {
   imports = [
     ./hardware-configuration.nix
 
@@ -6,6 +6,7 @@
 
     inputs.nix-gaming.nixosModules.pipewireLowLatency
     outputs.nixosModules
+    roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-laptop-ssd
@@ -72,30 +73,6 @@
     networkmanager.enable = true;
   };
 
-  services = {
-    printing.enable = true;
-
-    gnome = {
-      gnome-browser-connector.enable = true;
-      gnome-keyring.enable = true;
-    };
-    gvfs.enable = true;
-
-    xserver = {
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-
-    blueman = { enable = true; };
-
-    logind = { lidSwitch = "suspend"; };
-
-    # Enable touchpad support (enabled default in most desktopManager).
-    # services.xserver.libinput.enable = true;
-  };
-
   nixpkgs = {
     overlays = [
       # If you want to use overlays exported from other flakes:
@@ -144,8 +121,6 @@
     };
   };
 
-  programs = { nix-ld.enable = true; };
-
   environment = {
     etc = lib.mapAttrs' (name: value: {
       name = "nix/path/${name}";
@@ -160,18 +135,20 @@
   time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
+    };
   };
 
   users.users = {
@@ -187,6 +164,61 @@
     extraSpecialArgs = { inherit inputs outputs hostname username; };
     users = { ${username} = import ./home.nix; };
     backupFileExtension = "bak";
+  };
+
+  roles.gaming.enable = true;
+  gaming = {
+    starcitizen.enable = true;
+    starsector.enable = true;
+  };
+
+  programs = {
+    nix-ld.enable = true;
+
+    _1passwordz.enable = true;
+    firefoxz.enable = true;
+    fishz.enable = true;
+    gitz.enable = true;
+    keebs.enable = true;
+    kitty.enable = true;
+    nvim.enable = true;
+    obsz.enable = true;
+    starshipz.enable = true;
+    swappy.enable = true;
+    tmuxz.enable = true;
+  };
+
+  services = {
+    printing.enable = true;
+
+    gnome = {
+      gnome-browser-connector.enable = true;
+      gnome-keyring.enable = true;
+    };
+    gvfs.enable = true;
+
+    xserver = {
+      enable = true;
+
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
+
+    btrfs.enable = true;
+    # easyeffectsz.enable = true;
+    pipewirez.enable = true;
+    ssh.enable = true;
+
+    blueman = { enable = true; };
+    logind = { lidSwitch = "suspend"; };
+  };
+
+  wm = {
+    gnome.enable = true;
+    # hyprland.enable = true;
+    swayfx.enable = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

@@ -46,7 +46,7 @@
         });
       roles = import ./roles;
     in {
-      devShells = forEachSystem (pkgs: import ./shell.nix { inherit pkgs; });
+      devShells = forEachSystem (pkgs: import ./shells { inherit pkgs; });
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules;
