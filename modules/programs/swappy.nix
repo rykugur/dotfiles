@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.programs.swappy;
+let cfg = config.modules.programs.swappy;
 in {
-  options.programs.swappy.enable = lib.mkEnableOption "Enable swappy";
+  options.modules.programs.swappy.enable = lib.mkEnableOption "Enable swappy";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

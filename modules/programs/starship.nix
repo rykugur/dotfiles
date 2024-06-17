@@ -1,7 +1,8 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.programs.starshipz;
+let cfg = config.modules.programs.starship;
 in {
-  options.programs.starshipz.enable = lib.mkEnableOption "Enable starship";
+  options.modules.programs.starship.enable =
+    lib.mkEnableOption "Enable starship";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

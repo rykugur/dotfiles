@@ -2,7 +2,7 @@ abbr --add --global nb "nix build"
 
 abbr --add --global nd "nix develop ~/.dotfiles#default --command fish"
 abbr --add --global ndr "nix develop ~/.dotfiles#react --command fish"
-alias nvim "nix develop ~/.dotfiles#nvim"
+alias ndvim "nix develop ~/.dotfiles#nvim"
 
 abbr --add --global nr "nix repl"
 abbr --add --global nrn "nix repl --file '<nixpkgs>'"

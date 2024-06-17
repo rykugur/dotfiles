@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.services.easyeffectsz;
+let cfg = config.modules.services.easyeffects;
 in {
-  options.services.easyeffectsz.enable =
+  options.modules.services.easyeffects.enable =
     lib.mkEnableOption "Enable easyeffects";
 
   config = lib.mkIf cfg.enable {

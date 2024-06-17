@@ -134,26 +134,40 @@
   };
 
   roles.gaming.enable = true;
-  gaming = {
-    starcitizen.enable = true;
-    starsector.enable = true;
+  # TODO: move this to gaming role? V
+  modules = {
+    gaming = {
+      discord.enable = true;
+      starcitizen.enable = true;
+      starsector.enable = true;
+      wine.enable = true;
+    };
+
+    programs = {
+      _1password.enable = true;
+      firefox.enable = true;
+      fish.enable = true;
+      git.enable = true;
+      keebs.enable = true;
+      kitty.enable = true;
+      nvim.enable = true;
+      obs.enable = true;
+      starship.enable = true;
+      swappy.enable = true;
+      tmux.enable = true;
+    };
+
+    services = {
+      btrfs.enable = true;
+      easyeffects.enable = true;
+      pipewire.enable = true;
+      ssh.enable = true;
+    };
   };
 
   programs = {
     corectrl.enable = true;
     nix-ld.enable = true;
-
-    _1passwordz.enable = true;
-    firefoxz.enable = true;
-    fishz.enable = true;
-    gitz.enable = true;
-    keebs.enable = true;
-    kitty.enable = true;
-    nvim.enable = true;
-    obsz.enable = true;
-    starshipz.enable = true;
-    swappy.enable = true;
-    tmuxz.enable = true;
   };
 
   services = {
@@ -173,11 +187,6 @@
         variant = "";
       };
     };
-
-    btrfs.enable = true;
-    easyeffectsz.enable = true;
-    pipewirez.enable = true;
-    ssh.enable = true;
   };
 
   wm = {

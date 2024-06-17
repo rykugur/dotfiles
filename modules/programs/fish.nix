@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.programs.fishz;
+let cfg = config.modules.programs.fish;
 in {
-  options.programs.fishz.enable = lib.mkEnableOption "Enable fish.";
+  options.modules.programs.fish.enable = lib.mkEnableOption "Enable fish.";
 
   config = lib.mkIf cfg.enable {
     programs.fish = {

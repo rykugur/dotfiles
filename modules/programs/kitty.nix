@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.programs.kitty;
+let cfg = config.modules.programs.kitty;
 in {
-  options.programs.kitty.enable = lib.mkEnableOption "Enable kitty";
+  options.modules.programs.kitty.enable = lib.mkEnableOption "Enable kitty";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, hostname, ... }:
-let cfg = config.programs.waybarz;
+let cfg = config.modules.programs.waybar;
 in {
-  options.programs.waybarz.enable = lib.mkEnableOption "enable waybar";
+  options.modules.programs.waybar.enable = lib.mkEnableOption "enable waybar";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

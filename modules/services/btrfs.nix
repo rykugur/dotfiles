@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.services.btrfs;
+let cfg = config.modules.services.btrfs;
 in {
-  options = { services.btrfs.enable = lib.mkEnableOption "Enable BTRFS"; };
+  options.modules.services.btrfs.enable = lib.mkEnableOption "Enable BTRFS";
 
   config = lib.mkIf cfg.enable {
     services = {

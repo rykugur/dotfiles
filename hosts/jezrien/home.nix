@@ -75,18 +75,17 @@
     font-awesome
 
     # TODO: find a place for these VVV
-    discord
-    betterdiscordctl
     gamescope
     lutris
     mangohud
-    protontricks
-    protonup-ng
-    protonup-qt
-    steamcmd
-    steam-tui
-    wineWowPackages.waylandFull
-    winetricks
+    # protontricks
+    # protonup-ng
+    # protonup-qt
+    super-slicer-latest
+    # steamcmd
+    # steam-tui
+    # wineWowPackages.waylandFull
+    # winetricks
     n0la_rcon
     dxvk
     vkd3d
@@ -96,7 +95,7 @@
     fzf
     grc
     jq
-    kitty
+    # kitty
     lm_sensors
     pciutils
     ripgrep

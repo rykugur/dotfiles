@@ -1,7 +1,8 @@
 { config, lib, username, ... }:
-let cfg = config.programs._1passwordz;
+let cfg = config.modules.programs._1password;
 in {
-  options.programs._1passwordz.enable = lib.mkEnableOption "Enable 1password";
+  options.modules.programs._1password.enable =
+    lib.mkEnableOption "Enable 1password";
 
   config = lib.mkIf cfg.enable {
     programs._1password.enable = true;

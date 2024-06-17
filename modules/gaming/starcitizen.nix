@@ -1,10 +1,10 @@
 { config, lib, inputs, username, ... }:
-let cfg = config.gaming.starcitizen;
+let cfg = config.modules.gaming.starcitizen;
 in {
-  options = { gaming.starcitizen.enable = lib.mkEnableOption "Star Citizen"; };
+  options.modules.gaming.starcitizen.enable = lib.mkEnableOption "Star Citizen";
 
   config = lib.mkIf cfg.enable {
-    programs.faceTracking.enable = true;
+    modules.programs.faceTracking.enable = true;
 
     boot.kernel.sysctl = {
       "vm.max_map_count" = 16777216;

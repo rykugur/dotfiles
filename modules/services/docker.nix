@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.services.docker;
+let cfg = config.modules.services.docker;
 in {
-  options = { services.docker.enable = lib.mkEnableOption "Enable docker"; };
+  options.modules.services.docker.enable = lib.mkEnableOption "Enable docker";
 
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {

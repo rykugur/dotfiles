@@ -1,10 +1,10 @@
-{ config, lib, pkgs, username, ... }:
+{ config, lib, ... }:
 let cfg = config.roles.gaming;
 in {
-  options.roles.gaming = { enable = lib.mkEnableOption "Enable gaming role."; };
+  options.roles.gaming.enable = lib.mkEnableOption "Enable gaming role.";
 
   config = lib.mkIf cfg.enable {
-    gaming = {
+    modules.gaming = {
       gamemode.enable = true;
       steam.enable = true;
     };

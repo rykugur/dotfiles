@@ -1,10 +1,8 @@
 { config, lib, pkgs, ... }:
-let cfg = config.services.libvirtd;
+let cfg = config.modules.services.libvirtd;
 in {
-  options = {
-    services.libvirtd.enable =
-      lib.mkEnableOption "enable libvirtd virtualization.";
-  };
+  options.modules.services.libvirtd.enable =
+    lib.mkEnableOption "enable libvirtd virtualization.";
 
   config = lib.mkIf cfg.enable {
     virtualisation.libvirtd.enable = true;

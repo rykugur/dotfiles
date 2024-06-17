@@ -1,6 +1,6 @@
 { config, lib, pkgs, username, ... }:
 let
-  cfg = config.gaming.starsector;
+  cfg = config.modules.gaming.starsector;
   # leaving this for now; dunno wtf I was doing with it but it was un-used
   # modsDrv = with pkgs.starsectorMods.starsectorMods;
   #   mkModDirDrv [
@@ -10,7 +10,7 @@ let
   #     graphicslib
   #   ];
 in {
-  options.gaming.starsector = {
+  options.modules.gaming.starsector = {
     enable = lib.mkEnableOption "Enable Starsector.";
     mods.enable = lib.mkEnableOption "Enable starsector mods.";
   };

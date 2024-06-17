@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.gaming.gamemode;
+let cfg = config.modules.gaming.gamemode;
 in {
-  options.gaming.gamemode.enable = lib.mkEnableOption "Enable Gamemode";
+  options.modules.gaming.gamemode.enable = lib.mkEnableOption "Enable Gamemode";
 
   config = lib.mkIf cfg.enable {
     programs.gamemode = {

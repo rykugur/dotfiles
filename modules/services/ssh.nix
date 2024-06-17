@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.services.ssh;
+let cfg = config.modules.services.ssh;
 in {
-  options = { services.ssh.enable = lib.mkEnableOption "Enable SSH."; };
+  options.modules.services.ssh.enable = lib.mkEnableOption "Enable SSH.";
 
   config = lib.mkIf cfg.enable {
     services.openssh = {

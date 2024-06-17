@@ -1,9 +1,11 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.programs.tmux;
+let
+  cfg = config.modules.programs.tmux;
+  tmuxCfg = config.programs.tmux;
 in {
-  options.programs.tmuxz.enable = lib.mkEnableOption "Enable tmux";
+  options.modules.programs.tmux.enable = lib.mkEnableOption "Enable tmux";
 
-  config = lib.mkIf config.programs.tmuxz.enable {
+  config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
       programs.tmux = {
         enable = true;
@@ -31,14 +33,20 @@ in {
           bind -N "Select pane above the active pane" l select-pane -U
           bind -N "Select pane to the right of the active pane" \; select-pane -R
 
-          bind -r -N "Resize the pane left by ${toString cfg.resizeAmount}" \
-            j resize-pane -L ${toString cfg.resizeAmount}
-          bind -r -N "Resize the pane down by ${toString cfg.resizeAmount}" \
-            k resize-pane -D ${toString cfg.resizeAmount}
-          bind -r -N "Resize the pane up by ${toString cfg.resizeAmount}" \
-            l resize-pane -U ${toString cfg.resizeAmount}
-          bind -r -N "Resize the pane right by ${toString cfg.resizeAmount}" \
-            \; resize-pane -R ${toString cfg.resizeAmount}
+          bind -r -N "Resize the pane left by ${
+            toString tmuxCfg.resizeAmount
+          }" \
+            j resize-pane -L ${toString tmuxCfg.resizeAmount}
+          bind -r -N "Resize the pane down by ${
+            toString tmuxCfg.resizeAmount
+          }" \
+            k resize-pane -D ${toString tmuxCfg.resizeAmount}
+          bind -r -N "Resize the pane up by ${toString tmuxCfg.resizeAmount}" \
+            l resize-pane -U ${toString tmuxCfg.resizeAmount}
+          bind -r -N "Resize the pane right by ${
+            toString tmuxCfg.resizeAmount
+          }" \
+            \; resize-pane -R ${toString tmuxCfg.resizeAmount}
 
           # bind r to re-source config
           # bind-key r source-file ~/.config/tmux/tmux.conf

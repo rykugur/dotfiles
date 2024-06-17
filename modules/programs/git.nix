@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.programs.gitz;
+let cfg = config.modules.programs.git;
 in {
-  options.programs.gitz.enable = lib.mkEnableOption "enable git module";
+  options.modules.programs.git.enable = lib.mkEnableOption "enable git module";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

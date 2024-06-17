@@ -1,14 +1,13 @@
 { config, lib, pkgs, username, ... }:
 let
-  cfg = config.programs.faceTracking;
+  cfg = config.modules.programs.faceTracking;
   faceTracking = pkgs.writeShellScriptBin "faceTracking" ''
     aitrack &disown
     opentrack &disown
   '';
 in {
-  options = {
-    programs.faceTracking.enable = lib.mkEnableOption "Enable AI face tracking";
-  };
+  options.modules.programs.faceTracking.enable =
+    lib.mkEnableOption "Enable AI face tracking";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

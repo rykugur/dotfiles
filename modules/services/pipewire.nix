@@ -1,9 +1,8 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.services.pipewirez;
+let cfg = config.modules.services.pipewire;
 in {
-  options = {
-    services.pipewirez.enable = lib.mkEnableOption "Enable pipewire.";
-  };
+  options.modules.services.pipewire.enable =
+    lib.mkEnableOption "Enable pipewire.";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [

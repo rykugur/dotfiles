@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.programs.fuzzelz;
+let cfg = config.modules.programs.fuzzel;
 in {
-  options.programs.fuzzelz.enable = lib.mkEnableOption "Enable fuzzel";
+  options.modules.programs.fuzzel.enable = lib.mkEnableOption "Enable fuzzel";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

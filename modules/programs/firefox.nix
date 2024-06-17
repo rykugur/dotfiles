@@ -1,6 +1,6 @@
 { config, lib, pkgs, username, ... }:
 let
-  cfg = config.programs.firefoxz;
+  cfg = config.modules.programs.firefox;
   plexDesktop = pkgs.makeDesktopItem {
     name = "Plex Media Player";
     desktopName = "Plex Media Player";
@@ -28,7 +28,7 @@ let
     '';
   };
 in {
-  options.programs.firefoxz.enable =
+  options.modules.programs.firefox.enable =
     lib.mkEnableOption "Enable firefox (wrapper) module";
 
   config = lib.mkIf cfg.enable {

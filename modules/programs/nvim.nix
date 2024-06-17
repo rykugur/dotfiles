@@ -1,7 +1,7 @@
 { lib, config, username, ... }:
-let cfg = config.programs.nvim;
+let cfg = config.modules.programs.nvim;
 in {
-  options = { programs.nvim.enable = lib.mkEnableOption "Enable neovim"; };
+  options.modules.programs.nvim.enable = lib.mkEnableOption "Enable neovim";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

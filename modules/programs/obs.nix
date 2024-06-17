@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.programs.obsz;
+let cfg = config.modules.programs.obs;
 in {
-  options.programs.obsz.enable = lib.mkEnableOption "Enable OBS.";
+  options.modules.programs.obs.enable = lib.mkEnableOption "Enable OBS.";
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
       programs.obs-studio = {

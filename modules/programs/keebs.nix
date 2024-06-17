@@ -1,11 +1,9 @@
 # mechanical keyboards
 { config, lib, pkgs, username, ... }:
-let cfg = config.programs.keebs;
+let cfg = config.modules.programs.keebs;
 in {
-  options = {
-    programs.keebs.enable =
-      lib.mkEnableOption "Enable keebs (mechanical keyboards) module.";
-  };
+  options.modules.programs.keebs.enable =
+    lib.mkEnableOption "Enable keebs (mechanical keyboards) module.";
 
   config = lib.mkIf cfg.enable {
     hardware.keyboard.qmk.enable = true;
