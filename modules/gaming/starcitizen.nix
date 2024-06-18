@@ -1,4 +1,4 @@
-{ config, lib, inputs, username, ... }:
+{ config, lib, ... }:
 let cfg = config.modules.gaming.starcitizen;
 in {
   options.modules.gaming.starcitizen.enable = lib.mkEnableOption "Star Citizen";
@@ -14,8 +14,5 @@ in {
     networking.extraHosts = ''
       127.0.0.1 modules-cdn.eac-prod.on.epicgames.com
     '';
-
-    # home-manager.users.${username}.home.packages = [
-    # ];
   };
 }
