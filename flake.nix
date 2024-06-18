@@ -24,6 +24,8 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    luarocks-nix.url = "github:nix-community/luarocks-nix";
+
     # rust-overlay.url = "github:oxalica/rust-overlay";
 
     # Shameless plug: looking for a way to nixify your themes and make
@@ -46,7 +48,8 @@
         });
       roles = import ./roles;
     in {
-      devShells = forEachSystem (pkgs: import ./shells { inherit pkgs; });
+      devShells =
+        forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules;

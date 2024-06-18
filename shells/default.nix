@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ inputs, pkgs, ... }: {
 
   default = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
@@ -33,6 +33,19 @@
 
     shellHook = ''
       nvim
+      exit
+    '';
+  };
+
+  lua = pkgs.mkShell {
+    nativeBuildInputs = [
+      inputs.luarocks-nix.packages.${pkgs.system}.default
+      pkgs.lua
+      pkgs.nurl
+    ];
+
+    shellHook = ''
+      fish
       exit
     '';
   };

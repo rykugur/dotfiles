@@ -13,6 +13,10 @@ in {
         settings = {
           palette = "catppuccin_${flavor}";
           hostname = { ssh_symbol = ""; };
+          nix_shell = {
+            format = "[$name]($style)";
+            heuristic = true;
+          };
         } // builtins.fromTOML
           (builtins.readFile ../../configs/starship/starship-pure.toml)
           // builtins.fromTOML (builtins.readFile (pkgs.fetchFromGitHub {
