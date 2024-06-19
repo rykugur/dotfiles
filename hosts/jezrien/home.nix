@@ -118,6 +118,7 @@
     # TODO: and these VVV
     cliphist
     pywal
+    ulauncher
     wev
     wl-clipboard
     wl-clipboard-x11

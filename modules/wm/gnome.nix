@@ -21,7 +21,10 @@ in {
 
     home-manager.users.${username} = {
       dconf.settings = {
-        "org/gnome/mutter" = { auto-maximize = false; };
+        "org/gnome/mutter" = {
+          auto-maximize = false;
+          check-alive-timeout = "30000";
+        };
         "org/gnome/desktop/wm/preferences" = {
           audible-bell = false;
           visual-bell = false;
