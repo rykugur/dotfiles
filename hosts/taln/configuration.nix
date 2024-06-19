@@ -169,10 +169,7 @@
   roles.gaming.enable = true;
 
   modules = {
-    gaming = {
-      starcitizen.enable = true;
-      starsector.enable = true;
-    };
+    gaming = { starsector.enable = true; };
 
     programs = {
       _1password.enable = true;
@@ -193,6 +190,12 @@
       # easyeffects.enable = true;
       pipewire.enable = true;
       ssh.enable = true;
+    };
+
+    wm = {
+      gnome.enable = true;
+      # hyprland.enable = true;
+      swayfx.enable = true;
     };
   };
 
@@ -218,12 +221,6 @@
 
     blueman = { enable = true; };
     logind = { lidSwitch = "suspend"; };
-  };
-
-  wm = {
-    gnome.enable = true;
-    # hyprland.enable = true;
-    swayfx.enable = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

@@ -38,13 +38,14 @@
   };
 
   lua = pkgs.mkShell {
-    nativeBuildInputs = [
+    packages = [
       inputs.luarocks-nix.packages.${pkgs.system}.default
       pkgs.lua
       pkgs.nurl
     ];
 
     shellHook = ''
+      eval $(luarocks path --bin)
       fish
       exit
     '';
