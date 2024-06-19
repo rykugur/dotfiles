@@ -45,6 +45,7 @@
     ];
 
     shellHook = ''
+      eval $(luarocks path --bin)
       fish
       exit
     '';
