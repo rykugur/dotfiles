@@ -63,7 +63,12 @@
   };
 
   security = {
-    pam = { u2f = { enable = true; }; };
+    pam = {
+      u2f = {
+        enable = true;
+        cue = true;
+      };
+    };
     polkit.enable = true;
   };
 
