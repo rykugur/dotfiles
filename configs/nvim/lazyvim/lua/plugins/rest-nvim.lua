@@ -1,6 +1,6 @@
 return {
 	"rest-nvim/rest.nvim",
-	dependencies = { { "nvim-lua/plenary.nvim" } },
+	dependencies = { { "nvim-lua/plenary.nvim" }, { "vhyrro/luarocks.nvim" } },
 	ft = "http",
 	keys = {
 		{ "<leader>rr", "<Plug>RestNvim", desc = "Run request under cursor" },

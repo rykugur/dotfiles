@@ -29,7 +29,7 @@
 
   nvim = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
-    nativeBuildInputs = with pkgs; [ cmake gcc nodejs ];
+    nativeBuildInputs = with pkgs; [ cmake gcc nodejs luaPackages.lua ];
 
     shellHook = ''
       nvim
