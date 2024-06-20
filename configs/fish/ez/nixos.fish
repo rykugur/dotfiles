@@ -21,6 +21,10 @@ complete -c nd -s lua -l lua -a lua
 complete -c nd -s r -l react -a react
 complete -c nd -s n -l nvim -a nvim
 
+alias ndl "nd --lua"
+alias ndn "nd --nvim"
+alias ndr "nd --react"
+
 abbr --add --global nr "nix repl"
 abbr --add --global nrn "nix repl --file '<nixpkgs>'"
 abbr --add --global nr. "nix repl --file ."
