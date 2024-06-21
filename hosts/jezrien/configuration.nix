@@ -163,6 +163,13 @@
       pipewire.enable = true;
       ssh.enable = true;
     };
+
+    wm = {
+      gnome.enable = true;
+      # hyprland.enable = true;
+      swayfx.enable = true;
+    };
+
   };
 
   programs = {
@@ -187,12 +194,6 @@
         variant = "";
       };
     };
-  };
-
-  wm = {
-    gnome.enable = true;
-    # hyprland.enable = true;
-    swayfx.enable = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

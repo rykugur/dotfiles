@@ -1,7 +1,7 @@
 { config, lib, inputs, pkgs, username, ... }:
-let cfg = config.modules.programs.gbarz;
+let cfg = config.modules.wm.gbar;
 in {
-  options.modules.programs.gbarz.enable = lib.mkEnableOption "Enable gbar.";
+  options.modules.wm.gbar.enable = lib.mkEnableOption "Enable gbar.";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

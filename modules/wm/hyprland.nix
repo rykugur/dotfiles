@@ -1,7 +1,7 @@
 { config, lib, inputs, pkgs, username, hostname, ... }:
-let cfg = config.wm.hyprland;
+let cfg = config.modules.wm.hyprland;
 in {
-  options.wm.hyprland.enable = lib.mkEnableOption "Enable hyprland.";
+  options.modules.wm.hyprland.enable = lib.mkEnableOption "Enable hyprland.";
 
   config = lib.mkIf cfg.enable {
     programs.hyprland = {

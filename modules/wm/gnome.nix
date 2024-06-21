@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.wm.gnome;
+let cfg = config.modules.wm.gnome;
 in {
-  options.wm.gnome.enable = lib.mkEnableOption "Enable Gnome WM.";
+  options.modules.wm.gnome.enable = lib.mkEnableOption "Enable Gnome WM.";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
