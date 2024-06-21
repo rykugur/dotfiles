@@ -1,6 +1,6 @@
 { lib, stdenv, fetchFromGitHub, cmake, makeWrapper, ninja, pkg-config, curl
 , SDL2, lz4, p7zip, gnome, }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   name = "lampray";
 
   src = fetchFromGitHub {

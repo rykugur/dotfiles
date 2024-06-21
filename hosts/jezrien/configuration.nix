@@ -155,6 +155,7 @@
       starship.enable = true;
       swappy.enable = true;
       tmux.enable = true;
+      wezterm.enable = true;
     };
 
     services = {

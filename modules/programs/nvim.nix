@@ -1,4 +1,4 @@
-{ lib, config, username, ... }:
+{ config, lib, username, ... }:
 let cfg = config.modules.programs.nvim;
 in {
   options.modules.programs.nvim.enable = lib.mkEnableOption "Enable neovim";
@@ -13,6 +13,7 @@ in {
           packages = [
             pkgs.fd
             pkgs.lazygit
+            pkgs.lua # required for some plugins
             pkgs.neovide
             pkgs.nixfmt-classic
             pkgs.nodejs # required for many plugins

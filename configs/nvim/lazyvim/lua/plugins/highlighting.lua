@@ -8,6 +8,7 @@ return {
 				"http",
 				"json",
 				"lua",
+				"markdown",
 			},
 		},
 	},

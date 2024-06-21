@@ -32,8 +32,6 @@ config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
 config.font = wezterm.font_with_fallback({
-	"Iosevka Nerd Font",
-	"JetBrainsMono Nerd Font",
 	"FiraCode Nerd Font Mono",
 	"EnvyCodeR Nerd Font Mono",
 	"feather",
@@ -41,10 +39,10 @@ config.font = wezterm.font_with_fallback({
 config.font_size = 12.0
 
 config.window_padding = {
-	left = 8,
-	right = 8,
-	top = 8,
-	bottom = 2,
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
 }
 
 config.color_scheme = "Catppuccin Mocha"

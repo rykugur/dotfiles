@@ -25,9 +25,14 @@ in {
           auto-maximize = false;
           check-alive-timeout = "30000";
         };
+        "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
         "org/gnome/desktop/wm/preferences" = {
           audible-bell = false;
           visual-bell = false;
+        };
+        "org/gnome/desktop/peripherals/keyboard" = {
+          numlock-state = true;
+          remember-numlock-state = true;
         };
       };
     };

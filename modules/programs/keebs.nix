@@ -14,11 +14,14 @@ in {
 
     home-manager.users.${username} = {
       home = {
-        packages = [ pkgs.keebs-via.madnoodle-micro-pad ];
+        packages = [ pkgs.keebs-via.madnoodle-micro-pad pkgs.qmk ];
 
         file = {
           ".via-config-files/noodlepad-micro" = {
             source = pkgs.keebs-via.madnoodle-micro-pad;
+          };
+          ".via-config-files/doio-kb16-01.json" = {
+            source = ../../configs/misc/kb16-01.json;
           };
         };
       };

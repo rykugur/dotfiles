@@ -13,5 +13,6 @@
     ./swappy.nix
     ./tmux.nix
     ./waybar.nix
+    ./wezterm.nix
   ];
 }
