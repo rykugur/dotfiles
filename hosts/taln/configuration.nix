@@ -19,7 +19,7 @@
       modesetting.enable = true; # required
 
       powerManagement = {
-        enable = true;
+        enable = false;
         finegrained = false;
       };
 
