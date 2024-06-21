@@ -28,7 +28,7 @@ config.keys = {
 	},
 }
 
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = true
 
 config.font = wezterm.font_with_fallback({
@@ -48,8 +48,6 @@ config.window_padding = {
 config.color_scheme = "Catppuccin Mocha"
 
 config.window_background_opacity = 0.8
-
-config.enable_wayland = false
 
 -- and finally, return the configuration to wezterm
 return config
