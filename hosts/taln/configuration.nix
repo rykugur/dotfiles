@@ -64,6 +64,7 @@
 
   security = {
     pam = {
+      services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
         cue = true;
@@ -208,7 +209,10 @@
     };
   };
 
-  programs = { nix-ld.enable = true; };
+  programs = {
+    nix-ld.enable = true;
+    seahorse.enable = true;
+  };
 
   services = {
     printing.enable = true;

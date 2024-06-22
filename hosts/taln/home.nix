@@ -1,8 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { inputs, outputs, pkgs, username, ... }: {
-  imports = [ inputs.catppuccin.homeManagerModules.catppuccin ];
-
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -139,26 +137,26 @@
     size = 16;
   };
 
-  gtk = {
-    enable = true;
-    catppuccin = {
-      enable = true;
-      flavor = "mocha";
-      accent = "blue";
-
-      cursor = {
-        enable = true;
-        flavor = "mocha";
-        accent = "blue";
-      };
-
-      icon = {
-        enable = true;
-        flavor = "mocha";
-        accent = "blue";
-      };
-    };
-  };
+  # gtk = {
+  #   enable = true;
+  #   catppuccin = {
+  #     enable = true;
+  #     flavor = "mocha";
+  #     accent = "blue";
+  #
+  #     cursor = {
+  #       enable = true;
+  #       flavor = "mocha";
+  #       accent = "blue";
+  #     };
+  #
+  #     icon = {
+  #       enable = true;
+  #       flavor = "mocha";
+  #       accent = "blue";
+  #     };
+  #   };
+  # };
 
   # TODO: find a spot for this VVV
   # gtk = {
