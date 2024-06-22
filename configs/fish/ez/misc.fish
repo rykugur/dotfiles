@@ -83,8 +83,8 @@ else if which -a bpytop &>/dev/null
     alias top bpytop
 end
 
-if which -a nvim &>/dev/null
-    alias vim nvim
+if which -a bat &>/dev/null
+    alias cat bat
 end
 
 alias whatthecommit "curl -s https://whatthecommit.com/index.txt"

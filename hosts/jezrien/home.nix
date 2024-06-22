@@ -144,7 +144,7 @@
     font.name = "FiraCode Nerd Font Mono 10";
 
     theme = {
-      name = "Catppuccin-Mocha-Compact-Blue-Dark";
+      name = "catppuccin-mocha-compact-blue-dark";
       package = pkgs.catppuccin-gtk.override {
         accents = [ "blue" ];
         size = "compact";
