@@ -18,29 +18,28 @@ in {
         font.name = "FiraCode Nerd Font Mono 10";
 
         theme = {
-          name = "catppuccin-mocha-compact-blue-dark";
-          package = pkgs.catppuccin-gtk.override {
-            accents = [ "blue" ];
-            size = "compact";
-            tweaks = [ "rimless" ];
-            variant = "mocha";
+          name = "Adementary-dark";
+          package = pkgs.adementary-theme;
+          # name = "catppuccin-mocha-compact-blue-dark";
+          # package = pkgs.catppuccin-gtk.override {
+          #   accents = [ "blue" ];
+          #   size = "compact";
+          #   tweaks = [ "rimless" ];
+          #   variant = "mocha";
+          # };
+        };
+
+        cursorTheme = {
+          name = "catppuccin-mocha-blue-cursors";
+          package = pkgs.catppuccin-cursors.mochaBlue;
+        };
+
+        iconTheme = {
+          name = "Papirus-Dark";
+          package = pkgs.catppuccin-papirus-folders.override {
+            flavor = "mocha";
+            accent = "blue";
           };
-        };
-
-        cursorTheme = let package = pkgs.catppuccin-cursors;
-        in {
-          # name = "Bibata-Modern-Ice";
-          # package = pkgs.bibata-cursors;
-          name = package.outputName;
-          inherit package;
-        };
-
-        iconTheme = let package = pkgs.catppuccin-papirus-folders;
-        in {
-          # name = "Vimix-dark";
-          # package = pkgs.vimix-icon-theme;
-          name = package.outputName;
-          inherit package;
         };
 
         gtk2.extraConfig = ''
