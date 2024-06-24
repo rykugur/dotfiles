@@ -24,6 +24,7 @@
 
   security = {
     pam = {
+      services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
         cue = true;
@@ -133,7 +134,9 @@
     backupFileExtension = "bak";
   };
 
+  roles.desktop.enable = true;
   roles.gaming.enable = true;
+
   # TODO: move this to gaming role? V
   modules = {
     gaming = {
@@ -166,9 +169,9 @@
     };
 
     wm = {
-      gnome.enable = true;
-      # hyprland.enable = true;
-      swayfx.enable = true;
+      # gnome.enable = true;
+      hyprland.enable = true;
+      # swayfx.enable = true;
     };
 
   };
@@ -176,6 +179,7 @@
   programs = {
     corectrl.enable = true;
     nix-ld.enable = true;
+    seahorse.enable = true;
   };
 
   services = {
@@ -189,6 +193,7 @@
 
     xserver = {
       enable = true;
+      displayManager.startx.enable = true;
 
       xkb = {
         layout = "us";

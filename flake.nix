@@ -20,6 +20,7 @@
     };
     swayfx.url = "github:WillPower3309/swayfx";
     gBar.url = "github:scorpion-26/gBar";
+    ags.url = "github:Aylur/ags";
 
     nix-gaming.url = "github:fufexan/nix-gaming";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";

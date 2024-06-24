@@ -4,6 +4,8 @@ in {
   options.modules.wm.gnome.enable = lib.mkEnableOption "Enable Gnome WM.";
 
   config = lib.mkIf cfg.enable {
+    modules.wm.gtk.enable = true;
+
     environment.systemPackages = with pkgs; [
       gnome.gnome-tweaks
 

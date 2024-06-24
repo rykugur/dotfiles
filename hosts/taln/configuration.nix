@@ -5,6 +5,7 @@
     inputs.home-manager.nixosModules.home-manager
 
     inputs.nix-gaming.nixosModules.pipewireLowLatency
+
     outputs.nixosModules
     roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
@@ -63,6 +64,7 @@
 
   security = {
     pam = {
+      services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
         cue = true;
@@ -170,7 +172,10 @@
     backupFileExtension = "bak";
   };
 
-  roles.gaming.enable = true;
+  roles = {
+    desktop.enable = true;
+    gaming.enable = true;
+  };
 
   modules = {
     gaming = { starsector.enable = true; };
@@ -197,13 +202,17 @@
     };
 
     wm = {
+      ags.enable = true;
       gnome.enable = true;
-      # hyprland.enable = true;
+      hyprland.enable = true;
       swayfx.enable = true;
     };
   };
 
-  programs = { nix-ld.enable = true; };
+  programs = {
+    nix-ld.enable = true;
+    seahorse.enable = true;
+  };
 
   services = {
     printing.enable = true;

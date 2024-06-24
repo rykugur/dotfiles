@@ -1,6 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ outputs, pkgs, username, ... }: {
+{ inputs, outputs, pkgs, username, ... }: {
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -137,44 +137,65 @@
     size = 16;
   };
 
+  # gtk = {
+  #   enable = true;
+  #   catppuccin = {
+  #     enable = true;
+  #     flavor = "mocha";
+  #     accent = "blue";
+  #
+  #     cursor = {
+  #       enable = true;
+  #       flavor = "mocha";
+  #       accent = "blue";
+  #     };
+  #
+  #     icon = {
+  #       enable = true;
+  #       flavor = "mocha";
+  #       accent = "blue";
+  #     };
+  #   };
+  # };
+
   # TODO: find a spot for this VVV
-  gtk = {
-    enable = true;
-
-    font.name = "FiraCode Nerd Font Mono 10";
-
-    theme = {
-      name = "Catppuccin-Mocha-Compact-Blue-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "blue" ];
-        size = "compact";
-        tweaks = [ "rimless" ];
-        variant = "mocha";
-      };
-    };
-
-    cursorTheme = {
-      name = "Bibata-Modern-Ice";
-      package = pkgs.bibata-cursors;
-    };
-
-    iconTheme = {
-      name = "Vimix-dark";
-      package = pkgs.vimix-icon-theme;
-    };
-
-    gtk3.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
-
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
-  };
+  # gtk = {
+  #   enable = true;
+  #
+  #   font.name = "FiraCode Nerd Font Mono 10";
+  #
+  #   theme = {
+  #     name = "catppuccin-mocha-compact-blue-dark";
+  #     package = pkgs.catppuccin-gtk.override {
+  #       accents = [ "blue" ];
+  #       size = "compact";
+  #       tweaks = [ "rimless" ];
+  #       variant = "mocha";
+  #     };
+  #   };
+  #
+  #   cursorTheme = {
+  #     name = "Bibata-Modern-Ice";
+  #     package = pkgs.bibata-cursors;
+  #   };
+  #
+  #   iconTheme = {
+  #     name = "Vimix-dark";
+  #     package = pkgs.vimix-icon-theme;
+  #   };
+  #
+  #   gtk3.extraConfig = {
+  #     Settings = ''
+  #       gtk-application-prefer-dark-theme=1
+  #     '';
+  #   };
+  #
+  #   gtk4.extraConfig = {
+  #     Settings = ''
+  #       gtk-application-prefer-dark-theme=1
+  #     '';
+  #   };
+  # };
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
