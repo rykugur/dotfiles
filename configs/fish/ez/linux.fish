@@ -15,9 +15,6 @@ abbr --add --global sc.list 'systemctl list-unit-files'
 abbr --add --global sc.enabled 'systemctl list-unit-files | grep enabled'
 abbr --add --global ssc 'sudo systemctl'
 
-### bspwm
-abbr --add --global bspq bspc query
-
 ### docker
 abbr --add --global dc docker-compose
 abbr --add --global dcb docker-compose build
@@ -38,5 +35,4 @@ abbr --add --global tmat tmux a -t
 abbr --add --global tmnew tmux new
 abbr --add --global tms tmux new -s
 abbr --add --global tmls tmux ls
-abbr --add --global tmx tmuxinator
-abbr --add --global tmxs tmuxinator start
+abbr --add --global tmf tmuxifier
