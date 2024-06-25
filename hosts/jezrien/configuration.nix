@@ -36,6 +36,7 @@
   networking = {
     hostName = hostname;
     search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+    networkmanager.enable = true;
   };
 
   nixpkgs = {
