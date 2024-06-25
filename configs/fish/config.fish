@@ -28,6 +28,10 @@ if test -d $HOME/.local/fish/functions
     set -gx fish_function_path $HOME/.local/fish/functions $fish_function_path
 end
 
-eval (tmuxifier init - fish)
+if which -a tmuxifier &>/dev/null
+    eval (tmuxifier init - fish)
+end
 
-zoxide init fish | source
+if which -a zoxide &>/dev/null
+    zoxide init fish | source
+end
