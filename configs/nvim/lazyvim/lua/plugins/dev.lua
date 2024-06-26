@@ -33,71 +33,74 @@ return {
       },
     },
   },
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "haydenmeade/neotest-jest",
-      "marilari88/neotest-vitest",
-    },
-    keys = {
-      {
-        "<leader>tl",
-        function()
-          require("neotest").run.run_last()
-        end,
-        desc = "Run Last Test",
-      },
-      {
-        "<leader>tL",
-        function()
-          require("neotest").run.run_last({ strategy = "dap" })
-        end,
-        desc = "Debug Last Test",
-      },
-      {
-        "<leader>tw",
-        "<cmd>lua require('neotest').run.run({ jestCommand = 'jest --watch ' })<cr>",
-        desc = "Run Watch",
-      },
-    },
-    opts = function(_, opts)
-      table.insert(
-        opts.adapters,
-        require("neotest-jest")({
-          jestCommand = "yarn jest --",
-          jestConfigFile = "custom.jest.config.ts",
-          env = { CI = true },
-          cwd = function()
-            return vim.fn.getcwd()
-          end,
-        })
-      )
-      table.insert(opts.adapters, require("neotest-vitest"))
-    end,
-  },
-  -- unsure if this is needed for work projects; leaving for now
   -- {
-  --   "stevearc/conform.nvim",
-  --   opts = {
-  --     formatters = {
-  --       prettier = {
-  --         require_cwd = true,
-  --         cwd = require("conform.util").root_file({
-  --           ".prettierrc",
-  --           ".prettierrc.json",
-  --           ".prettierrc.yml",
-  --           ".prettierrc.yaml",
-  --           ".prettierrc.json5",
-  --           ".prettierrc.js",
-  --           ".prettierrc.cjs",
-  --           ".prettierrc.mjs",
-  --           ".prettierrc.toml",
-  --           "prettier.config.js",
-  --           "prettier.config.cjs",
-  --           "prettier.config.mjs",
-  --         }),
-  --       },
+  --   "nvim-neotest/neotest",
+  --   dependencies = {
+  --     "haydenmeade/neotest-jest",
+  --     "marilari88/neotest-vitest",
+  --   },
+  --   keys = {
+  --     {
+  --       "<leader>tl",
+  --       function()
+  --         require("neotest").run.run_last()
+  --       end,
+  --       desc = "Run Last Test",
+  --     },
+  --     {
+  --       "<leader>tL",
+  --       function()
+  --         require("neotest").run.run_last({ strategy = "dap" })
+  --       end,
+  --       desc = "Debug Last Test",
+  --     },
+  --     {
+  --       "<leader>tw",
+  --       "<cmd>lua require('neotest').run.run({ jestCommand = 'jest --watch ' })<cr>",
+  --       desc = "Run Watch",
   --     },
   --   },
+  --   opts = function(_, opts)
+  --     table.insert(
+  --       opts.adapters,
+  --       require("neotest-jest")({
+  --         jestCommand = "yarn jest --",
+  --         jestConfigFile = "custom.jest.config.ts",
+  --         env = { CI = true },
+  --         cwd = function()
+  --           return vim.fn.getcwd()
+  --         end,
+  --       })
+  --     )
+  --     table.insert(opts.adapters, require("neotest-vitest"))
+  --   end,
   -- },
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        javascript = { { "prettierd", "prettier" } },
+        typescript = { { "prettierd", "prettier" } },
+      },
+      formatters = {
+        prettier = {
+          require_cwd = true,
+          -- cwd = require("conform.util").root_file({
+          --   ".prettierrc",
+          --   ".prettierrc.json",
+          --   ".prettierrc.yml",
+          --   ".prettierrc.yaml",
+          --   ".prettierrc.json5",
+          --   ".prettierrc.js",
+          --   ".prettierrc.cjs",
+          --   ".prettierrc.mjs",
+          --   ".prettierrc.toml",
+          --   "prettier.config.js",
+          --   "prettier.config.cjs",
+          --   "prettier.config.mjs",
+          -- }),
+        },
+      },
+    },
+  },
 }
