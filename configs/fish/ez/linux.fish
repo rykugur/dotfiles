@@ -32,7 +32,6 @@ abbr --add --global hypr.log tail -Fn 999 /tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE
 ### tmux
 abbr --add --global tm tmux
 abbr --add --global tmat tmux a -t
-abbr --add --global tmnew tmux new
-abbr --add --global tms tmux new -s
+abbr --add --global tmn tmux new -s
 abbr --add --global tmls tmux ls
 abbr --add --global tmf tmuxifier
