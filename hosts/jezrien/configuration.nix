@@ -33,6 +33,23 @@
     polkit.enable = true;
   };
 
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+
   networking = {
     hostName = hostname;
     search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
@@ -95,7 +112,7 @@
       value.source = value.flake;
     }) config.nix.registry;
 
-    systemPackages = with pkgs; [ git neovim nix-search-cli ];
+    systemPackages = with pkgs; [ git neovim nix-search-cli polkit_gnome ];
 
     variables = {
       VDPAU_DRIVER = "radeonsi";
@@ -138,7 +155,6 @@
   roles.desktop.enable = true;
   roles.gaming.enable = true;
 
-  # TODO: move this to gaming role? V
   modules = {
     gaming = {
       discord.enable = true;

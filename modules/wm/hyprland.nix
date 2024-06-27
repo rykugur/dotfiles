@@ -29,6 +29,7 @@ in {
         swappy
         swayidle
         swaylock
+        ulauncher
         wlogout
       ];
 
