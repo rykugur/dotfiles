@@ -28,7 +28,8 @@
 
   nvim = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
-    packages = with pkgs; [ cargo cmake gcc nodejs luaPackages.lua ];
+    # packages required to build some plugins
+    packages = with pkgs; [ cargo cmake gcc go nodejs luaPackages.lua ];
 
     shellHook = ''
       nvim

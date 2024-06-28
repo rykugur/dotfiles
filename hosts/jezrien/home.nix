@@ -44,17 +44,10 @@
     n0la_rcon
     dxvk
     vkd3d
-    # TODO: and these VVV
     warp-terminal
-    # TODO: and these VVV
     fira
     (nerdfonts.override { fonts = [ "FiraCode" "FiraMono" ]; })
-
-    # catppuccin-gtk
-    # matcha-gtk-theme
-    # papirus-icon-theme
-    # volantes-cursors
-    # TODO: and these VVV
+    arandr
     cliphist
     pywal
     ulauncher

@@ -27,6 +27,7 @@ in {
           source ~/.dotfiles/configs/fish/config.fish
         '';
       };
+      programs.fzf.enable = true;
     };
   };
 }

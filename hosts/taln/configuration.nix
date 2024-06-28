@@ -202,7 +202,6 @@
     };
 
     wm = {
-      ags.enable = true;
       gnome.enable = true;
       hyprland.enable = true;
       swayfx.enable = true;
