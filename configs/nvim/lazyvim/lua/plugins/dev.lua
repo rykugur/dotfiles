@@ -103,5 +103,7 @@ return {
       },
     },
   },
+  { "luckasRanarison/tree-sitter-hypr" },
+  { "theRealCarneiro/hyprland-vim-syntax", dependencies = { "nvim-treesitter/nvim-treesitter" }, ft = "hypr" },
   { "mistricky/codesnap.nvim", build = "make" },
 }
