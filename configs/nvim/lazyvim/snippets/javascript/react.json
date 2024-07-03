@@ -1,9 +1,14 @@
 {
+  "import react": {
+    "prefix": "imr",
+    "body": [
+      "import React from 'react';"
+    ]
+  },
   "Import style tachyons": {
     "prefix": "imst",
     "body": [
       "import { styles as s } from '@tachyons';"
-    ],
-    "description": "Import react-native tachyons"
+    ]
   }
 }
