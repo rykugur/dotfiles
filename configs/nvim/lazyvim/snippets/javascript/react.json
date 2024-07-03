@@ -1,0 +1,9 @@
+{
+  "Import style tachyons": {
+    "prefix": "imst",
+    "body": [
+      "import { styles as s } from '@tachyons';"
+    ],
+    "description": "Import react-native tachyons"
+  }
+}

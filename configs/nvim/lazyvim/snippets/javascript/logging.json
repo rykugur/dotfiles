@@ -1,0 +1,9 @@
+{
+  "derp logging - js": {
+    "prefix": "derp",
+    "body": [
+      "console.log('DERP99: $1=', $2);"
+    ],
+    "description": "Log output to console tagged with DERP99 for easy grepping (99 because Anarchy99 from XxX because why not)"
+  }
+}
