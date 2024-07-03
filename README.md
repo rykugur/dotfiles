@@ -8,4 +8,5 @@ The nixOS config is contained within a flake, with home-manager installed as a n
 
 ## TODO
 
-- Get lazydev working
+- Figure out why custom snippets are showing up twice
+- Get navic working
