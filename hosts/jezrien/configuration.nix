@@ -159,10 +159,8 @@
 
   modules = {
     gaming = {
-      discord.enable = true;
       starcitizen.enable = true;
       starsector.enable = true;
-      wine.enable = true;
     };
 
     programs = {
