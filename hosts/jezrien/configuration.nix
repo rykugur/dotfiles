@@ -152,6 +152,11 @@
     backupFileExtension = "bak";
   };
 
+  hardware.graphics = {
+    extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+    extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+  };
+
   roles.desktop.enable = true;
   roles.gaming.enable = true;
 

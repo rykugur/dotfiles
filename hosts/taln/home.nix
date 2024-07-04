@@ -35,7 +35,6 @@
     baobab
     bottom
     cinnamon.nemo
-    easyeffects
     file
     gnome.seahorse
     gnome.zenity

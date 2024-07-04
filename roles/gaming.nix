@@ -15,6 +15,8 @@ in {
         gamescope
         lutris
         mangohud
+        unixtools.xxd
+        xdelta
       ];
     };
   };
