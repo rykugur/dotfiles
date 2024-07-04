@@ -5,7 +5,6 @@
     inputs.home-manager.nixosModules.home-manager
 
     inputs.nix-gaming.nixosModules.pipewireLowLatency
-
     outputs.nixosModules
     roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
@@ -73,6 +72,23 @@
     polkit.enable = true;
   };
 
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart =
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+
   networking = {
     hostName = hostname;
     search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
@@ -133,9 +149,7 @@
       value.source = value.flake;
     }) config.nix.registry;
 
-    systemPackages = with pkgs;
-      [ git neovim nix-search-cli ]
-      ++ [ (import ../../scripts/hyprland-suspend.nix { inherit pkgs; }) ];
+    systemPackages = with pkgs; [ git neovim nix-search-cli polkit_gnome ];
   };
 
   time.timeZone = "America/Chicago";
@@ -189,7 +203,7 @@
       kitty.enable = true;
       nvim.enable = true;
       obs.enable = true;
-      starship.enable = true;
+      # starship.enable = true;
       swappy.enable = true;
       tmux.enable = true;
     };
@@ -202,9 +216,9 @@
     };
 
     wm = {
-      gnome.enable = true;
+      # gnome.enable = true;
       hyprland.enable = true;
-      swayfx.enable = true;
+      # swayfx.enable = true;
     };
   };
 
@@ -224,6 +238,7 @@
 
     xserver = {
       enable = true;
+      displayManager.startx.enable = true;
 
       xkb = {
         layout = "us";

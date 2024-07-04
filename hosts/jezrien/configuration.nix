@@ -152,8 +152,10 @@
     backupFileExtension = "bak";
   };
 
-  roles.desktop.enable = true;
-  roles.gaming.enable = true;
+  roles = {
+    desktop.enable = true;
+    gaming.enable = true;
+  };
 
   modules = {
     gaming = {
@@ -175,7 +177,6 @@
       starship.enable = true;
       swappy.enable = true;
       tmux.enable = true;
-      wezterm.enable = true;
     };
 
     services = {
