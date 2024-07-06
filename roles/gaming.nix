@@ -5,8 +5,10 @@ in {
 
   config = lib.mkIf cfg.enable {
     modules.gaming = {
+      discord.enable = true;
       gamemode.enable = true;
       steam.enable = true;
+      wine.enable = true;
     };
 
     home-manager.users.${username} = {

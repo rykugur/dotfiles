@@ -4,6 +4,9 @@ in {
   options.modules.programs.fish.enable = lib.mkEnableOption "Enable fish.";
 
   config = lib.mkIf cfg.enable {
+    modules.programs.oh-my-posh.enable = true;
+    # config.modules.programs.starship.enable = true;
+
     programs.fish = {
       enable = true;
       vendor.functions.enable = true;
@@ -25,9 +28,16 @@ in {
         enable = true;
         interactiveShellInit = ''
           source ~/.dotfiles/configs/fish/config.fish
+          oh-my-posh init fish | source
         '';
       };
+
       programs.fzf.enable = true;
+
+      programs.zoxide = {
+        enable = true;
+        enableFishIntegration = true;
+      };
     };
   };
 }
