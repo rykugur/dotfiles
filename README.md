@@ -10,3 +10,4 @@ The nixOS config is contained within a flake, with home-manager installed as a n
 
 - Figure out why custom snippets are showing up twice
 - Get navic working
+- Install/switch to CaskaydiaCove Nerd Font.
