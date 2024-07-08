@@ -9,6 +9,7 @@
     ./kitty.nix
     ./nvim.nix
     ./obs.nix
+    ./oh-my-posh.nix
     ./starship.nix
     ./swappy.nix
     ./tmux.nix

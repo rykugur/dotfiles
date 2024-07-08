@@ -31,7 +31,3 @@ end
 if which -a tmuxifier &>/dev/null
     eval (tmuxifier init - fish)
 end
-
-if which -a zoxide &>/dev/null
-    zoxide init fish | source
-end

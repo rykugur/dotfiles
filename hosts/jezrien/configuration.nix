@@ -152,15 +152,20 @@
     backupFileExtension = "bak";
   };
 
-  roles.desktop.enable = true;
-  roles.gaming.enable = true;
+  hardware.graphics = {
+    extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+    extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+  };
+
+  roles = {
+    desktop.enable = true;
+    gaming.enable = true;
+  };
 
   modules = {
     gaming = {
-      discord.enable = true;
       starcitizen.enable = true;
       starsector.enable = true;
-      wine.enable = true;
     };
 
     programs = {
@@ -175,7 +180,6 @@
       starship.enable = true;
       swappy.enable = true;
       tmux.enable = true;
-      wezterm.enable = true;
     };
 
     services = {

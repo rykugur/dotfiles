@@ -19,6 +19,12 @@ in {
           support32Bit = true;
         };
         pulse.enable = true;
+
+        lowLatency = {
+          enable = true;
+          quantum = 2048;
+          rate = 48000;
+        };
       };
     };
 
