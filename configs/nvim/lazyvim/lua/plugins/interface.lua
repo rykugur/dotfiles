@@ -1,5 +1,16 @@
 return {
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        styles = {
+          comments = { "italic" },
+        },
+      })
+    end,
+  },
   {
     "LazyVim/LazyVim",
     opts = {
@@ -72,6 +83,12 @@ return {
       defaults = {
         layout_strategy = "vertical",
       },
+    },
+  },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    opts = {
+      scope = { enabled = true },
     },
   },
 }
