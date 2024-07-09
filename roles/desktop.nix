@@ -6,6 +6,13 @@ in {
   config = lib.mkIf cfg.enable {
     modules.wm.gtk.enable = true;
 
+    fonts.packages = with pkgs;
+      [
+        (nerdfonts.override {
+          fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
+        })
+      ];
+
     home-manager.users.${username} = {
       home.packages = with pkgs; [
         baobab
@@ -20,6 +27,9 @@ in {
         lampray
         mousai
         neofetch
+        (nerdfonts.override {
+          fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
+        })
         nitch
         nvtopPackages.full
         obsidian

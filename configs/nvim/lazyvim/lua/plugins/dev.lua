@@ -8,6 +8,7 @@ return {
         { path = "LazyVim", words = { "LazyVim" } },
         { path = "wezterm-types", mods = { "wezterm" } },
         { path = "${3rd}/love2d/library" },
+        { path = "~/dev/libs/lua" },
       },
     },
   },
