@@ -3,13 +3,18 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    config = function()
-      require("catppuccin").setup({
-        styles = {
-          comments = { "italic" },
-        },
-      })
-    end,
+    opts = {
+      styles = {
+        comments = { "italic" },
+      },
+    },
+    -- config = function()
+    --   require("catppuccin").setup({
+    --     styles = {
+    --       comments = { "italic" },
+    --     },
+    --   })
+    -- end,
   },
   {
     "LazyVim/LazyVim",
