@@ -7,16 +7,37 @@ return {
       library = {
         { path = "LazyVim", words = { "LazyVim" } },
         { path = "wezterm-types", mods = { "wezterm" } },
+        { path = "${3rd}/love2d/library" },
       },
     },
   },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   opts = {
+  --     servers = {
+  --       lua_ls = {
+  --         workspace = {
+  --           checkThirdParty = true,
+  --           library = {
+  --             "${3rd}/love2d/library",
+  --             -- "~/.luarocks/share/lua/5.1/?.lua",
+  --             -- "~/.luarocks/share/lua/5.1/?/init.lua",
+  --             -- vim.fn.expand("~/.luarocks/share/lua/5.1/?.lua"),
+  --             -- vim.fn.expand("~/.luarocks/share/lua/5.1/?/init.lua"),
+  --           },
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
   {
     "hrsh7th/nvim-cmp",
     opts = function(_, opts)
       opts.sources = opts.sources or {}
       table.insert(opts.sources, {
-        name = "lazydev",
-        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+        { name = "nvim_lsp" },
+        { name = "lazydev", group_index = 0 }, -- set group index to 0 to skip loading LuaLS completions
+        { name = "nvim_lua" },
       })
     end,
   },
@@ -26,8 +47,12 @@ return {
       ensure_installed = {
         "fish",
         "http",
+        "javascript",
+        "jsdoc",
         "json",
+        "jsonc",
         "lua",
+        "luadoc",
         "markdown",
         "nix",
       },
