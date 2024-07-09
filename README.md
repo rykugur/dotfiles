@@ -8,5 +8,4 @@ The nixOS config is contained within a flake, with home-manager installed as a n
 
 ## TODO
 
-- Figure out why custom snippets are showing up twice
-- Get navic working
+- lua_ls - autocomplete with third-party libs

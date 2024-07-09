@@ -40,6 +40,7 @@
   lua = pkgs.mkShell {
     packages = [
       inputs.luarocks-nix.packages.${pkgs.system}.default
+      pkgs.love
       pkgs.lua
       pkgs.nurl
     ];

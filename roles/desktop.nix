@@ -26,7 +26,6 @@ in {
         opera
         pavucontrol
         playerctl
-        plex-media-player
         radeontop
         solaar
         spotify
