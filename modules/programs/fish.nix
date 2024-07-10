@@ -27,7 +27,6 @@ in {
         enable = true;
         interactiveShellInit = ''
           source ~/.dotfiles/configs/fish/config.fish
-          oh-my-posh init fish | source
         '';
       };
 

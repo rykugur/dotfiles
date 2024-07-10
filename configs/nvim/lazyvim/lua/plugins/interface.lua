@@ -1,20 +1,21 @@
 return {
+  -- colorscheme stuff
   {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    opts = {
-      styles = {
-        comments = { "italic" },
-      },
-    },
-    -- config = function()
-    --   require("catppuccin").setup({
-    --     styles = {
-    --       comments = { "italic" },
-    --     },
-    --   })
-    -- end,
+    config = function()
+      require("catppuccin").setup({
+        styles = {
+          comments = { "italic" },
+        },
+        integrations = {
+          mason = true,
+          neotree = true,
+          which_key = true,
+        },
+      })
+    end,
   },
   {
     "LazyVim/LazyVim",

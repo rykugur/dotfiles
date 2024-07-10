@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let cfg = config.roles.desktop;
 in {
   options.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
@@ -21,12 +21,10 @@ in {
         cinnamon.nemo
         easyeffects
         file
-        gnome.seahorse
-        gnome.zenity
         google-chrome
         lampray
         mousai
-        neofetch
+        # neofetch
         (nerdfonts.override {
           fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
         })
@@ -37,11 +35,13 @@ in {
         pavucontrol
         playerctl
         radeontop
-        solaar
+        seahorse
+        # solaar
         spotify
         vlc
         xdg-utils
         xfce.thunar
+        zenity
 
         p7zip
         unzip

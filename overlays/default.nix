@@ -6,17 +6,19 @@
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
-  modifications = final: prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
-    super-slicer = prev.super-slicer.overrideAttrs (o: {
-      patches = (o.patches or [ ]) ++ [
-        # can be removed once https://github.com/NixOS/nixpkgs/pull/298652 is merged
-        ./patches/super-slicer.patch
-      ];
-    });
-  };
+  modifications = final: prev:
+    {
+      # example = prev.example.overrideAttrs (oldAttrs: rec {
+      # ...
+      # });
+      # example patch:
+      # super-slicer = prev.super-slicer.overrideAttrs (o: {
+      #   patches = (o.patches or [ ]) ++ [
+      #     # can be removed once https://github.com/NixOS/nixpkgs/pull/298652 is merged
+      #     ./patches/super-slicer.patch
+      #   ];
+      # });
+    };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'

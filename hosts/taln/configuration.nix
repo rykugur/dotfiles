@@ -66,7 +66,7 @@
       services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
-        cue = true;
+        settings = { cue = true; };
       };
     };
     polkit.enable = true;
