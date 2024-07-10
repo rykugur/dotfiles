@@ -66,7 +66,7 @@
       services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
-        cue = true;
+        settings = { cue = true; };
       };
     };
     polkit.enable = true;
@@ -203,7 +203,6 @@
       kitty.enable = true;
       nvim.enable = true;
       obs.enable = true;
-      # starship.enable = true;
       swappy.enable = true;
       tmux.enable = true;
     };

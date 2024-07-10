@@ -1,10 +1,17 @@
-{ config, inputs, lib, pkgs, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let cfg = config.roles.desktop;
 in {
   options.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
 
   config = lib.mkIf cfg.enable {
     modules.wm.gtk.enable = true;
+
+    fonts.packages = with pkgs;
+      [
+        (nerdfonts.override {
+          fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
+        })
+      ];
 
     home-manager.users.${username} = {
       home.packages = with pkgs; [
@@ -14,25 +21,27 @@ in {
         cinnamon.nemo
         easyeffects
         file
-        gnome.seahorse
-        gnome.zenity
         google-chrome
         lampray
         mousai
-        neofetch
+        # neofetch
+        (nerdfonts.override {
+          fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
+        })
         nitch
         nvtopPackages.full
         obsidian
         opera
         pavucontrol
         playerctl
-        plex-media-player
         radeontop
-        solaar
+        seahorse
+        # solaar
         spotify
         vlc
         xdg-utils
         xfce.thunar
+        zenity
 
         p7zip
         unzip

@@ -31,3 +31,7 @@ end
 if which -a tmuxifier &>/dev/null
     eval (tmuxifier init - fish)
 end
+
+if which -a oh-my-posh &>/dev/null
+    oh-my-posh init fish --config ~/.dotfiles/configs/oh-my-posh/config.catppuccin_mocha.json | source
+end

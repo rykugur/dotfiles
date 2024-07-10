@@ -10,13 +10,20 @@ in {
         programs.neovim = { enable = true; };
 
         home = {
-          packages = [
-            pkgs.fd
-            pkgs.lazygit
-            pkgs.lua # required for some plugins
-            pkgs.neovide
-            pkgs.nixfmt-classic
-            pkgs.nodejs # required for many plugins
+          packages = with pkgs; [
+            fd
+            lazygit
+            neovide
+            nixfmt-classic
+
+            # below pkgs are required for plugins/updates
+            cargo
+            cmake
+            gcc
+            go
+            luaPackages.lua
+            luarocks-nix
+            nodejs
           ];
 
           file = {

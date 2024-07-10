@@ -5,7 +5,6 @@ in {
 
   config = lib.mkIf cfg.enable {
     modules.programs.oh-my-posh.enable = true;
-    # config.modules.programs.starship.enable = true;
 
     programs.fish = {
       enable = true;
@@ -28,7 +27,6 @@ in {
         enable = true;
         interactiveShellInit = ''
           source ~/.dotfiles/configs/fish/config.fish
-          oh-my-posh init fish | source
         '';
       };
 

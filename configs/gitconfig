@@ -8,3 +8,5 @@
 	program = /run/current-system/sw/bin/op-ssh-sign
 [commit]
   gpgsign = true
+[alias]
+  undo = reset --soft HEAD^

@@ -1,5 +1,5 @@
 { lib, stdenv, fetchFromGitHub, cmake, makeWrapper, ninja, pkg-config, curl
-, SDL2, lz4, p7zip, gnome, }:
+, SDL2, lz4, p7zip, zenity, }:
 stdenv.mkDerivation {
   name = "lampray";
 
@@ -12,7 +12,7 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [ cmake makeWrapper ninja pkg-config ];
 
-  buildInputs = [ curl SDL2 lz4 p7zip gnome.zenity ];
+  buildInputs = [ curl SDL2 lz4 p7zip zenity ];
 
   prePatch = ''
     sed -i 's|const lampString baseDataPath = "Lamp_Data/";|const lampString baseDataPath = ((std::string)std::getenv("HOME")) + "/.lamp/";|g' Lampray/Control/lampConfig.h

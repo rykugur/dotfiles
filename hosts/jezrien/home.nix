@@ -46,7 +46,6 @@
     vkd3d
     warp-terminal
     fira
-    (nerdfonts.override { fonts = [ "FiraCode" "FiraMono" ]; })
     arandr
     cliphist
     pywal
