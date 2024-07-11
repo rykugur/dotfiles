@@ -21,6 +21,7 @@ in {
         cinnamon.nemo
         easyeffects
         file
+        file-roller
         google-chrome
         lampray
         mousai

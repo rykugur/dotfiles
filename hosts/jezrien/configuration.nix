@@ -188,11 +188,7 @@
       ssh.enable = true;
     };
 
-    wm = {
-      # gnome.enable = true;
-      hyprland.enable = true;
-      # swayfx.enable = true;
-    };
+    wm.hyprland.enable = true;
 
   };
 
@@ -210,6 +206,14 @@
       gnome-keyring.enable = true;
     };
     gvfs.enable = true;
+
+    udev = {
+      enable = true;
+      extraRules = ''
+        SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="manual"
+        SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{pp_power_profile_mode}="4"
+      '';
+    };
 
     xserver = {
       enable = true;
