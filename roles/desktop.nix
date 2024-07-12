@@ -72,6 +72,16 @@ in {
         iotop
         iftop
       ];
+
+      xdg = {
+        enable = true;
+
+        mimeApps = {
+          enable = true;
+
+          defaultApplications = { "inode/directory" = [ "nemo.desktop" ]; };
+        };
+      };
     };
   };
 }

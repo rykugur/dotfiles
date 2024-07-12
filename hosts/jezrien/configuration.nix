@@ -10,12 +10,12 @@
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
-    common-cpu-amd-pstate
+    common-cpu-amd
     common-gpu-amd
   ]);
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_9;
+    kernelPackages = pkgs.linuxPackages_zen;
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
@@ -193,7 +193,10 @@
   };
 
   programs = {
-    corectrl.enable = true;
+    corectrl = {
+      enable = true;
+      gpuOverclock.enable = true;
+    };
     nix-ld.enable = true;
     seahorse.enable = true;
   };
@@ -207,13 +210,13 @@
     };
     gvfs.enable = true;
 
-    udev = {
-      enable = true;
-      extraRules = ''
-        SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="manual"
-        SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{pp_power_profile_mode}="4"
-      '';
-    };
+    # udev = {
+    #   enable = true;
+    #   extraRules = ''
+    #     SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="manual"
+    #     SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{pp_power_profile_mode}="1"
+    #   '';
+    # };
 
     xserver = {
       enable = true;
