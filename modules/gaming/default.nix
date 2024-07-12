@@ -6,6 +6,7 @@
     ./starcitizen.nix
     ./starsector.nix
     ./steam.nix
+    ./vfio.nix
     ./wine.nix
   ];
 }

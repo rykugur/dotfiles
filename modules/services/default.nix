@@ -1,10 +1,4 @@
 {
-  imports = [
-    ./btrfs.nix
-    ./docker.nix
-    ./easyeffects.nix
-    ./libvirtd.nix
-    ./pipewire.nix
-    ./ssh.nix
-  ];
+  imports =
+    [ ./btrfs.nix ./docker.nix ./easyeffects.nix ./pipewire.nix ./ssh.nix ];
 }
