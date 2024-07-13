@@ -39,6 +39,7 @@ in {
         seahorse
         # solaar
         spotify
+        tigervnc
         vlc
         xdg-utils
         xfce.thunar
