@@ -235,6 +235,8 @@
     };
     gvfs.enable = true;
 
+    upower.enable = true;
+
     xserver = {
       enable = true;
       displayManager.startx.enable = true;
