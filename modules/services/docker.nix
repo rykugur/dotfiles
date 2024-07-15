@@ -7,7 +7,8 @@ in {
     virtualisation.docker = {
       enable = true;
       storageDriver = "btrfs";
-      enableNvidia = true;
+      # TODO: figure out how to conditionally enable this
+      # enableNvidia = true;
     };
 
     # TODO: pass these args to docker
