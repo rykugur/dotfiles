@@ -41,6 +41,7 @@ in {
         spotify
         tigervnc
         vlc
+        winbox # mikrotik router mgmt app
         xdg-utils
         xfce.thunar
         zenity
