@@ -39,6 +39,7 @@ in {
         seahorse
         solaar
         spotify
+        sshfs
         tigervnc
         vlc
         winbox # mikrotik router mgmt app
