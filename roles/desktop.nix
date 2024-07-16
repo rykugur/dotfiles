@@ -20,12 +20,12 @@ in {
         bottom
         cinnamon.nemo
         easyeffects
+        fastfetch
         file
         file-roller
         google-chrome
         lampray
         mousai
-        # neofetch
         (nerdfonts.override {
           fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
         })
@@ -37,7 +37,7 @@ in {
         playerctl
         radeontop
         seahorse
-        # solaar
+        solaar
         spotify
         tigervnc
         vlc
