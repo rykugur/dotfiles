@@ -1,0 +1,16 @@
+{
+  "mock.calls[0]": {
+    "prefix": "mc0",
+    "body": [
+      "mock.calls[0]"
+    ],
+    "description": "Inserts mock.calls[0]"
+  },
+  "mock.calls[0][0]": {
+    "prefix": "mc00",
+    "body": [
+      "mock.calls[0][0]"
+    ],
+    "description": "Inserts mock.calls[0][0]"
+  }
+}
