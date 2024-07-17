@@ -105,6 +105,10 @@ return {
     opts = {
       options = {
         always_show_bufferline = true,
+        indicator = {
+          style = "underline",
+        },
+        tab_size = 32,
       },
     },
   },
