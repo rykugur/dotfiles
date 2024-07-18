@@ -20,6 +20,9 @@ in {
           ".via-config-files/noodlepad-micro" = {
             source = pkgs.keebs-via.madnoodle-micro-pad;
           };
+          ".via-config-files/noodlepad-udon13-v2" = {
+            source = pkgs.keebs-via.madnoodle-udon13-v2;
+          };
           ".via-config-files/doio-kb16-01.json" = {
             source = ../../configs/misc/kb16-01.json;
           };

@@ -34,6 +34,7 @@
   home.packages = with pkgs; [
     prettierd
     stylua
+    vivaldi
 
     vscode
 
