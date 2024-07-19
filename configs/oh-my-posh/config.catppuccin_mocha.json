@@ -18,6 +18,12 @@
           "type": "os"
         },
         {
+          "type": "text",
+          "style": "powerline",
+          "foreground": "p:blue",
+          "template": "{{ if .Env.IN_NIX_SHELL }}impure {{ end }}"
+        },
+        {
           "foreground": "p:blue",
           "style": "plain",
           "template": "{{ .UserName }}@{{ .HostName }} ",
