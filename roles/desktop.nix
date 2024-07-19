@@ -47,6 +47,10 @@ in {
         xfce.thunar
         zenity
 
+        albert
+        wofi
+        wofi-emoji
+
         p7zip
         unzip
         xz

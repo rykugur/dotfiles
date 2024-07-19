@@ -33,5 +33,6 @@ if which -a tmuxifier &>/dev/null
 end
 
 if which -a oh-my-posh &>/dev/null
+    alias omp oh-my-posh
     oh-my-posh init fish --config ~/.dotfiles/configs/oh-my-posh/config.catppuccin_mocha.json | source
 end
