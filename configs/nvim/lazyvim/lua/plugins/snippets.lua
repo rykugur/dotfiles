@@ -3,6 +3,7 @@ return {
   opts = {
     extended_filetypes = {
       typescript = { "javascript" },
+      typescriptreact = { "javascript" },
     },
   },
 }
