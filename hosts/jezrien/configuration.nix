@@ -159,6 +159,7 @@
 
   roles = {
     desktop.enable = true;
+    dev.enable = true;
     gaming.enable = true;
   };
 
