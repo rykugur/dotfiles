@@ -26,6 +26,26 @@
   #   ];
   # };
 
+  tauri = pkgs.mkShell {
+    NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
+
+    packages = with pkgs; [
+      cairo
+      glibc
+      gtk3
+      libsoup
+      openssl
+      rustc
+      webkitgtk
+      yarn
+    ];
+
+    shellHook = ''
+      fish
+      exit
+    '';
+  };
+
   nvim = pkgs.mkShell {
     NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
     # packages required to build some plugins
