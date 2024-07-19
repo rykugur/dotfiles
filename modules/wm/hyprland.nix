@@ -4,7 +4,10 @@ in {
   options.modules.wm.hyprland.enable = lib.mkEnableOption "Enable hyprland.";
 
   config = lib.mkIf cfg.enable {
-    modules.wm.ags.enable = true;
+    modules.wm = {
+      ags.enable = true;
+      albert.enable = true;
+    };
 
     programs.hyprland = {
       enable = true;

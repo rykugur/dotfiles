@@ -47,7 +47,6 @@ in {
         xfce.thunar
         zenity
 
-        albert
         wofi
         wofi-emoji
 
