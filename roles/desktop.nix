@@ -41,6 +41,7 @@ in {
         spotify
         sshfs
         tigervnc
+        tldr
         vlc
         winbox # mikrotik router mgmt app
         xdg-utils
