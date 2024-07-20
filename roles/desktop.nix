@@ -47,6 +47,9 @@ in {
         xfce.thunar
         zenity
 
+        feh
+        xfce.ristretto
+
         wofi
         wofi-emoji
 
@@ -85,7 +88,13 @@ in {
         mimeApps = {
           enable = true;
 
-          defaultApplications = { "inode/directory" = [ "nemo.desktop" ]; };
+          defaultApplications = {
+            "image/png" = [ "feh.desktop" "org.xfce.ristretto.desktop" ];
+            "image/jpg" = [ "feh.desktop" "org.xfce.ristretto.desktop" ];
+            "image/jpeg" = [ "feh.desktop" "org.xfce.ristretto.desktop" ];
+            "image/webp" = [ "feh.desktop" "org.xfce.ristretto.desktop" ];
+            "inode/directory" = [ "thunar.desktop" ];
+          };
         };
       };
     };
