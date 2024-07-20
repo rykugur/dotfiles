@@ -105,6 +105,7 @@ return {
     opts = {
       options = {
         always_show_bufferline = true,
+        max_name_length = 32,
         tab_size = 32,
       },
     },
