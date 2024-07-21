@@ -11,6 +11,13 @@ in {
     lib.mkEnableOption "Enable Vivaldi.";
 
   config = lib.mkIf cfg.enable {
+    environment.etc = {
+      "1password/custom_allowed_browsers" = {
+        text = "vivaldi-bin";
+        mode = "0755";
+      };
+    };
+
     home-manager.users.${username} = {
       home.packages = with pkgs; [ vivaldi ];
 
