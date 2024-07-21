@@ -4,6 +4,7 @@ in {
   options.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
 
   config = lib.mkIf cfg.enable {
+    modules.programs.vivaldi.enable = true;
     modules.wm.gtk.enable = true;
 
     fonts.packages = with pkgs;

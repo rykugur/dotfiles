@@ -175,7 +175,6 @@
 
     programs = {
       _1password.enable = true;
-      firefox.enable = true;
       fish.enable = true;
       git.enable = true;
       keebs.enable = true;
