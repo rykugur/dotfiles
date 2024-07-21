@@ -1,12 +1,10 @@
 { config, lib, pkgs, username, ... }:
 let
   cfg = config.modules.programs.vivaldi;
-  catppuccin-mocha-blue-vivaldi-theme = pkgs.fetchzip {
+  catppuccin-mocha-blue-vivaldi-theme = pkgs.fetchurl {
     url =
       "https://github.com/catppuccin/vivaldi/releases/download/1.0.0-ctpv2/Catppuccin.Mocha.Blue.zip";
-    sha256 = "sha256-sE3UL8NHg1mXnciuOcIVt5vdjOsgYEhtEW04NDuL6rI=";
-
-    stripRoot = false;
+    sha256 = "sha256-/8tYSn/zJ9HpwcEb7tHzkwIt9OpetYMWdzWAL0x8rco=";
   };
 in {
   options.modules.programs.vivaldi.enable =
@@ -17,7 +15,7 @@ in {
       home.packages = with pkgs; [ vivaldi ];
 
       home.file = {
-        ".vivald-themes/catppuccin-mocha-blue/" = {
+        ".vivald-themes/catppuccin-mocha-blue.zip" = {
           source = "${catppuccin-mocha-blue-vivaldi-theme}";
           recursive = true;
         };
