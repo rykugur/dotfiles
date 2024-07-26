@@ -201,7 +201,7 @@
       enable = true;
       gpuOverclock.enable = true;
     };
-    nix-ld.enable = true;
+    nix-ld = { enable = true; };
     seahorse.enable = true;
   };
 
