@@ -11,7 +11,7 @@
     common-pc
     common-pc-laptop-ssd
     common-cpu-intel
-    common-gpu-nvidia
+    common-gpu-nvidia # this points at the common/gpu/nvidia/prime.nix file
   ]);
 
   hardware = {
@@ -19,7 +19,7 @@
       modesetting.enable = true; # required
 
       powerManagement = {
-        enable = false;
+        enable = true;
         finegrained = false;
       };
 
@@ -28,10 +28,6 @@
       package = config.boot.kernelPackages.nvidiaPackages.production;
 
       prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
         intelBusId = "PCI:00:02:0";
         nvidiaBusId = "PCI:59:00:0";
       };

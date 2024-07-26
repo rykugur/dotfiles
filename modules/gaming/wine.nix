@@ -6,6 +6,7 @@ in {
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
       home.packages = with pkgs; [
+        bottles
         protontricks
         protonup-ng
         protonup-qt

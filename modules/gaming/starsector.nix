@@ -22,17 +22,17 @@ in {
       } // lib.mkIf cfg.mods.enable {
         file = lib.mkIf cfg.mods.enable {
           ".local/share/starsector/mods/lazylib" = {
-            source = "${pkgs.starsectorMods.starsectorMods.lazylib}";
+            source = "${pkgs.starsectorMods.lazylib}";
           };
           ".local/share/starsector/mods/magiclib" = {
-            source = "${pkgs.starsectorMods.starsectorMods.magiclib}";
+            source = "${pkgs.starsectorMods.Mods.magiclib}";
           };
           ".local/share/starsector/mods/nexerelin" = {
-            source = "${pkgs.starsectorMods.starsectorMods.nexerelin}";
+            source = "${pkgs.starsectorMods.nexerelin}";
           };
           ".local/share/starsector/mods/graphicslib" = {
             source =
-              "${pkgs.starsectorMods.starsectorMods.graphicslib}/GraphicsLib"; # temporary workaround
+              "${pkgs.starsectorMods.graphicslib}/GraphicsLib"; # temporary workaround
           };
         };
       };
