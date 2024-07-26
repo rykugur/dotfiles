@@ -27,22 +27,4 @@ set visualbell
 nnoremap <silent> <leader>pp :set paste!<CR>
 nnoremap <silent> <leader><space> :noh<CR>
 
-" training to not use arrow keys wooooo
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-nnoremap j gj
-nnoremap k gk
-" remap hjkl to be less annoying (to fit better with default homerow/index key)
-noremap ; l
-noremap l k
-noremap k j
-noremap j h
-" remap doubles to <ESC> for easy switching from insert mode
-"inoremap jj <ESC>
-"inoremap kk <ESC>
-"inoremap lll <ESC>
-"inoremap ;; <ESC>
-" select all
 nnoremap aa ggVG

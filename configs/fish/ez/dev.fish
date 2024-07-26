@@ -58,6 +58,7 @@ abbr --add --global gss 'git status --short'
 abbr --add --global gssg 'git status --short | grep'
 abbr --add --global gsub 'git submodule'
 abbr --add --global turtles 'git commit -m "it\'s turtles all the way down"'
+
 alias gbn "git branch | cut -d' ' -f2"
 alias glg "git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias gll "git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
@@ -70,3 +71,7 @@ alias git.head "gll | head -n1"
 alias git.track "git branch -vv"
 alias git.tree "log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative"
 alias jedi "git push --force"
+
+function git.remote.latestTag
+    git -c 'versionsort.suffix=-' ls-remote --exit-code --refs --sort='version:refname' --tags $argv '*.*.*' | tail --lines=1 | cut --delimiter='/' --fields=3
+end
