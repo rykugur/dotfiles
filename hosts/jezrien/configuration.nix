@@ -68,6 +68,7 @@
       #   });
       # })
       outputs.overlays.additions
+      outputs.overlays.modifications
     ];
     config.allowUnfree = true;
   };
@@ -166,7 +167,10 @@
   modules = {
     gaming = {
       starcitizen.enable = true;
-      starsector.enable = true;
+      starsector = {
+        enable = true;
+        mods.enable = true;
+      };
       vfio = {
         enable = false; # maybe I'll muck with this some other time
         vfioIds = [ "1002:747e" "1002:ab30" ];
@@ -213,14 +217,6 @@
       gnome-keyring.enable = true;
     };
     gvfs.enable = true;
-
-    # udev = {
-    #   enable = true;
-    #   extraRules = ''
-    #     SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{power_dpm_force_performance_level}="manual"
-    #     SUBSYSTEM=="pci", DRIVER=="amdgpu", ATTR{pp_power_profile_mode}="1"
-    #   '';
-    # };
 
     xserver = {
       enable = true;
