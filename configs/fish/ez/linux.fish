@@ -18,6 +18,8 @@ abbr --add --global ssc 'sudo systemctl'
 ### docker
 abbr --add --global dc docker-compose
 abbr --add --global dcb docker-compose build
+abbr --add --global dcl docker-compose logs
+abbr --add --global dclf docker-compose logs -f
 abbr --add --global dcr docker-compose restart
 abbr --add --global dcu docker-compose up
 abbr --add --global dcud docker-compose up -d
