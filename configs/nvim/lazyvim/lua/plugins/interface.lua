@@ -71,17 +71,13 @@ return {
   },
   {
     "nvim-lualine/lualine.nvim",
-    opts = function()
-      return {
-        options = {
-          icons_enable = true,
-          theme = "auto",
-          component_separators = { left = " ", right = " " },
-          section_separators = { left = "", right = "" },
-          sections = {},
-        },
-      }
-    end,
+    opts = {
+      options = {
+        theme = "auto",
+        component_separators = { left = "|", right = "|" },
+        section_separators = { left = "", right = "" },
+      },
+    },
   },
   {
     "nvim-telescope/telescope.nvim",

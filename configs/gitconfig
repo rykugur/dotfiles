@@ -10,3 +10,4 @@
   gpgsign = true
 [alias]
   undo = reset --soft HEAD^
+  yolo = commit -m (curl -s https://whatthecommit.com/index.txt)
