@@ -12,5 +12,19 @@
       "mock.calls[0][0]"
     ],
     "description": "Inserts mock.calls[0][0]"
+  },
+  "tms": {
+    "prefix": "tms",
+    "body": [
+      "toMatchSnapshot($0)"
+    ],
+    "description": "Inserts toMatchSnapshot(...)"
+  },
+  "tmis": {
+    "prefix": "tmis",
+    "body": [
+      "toMatchInlineSnapshot($0)"
+    ],
+    "description": "Inserts toMatchInlineSnapshot(...)"
   }
 }
