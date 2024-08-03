@@ -130,4 +130,13 @@ return {
   { "luckasRanarison/tree-sitter-hypr" },
   { "theRealCarneiro/hyprland-vim-syntax", dependencies = { "nvim-treesitter/nvim-treesitter" }, ft = "hypr" },
   { "mistricky/codesnap.nvim", build = "make", opts = { has_breadcrumbs = true } },
+  {
+    "linrongbin16/gitlinker.nvim",
+    cmd = "GitLink",
+    opts = {},
+    keys = {
+      { "<leader>gy", "<cmd>GitLink<cr>", mode = { "n", "v" }, desc = "Yank git link" },
+      { "<leader>gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
+    },
+  },
 }
