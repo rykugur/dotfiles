@@ -31,6 +31,7 @@ in {
           fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
         })
         nitch
+        nixd
         nvtopPackages.full
         obsidian
         opera

@@ -1,7 +1,5 @@
 { config, lib, inputs, pkgs, username, hostname, ... }:
-let
-  cfg = config.modules.wm.hyprland;
-  walkerOverride = pkgs.walker.overrideAttrs (old: { version = "0.1.1"; });
+let cfg = config.modules.wm.hyprland;
 in {
   options.modules.wm.hyprland.enable = lib.mkEnableOption "Enable hyprland.";
 
@@ -24,20 +22,19 @@ in {
     # ];
 
     home-manager.users.${username} = {
-      home.packages = with pkgs;
-        [
-          dunst
-          libnotify
-          grim
-          grimblast
-          hypridle
-          hyprlock
-          hyprpaper
-          inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
-          slurp
-          swappy
-          wlogout
-        ] ++ [ walkerOverride ];
+      home.packages = with pkgs; [
+        dunst
+        libnotify
+        grim
+        grimblast
+        hypridle
+        hyprlock
+        hyprpaper
+        inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
+        slurp
+        swappy
+        wlogout
+      ];
 
       programs.fuzzel = {
         enable = true;
