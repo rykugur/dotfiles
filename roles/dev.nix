@@ -5,7 +5,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
-      home.packages = with pkgs; [ direnv ];
+      home.packages = with pkgs; [ bruno direnv ];
 
       programs.fish = {
         enable = true;

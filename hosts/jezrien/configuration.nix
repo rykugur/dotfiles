@@ -196,8 +196,10 @@
       ssh.enable = true;
     };
 
-    wm.hyprland.enable = true;
-
+    wm = {
+      gnome.enable = true;
+      hyprland.enable = true;
+    };
   };
 
   programs = {
