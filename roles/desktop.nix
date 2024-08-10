@@ -4,7 +4,7 @@ in {
   options.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
 
   config = lib.mkIf cfg.enable {
-    modules.programs.vivaldi.enable = true;
+    modules.programs.firefox.enable = true;
     modules.wm.gtk.enable = true;
 
     fonts.packages = with pkgs;
@@ -19,17 +19,18 @@ in {
         baobab
         bat
         bottom
-        cinnamon.nemo
         easyeffects
         fastfetch
         file
         file-roller
         google-chrome
+        jellyfin-media-player
         lampray
         mousai
         (nerdfonts.override {
           fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
         })
+        nemo
         nitch
         nixd
         nvtopPackages.full

@@ -7,7 +7,7 @@ in {
     modules.wm.gtk.enable = true;
 
     environment.systemPackages = with pkgs; [
-      gnome.gnome-tweaks
+      gnome-tweaks
 
       gnomeExtensions.dash-to-dock
     ];

@@ -28,8 +28,10 @@ let
     '';
   };
 in {
-  options.modules.programs.firefox.enable =
-    lib.mkEnableOption "Enable firefox (wrapper) module";
+  options.modules.programs.firefox = {
+    enable = lib.mkEnableOption "Enable firefox (wrapper) module";
+    ArcWTF.enable = lib.mkEnableOption "Enable ArcWTF theme";
+  };
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
@@ -46,6 +48,7 @@ in {
             settings = {
               "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
               "svg.context-properties.content.enabled" = true;
+            } // lib.mkIf cfg.ArcWTF.enable {
               "uc.tweak.popup-search" = true;
               "uc.tweak.longer-sidebar" = true;
             };
@@ -98,16 +101,10 @@ in {
               };
             };
           };
-          plex = {
-            id = 1;
-            settings = {
-              "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-            };
-          };
         };
       };
 
-      home.file = {
+      home.file = lib.mkIf cfg.ArcWTF.enable {
         ".mozilla/firefox/default/chrome" = {
           source = "${ArcWTF}/chrome";
           recursive = true;
@@ -126,6 +123,7 @@ in {
             "x-scheme-handler/https" = [ "firefox.desktop" ];
             "x-scheme-handler/about" = [ "firefox.desktop" ];
             "x-scheme-handler/unknown" = [ "firefox.desktop" ];
+            "application/pdf" = [ "firefox.desktop" ];
           };
         };
       };
