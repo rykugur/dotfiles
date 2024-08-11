@@ -44,7 +44,6 @@ let
         "https://github.com/Histidine91/Nexerelin/releases/download/v0.11.1b/Nexerelin_0.11.1b.zip";
       sha256 = "sha256-S7M4fAgwl4IxTPGle9RkzD00ElWNYGN+BLPaJMZLWoQ=";
     };
-    deps = [ lazylib magiclib ];
   };
 
   graphicslib = mkStarsectorMod {
@@ -54,7 +53,6 @@ let
         "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";
       sha256 = "sha256-LwLO5A0Af6vKJcnGWk9rylzhvwolWCJV5aqoaY+6ra4=";
     };
-    deps = [ lazylib ];
   };
 
   # mkModsDirDrv = mods:
@@ -74,14 +72,9 @@ let
   #       '';
   #     };
   #   };
-  #
+
   # modsDrv = with pkgs.starsectorMods.starsectorMods;
-  #   mkModDirDrv [
-  #     lazylib
-  #     magiclib
-  #     nexerelin
-  #     graphicslib
-  #   ];
+  #   mkModDirDrv [ lazylib magiclib nexerelin graphicslib ];
 in {
   options.modules.gaming.starsector = {
     enable = lib.mkEnableOption "Enable Starsector.";

@@ -103,6 +103,7 @@
       #   });
       # })
       outputs.overlays.additions
+      outputs.overlays.modifications
     ];
     config.allowUnfree = true;
   };
@@ -189,7 +190,12 @@
   };
 
   modules = {
-    gaming = { starsector.enable = true; };
+    gaming = {
+      starsector = {
+        enable = true;
+        mods.enable = true;
+      };
+    };
 
     programs = {
       _1password.enable = true;
