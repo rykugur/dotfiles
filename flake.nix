@@ -8,6 +8,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    ### hyprland stuff
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     # hyprland.url = "github:hyprwm/Hyprland";
     hyprland-contrib = {
@@ -18,6 +19,7 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
     swayfx.url = "github:WillPower3309/swayfx";
     gBar.url = "github:scorpion-26/gBar";
     ags.url = "github:Aylur/ags";

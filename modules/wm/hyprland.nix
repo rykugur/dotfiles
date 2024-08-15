@@ -22,7 +22,10 @@ in {
     # ];
 
     home-manager.users.${username} = {
-      home.packages = with pkgs; [
+      home.packages = [
+        inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
+        # inputs.mcmojave-hyprcursor.packages.${pkgs.system}.default
+      ] ++ (with pkgs; [
         dunst
         libnotify
         grim
@@ -31,11 +34,10 @@ in {
         hypridle
         hyprlock
         hyprpaper
-        inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
         slurp
         swappy
         wlogout
-      ];
+      ]);
 
       programs.fuzzel = {
         enable = true;
@@ -84,6 +86,13 @@ in {
         # source = ~/.config/hypr/input.conf
         # source = ~/.config/hypr/rules.conf
         # source = ~/.config/hypr/host_custom.conf
+      };
+
+      home.pointerCursor = {
+        name = "phinger-cursors-light";
+        package = pkgs.phinger-cursors;
+        size = 32;
+        gtk.enable = true;
       };
 
       # home.file = {

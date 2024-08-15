@@ -20,18 +20,6 @@ in {
         theme = {
           name = "Adementary-dark";
           package = pkgs.adementary-theme;
-          # name = "catppuccin-mocha-compact-blue-dark";
-          # package = pkgs.catppuccin-gtk.override {
-          #   accents = [ "blue" ];
-          #   size = "compact";
-          #   tweaks = [ "rimless" ];
-          #   variant = "mocha";
-          # };
-        };
-
-        cursorTheme = {
-          name = "catppuccin-mocha-blue-cursors";
-          package = pkgs.catppuccin-cursors.mochaBlue;
         };
 
         iconTheme = {
@@ -50,46 +38,6 @@ in {
 
         gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; };
       };
-
-      # gtk = {
-      #   enable = true;
-      #
-      #   font.name = "FiraCode Nerd Font Mono 10";
-      #
-      #   catppuccin = {
-      #     enable = true;
-      #     flavor = "mocha";
-      #     accent = "blue";
-      #
-      #     cursor = {
-      #       enable = true;
-      #       flavor = "mocha";
-      #       accent = "blue";
-      #     };
-      #
-      #     icon = {
-      #       enable = true;
-      #       flavor = "mocha";
-      #       accent = "blue";
-      #     };
-      #   };
-      #
-      #   gtk2.extraConfig = ''
-      #     gtk-application-prefer-dark-theme=1
-      #   '';
-      #
-      #   gtk3.extraConfig = {
-      #     Settings = ''
-      #       gtk-application-prefer-dark-theme=1
-      #     '';
-      #   };
-      #
-      #   gtk4.extraConfig = {
-      #     Settings = ''
-      #       gtk-application-prefer-dark-theme=1
-      #     '';
-      #   };
-      # };
     };
   };
 }
