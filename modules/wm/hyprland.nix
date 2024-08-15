@@ -27,6 +27,7 @@ in {
         libnotify
         grim
         grimblast
+        hyprcursor
         hypridle
         hyprlock
         hyprpaper

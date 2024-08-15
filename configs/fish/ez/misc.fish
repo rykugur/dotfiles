@@ -32,6 +32,7 @@ alias trim.spaces "sed -E 's/[[:space:]]+/ /g'"
 alias ytdl "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3"
 
 alias nv nvim
+alias "nv." "nvim ."
 alias v nvim
 alias vi nvim
 

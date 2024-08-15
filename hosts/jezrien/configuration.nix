@@ -187,6 +187,7 @@
       obs.enable = true;
       swappy.enable = true;
       tmux.enable = true;
+      virtman.enable = true;
     };
 
     services = {
@@ -196,10 +197,7 @@
       ssh.enable = true;
     };
 
-    wm = {
-      gnome.enable = true;
-      hyprland.enable = true;
-    };
+    wm = { hyprland.enable = true; };
   };
 
   programs = {

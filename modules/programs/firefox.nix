@@ -1,11 +1,6 @@
 { config, lib, pkgs, username, ... }:
 let
   cfg = config.modules.programs.firefox;
-  plexDesktop = pkgs.makeDesktopItem {
-    name = "Plex Media Player (Firefox)";
-    desktopName = "Plex Media Player (Firefox)";
-    exec = "${pkgs.firefox}/bin/firefox --P plex";
-  };
   ArcWTF = pkgs.stdenv.mkDerivation rec {
     name = "arcWTF";
     version = "1.2-firefox";
@@ -35,8 +30,6 @@ in {
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {
-      home.packages = [ plexDesktop ];
-
       programs.firefox = {
         enable = true;
         package =

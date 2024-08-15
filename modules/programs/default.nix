@@ -13,6 +13,7 @@
     ./starship.nix
     ./swappy.nix
     ./tmux.nix
+    ./virtman.nix
     ./vivaldi.nix
     ./waybar.nix
     ./wezterm.nix
