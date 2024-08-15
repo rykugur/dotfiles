@@ -15,7 +15,7 @@ in {
       gtk = {
         enable = true;
 
-        font.name = "FiraCode Nerd Font Mono 10";
+        font.name = "CaskaydiaCove Nerd Font Mono 10";
 
         theme = {
           name = "Adementary-dark";
