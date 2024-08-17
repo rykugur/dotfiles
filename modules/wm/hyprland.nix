@@ -7,6 +7,7 @@ in {
     modules.wm = {
       ags.enable = true;
       albert.enable = true;
+      swaylock.enable = true;
     };
 
     programs.hyprland = {
@@ -16,10 +17,6 @@ in {
     };
 
     xdg.portal = { enable = true; };
-
-    # environment.systemPackages = with pkgs; [
-    #   xdg-desktop-portal-gtk
-    # ];
 
     home-manager.users.${username} = {
       home.packages = [
@@ -38,21 +35,6 @@ in {
         swappy
         wlogout
       ]);
-
-      programs.fuzzel = {
-        enable = true;
-        settings = {
-          colors = {
-            background = "1e1e2edd";
-            text = "cdd6f4ff";
-            match = "f38ba8ff";
-            selection = "585b70ff";
-            selection-match = "f38ba8ff";
-            selection-text = "cdd6f4ff";
-            border = "b4befeff";
-          };
-        };
-      };
 
       wayland.windowManager.hyprland = {
         enable = true;

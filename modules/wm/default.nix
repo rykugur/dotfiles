@@ -8,5 +8,6 @@
     ./hyprland.nix
     ./kde.nix
     ./swayfx.nix
+    ./swaylock.nix
   ];
 }
