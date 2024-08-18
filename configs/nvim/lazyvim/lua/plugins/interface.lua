@@ -50,26 +50,6 @@ return {
     },
   },
   {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      -- add a keymap to browse plugin files
-      -- stylua: ignore
-      {
-        "<leader>fp",
-        function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
-        desc = "Find Plugin File",
-      },
-    },
-    -- change some options
-    opts = {
-      defaults = {
-        layout_strategy = "horizontal",
-        -- sorting_strategy = "ascending",
-        winblend = 0,
-      },
-    },
-  },
-  {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
@@ -87,6 +67,7 @@ return {
           "svg",
         },
         layout_strategy = "vertical",
+        winblend = 0,
       },
     },
   },
@@ -103,6 +84,30 @@ return {
         always_show_bufferline = true,
         max_name_length = 32,
         tab_size = 32,
+      },
+    },
+  },
+  {
+    "folke/twilight.nvim",
+    keys = {
+      {
+        "<leader>ut",
+        function()
+          require("twilight").toggle()
+        end,
+        desc = "Toggle Twiglight",
+      },
+    },
+  },
+  {
+    "folke/zen-mode.nvim",
+    keys = {
+      {
+        "<leader>uz",
+        function()
+          require("zen-mode").toggle()
+        end,
+        desc = "Toggle Zen-mode",
       },
     },
   },

@@ -141,4 +141,29 @@ return {
       { "<leader>gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
     },
   },
+  { "polarmutex/git-worktree.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+  {
+    "nvim-telescope/telescope.nvim",
+    keys = {
+      {
+        "<leader>gwl",
+        function()
+          require("telescope").extensions.git_worktree.git_worktree()
+        end,
+        desc = "Switch worktrees",
+      },
+      {
+        "<leader>gwc",
+        function()
+          require("telescope").extensions.git_worktree.create_git_worktree()
+        end,
+        desc = "Create a worktree",
+      },
+    },
+    config = function(_, opts)
+      local telescope = require("telescope")
+      telescope.setup(opts)
+      telescope.load_extension("git_worktree")
+    end,
+  },
 }

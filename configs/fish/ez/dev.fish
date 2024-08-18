@@ -57,6 +57,11 @@ abbr --add --global grv 'git remote -v'
 abbr --add --global gss 'git status --short'
 abbr --add --global gssg 'git status --short | grep'
 abbr --add --global gsub 'git submodule'
+abbr --add --global gw 'git worktree'
+abbr --add --global gwa 'git worktree add'
+abbr --add --global gwr 'git worktree remove'
+abbr --add --global gwls 'git worktree list'
+
 abbr --add --global turtles 'git commit -m "it\'s turtles all the way down"'
 
 alias gbn "git branch | cut -d' ' -f2"
