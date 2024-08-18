@@ -141,7 +141,16 @@ return {
       { "<leader>gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
     },
   },
-  { "polarmutex/git-worktree.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+  {
+    "polarmutex/git-worktree.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      config = function()
+        local Hooks = require("git-worktree.hooks")
+        Hooks.register(Hooks.type.SWITCH, Hooks.builtins.update_current_buffer_on_switch)
+      end,
+    },
+  },
   {
     "nvim-telescope/telescope.nvim",
     keys = {
