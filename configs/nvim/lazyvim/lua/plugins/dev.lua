@@ -46,8 +46,6 @@ return {
       ensure_installed = {
         "fish",
         "http",
-        "javascript",
-        "jsdoc",
         "json",
         "jsonc",
         "lua",
@@ -99,38 +97,6 @@ return {
   --     table.insert(opts.adapters, require("neotest-vitest"))
   --   end,
   -- },
-  {
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        javascript = { { "prettierd", "prettier" } },
-        javascriptreact = { { "prettierd", "prettier" } },
-        typescript = { { "prettierd", "prettier" } },
-        typescriptreact = { { "prettierd", "prettier" } },
-      },
-      formatters = {
-        prettier = {
-          require_cwd = true,
-          -- cwd = require("conform.util").root_file({
-          --   ".prettierrc",
-          --   ".prettierrc.json",
-          --   ".prettierrc.yml",
-          --   ".prettierrc.yaml",
-          --   ".prettierrc.json5",
-          --   ".prettierrc.js",
-          --   ".prettierrc.cjs",
-          --   ".prettierrc.mjs",
-          --   ".prettierrc.toml",
-          --   "prettier.config.js",
-          --   "prettier.config.cjs",
-          --   "prettier.config.mjs",
-          -- }),
-        },
-      },
-    },
-  },
-  { "luckasRanarison/tree-sitter-hypr" },
-  { "theRealCarneiro/hyprland-vim-syntax", dependencies = { "nvim-treesitter/nvim-treesitter" }, ft = "hypr" },
   { "mistricky/codesnap.nvim", build = "make", opts = { has_breadcrumbs = true } },
   {
     "linrongbin16/gitlinker.nvim",
@@ -141,38 +107,5 @@ return {
       { "<leader>gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
     },
   },
-  {
-    "polarmutex/git-worktree.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      config = function()
-        local Hooks = require("git-worktree.hooks")
-        Hooks.register(Hooks.type.SWITCH, Hooks.builtins.update_current_buffer_on_switch)
-      end,
-    },
-  },
-  {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      {
-        "<leader>gwl",
-        function()
-          require("telescope").extensions.git_worktree.git_worktree()
-        end,
-        desc = "Switch worktrees",
-      },
-      {
-        "<leader>gwc",
-        function()
-          require("telescope").extensions.git_worktree.create_git_worktree()
-        end,
-        desc = "Create a worktree",
-      },
-    },
-    config = function(_, opts)
-      local telescope = require("telescope")
-      telescope.setup(opts)
-      telescope.load_extension("git_worktree")
-    end,
-  },
+  { "mfussenegger/nvim-dap", opts = { manual_mode = false }, dependencies = { "rcarriga/nvim-dap-ui" } },
 }
