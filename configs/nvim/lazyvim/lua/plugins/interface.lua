@@ -111,4 +111,19 @@ return {
       },
     },
   },
+  {
+    "akinsho/bufferline.nvim",
+    keys = {
+      {
+        "<leader><tab>H",
+        "<cmd>BufferLineMovePrev<CR>",
+        desc = "Move current tab to the left",
+      },
+      {
+        "<leader><tab>L",
+        "<cmd>BufferLineMoveNext<CR>",
+        desc = "Move current tab to the right",
+      },
+    },
+  },
 }
