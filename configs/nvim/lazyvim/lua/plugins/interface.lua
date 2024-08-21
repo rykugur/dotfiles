@@ -86,6 +86,28 @@ return {
         tab_size = 32,
       },
     },
+    keys = {
+      {
+        "<leader><tab>H",
+        "<cmd>BufferLineMovePrev<CR>",
+        desc = "Move current tab to the left",
+      },
+      {
+        "<leader><tab>L",
+        "<cmd>BufferLineMoveNext<CR>",
+        desc = "Move current tab to the right",
+      },
+      {
+        "<leader><tab>ch",
+        "<cmd>BufferLineCloseLeft<CR>",
+        desc = "Close all tabs to the left of current",
+      },
+      {
+        "<leader><tab>cl",
+        "<cmd>BufferLineCloseRight<CR>",
+        desc = "Close all tabs to the right of current",
+      },
+    },
   },
   {
     "folke/twilight.nvim",
@@ -108,21 +130,6 @@ return {
           require("zen-mode").toggle()
         end,
         desc = "Toggle Zen-mode",
-      },
-    },
-  },
-  {
-    "akinsho/bufferline.nvim",
-    keys = {
-      {
-        "<leader><tab>H",
-        "<cmd>BufferLineMovePrev<CR>",
-        desc = "Move current tab to the left",
-      },
-      {
-        "<leader><tab>L",
-        "<cmd>BufferLineMoveNext<CR>",
-        desc = "Move current tab to the right",
       },
     },
   },
