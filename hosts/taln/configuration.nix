@@ -42,11 +42,6 @@
       enable = true;
       powerOnBoot = true;
     };
-
-    openrazer = {
-      enable = true;
-      users = [ "${username}" ];
-    };
   };
 
   boot = {
@@ -173,7 +168,7 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/dusty";
-      extraGroups = [ "wheel" "networkmanager" "openrazer" ];
+      extraGroups = [ "wheel" "networkmanager" ];
     };
   };
 
@@ -205,6 +200,7 @@
       kitty.enable = true;
       nvim.enable = true;
       obs.enable = true;
+      razer.enable = true;
       swappy.enable = true;
       tmux.enable = true;
     };

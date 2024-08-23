@@ -10,6 +10,7 @@
     ./nvim.nix
     ./obs.nix
     ./oh-my-posh.nix
+    ./razer.nix
     ./starship.nix
     ./swappy.nix
     ./tmux.nix
