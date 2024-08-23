@@ -33,7 +33,12 @@ abbr --add --global hypr.log tail -Fn 999 /tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE
 
 ### tmux
 abbr --add --global tm tmux
-abbr --add --global tmat tmux a -t
 abbr --add --global tmn tmux new -s
 abbr --add --global tmls tmux ls
 abbr --add --global tmf tmuxifier
+
+if which -a sesh &>/dev/null
+    alias tmat "sesh connect (sesh list -t | fzf)"
+else
+    abbr --add --global tmat tmux a -t
+end
