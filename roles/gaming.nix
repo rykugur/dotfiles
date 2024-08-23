@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, ... }:
+{ config, inputs, lib, pkgs, username, ... }:
 let cfg = config.roles.gaming;
 in {
   options.roles.gaming.enable = lib.mkEnableOption "Enable gaming role.";
@@ -12,13 +12,14 @@ in {
     };
 
     home-manager.users.${username} = {
-      home.packages = with pkgs; [
+      home.packages = [
+        inputs.umu.packages.${pkgs.system}.umu
 
-        gamescope
-        lutris
-        mangohud
-        unixtools.xxd
-        xdelta
+        pkgs.gamescope
+        pkgs.lutris
+        pkgs.mangohud
+        pkgs.unixtools.xxd
+        pkgs.xdelta
       ];
     };
   };

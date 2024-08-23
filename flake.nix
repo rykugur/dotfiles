@@ -26,6 +26,11 @@
 
     nix-gaming.url = "github:fufexan/nix-gaming";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    umu = {
+      url =
+        "git+https://github.com/Open-Wine-Components/umu-launcher/?dir=packaging/nix&submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     luarocks-nix.url = "github:nix-community/luarocks-nix";
 
