@@ -7,7 +7,7 @@ in {
     home-manager.users.${username} = {
       # TODO: better understand this, appears to be required to get the HM config
       config, pkgs, ... }: {
-        home.packages = [ pkgs.tmux pkgs.tmuxifier pkgs.tpm ];
+        home.packages = [ pkgs.sesh pkgs.tmux pkgs.tmuxifier pkgs.tpm ];
 
         home.file = {
           ".config/tmux" = {
