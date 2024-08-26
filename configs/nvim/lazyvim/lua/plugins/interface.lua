@@ -65,6 +65,7 @@ return {
       defaults = {
         file_ignore_patterns = {
           "svg",
+          "yarn.lock",
         },
         layout_strategy = "vertical",
         winblend = 0,
