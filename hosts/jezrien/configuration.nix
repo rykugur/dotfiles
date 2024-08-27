@@ -171,6 +171,7 @@
         enable = true;
         mods.enable = true;
       };
+      wow.enable = true;
       vfio = {
         enable = false; # maybe I'll muck with this some other time
         vfioIds = [ "1002:747e" "1002:ab30" ];

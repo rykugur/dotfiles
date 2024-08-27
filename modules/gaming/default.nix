@@ -8,5 +8,6 @@
     ./steam.nix
     ./vfio.nix
     ./wine.nix
+    ./wow.nix
   ];
 }
