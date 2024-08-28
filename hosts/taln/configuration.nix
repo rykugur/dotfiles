@@ -190,6 +190,7 @@
         enable = true;
         mods.enable = true;
       };
+      wow.enable = true;
     };
 
     programs = {

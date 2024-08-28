@@ -9,6 +9,8 @@ in {
       programs.ags = {
         enable = true;
 
+        configDir = ../../configs/ags;
+
         # additional packages to add to gjs's runtime
         extraPackages = with pkgs; [ gtksourceview webkitgtk accountsservice ];
       };

@@ -33,6 +33,7 @@ in {
         nemo
         nitch
         nixd
+        nix-index
         nvtopPackages.full
         obsidian
         opera
