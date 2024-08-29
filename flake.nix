@@ -34,6 +34,8 @@
 
     luarocks-nix.url = "github:nix-community/luarocks-nix";
 
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
+
     # rust-overlay.url = "github:oxalica/rust-overlay";
 
     # Shameless plug: looking for a way to nixify your themes and make

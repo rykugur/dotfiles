@@ -18,5 +18,6 @@
     ./vivaldi.nix
     ./waybar.nix
     ./wezterm.nix
+    ./zen-browser.nix
   ];
 }
