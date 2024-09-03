@@ -25,6 +25,7 @@ let
 in {
   options.modules.programs.firefox = {
     enable = lib.mkEnableOption "Enable firefox (wrapper) module";
+    mime.enable = lib.mkEnableOption "Enable Firefox MIME handlers";
     ArcWTF.enable = lib.mkEnableOption "Enable ArcWTF theme";
   };
 
@@ -104,7 +105,7 @@ in {
         };
       };
 
-      xdg = {
+      xdg = lib.mkIf cfg.mime.enable {
         enable = true;
 
         mimeApps = {
