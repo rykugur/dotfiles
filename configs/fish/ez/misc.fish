@@ -1,4 +1,13 @@
-# TODO: organize this file
+### randos
+alias pyhttpserver "python2 -m SimpleHTTPServer 8080"
+alias ts.watch "npx tsc -w"
+alias rn.kill "kill -9 (lsof -t -i:8081)"
+
+### android abbreviations
+abbr --add --global adb.reverse 'adb reverse tcp:8081 tcp:8081; adb reverse tcp:8080 tcp:8080'
+abbr --add --global adb.start adb shell am start
+abbr --add --global adb.reset-perms adb shell pm reset-permissions
+abbr --add --global .gw ./gradlew
 
 abbr --add --global .. 'cd ..'
 abbr --add --global ... 'cd ../..'
