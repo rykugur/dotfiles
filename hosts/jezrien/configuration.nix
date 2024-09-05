@@ -186,6 +186,7 @@
       kitty.enable = true;
       nvim.enable = true;
       obs.enable = true;
+      razer.enable = true;
       swappy.enable = true;
       tmux.enable = true;
       virtman.enable = true;

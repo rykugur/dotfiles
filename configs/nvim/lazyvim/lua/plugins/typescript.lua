@@ -1,3 +1,4 @@
+-- general catch-all file for javascript/typescript/react
 return {
   {
     "stevearc/conform.nvim",
@@ -57,5 +58,11 @@ return {
         })
       )
     end,
+  },
+  {
+    "razak17/tailwind-fold.nvim",
+    opts = {},
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = { "html", "svelte", "astro", "vue", "typescriptreact", "php", "blade" },
   },
 }
