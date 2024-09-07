@@ -22,12 +22,14 @@ in {
           enable = true;
 
           matchBlocks = {
-            "jezrien taln tanavast" = {
+            "jezrien taln tanavast klipper pihole" = {
               forwardAgent = true;
               extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
             };
 
             "quadra" = { user = "quadra"; };
+            "pihole" = { user = username; };
+
             "github.com" = {
               extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
             };
