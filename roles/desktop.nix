@@ -4,10 +4,7 @@ in {
   options.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
 
   config = lib.mkIf cfg.enable {
-    modules.programs = {
-      firefox.enable = true;
-      zen-browser.enable = true;
-    };
+    modules.programs = { zen-browser.enable = true; };
     modules.wm.gtk.enable = true;
 
     fonts.packages = with pkgs;
