@@ -24,6 +24,7 @@ abbr --add --global grin 'grep -ni'
 abbr --add --global grine 'grep -niRE'
 abbr --add --global pagi 'ps aux | grep -v grep | grep -i'
 abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
+abbr --add --global ssh.forcePass 'ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'
 abbr --add --global sv 'sudo nvim'
 abbr --add --global taill 'tail -Fn 999'
 
