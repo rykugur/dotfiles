@@ -22,7 +22,7 @@ in {
           enable = true;
 
           matchBlocks = {
-            "jezrien taln tanavast klipper pihole" = {
+            "jezrien taln tanavast taldain" = {
               forwardAgent = true;
               extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
             };
