@@ -3,9 +3,9 @@
     "prefix": "module",
     "body": [
       "{ config, lib, pkgs, username, ... }:",
-      "let cfg = config.modules.${1:programs}.${2:my-module};",
+      "let cfg = config.modules.${1:gaming|programs|services|wm}.${2:my-module};",
       "in {",
-      " options.modules.${3:programs}.${4:my-module}.enable =",
+      " options.modules.${3:gaming|programs|services|wm}.${4:my-module}.enable =",
       "   lib.mkEnableOption \"Enable ${5:my module}\";",
       "",
       "config = lib.mkIf cfg.enable {",
@@ -14,6 +14,13 @@
       " };",
       "};$0"
     ],
-    "description": "Log output to console tagged with DERP99 for easy grepping (99 because Anarchy99 from XxX because why not)"
+    "description": "Ez (possibly naive) new module snippet."
+  },
+  "mkEnableOption": {
+    "prefix": "mkEnableOption",
+    "body": [
+      "options.modules.${1:gaming|programs|services|wm}.${2:my-module}.enable = lib.mkEnableOption \"Enable ${3:my module}\";$0"
+    ],
+    "description": "ez mkEnableOption"
   }
 }
