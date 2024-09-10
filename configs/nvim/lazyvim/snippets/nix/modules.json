@@ -1,0 +1,19 @@
+{
+  "new module": {
+    "prefix": "module",
+    "body": [
+      "{ config, lib, pkgs, username, ... }:",
+      "let cfg = config.modules.${1:programs}.${2:my-module};",
+      "in {",
+      " options.modules.${3:programs}.${4:my-module}.enable =",
+      "   lib.mkEnableOption \"Enable ${5:my module}\";",
+      "",
+      "config = lib.mkIf cfg.enable {",
+      " home-manager.users.\\${username} = {",
+      "   $6",
+      " };",
+      "};$0"
+    ],
+    "description": "Log output to console tagged with DERP99 for easy grepping (99 because Anarchy99 from XxX because why not)"
+  }
+}
