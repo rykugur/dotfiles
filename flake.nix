@@ -8,9 +8,10 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
+
     ### hyprland stuff
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    # hyprland.url = "github:hyprwm/Hyprland";
     hyprland-contrib = {
       url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,7 +25,6 @@
     gBar.url = "github:scorpion-26/gBar";
     ags.url = "github:Aylur/ags";
 
-    nix-gaming.url = "github:fufexan/nix-gaming";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     umu = {
       url =
@@ -32,15 +32,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
     luarocks-nix.url = "github:nix-community/luarocks-nix";
-
     zen-browser.url = "github:MarceColl/zen-browser-flake";
-
-    # rust-overlay.url = "github:oxalica/rust-overlay";
-
-    # Shameless plug: looking for a way to nixify your themes and make
-    # everything match nicely? Try nix-colors!
-    # nix-colors.url = "github:misterio77/nix-colors";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs:
@@ -49,7 +44,7 @@
 
       lib = nixpkgs.lib // home-manager.lib;
 
-      systems = [ "x86_64-linux" ];
+      systems = [ "x86_64-linux" "aarch64-linux" ];
       forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
       pkgsFor = lib.genAttrs systems (system:
         import nixpkgs {
@@ -64,14 +59,15 @@
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules;
 
-      nixosConfigurations = {
+      nixosConfigurations = let username = "dusty";
+      in {
         # primary/gaming desktop
         "jezrien" = nixpkgs.lib.nixosSystem {
           modules = [ ./hosts/jezrien ];
           specialArgs = {
             inherit inputs outputs roles;
             hostname = "jezrien";
-            username = "dusty";
+            inherit username;
           };
         };
         # razer blade stealth laptop
@@ -80,31 +76,23 @@
           specialArgs = {
             inherit inputs outputs roles;
             hostname = "taln";
-            username = "dusty";
+            inherit username;
           };
         };
+        # raspberry pi 5
+        # "taldain" = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./hosts/taldain ];
+        #   specialArgs = {
+        #     inherit inputs outputs roles;
+        #     hostname = "taldain";
+        #     inherit username;
+        #   };
+        # };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/tanavast/configuration.nix];
         #   specialArgs = { inherit inputs outputs; };
         # };
       };
-
-      # homeConfigurations = {
-      #   "dusty@jezrien" = home-manager.lib.homeManagerConfiguration {
-      #     pkgs = pkgsFor.x86_64-linux;
-      #     extraSpecialArgs = {inherit inputs outputs;};
-      #     modules = [
-      #       ./home/dusty/jezrien
-      #     #     ];
-      #       };
-      # "dusty@taln" = home-manager.lib.homeManagerConfiguration {
-      #   pkgs = pkgsFor.x86_64-linux;
-      #   extraSpecialArgs = {inherit inputs outputs;};
-      #   modules = [
-      #     ./home/dusty/taln
-      #   ];
-      #   # };
-      # };
     };
 }
