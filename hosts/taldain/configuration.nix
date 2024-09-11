@@ -6,9 +6,16 @@
     # outputs.nixosModules
   ];
 
+  # boot = {
+  #   # kernelPackages = pkgs.linuxPackages_zen;
+  #   loader.grub.enable = true;
+  # };
   boot = {
     # kernelPackages = pkgs.linuxPackages_zen;
-    loader.grub.enable = true;
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
   };
 
   networking = {
