@@ -1,5 +1,7 @@
 { inputs, outputs, lib, config, pkgs, hostname, username, roles, ... }: {
   imports = [
+    ../default.nix
+
     ./hardware-configuration.nix
 
     inputs.home-manager.nixosModules.home-manager
