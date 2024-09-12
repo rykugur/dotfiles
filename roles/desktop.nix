@@ -68,7 +68,6 @@ in {
         duf
         eza
         fzf
-        grc
         jq
         ldns
         lm_sensors

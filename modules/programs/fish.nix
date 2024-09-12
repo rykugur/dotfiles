@@ -17,6 +17,8 @@ in {
       home.packages = with pkgs; [
         babelfish
 
+        grc
+
         fishPlugins.autopair
         fishPlugins.grc
         fishPlugins.fzf-fish
