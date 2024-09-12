@@ -3,8 +3,10 @@
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     inputs.home-manager.nixosModules.home-manager
-    outputs.nixosModules
+    # outputs.nixosModules
   ];
+
+  raspberry-pi-nix.board = "bcm2712";
 
   networking = {
     hostName = hostname;
@@ -80,16 +82,16 @@
     backupFileExtension = "bak";
   };
 
-  modules = {
-    programs = {
-      fish.enable = true;
-      git.enable = true;
-      nvim.enable = true;
-      tmux.enable = true;
-    };
-
-    services = { ssh.enable = true; };
-  };
+  # modules = {
+  #   programs = {
+  #     fish.enable = true;
+  #     git.enable = true;
+  #     nvim.enable = true;
+  #     tmux.enable = true;
+  #   };
+  #
+  #   services = { ssh.enable = true; };
+  # };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
