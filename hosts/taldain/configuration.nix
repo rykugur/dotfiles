@@ -82,16 +82,16 @@
     backupFileExtension = "bak";
   };
 
-  # modules = {
-  #   programs = {
-  #     fish.enable = true;
-  #     git.enable = true;
-  #     nvim.enable = true;
-  #     tmux.enable = true;
-  #   };
-  #
-  #   services = { ssh.enable = true; };
-  # };
+  modules = {
+    programs = {
+      fish.enable = true;
+      git.enable = true;
+      nvim.enable = true;
+      tmux.enable = true;
+    };
+
+    services = { ssh.enable = true; };
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
