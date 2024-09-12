@@ -84,6 +84,7 @@
 
   modules = {
     programs = {
+      _1password.enable = true;
       fish.enable = true;
       git.enable = true;
       nvim.enable = true;
