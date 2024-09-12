@@ -1,6 +1,6 @@
 { inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   imports = [
-    outputs.raspberry-pi-nix.nixosModules.raspberry-pi
+    inputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     inputs.home-manager.nixosModules.home-manager
     outputs.nixosModules
