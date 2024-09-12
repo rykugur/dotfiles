@@ -80,14 +80,15 @@
           };
         };
         # raspberry pi 5
-        # "taldain" = nixpkgs.lib.nixosSystem {
-        #   modules = [ ./hosts/taldain ];
-        #   specialArgs = {
-        #     inherit inputs outputs roles;
-        #     hostname = "taldain";
-        #     inherit username;
-        #   };
-        # };
+        "taldain" = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/taldain ];
+          system = "aarch64-linux";
+          specialArgs = {
+            inherit inputs outputs roles;
+            hostname = "taldain";
+            inherit username;
+          };
+        };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/tanavast/configuration.nix];
