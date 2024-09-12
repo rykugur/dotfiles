@@ -1,6 +1,8 @@
-{ config, lib, pkgs, username, ... }:
+{ config, inputs, lib, pkgs, username, ... }:
 let cfg = config.modules.services.pipewire;
 in {
+  imports = [ inputs.nix-gaming.nixosModules.pipewireLowLatency ];
+
   options.modules.services.pipewire.enable =
     lib.mkEnableOption "Enable pipewire.";
 

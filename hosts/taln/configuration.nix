@@ -6,7 +6,6 @@
 
     inputs.home-manager.nixosModules.home-manager
 
-    inputs.nix-gaming.nixosModules.pipewireLowLatency
     outputs.nixosModules
     roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [

@@ -3,7 +3,7 @@
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     inputs.home-manager.nixosModules.home-manager
-    # outputs.nixosModules
+    outputs.nixosModules
   ];
 
   raspberry-pi-nix.board = "bcm2712";
