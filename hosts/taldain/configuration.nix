@@ -1,22 +1,10 @@
 { inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   imports = [
-    ./hardware-configuration.nix
+    outputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     inputs.home-manager.nixosModules.home-manager
-    # outputs.nixosModules
+    outputs.nixosModules
   ];
-
-  # boot = {
-  #   # kernelPackages = pkgs.linuxPackages_zen;
-  #   loader.grub.enable = true;
-  # };
-  boot = {
-    # kernelPackages = pkgs.linuxPackages_zen;
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
-  };
 
   networking = {
     hostName = hostname;
@@ -58,6 +46,11 @@
       experimental-features = "nix-command flakes";
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
+
+      substituters = [ "https://raspberry-pi-nix.cachix.org" ];
+      trusted-public-keys = [
+        "raspberry-pi-nix.cachix.org-1:WmV2rdSangxW0rZjY/tBvBDSaNFQ3DyEQsVw8EvHn9o="
+      ];
     };
   };
 
@@ -87,18 +80,16 @@
     backupFileExtension = "bak";
   };
 
-  # modules = {
-  #   programs = {
-  #     fish.enable = true;
-  #     git.enable = true;
-  #     nvim.enable = true;
-  #     tmux.enable = true;
-  #   };
-  #
-  #   services = { ssh.enable = true; };
-  # };
+  modules = {
+    programs = {
+      fish.enable = true;
+      git.enable = true;
+      nvim.enable = true;
+      tmux.enable = true;
+    };
 
-  programs = { nix-ld = { enable = true; }; };
+    services = { ssh.enable = true; };
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
