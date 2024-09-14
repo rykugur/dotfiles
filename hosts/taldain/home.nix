@@ -31,7 +31,7 @@
     homeDirectory = "/home/${username}";
   };
 
-  home.packages = with pkgs; [ super-slicer-latest ];
+  home.packages = with pkgs; [ direnv super-slicer-latest ];
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
