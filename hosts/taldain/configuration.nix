@@ -138,12 +138,22 @@
         # and Port
         http_port = 3001;
         # Grafana needs to know on which domain and URL it's running
-        # domain = "taldain";
+        domain = "grafana.taldain";
         # root_url =
         #   "https://taldain/grafana/"; # Not needed if it is `https://your.domain/`
         serve_from_sub_path = true;
       };
     };
+  };
+  services.nginx.virtualHosts.${config.services.grafana.domain} = {
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
+      proxyWebsockets = true;
+    };
+  };
+  services.prometheus = {
+    enable = true;
+    port = 9001;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
