@@ -152,10 +152,9 @@
     enable = true;
     virtualHosts.${config.services.grafana.domain} = {
       locations."/" = {
-        proxyPass =
-          "http://${toString config.services.grafana.settings.http_addr}:${
-            toString config.services.grafana.port
-          }";
+        proxyPass = "http://${
+            toString config.services.grafana.settings.server.http_addr
+          }:${toString config.services.grafana.port}";
         proxyWebsockets = true;
         recommendedProxySettings = true;
       };
