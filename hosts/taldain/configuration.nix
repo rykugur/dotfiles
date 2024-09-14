@@ -135,8 +135,8 @@
     enable = true;
     settings = {
       server = {
-        # Listening Address
-        http_addr = "127.0.0.1";
+        # Listening Addresslog
+        http_addr = "0.0.0.0";
         # and Port
         http_port = 3001;
         # Grafana needs to know on which domain and URL it's running
@@ -155,14 +155,20 @@
     enable = true;
     virtualHosts.${config.services.grafana.settings.server.domain} = {
       locations = {
-        "/grafana" = {
+        "/" = {
+          return = "200 '<html><body>Hello, world</body></html>'";
+          extraConfig = ''
+            default_type text/html;
+          '';
+        };
+        "/grafana/" = {
           proxyPass = "http://${
               toString config.services.grafana.settings.server.http_addr
             }:${toString config.services.grafana.settings.server.http_port}";
           proxyWebsockets = true;
           recommendedProxySettings = true;
         };
-        "/prometheus" = {
+        "/prometheus/" = {
           proxyPass =
             "http://taldain.rhx.sh:${toString config.services.prometheus.port}";
           proxyWebsockets = true;
