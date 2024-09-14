@@ -143,7 +143,20 @@
       };
     };
   };
-  # virtualisation.docker.enable = true;
+  services.nginx = {
+    enable = true;
+    virtualHosts."your.domain" = {
+      addSSL = true;
+      enableACME = true;
+      locations."/grafana/" = {
+        proxyPass = "http://${
+            toString config.services.grafana.settings.server.http_addr
+          }:${toString config.services.grafana.settings.server.http_port}";
+        proxyWebsockets = true;
+        recommendedProxySettings = true;
+      };
+    };
+  };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
