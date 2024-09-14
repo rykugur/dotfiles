@@ -140,9 +140,9 @@
         # and Port
         http_port = 3001;
         # Grafana needs to know on which domain and URL it's running
-        domain = "grafana.taldain";
-        # root_url =
-        #   "https://taldain/grafana/"; # Not needed if it is `https://your.domain/`
+        domain = "taldain.rhx.sh";
+        root_url =
+          "https://taldain.rhx.sh/grafana"; # Not needed if it is `https://your.domain/`
         serve_from_sub_path = true;
       };
     };
@@ -150,7 +150,7 @@
   services.nginx = {
     enable = true;
     virtualHosts.${config.services.grafana.settings.server.domain} = {
-      locations."/" = {
+      locations."/grafana" = {
         proxyPass = "http://${
             toString config.services.grafana.settings.server.http_addr
           }:${toString config.services.grafana.settings.server.http_port}";
