@@ -103,8 +103,7 @@
       ports.http = 3000;
       ports.https = 443;
       prometheus.enable = true;
-      prometheus.path =
-        "http://127.0.0.1:${toString config.services.prometheus.port}/metrics";
+      prometheus.path = "/metrics";
       upstreams.groups.default = [
         "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
       ];
