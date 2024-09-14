@@ -1,9 +1,10 @@
-{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
+{ inputs, outputs, lib, config, pkgs, hostname, roles, username, ... }: {
   imports = [
     inputs.raspberry-pi-nix.nixosModules.raspberry-pi
 
     inputs.home-manager.nixosModules.home-manager
     outputs.nixosModules
+    roles
   ];
 
   raspberry-pi-nix.board = "bcm2712";
@@ -82,6 +83,7 @@
     backupFileExtension = "bak";
   };
 
+  roles.server.enable = true;
   modules = {
     programs = {
       _1password.enable = true;
