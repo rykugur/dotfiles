@@ -153,7 +153,7 @@
       locations."/" = {
         proxyPass = "http://${
             toString config.services.grafana.settings.server.http_addr
-          }:${toString config.services.grafa.settings.server.http_port}";
+          }:${toString config.services.grafana.settings.server.http_port}";
         proxyWebsockets = true;
         recommendedProxySettings = true;
       };
