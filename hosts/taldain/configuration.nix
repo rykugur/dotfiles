@@ -102,6 +102,9 @@
       ports.dns = 53; # Port for incoming DNS Queries.
       ports.http = 3000;
       ports.https = 443;
+      prometheus.enable = true;
+      prometheus.path =
+        "http://127.0.0.1:${toString config.services.prometheus.port}/metrics";
       upstreams.groups.default = [
         "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
       ];
@@ -147,8 +150,12 @@
   };
   services.nginx.virtualHosts.${config.services.grafana.domain} = {
     locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
+      proxyPass =
+        "http://${toString config.services.grafana.settings.http_addr}:${
+          toString config.services.grafana.port
+        }";
       proxyWebsockets = true;
+      recommendedProxySettings = true;
     };
   };
   services.prometheus = {
