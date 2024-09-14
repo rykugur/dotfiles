@@ -147,21 +147,29 @@
       };
     };
   };
-  services.nginx = {
-    enable = true;
-    virtualHosts.${config.services.grafana.settings.server.domain} = {
-      locations."/grafana" = {
-        proxyPass = "http://${
-            toString config.services.grafana.settings.server.http_addr
-          }:${toString config.services.grafana.settings.server.http_port}";
-        proxyWebsockets = true;
-        recommendedProxySettings = true;
-      };
-    };
-  };
   services.prometheus = {
     enable = true;
     port = 9001;
+  };
+  services.nginx = {
+    enable = true;
+    virtualHosts.${config.services.grafana.settings.server.domain} = {
+      locations = {
+        "/grafana" = {
+          proxyPass = "http://${
+              toString config.services.grafana.settings.server.http_addr
+            }:${toString config.services.grafana.settings.server.http_port}";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+        };
+        "/prometheus" = {
+          proxyPass =
+            "http://taldain.rhx.sh:${toString config.services.prometheus.port}";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+        };
+      };
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
