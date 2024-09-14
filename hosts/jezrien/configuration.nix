@@ -53,7 +53,7 @@
 
   networking = {
     hostName = hostname;
-    search = [ "pihole.lan" "pihole" "8.8.8.8" "8.8.4.4" ];
+    search = [ "taldain" "8.8.8.8" "8.8.4.4" ];
     networkmanager.enable = true;
   };
 
