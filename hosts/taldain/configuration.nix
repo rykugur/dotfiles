@@ -100,6 +100,8 @@
     enable = true;
     settings = {
       ports.dns = 53; # Port for incoming DNS Queries.
+      ports.http = 3000;
+      ports.https = 443;
       upstreams.groups.default = [
         "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
       ];
@@ -134,7 +136,7 @@
         # Listening Address
         http_addr = "127.0.0.1";
         # and Port
-        http_port = 3000;
+        http_port = 3001;
         # Grafana needs to know on which domain and URL it's running
         # domain = "taldain";
         # root_url =
