@@ -36,7 +36,6 @@ in {
         nix-index
         nvtopPackages.full
         obsidian
-        opera
         pavucontrol
         playerctl
         radeontop
