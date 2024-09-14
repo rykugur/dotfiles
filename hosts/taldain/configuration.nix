@@ -149,7 +149,7 @@
   };
   services.nginx = {
     enable = true;
-    virtualHosts.${config.services.grafana.domain} = {
+    virtualHosts.${config.services.grafana.settings.server.domain} = {
       locations."/" = {
         proxyPass = "http://${
             toString config.services.grafana.settings.server.http_addr
