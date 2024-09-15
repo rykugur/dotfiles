@@ -153,26 +153,54 @@
   };
   services.nginx = {
     enable = true;
-    virtualHosts.${config.services.grafana.settings.server.domain} = {
-      locations = {
+    virtualHosts = {
+      "localhost" = {
         "/" = {
-          return = "200 '<html><body>Hello, world</body></html>'";
+          return = "200 '<html><body>Hello, localhost</body></html>'";
           extraConfig = ''
             default_type text/html;
           '';
         };
-        "/grafana/" = {
-          proxyPass = "http://${
-              toString config.services.grafana.settings.server.http_addr
-            }:${toString config.services.grafana.settings.server.http_port}";
-          proxyWebsockets = true;
-          recommendedProxySettings = true;
+      };
+      "127.0.0.1" = {
+        "/" = {
+          return = "200 '<html><body>Hello, from 127.0.0.1</body></html>'";
+          extraConfig = ''
+            default_type text/html;
+          '';
         };
-        "/prometheus/" = {
-          proxyPass =
-            "http://taldain.rhx.sh:${toString config.services.prometheus.port}";
-          proxyWebsockets = true;
-          recommendedProxySettings = true;
+
+      };
+      "taldain" = {
+        "/" = {
+          return = "200 '<html><body>Hello, from taldain</body></html>'";
+          extraConfig = ''
+            default_type text/html;
+          '';
+        };
+      };
+      ${config.services.grafana.settings.server.domain} = {
+        locations = {
+          "/" = {
+            return = "200 '<html><body>Hello, world</body></html>'";
+            extraConfig = ''
+              default_type text/html;
+            '';
+          };
+          "/grafana/" = {
+            proxyPass = "http://${
+                toString config.services.grafana.settings.server.http_addr
+              }:${toString config.services.grafana.settings.server.http_port}";
+            proxyWebsockets = true;
+            recommendedProxySettings = true;
+          };
+          "/prometheus/" = {
+            proxyPass = "http://taldain.rhx.sh:${
+                toString config.services.prometheus.port
+              }";
+            proxyWebsockets = true;
+            recommendedProxySettings = true;
+          };
         };
       };
     };
