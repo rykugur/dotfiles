@@ -8,6 +8,13 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    nix-secrets = {
+      url = "git+ssh://git@github.com/rykugur/nix-secrets?shallow=1&ref=main";
+      flake = false;
+    };
+
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 
     ### hyprland stuff
@@ -79,7 +86,7 @@
             inherit username;
           };
         };
-        # raspberry pi 5
+        # raspberry pi 5 - dns ad blocker, klipper server
         "taldain" = nixpkgs.lib.nixosSystem {
           modules = [ ./hosts/taldain ];
           system = "aarch64-linux";
