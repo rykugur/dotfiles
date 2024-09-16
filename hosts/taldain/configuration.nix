@@ -96,90 +96,12 @@
     services = { ssh.enable = true; };
   };
 
-  services.blocky = {
+  services.adguardhome = {
     enable = true;
-    settings = {
-      ports.dns = 53; # Port for incoming DNS Queries.
-      ports.http = 3000;
-      ports.https = 443;
-      prometheus.enable = true;
-      prometheus.path = "/metrics";
-      upstreams.groups.default = [
-        "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
-      ];
-      # For initially solving DoH/DoT Requests when no system Resolver is available.
-      bootstrapDns = {
-        upstream = "https://one.one.one.one/dns-query";
-        ips = [ "1.1.1.1" "1.0.0.1" ];
-      };
-      #Enable Blocking of certian domains.
-      blocking = {
-        blackLists = {
-          #Adblocking
-          ads = [
-            "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-          ];
-          #Another filter for blocking adult sites
-          adult = [ "https://blocklistproject.github.io/Lists/porn.txt" ];
-          #You can add additional categories
-        };
-        #Configure what block categories are used
-        clientGroupsBlock = {
-          default = [ "ads" ];
-          kids = [ "ads" "adult" ];
-        };
-      };
-    };
+    allowDHCP = false;
   };
-  services.grafana = {
-    enable = true;
-    settings = {
-      server = {
-        # Listening Addresslog
-        http_addr = "0.0.0.0";
-        # and Port
-        http_port = 3001;
-        # Grafana needs to know on which domain and URL it's running
-        domain = "taldain.rhx.sh";
-        root_url =
-          "https://taldain.rhx.sh/grafana"; # Not needed if it is `https://your.domain/`
-        serve_from_sub_path = true;
-      };
-    };
-  };
-  services.prometheus = {
-    enable = true;
-    port = 9001;
-  };
-  services.nginx = {
-    enable = true;
-    virtualHosts = {
-      ${config.services.grafana.settings.server.domain} = {
-        locations = {
-          "/" = {
-            return = "200 '<html><body>Hello, world</body></html>'";
-            extraConfig = ''
-              default_type text/html;
-            '';
-          };
-          "/grafana/" = {
-            proxyPass = "http://${
-                toString config.services.grafana.settings.server.http_addr
-              }:${toString config.services.grafana.settings.server.http_port}";
-            proxyWebsockets = true;
-            recommendedProxySettings = true;
-          };
-          "/prometheus/" = {
-            proxyPass = "http://taldain.rhx.sh:${
-                toString config.services.prometheus.port
-              }";
-            proxyWebsockets = true;
-            recommendedProxySettings = true;
-          };
-        };
-      };
-    };
-  };
+  networking.firewall.allowedTCPPorts = [ 80 3000 ];
+  networking.firewall.allowedUDPPorts = [ 53 ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "23.11";
