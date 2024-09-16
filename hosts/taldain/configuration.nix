@@ -154,31 +154,6 @@
   services.nginx = {
     enable = true;
     virtualHosts = {
-      "localhost" = {
-        "/" = {
-          return = "200 '<html><body>Hello, localhost</body></html>'";
-          extraConfig = ''
-            default_type text/html;
-          '';
-        };
-      };
-      "127.0.0.1" = {
-        "/" = {
-          return = "200 '<html><body>Hello, from 127.0.0.1</body></html>'";
-          extraConfig = ''
-            default_type text/html;
-          '';
-        };
-
-      };
-      "taldain" = {
-        "/" = {
-          return = "200 '<html><body>Hello, from taldain</body></html>'";
-          extraConfig = ''
-            default_type text/html;
-          '';
-        };
-      };
       ${config.services.grafana.settings.server.domain} = {
         locations = {
           "/" = {
