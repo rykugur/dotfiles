@@ -49,8 +49,9 @@ in {
               "jezrien taln tanavast taldain" = {
                 forwardAgent = true;
                 extraOptions = {
-                  "IdentityAgent" = "~/.1password/agent.sock";
                   "IdentityFile" = "~/.ssh/id_ed25519";
+                  # "IdentitiesOnly" = "yes";
+                  "IdentityAgent" = "~/.1password/agent.sock";
                 };
               };
 
