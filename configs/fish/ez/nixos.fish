@@ -25,6 +25,10 @@ alias ndl "nd --lua"
 alias ndn "nd --nvim"
 alias ndr "nd --react"
 
+abbr --add --global nf "nix flake"
+abbr --add --global nfc "nix flake check"
+abbr --add --global nfu "nix flake update"
+
 abbr --add --global nr "nix repl"
 abbr --add --global nrn "nix repl --file '<nixpkgs>'"
 abbr --add --global nr. "nix repl --file ."

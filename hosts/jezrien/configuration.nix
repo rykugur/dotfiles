@@ -4,8 +4,6 @@
 
     ./hardware-configuration.nix
 
-    inputs.sops-nix.nixosModules.sops
-
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
@@ -55,8 +53,8 @@
 
   networking = {
     hostName = hostname;
-    search = [ "taldain" "8.8.8.8" "8.8.4.4" ];
-    networkmanager.enable = true;
+    search = [ "router.lan" ];
+    nameservers = [ "10.3.8.157" ];
   };
 
   nixpkgs = {

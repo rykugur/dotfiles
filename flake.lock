@@ -547,24 +547,6 @@
         "type": "github"
       }
     },
-    "nix-secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1726358225,
-        "narHash": "sha256-QfBfMvWXvrokyDCuvu71Hkrdbye2fn9qTfu9HR/0RGE=",
-        "ref": "main",
-        "rev": "fb89844249a3244ad1831cc0d4edd580c511ab2b",
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/rykugur/nix-secrets"
-      },
-      "original": {
-        "ref": "main",
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/rykugur/nix-secrets"
-      }
-    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1725477728,
@@ -838,7 +820,6 @@
         "luarocks-nix": "luarocks-nix",
         "mcmojave-hyprcursor": "mcmojave-hyprcursor",
         "nix-gaming": "nix-gaming",
-        "nix-secrets": "nix-secrets",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_7",
         "nixpkgs-unstable": "nixpkgs-unstable",

@@ -1,0 +1,30 @@
+keys:
+  - &user:
+    - &dusty age1d0p4d7we2z424gs2xste7djkn7f5rqqhf4r4e92gy9v6ewqtzv6snfs404
+  - &hosts:
+    - &jezrien age1zrsq6443zacdx3tpsfryeg2t5wqxz465cxezmar4qu8zgh00v5fsc8vypu
+    - &taln age150regnuejf37m500gahayyrgrnu7mzta88swa88vru4zpdapnpyqyptnua
+    - &tanavast age1rtuyhmau600e49u45s0ea5h4y08f4l4puqk9jkx73ghtlnmptsgq7t6r6p
+    - &taldain age10qrd4ws96e6wd6gtel3pp99mhw4k6gpf9q6st8wp6yk0v7hsvewqpg063k
+
+creation_rules:
+  - path_regex: jezrien/secrets.yaml
+    key_groups:
+      - age:
+          - *dusty
+          - *jezrien
+  - path_regex: taln/secrets.yaml
+    key_groups:
+      - age:
+          - *dusty
+          - *taln
+  - path_regex: tanavast/secrets.yaml
+    key_groups:
+      - age:
+          - *dusty
+          - *tanavast
+  - path_regex: taldain/secrets.yaml
+    key_groups:
+      - age:
+          - *dusty
+          - *taldain

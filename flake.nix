@@ -10,10 +10,6 @@
 
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    nix-secrets = {
-      url = "git+ssh://git@github.com/rykugur/nix-secrets?shallow=1&ref=main";
-      flake = false;
-    };
 
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 

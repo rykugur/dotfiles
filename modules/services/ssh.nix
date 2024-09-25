@@ -26,41 +26,40 @@ in {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXPP3eYU/t0j8PQpaXQMjbol9FUz/AaEDBkGkBGp9Ak"
     ];
 
-    home-manager.users.${username} =
-      let secretsPath = builtins.toString inputs.nix-secrets;
-      in {
-        imports = [ inputs.sops-nix.homeManagerModules.sops ];
+    home-manager.users.${username} = {
+      imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
-        home.packages = with pkgs; [ age sops ];
+      home.packages = with pkgs; [ age sops ];
 
-        sops = {
-          defaultSopsFile = "${secretsPath}/${hostname}/secrets.yaml";
-          age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
-          secrets.ssh_private_key = {
-            path = "/home/${username}/.ssh/id_ed25519";
-          };
+      sops = {
+        defaultSopsFile = ../../hosts/${hostname}/secrets.yaml;
+        age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
+        secrets.ssh_private_key = {
+          path = "/home/${username}/.ssh/id_ed25519";
         };
+      };
 
-        programs = {
-          ssh = {
-            enable = true;
+      programs = {
+        ssh = {
+          enable = true;
 
-            matchBlocks = {
-              "jezrien taln tanavast taldain" = {
-                forwardAgent = true;
-                extraOptions = {
-                  "IdentityFile" = "~/.ssh/id_ed25519";
-                  # "IdentitiesOnly" = "yes";
-                  "IdentityAgent" = "~/.1password/agent.sock";
-                };
-              };
+          matchBlocks = {
+            "jezrien taln tanavast taldain" = {
+              identityFile = "~/.ssh/id_ed25519";
+              identitiesOnly = true;
+              forwardAgent = true;
+              # extraOptions = {
+              #   "IdentitiesOnly" = "yes";
+              #   "IdentityAgent" = "~/.1password/agent.sock";
+              # };
+            };
 
-              "github.com" = {
-                extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
-              };
+            "github.com" = {
+              extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
             };
           };
         };
       };
+    };
   };
 }
