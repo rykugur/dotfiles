@@ -64,8 +64,6 @@
       name = "nix/path/${name}";
       value.source = value.flake;
     }) config.nix.registry;
-
-    systemPackages = with pkgs; [ git neovim ];
   };
 
   users.users = {

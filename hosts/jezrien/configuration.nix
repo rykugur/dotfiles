@@ -114,7 +114,7 @@
       value.source = value.flake;
     }) config.nix.registry;
 
-    systemPackages = with pkgs; [ git neovim nix-search-cli polkit_gnome ];
+    systemPackages = with pkgs; [ polkit_gnome ];
 
     variables = {
       VDPAU_DRIVER = "radeonsi";

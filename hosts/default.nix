@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   config = {
     time.timeZone = "America/Chicago";
 
@@ -29,5 +29,7 @@
       }];
       distributedBuilds = true;
     };
+
+    environment.systemPackages = with pkgs; [ git neovim nix-search-cli ];
   };
 }
