@@ -13,6 +13,8 @@
 
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
     ### hyprland stuff
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprland-contrib = {
