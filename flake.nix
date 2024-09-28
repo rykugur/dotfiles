@@ -91,7 +91,7 @@
           specialArgs = {
             inherit inputs outputs roles;
             hostname = "taldain";
-            inherit username;
+            username = "shazbot";
           };
         };
         # # homelab
