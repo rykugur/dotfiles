@@ -94,15 +94,6 @@
             inherit username;
           };
         };
-        # intel NUC, random testbed (currently testing proxmox)
-        "moxy" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/moxy ];
-          specialArgs = {
-            inherit inputs outputs roles;
-            hostname = "moxy";
-            inherit username;
-          };
-        };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/tanavast/configuration.nix];
