@@ -54,7 +54,7 @@
   networking = {
     hostName = hostname;
     search = [ "router.lan" ];
-    nameservers = [ "10.3.8.157" ];
+    nameservers = [ "10.3.8.203" ];
   };
 
   nixpkgs = {
