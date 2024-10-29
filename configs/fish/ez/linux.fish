@@ -25,6 +25,8 @@ set -gx KNOWN_TMUXIFIER_SESSIONS "sptmm\ndots"
 function tmn --description "Presents the user with a list of tmux sessions to start"
     set -l selection (echo -e $KNOWN_TMUXIFIER_SESSIONS | fzf)
 
+    # set -l local_sessions (tmux ls | awk '{print sub(/:$/,"",$1) ? $1 : $1}')
+
     if test -z $selection
         echo "Nothing selected"
         return
