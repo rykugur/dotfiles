@@ -17,9 +17,23 @@ abbr --add --global ssc 'sudo systemctl'
 
 ### tmux
 abbr --add --global tm tmux
-abbr --add --global tmn tmux new -s
 abbr --add --global tmls tmux ls
 abbr --add --global tmf tmuxifier
+
+# override/add to this env var as needed
+set -gx KNOWN_TMUXIFIER_SESSIONS "sptmm\ndots"
+function tmn --description "Presents the user with a list of tmux sessions to start"
+    set -l selection (echo -e $KNOWN_TMUXIFIER_SESSIONS | fzf)
+
+    # set -l local_sessions (tmux ls | awk '{print sub(/:$/,"",$1) ? $1 : $1}')
+
+    if test -z $selection
+        echo "Nothing selected"
+        return
+    end
+
+    tmuxifier load-session $selection
+end
 
 if which -a sesh &>/dev/null
     alias tmat "sesh connect (sesh list -t | fzf)"

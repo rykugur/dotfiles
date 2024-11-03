@@ -108,4 +108,14 @@ return {
     },
   },
   { "mfussenegger/nvim-dap", opts = { manual_mode = false }, dependencies = { "rcarriga/nvim-dap-ui" } },
+  {
+    "LintaoAmons/scratch.nvim",
+    event = "VeryLazy",
+    cmd = { "Scratch", "ScratchWithName", "ScratchOpen", "ScratchOpenFzf" },
+    config = function()
+      require("scratch").setup({
+        filetypes = { "ts", "tsx", "js", "jsx", "sh", "fish" }, -- filetypes to select from
+      })
+    end,
+  },
 }
