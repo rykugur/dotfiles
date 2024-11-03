@@ -54,7 +54,7 @@
   networking = {
     hostName = hostname;
     search = [ "router.lan" ];
-    nameservers = [ "10.3.8.203" ];
+    # nameservers = [ "10.3.8.203" ];
   };
 
   nixpkgs = {
@@ -165,6 +165,7 @@
     programs = {
       _1password.enable = true;
       fish.enable = true;
+      fuzzel.enable = true;
       git.enable = true;
       keebs.enable = true;
       kitty.enable = true;
@@ -207,6 +208,8 @@
     xserver = {
       enable = true;
       displayManager.startx.enable = true;
+
+      windowManager.openbox.enable = true;
 
       xkb = {
         layout = "us";

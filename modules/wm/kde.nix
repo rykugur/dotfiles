@@ -5,7 +5,16 @@ in {
 
   config = lib.mkIf cfg.enable {
 
-    services.desktopManager.plasma6.enable = true;
+    services = {
+      desktopManager.plasma6.enable = true;
+      displayManager = {
+        defaultSession = "plasmax11";
+        sddm = {
+          enable = true;
+          wayland.enable = false;
+        };
+      };
+    };
 
     qt = {
       enable = true;
