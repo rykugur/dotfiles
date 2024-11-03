@@ -61,6 +61,7 @@
   "plenary.nvim": { "branch": "master", "commit": "2d9b06177a975543726ce5c73fca176cedbffe9d" },
   "project.nvim": { "branch": "main", "commit": "8c6bad7d22eef1b71144b401c9f74ed01526a4fb" },
   "render-markdown.nvim": { "branch": "main", "commit": "18c7ef71fb4b8d83cb0160adc9127fc4d65ca42e" },
+  "scratch.nvim": { "branch": "main", "commit": "ec915805f0cd552b93d3a8cdc79fbf6b5527c429" },
   "tailwind-fold.nvim": { "branch": "main", "commit": "5544fa59307e4ce5ad3e07ef3ddb231775dc5cda" },
   "tailwindcss-colorizer-cmp.nvim": { "branch": "main", "commit": "3d3cd95e4a4135c250faf83dd5ed61b8e5502b86" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "cf48d4dfce44e0b9a2e19a008d6ec6ea6f01a83b" },
