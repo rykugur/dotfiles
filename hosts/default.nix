@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, username, ... }: {
   config = {
     time.timeZone = "America/Chicago";
 

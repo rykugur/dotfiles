@@ -2,21 +2,18 @@
   imports = [
     ./1password.nix
     ./firefox.nix
-    ./fish.nix
     ./fuzzel.nix
     ./git.nix
     ./keebs.nix
-    ./kitty.nix
     ./nvim.nix
     ./obs.nix
-    ./oh-my-posh.nix
     ./razer.nix
-    ./starship.nix
     ./swappy.nix
-    ./tmux.nix
     ./virtman.nix
     ./vivaldi.nix
     ./wezterm.nix
     ./zen-browser.nix
+
+    ./term
   ];
 }

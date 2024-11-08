@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.modules.programs.tmux;
+let cfg = config.modules.programs.term.tmux;
 in {
-  options.modules.programs.tmux.enable = lib.mkEnableOption "Enable tmux";
+  options.modules.programs.term.tmux.enable = lib.mkEnableOption "Enable tmux";
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = {

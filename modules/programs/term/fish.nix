@@ -1,10 +1,10 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.modules.programs.fish;
+let cfg = config.modules.programs.term.fish;
 in {
-  options.modules.programs.fish.enable = lib.mkEnableOption "Enable fish.";
+  options.modules.programs.term.fish.enable = lib.mkEnableOption "Enable fish.";
 
   config = lib.mkIf cfg.enable {
-    modules.programs.oh-my-posh.enable = true;
+    modules.programs.term.oh-my-posh.enable = true;
 
     programs.fish = {
       enable = true;

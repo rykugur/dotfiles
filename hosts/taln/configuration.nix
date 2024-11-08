@@ -177,15 +177,18 @@
 
     programs = {
       _1password.enable = true;
-      fish.enable = true;
       git.enable = true;
       keebs.enable = true;
-      kitty.enable = true;
       nvim.enable = true;
       obs.enable = true;
       razer.enable = true;
       swappy.enable = true;
-      tmux.enable = true;
+
+      term = {
+        fish.enable = true;
+        kitty.enable = true;
+        tmux.enable = true;
+      };
     };
 
     services = {

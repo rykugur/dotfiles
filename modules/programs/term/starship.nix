@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.modules.programs.starship;
+let cfg = config.modules.programs.term.starship;
 in {
-  options.modules.programs.starship.enable =
+  options.modules.programs.term.starship.enable =
     lib.mkEnableOption "Enable starship";
 
   config = lib.mkIf cfg.enable {
