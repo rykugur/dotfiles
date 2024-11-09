@@ -177,6 +177,7 @@
 
     programs = {
       _1password.enable = true;
+      fuzzel.enable = true;
       git.enable = true;
       keebs.enable = true;
       nvim.enable = true;
@@ -185,7 +186,7 @@
       swappy.enable = true;
 
       term = {
-        fish.enable = true;
+        nushell.enable = true;
         kitty.enable = true;
         tmux.enable = true;
       };

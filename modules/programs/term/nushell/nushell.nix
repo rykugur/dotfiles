@@ -13,19 +13,16 @@ let
     rev = "7e3e5779ff86a1b8dadcf7a90eee2e3dcfe449df";
     sha256 = lib.fakeSha256;
   };
+  aliases = import ./aliases.nix;
 in {
   options.modules.programs.term.nushell.enable =
     lib.mkEnableOption "Enable nushell.";
 
   config = lib.mkIf cfg.enable {
-    users.users.${username}.shell = pkgs.nushell;
-
     home-manager.users.${username} = {
-      # home.packages = with pkgs; [ ];
-
       programs.nushell = {
         enable = true;
-        shellAliases = { ll = "ls -al"; };
+        shellAliases = aliases;
       };
 
       programs.starship = {
