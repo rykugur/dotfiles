@@ -174,7 +174,7 @@
       virtman.enable = true;
 
       term = {
-        fish.enable = true;
+        nushell.enable = true;
         kitty.enable = true;
         tmux.enable = true;
       };
