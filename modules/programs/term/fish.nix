@@ -11,7 +11,7 @@ in {
       vendor.functions.enable = true;
     };
 
-    users.users.${username}.shell = pkgs.fish;
+    # users.users.${username}.shell = pkgs.fish;
 
     home-manager.users.${username} = {
       home.packages = with pkgs; [
