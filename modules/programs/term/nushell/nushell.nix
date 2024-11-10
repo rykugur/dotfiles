@@ -13,7 +13,7 @@ let
     rev = "7e3e5779ff86a1b8dadcf7a90eee2e3dcfe449df";
     sha256 = lib.fakeSha256;
   };
-  aliases = import ./aliases.nix;
+  ez = import ./ez;
 in {
   options.modules.programs.term.nushell.enable =
     lib.mkEnableOption "Enable nushell.";
@@ -22,7 +22,8 @@ in {
     home-manager.users.${username} = {
       programs.nushell = {
         enable = true;
-        shellAliases = aliases;
+        environmentVariables = ez.env;
+        shellAliases = ez.aliases;
       };
 
       programs.starship = {
