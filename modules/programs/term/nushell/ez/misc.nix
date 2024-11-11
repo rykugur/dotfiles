@@ -11,9 +11,9 @@
     ll = "ls -al";
     # cwd = ''pwd | tr -d "\n" | wl-copy'';
     # pwdc = "pwd | trim.newlines | wl-copy";
-    dush = "du -sh";
+    duh = "du -h";
     murder = "kill -9";
-    ndots = "cd ~/.dotfiles/; and nvim .";
+    # ndots = "cd ~/.dotfiles/; nvim .";
     getmyip = "dig +short myip.opendns.com @resolver1.opendns.com";
     pingtest = "ping -D -O google.com";
     ytdl = "youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3";

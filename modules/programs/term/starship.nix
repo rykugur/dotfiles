@@ -18,7 +18,7 @@ in {
             heuristic = true;
           };
         } // builtins.fromTOML
-          (builtins.readFile ../../configs/starship/starship-pure.toml)
+          (builtins.readFile ../../../configs/starship/starship-pure.toml)
           // builtins.fromTOML (builtins.readFile (pkgs.fetchFromGitHub {
             owner = "catppuccin";
             repo = "starship";

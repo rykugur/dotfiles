@@ -188,6 +188,7 @@
       term = {
         nushell.enable = true;
         kitty.enable = true;
+        starship.enable = true;
         tmux.enable = true;
       };
     };
