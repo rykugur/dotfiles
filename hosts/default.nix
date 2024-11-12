@@ -31,5 +31,7 @@
     };
 
     environment.systemPackages = with pkgs; [ git neovim nix-search-cli ];
+
+    users.defaultUserShell = pkgs.nushell;
   };
 }
