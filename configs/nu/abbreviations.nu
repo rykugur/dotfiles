@@ -1,5 +1,4 @@
-let docker = {
-  # docker abbreviations
+const docker = {
   dc: "docker compose"
   dcb: "docker compose build"
   dcl: "docker compose logs"
@@ -13,8 +12,7 @@ let docker = {
   lzd: "lazydocker"
 }
 
-let git = {
-  # git abbreviations
+const git = {
   ga: "git add"
   ga.: "git add ."
   gas: "git add (git status --short | grep -E \"(AM|MM)\" | awk \"{print $2}\")"
@@ -69,8 +67,7 @@ let git = {
   turtles: "git commit -m \"it's turtles all the way down\""
 }
 
-let misc = {
-  # misc linux abbreviations
+const misc = {
   ### pacman
   pac: "pacman"
   pacs: "pacman -S"
@@ -91,7 +88,11 @@ let misc = {
   tmf: "tmuxifier"
 }
 
-let devs = { # dev abbreviations
+const nush = {
+  psw: "ps | where"
+}
+
+const dev = {
   adb.reverse: "adb reverse tcp:8081 tcp:8081; adb reverse tcp:8080 tcp:8080"
   adb.start: "adb shell am start"
   adb.reset-perms: "adb shell pm reset-permissions"
@@ -110,4 +111,8 @@ let devs = { # dev abbreviations
   ssh.forcePass: "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
   sv: "sudo nvim"
   taill: "tail -Fn 999"
+}
+
+export def get_abbreviations [] {
+  $dev | merge $nush | merge $misc | merge $git | merge $docker
 }
