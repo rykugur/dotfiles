@@ -24,6 +24,10 @@ in {
         extraConfig = ''
           use ${nupm}/nupm
           source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
+          source ${nu-scripts}/custom-completions/git/git-completions.nu
+          $env.config.hooks.env_change.PWD = (
+            $env.config.hooks.env_change.PWD | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
+          )
           source ~/.dotfiles/configs/nu/config.nu
         '';
       };

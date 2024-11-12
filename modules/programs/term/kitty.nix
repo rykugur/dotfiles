@@ -20,7 +20,6 @@ in {
             remember_window_size = "no";
             initial_window_width = "160c";
             initial_window_height = "40c";
-            shell = "${pkgs.nushell}/bin/nu";
           };
           themeFile = "Catppuccin-Mocha";
         };

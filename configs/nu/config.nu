@@ -2,7 +2,6 @@ $env.DOTFILES_DIR = "~/.dotfiles"
 
 use ./abbreviations.nu
 let abbreviations = abbreviations get_abbreviations
-print $abbreviations
 
 source ./aliases.nu
 

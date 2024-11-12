@@ -88,6 +88,8 @@ const misc = {
   tmf: "tmuxifier"
 }
 
+const nix = {}
+
 const nush = {
   psw: "ps | where"
 }
@@ -114,5 +116,5 @@ const dev = {
 }
 
 export def get_abbreviations [] {
-  $dev | merge $nush | merge $misc | merge $git | merge $docker
+  $dev | merge $nush | merge $misc | merge $nix | merge $git | merge $docker
 }
