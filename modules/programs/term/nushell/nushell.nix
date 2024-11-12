@@ -13,7 +13,6 @@ let
     rev = "7e3e5779ff86a1b8dadcf7a90eee2e3dcfe449df";
     sha256 = "sha256-BNFBQ9kK2/P7mjdBqMj/8cbBPVogK0n1qcx6dx9mer8=";
   };
-  ez = import ./ez;
 in {
   options.modules.programs.term.nushell.enable =
     lib.mkEnableOption "Enable nushell.";
@@ -22,12 +21,11 @@ in {
     home-manager.users.${username} = {
       programs.nushell = {
         enable = true;
-        environmentVariables = ez.env;
         extraConfig = ''
           use ${nupm}/nupm
           source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
+          source ~/.dotfiles/configs/nu/config.nu
         '';
-        shellAliases = ez.aliases;
       };
 
       programs.starship = {

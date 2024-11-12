@@ -7,7 +7,7 @@
     nr = "nix repl";
     nrn = "nix repl --file '<nixpkgs>'";
     "nr." = "nix repl --file .";
-    nrf = ''nix repl --exrp "builtins.getFlake $env.HOME/.dotfiles"'';
+    nrf = ''nix repl --expr \\"builtins.getFlake $env.HOME/.dotfiles\\"'';
     ns = "nix shell";
     snr = "sudo nixos-rebuild";
     snrs = "sudo nixos-rebuild switch";
