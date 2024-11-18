@@ -5,6 +5,7 @@
     ./oh-my-posh.nix
     ./starship.nix
     ./tmux.nix
+    ./zellij.nix
 
     ./nushell
   ];

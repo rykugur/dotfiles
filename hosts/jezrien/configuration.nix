@@ -177,6 +177,7 @@
         nushell.enable = true;
         kitty.enable = true;
         tmux.enable = true;
+        zellij.enable = true;
       };
     };
 

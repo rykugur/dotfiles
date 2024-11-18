@@ -24,7 +24,12 @@ in {
         extraConfig = ''
           use ${nupm}/nupm
           source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
+          source ${nu-scripts}/custom-completions/docker/docker-completions.nu
           source ${nu-scripts}/custom-completions/git/git-completions.nu
+          source ${nu-scripts}/custom-completions/nix/nix-completions.nu
+          source ${nu-scripts}/custom-completions/npm/npm-completions.nu
+          source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu
+          source ${nu-scripts}/custom-completions/zellij/zellij-completions.nu
           $env.config.hooks.env_change.PWD = (
             $env.config.hooks.env_change.PWD | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
           )

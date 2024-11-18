@@ -88,10 +88,28 @@ const misc = {
   tmf: "tmuxifier"
 }
 
-const nix = {}
+const nix = {
+  nf: "nix flake"
+  nfc: "nix flake check"
+  nfu: "nix flake update"
+
+  nr: "nix repl"
+  nrn: "nix repl --file '<nixpkgs>'"
+  nr.: "nix repl --file ."
+  nrf: 'nix repl --expr "builtins.getFlake \"($env.HOME)/.dotfiles\""'
+  #$env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
+
+  nds: "nix-shell"
+  ns: "nix shell"
+
+  snr: "sudo nixos-rebuild"
+  snrs: "sudo nixos-rebuild switch"
+  snrsf: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
+}
 
 const nush = {
   psw: "ps | where"
+  pswni: "ps | where name in"
 }
 
 const dev = {
@@ -116,5 +134,6 @@ const dev = {
 }
 
 export def get_abbreviations [] {
+   # surely there's a better way to do this
   $dev | merge $nush | merge $misc | merge $nix | merge $git | merge $docker
 }
