@@ -5,6 +5,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -43,7 +46,7 @@
     zen-browser.url = "github:MarceColl/zen-browser-flake";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:
     let
       inherit (self) outputs;
 
@@ -99,6 +102,11 @@
         #   modules = [ ./hosts/tanavast/configuration.nix];
         #   specialArgs = { inherit inputs outputs; };
         # };
+      };
+
+      darwinConfigurations."HJ0704F9VK" = nix-darwin.lib.darwinSystem {
+        modules = [ ./hosts/work-macbook/configuration.nix ];
+        specialArgs = { inherit inputs outputs roles; };
       };
     };
 }
