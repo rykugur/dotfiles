@@ -5,11 +5,17 @@ in {
 
   environment.systemPackages = [ pkgs.nixfmt-classic ];
 
-  # home-manager = {
-  #   extraSpecialArgs = { inherit inputs outputs hostname username; };
-  #   users = { ${username} = import ../../users/work/home.nix; };
-  #   backupFileExtension = "bak";
-  # };
+  users.users.${username} = { home = "/Users/${username}"; };
+
+  home-manager = {
+    # extraSpecialArgs = { inherit inputs outputs hostname username; };
+    extraSpecialArgs = {
+      inherit inputs outputs hostname;
+      username = "dustin.jerome";
+    };
+    users = { ${username} = import ../../users/work/home.nix; };
+    backupFileExtension = "bak";
+  };
 
   security.pam.enableSudoTouchIdAuth = true;
 
