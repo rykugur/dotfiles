@@ -170,13 +170,6 @@
       razer.enable = true;
       swappy.enable = true;
       virtman.enable = true;
-
-      term = {
-        nushell.enable = true;
-        kitty.enable = true;
-        tmux.enable = true;
-        zellij.enable = true;
-      };
     };
 
     services = {

@@ -58,6 +58,7 @@ const git = {
   grm: "git remote"
   grv: "git remote -v"
   gss: "git status --short"
+  #gss: 'git status --short | lines | str trim | split column " "'
   gssg: "git status --short | grep"
   gsub: "git submodule"
   gw: "git worktree"
@@ -89,6 +90,9 @@ const misc = {
 }
 
 const nix = {
+  nb: "nix build"
+  ndb: "nix-build"
+
   nf: "nix flake"
   nfc: "nix flake check"
   nfu: "nix flake update"
@@ -99,12 +103,13 @@ const nix = {
   nrf: 'nix repl --expr "builtins.getFlake \"($env.HOME)/.dotfiles\""'
   #$env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
 
-  nds: "nix-shell"
   ns: "nix shell"
+  nds: "nix-shell"
 
   snr: "sudo nixos-rebuild"
   snrs: "sudo nixos-rebuild switch"
   snrsf: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
+  rbld: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
 }
 
 const nush = {

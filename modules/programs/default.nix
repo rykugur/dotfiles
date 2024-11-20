@@ -13,7 +13,5 @@
     ./vivaldi.nix
     ./wezterm.nix
     ./zen-browser.nix
-
-    ./term
   ];
 }

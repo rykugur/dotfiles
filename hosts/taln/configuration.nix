@@ -182,13 +182,6 @@
       obs.enable = true;
       razer.enable = true;
       swappy.enable = true;
-
-      term = {
-        nushell.enable = true;
-        kitty.enable = true;
-        starship.enable = true;
-        tmux.enable = true;
-      };
     };
 
     services = {

@@ -66,6 +66,7 @@
 
       overlays = import ./overlays { inherit inputs; };
       nixosModules = import ./modules;
+      hmModules = import ./modules/home-manager;
 
       nixosConfigurations = let username = "dusty";
       in {

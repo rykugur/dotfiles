@@ -85,12 +85,6 @@
       _1password.enable = true;
       git.enable = true;
       nvim.enable = true;
-
-      term = {
-        fish.enable = true;
-        tmux.enable = true;
-
-      };
     };
 
     services = { ssh.enable = true; };

@@ -2,11 +2,9 @@
   imports = [
     ./fish.nix
     ./kitty.nix
-    ./oh-my-posh.nix
+    ./nushell.nix
     ./starship.nix
     ./tmux.nix
     ./zellij.nix
-
-    ./nushell
   ];
 }
