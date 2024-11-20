@@ -1,17 +1,37 @@
 { inputs, outputs, lib, config, pkgs, hostname, roles, ... }:
 let username = "dustin.jerome";
 in {
-  imports = [ inputs.home-manager.darwinModules.home-manager ];
+  ### system config
+  imports = [
+    inputs.home-manager.darwinModules.home-manager
+
+    # outputs.nixosModules
+    # roles
+  ];
 
   environment.systemPackages = [ pkgs.nixfmt-classic ];
 
-  # home-manager = {
-  #   extraSpecialArgs = { inherit inputs outputs hostname username; };
-  #   users = { ${username} = import ../../users/work/home.nix; };
-  #   backupFileExtension = "bak";
-  # };
+  users.users.${username} = { home = "/Users/${username}"; };
 
   security.pam.enableSudoTouchIdAuth = true;
+
+  ### home-manager config
+
+  home-manager = {
+    # extraSpecialArgs = { inherit inputs outputs hostname username; };
+    extraSpecialArgs = {
+      inherit inputs outputs hostname;
+      username = "dustin.jerome";
+    };
+    users = { ${username} = import ../../users/work/home.nix; };
+    backupFileExtension = "bak";
+  };
+
+  ### roles and modules
+
+  # roles = { dev.enable = true; };
+
+  ### stuff to mostly ignore
 
   # Set Git commit hash for darwin-version.
   system.configurationRevision =
