@@ -19,7 +19,5 @@ in {
     enable = lib.mkEnableOption "Enable albert home-manager module.";
   };
 
-  config = lib.mkIf cfg.enable {
-    home-manager.users.${username} = { home.packages = [ albertOverride ]; };
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ albertOverride ]; };
 }

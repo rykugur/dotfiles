@@ -194,6 +194,9 @@
     mangohud
     unixtools.xxd
     xdelta
+
+    libtool
+    neovide
   ];
 
   rhx = {
@@ -212,7 +215,7 @@
     obs.enable = true;
     razer.enable = true;
     ssh.enable = true;
-    starcitizen.enable = true;
+    # starcitizen.enable = true;
     starsector = {
       enable = true;
       mods.enable = true;

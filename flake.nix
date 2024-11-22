@@ -59,7 +59,6 @@
           inherit system;
           config.allowUnfree = true;
         });
-      roles = import ./roles;
     in {
       devShells =
         forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
@@ -74,30 +73,30 @@
         "jezrien" = nixpkgs.lib.nixosSystem {
           modules = [ ./hosts/jezrien ];
           specialArgs = {
-            inherit inputs outputs roles;
+            inherit inputs outputs;
             hostname = "jezrien";
             inherit username;
           };
         };
-        # razer blade stealth laptop
-        "taln" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taln ];
-          specialArgs = {
-            inherit inputs outputs roles;
-            hostname = "taln";
-            inherit username;
-          };
-        };
-        # raspberry pi 5 - dns ad blocker, klipper server
-        "taldain" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taldain ];
-          system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs roles;
-            hostname = "taldain";
-            username = "shazbot";
-          };
-        };
+        # # razer blade stealth laptop
+        # "taln" = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./hosts/taln ];
+        #   specialArgs = {
+        #     inherit inputs outputs;
+        #     hostname = "taln";
+        #     inherit username;
+        #   };
+        # };
+        # # raspberry pi 5 - dns ad blocker, klipper server
+        # "taldain" = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./hosts/taldain ];
+        #   system = "aarch64-linux";
+        #   specialArgs = {
+        #     inherit inputs outputs;
+        #     hostname = "taldain";
+        #     username = "shazbot";
+        #   };
+        # };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/tanavast/configuration.nix];

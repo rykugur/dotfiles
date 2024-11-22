@@ -5,8 +5,9 @@ in {
     enable = lib.mkEnableOption "Enable ags home-manager module.";
   };
 
+  imports = [ inputs.ags.homeManagerModules.default ];
+
   config = lib.mkIf cfg.enable {
-    imports = [ inputs.ags.homeManagerModules.default ];
     programs.ags = {
       enable = true;
 

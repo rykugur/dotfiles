@@ -15,7 +15,8 @@
     ./nvim.nix
     ./obs.nix
     ./ssh.nix
-    ./starcitizen.nix
+    # TODO: figure out a way around this, issues on nix-darwin
+    # ./starcitizen.nix
     ./starsector.nix
     ./starship.nix
     ./swaylock.nix

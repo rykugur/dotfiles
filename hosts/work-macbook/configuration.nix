@@ -4,7 +4,8 @@
     inputs.home-manager.darwinModules.home-manager
 
     # outputs.nixosModules
-    outputs.hmModules
+    # outputs.hmModules
+    # (builtins.removeAttrs outputs.hmModules [ "zen-browser" ])
     # roles
   ];
 
@@ -17,7 +18,6 @@
   ### home-manager config
 
   home-manager = {
-    # extraSpecialArgs = { inherit inputs outputs hostname username; };
     extraSpecialArgs = { inherit inputs outputs hostname username; };
     users = { ${username} = import ../../users/work/home.nix; };
     backupFileExtension = "bak";

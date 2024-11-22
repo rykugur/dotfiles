@@ -1,12 +1,13 @@
-{ config, inputs, lib, pkgs, hostname, username, ... }:
+{ config, inputs, lib, pkgs, hostname, ... }:
 let cfg = config.rhx.ssh;
 in {
   options.rhx.ssh = {
     enable = lib.mkEnableOption "Enable ssh home-manager module.";
   };
 
+  imports = [ inputs.sops-nix.homeManagerModules.sops ];
+
   config = lib.mkIf cfg.enable {
-    imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
     home.packages = with pkgs; [ age sops ];
 

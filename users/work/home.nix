@@ -1,6 +1,8 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { outputs, pkgs, username, ... }: {
+  imports = [ outputs.hmModules ];
+
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -40,15 +42,19 @@
     prettierd
     stylua
     tldr
+    zoxide
   ];
 
   rhx = {
     fish.enable = true;
-    git.enable = true;
+    git = {
+      enable = true;
+      gitconfig.enable = false;
+    };
     kitty.enable = true;
     nushell.enable = true;
     nvim.enable = true;
-    ssh.enable = true;
+    # ssh.enable = true;
     starship.enable = true;
     tmux.enable = true;
     zellij.enable = true;

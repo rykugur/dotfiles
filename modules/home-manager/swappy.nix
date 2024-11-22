@@ -1,8 +1,8 @@
 { config, lib, ... }:
-let cfg = config.rhx.obs;
+let cfg = config.rhx.swappy;
 in {
-  options.rhx.obs = {
-    enable = lib.mkEnableOption "Enable obs home-manager module.";
+  options.rhx.swappy = {
+    enable = lib.mkEnableOption "Enable swappy home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
