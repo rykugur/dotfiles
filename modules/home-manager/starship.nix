@@ -2,7 +2,7 @@
 let cfg = config.rhx.starship;
 in {
   options.rhx.starship = {
-    enable = lib.mkEnableOption "Enable fish home-manager module.";
+    enable = lib.mkEnableOption "Enable starship home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {

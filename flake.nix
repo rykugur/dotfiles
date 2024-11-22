@@ -65,7 +65,7 @@
         forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
 
       overlays = import ./overlays { inherit inputs; };
-      nixosModules = import ./modules;
+      nixosModules = import ./modules/nixos;
       hmModules = import ./modules/home-manager;
 
       nixosConfigurations = let username = "dusty";

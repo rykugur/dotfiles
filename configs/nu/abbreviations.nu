@@ -100,8 +100,7 @@ const nix = {
   nr: "nix repl"
   nrn: "nix repl --file '<nixpkgs>'"
   nr.: "nix repl --file ."
-  nrf: 'nix repl --expr "builtins.getFlake \"($env.HOME)/.dotfiles\""'
-  #$env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
+  nrf: 'nix repl --expr $"builtins.getFlake \"($env.HOME)/.dotfiles\""'
 
   ns: "nix shell"
   nds: "nix-shell"

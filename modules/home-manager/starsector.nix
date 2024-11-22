@@ -1,6 +1,6 @@
-{ config, lib, pkgs, username, ... }:
+{ config, lib, pkgs, ... }:
 let
-  cfg = config.modules.gaming.starsector;
+  cfg = config.rhx.starsector;
   mkStarsectorMod = { name ? "nutsack", src, deps ? [ ], }:
     pkgs.stdenv.mkDerivation {
       inherit name;
@@ -76,22 +76,20 @@ let
   # modsDrv = with pkgs.starsectorMods.starsectorMods;
   #   mkModDirDrv [ lazylib magiclib nexerelin graphicslib ];
 in {
-  options.modules.gaming.starsector = {
-    enable = lib.mkEnableOption "Enable Starsector.";
+  options.rhx.starsector = {
+    enable = lib.mkEnableOption "Enable starsector home-manager module.";
     mods.enable = lib.mkEnableOption "Enable starsector mods.";
   };
 
   config = lib.mkIf cfg.enable {
-    home-manager.users.${username} = {
-      home.packages = [ pkgs.starsector ];
+    home.packages = [ pkgs.starsector ];
 
-      home.file = lib.mkIf cfg.mods.enable {
-        ".local/share/starsector/mods/lazylib" = { source = "${lazylib}"; };
-        ".local/share/starsector/mods/magiclib" = { source = "${magiclib}"; };
-        ".local/share/starsector/mods/nexerelin" = { source = "${nexerelin}"; };
-        ".local/share/starsector/mods/graphicslib" = {
-          source = "${graphicslib}/GraphicsLib"; # temporary workaround
-        };
+    home.file = lib.mkIf cfg.mods.enable {
+      ".local/share/starsector/mods/lazylib" = { source = "${lazylib}"; };
+      ".local/share/starsector/mods/magiclib" = { source = "${magiclib}"; };
+      ".local/share/starsector/mods/nexerelin" = { source = "${nexerelin}"; };
+      ".local/share/starsector/mods/graphicslib" = {
+        source = "${graphicslib}/GraphicsLib"; # temporary workaround
       };
     };
   };

@@ -32,6 +32,8 @@
 
     environment.systemPackages = with pkgs; [ git neovim nix-search-cli ];
 
+    programs.dconf.enable = true;
+
     # Necessary for using flakes on this system.
     nix.settings.experimental-features = "nix-command flakes pipe-operators";
 

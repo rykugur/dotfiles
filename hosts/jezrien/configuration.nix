@@ -140,6 +140,12 @@
     extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
   };
 
+  rhx = {
+    _1password.enable = true;
+    razer.enable = true;
+    virtman.enable = true;
+  };
+
   roles = {
     desktop.enable = true;
     dev.enable = true;
@@ -158,18 +164,6 @@
         enable = false; # maybe I'll muck with this some other time
         vfioIds = [ "1002:747e" "1002:ab30" ];
       };
-    };
-
-    programs = {
-      _1password.enable = true;
-      fuzzel.enable = true;
-      git.enable = true;
-      keebs.enable = true;
-      nvim.enable = true;
-      obs.enable = true;
-      razer.enable = true;
-      swappy.enable = true;
-      virtman.enable = true;
     };
 
     services = {
@@ -210,6 +204,30 @@
         layout = "us";
         variant = "";
       };
+    };
+
+    udev = {
+      enable = true;
+      packages = [ pkgs.via pkgs.vial ];
+      extraRules = ''
+        # Wooting One Legacy
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff01", TAG+="uaccess"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff01", TAG+="uaccess"
+
+        # Wooting One update mode
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2402", TAG+="uaccess"
+
+        # Wooting Two Legacy
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff02", TAG+="uaccess"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff02", TAG+="uaccess"
+
+        # Wooting Two update mode
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2403", TAG+="uaccess"
+
+        # Generic Wootings
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31e3", TAG+="uaccess"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="31e3", TAG+="uaccess"
+      '';
     };
   };
 

@@ -59,10 +59,18 @@
   ];
 
   rhx = {
+    fuzzel.enable = true;
+    git.enable = true;
+    keebs.enable = true;
     kitty.enable = true;
     nushell.enable = true;
+    nvim.enable = true;
+    obs.enable = true;
+    razer.enable = true;
     starship.enable = true;
+    swappy.enable = true;
     tmux.enable = true;
+    virtman.enable = true;
     zellij.enable = true;
   };
 

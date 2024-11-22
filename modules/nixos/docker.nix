@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.modules.services.docker;
+let cfg = config.rhx.docker;
 in {
-  options.modules.services.docker.enable = lib.mkEnableOption "Enable docker";
+  options.rhx.docker.enable = lib.mkEnableOption "Enable docker nixOS module";
 
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {

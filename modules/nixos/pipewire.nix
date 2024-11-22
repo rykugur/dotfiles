@@ -1,10 +1,8 @@
-{ config, inputs, lib, pkgs, username, ... }:
-let cfg = config.modules.services.pipewire;
+{ config, lib, pkgs, username, ... }:
+let cfg = config.rhx.pipewire;
 in {
-  imports = [ inputs.nix-gaming.nixosModules.pipewireLowLatency ];
-
-  options.modules.services.pipewire.enable =
-    lib.mkEnableOption "Enable pipewire.";
+  options.rhx.pipewire.enable =
+    lib.mkEnableOption "Enable pipewire nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
