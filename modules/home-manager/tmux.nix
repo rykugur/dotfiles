@@ -2,7 +2,7 @@
 let cfg = config.rhx.tmux;
 in {
   options.rhx.tmux = {
-    enable = lib.mkEnableOption "Enable fish home-manager module.";
+    enable = lib.mkEnableOption "Enable tmux home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {

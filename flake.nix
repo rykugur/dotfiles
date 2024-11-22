@@ -59,13 +59,12 @@
           inherit system;
           config.allowUnfree = true;
         });
-      roles = import ./roles;
     in {
       devShells =
         forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
 
       overlays = import ./overlays { inherit inputs; };
-      nixosModules = import ./modules;
+      nixosModules = import ./modules/nixos;
       hmModules = import ./modules/home-manager;
 
       nixosConfigurations = let username = "dusty";
@@ -74,30 +73,30 @@
         "jezrien" = nixpkgs.lib.nixosSystem {
           modules = [ ./hosts/jezrien ];
           specialArgs = {
-            inherit inputs outputs roles;
+            inherit inputs outputs;
             hostname = "jezrien";
             inherit username;
           };
         };
-        # razer blade stealth laptop
-        "taln" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taln ];
-          specialArgs = {
-            inherit inputs outputs roles;
-            hostname = "taln";
-            inherit username;
-          };
-        };
-        # raspberry pi 5 - dns ad blocker, klipper server
-        "taldain" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taldain ];
-          system = "aarch64-linux";
-          specialArgs = {
-            inherit inputs outputs roles;
-            hostname = "taldain";
-            username = "shazbot";
-          };
-        };
+        # # razer blade stealth laptop
+        # "taln" = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./hosts/taln ];
+        #   specialArgs = {
+        #     inherit inputs outputs;
+        #     hostname = "taln";
+        #     inherit username;
+        #   };
+        # };
+        # # raspberry pi 5 - dns ad blocker, klipper server
+        # "taldain" = nixpkgs.lib.nixosSystem {
+        #   modules = [ ./hosts/taldain ];
+        #   system = "aarch64-linux";
+        #   specialArgs = {
+        #     inherit inputs outputs;
+        #     hostname = "taldain";
+        #     username = "shazbot";
+        #   };
+        # };
         # # homelab
         # tanavast = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/tanavast/configuration.nix];
@@ -109,7 +108,11 @@
         # work macbook
         "HJ0704F9VK" = nix-darwin.lib.darwinSystem {
           modules = [ ./hosts/work-macbook/configuration.nix ];
-          specialArgs = { inherit inputs outputs roles; };
+          specialArgs = {
+            inherit inputs outputs;
+            hostname = "";
+            username = "dustin.jerome";
+          };
         };
       };
     };

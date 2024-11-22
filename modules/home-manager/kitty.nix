@@ -2,7 +2,7 @@
 let cfg = config.rhx.kitty;
 in {
   options.rhx.kitty = {
-    enable = lib.mkEnableOption "Enable fish home-manager module.";
+    enable = lib.mkEnableOption "Enable kitty home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {

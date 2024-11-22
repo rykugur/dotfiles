@@ -6,6 +6,8 @@ let abbreviations = abbreviations get_abbreviations
 
 source ./aliases.nu
 
+source ./commands.nu
+
 $env.config = {
   keybindings: [
     {

@@ -2,7 +2,7 @@
 let cfg = config.rhx.zellij;
 in {
   options.rhx.zellij = {
-    enable = lib.mkEnableOption "Enable fish home-manager module.";
+    enable = lib.mkEnableOption "Enable zellij home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
