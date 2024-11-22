@@ -16,6 +16,7 @@ in {
       gh.enable = true;
     };
 
-    home.file.".gitconfig".source = ../../configs/gitconfig;
+    home.file.".gitconfig" =
+      lib.mkIf cfg.gitconfig.enable { source = ../../configs/gitconfig; };
   };
 }

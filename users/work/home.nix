@@ -42,7 +42,6 @@
     prettierd
     stylua
     tldr
-    zoxide
   ];
 
   rhx = {

@@ -181,7 +181,6 @@
     tree
     usbutils
     wget
-    zoxide
 
     btop
     iotop
