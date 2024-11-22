@@ -31,7 +31,16 @@
     homeDirectory = "/Users/${username}";
   };
 
-  home.packages = with pkgs; [ prettierd stylua ];
+  home.packages = with pkgs; [
+    bat
+    direnv
+    nixd
+    nixfmt-classic
+    nix-index
+    prettierd
+    stylua
+    tldr
+  ];
 
   rhx = {
     fish.enable = true;

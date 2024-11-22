@@ -78,6 +78,7 @@
   };
 
   home.packages = with pkgs; [
+    direnv
     prettierd
     stylua
 
@@ -116,6 +117,83 @@
     catppuccin-gtk
     catppuccin-cursors
     catppuccin-papirus-folders
+
+    baobab
+    bat
+    bottom
+    easyeffects
+    fastfetch
+    file
+    file-roller
+    google-chrome
+    jellyfin-media-player
+    lampray
+    mousai
+    (nerdfonts.override {
+      fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
+    })
+    nemo
+    nitch
+    nixd
+    nix-index
+    nvtopPackages.full
+    obsidian
+    pavucontrol
+    playerctl
+    radeontop
+    seahorse
+    solaar
+    spotify
+    sshfs
+    tigervnc
+    tldr
+    vlc
+    # mikrotik router mgmt app .
+    (winbox.override { wine = wineWowPackages.waylandFull; })
+    xdg-utils
+    xfce.thunar
+    zenity
+
+    feh
+    xfce.ristretto
+
+    wofi
+    wofi-emoji
+
+    p7zip
+    unzip
+    xz
+    zip
+
+    dnsutils
+    duf
+    eza
+    fzf
+    jq
+    ldns
+    lm_sensors
+    nmap
+    pciutils
+    psmisc
+    ripgrep
+    silver-searcher
+    speedtest-cli
+    tree
+    usbutils
+    wget
+    zoxide
+
+    btop
+    iotop
+    iftop
+
+    inputs.umu.packages.${pkgs.system}.umu
+
+    gamescope
+    lutris
+    mangohud
+    unixtools.xxd
+    xdelta
   ];
 
   rhx = {

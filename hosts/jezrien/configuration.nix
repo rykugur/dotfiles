@@ -1,4 +1,4 @@
-{ inputs, outputs, lib, config, pkgs, hostname, username, roles, ... }: {
+{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   imports = [
     ../default.nix
 
@@ -7,7 +7,6 @@
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
-    roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
