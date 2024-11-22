@@ -1,4 +1,3 @@
-
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { outputs, pkgs, username, ... }: {
@@ -32,10 +31,19 @@
     homeDirectory = "/Users/${username}";
   };
 
-  home.packages = with pkgs; [
-    prettierd
-    stylua
-  ];
+  home.packages = with pkgs; [ prettierd stylua ];
+
+  rhx = {
+    fish.enable = true;
+    git.enable = true;
+    kitty.enable = true;
+    nushell.enable = true;
+    nvim.enable = true;
+    ssh.enable = true;
+    starship.enable = true;
+    tmux.enable = true;
+    zellij.enable = true;
+  };
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;

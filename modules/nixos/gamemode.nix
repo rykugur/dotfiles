@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }:
-let cfg = config.modules.gaming.gamemode;
+let cfg = config.rhx.gamemode;
 in {
-  options.modules.gaming.gamemode.enable = lib.mkEnableOption "Enable Gamemode";
+  options.rhx.gamemode.enable =
+    lib.mkEnableOption "Enable gamemode nixOS module";
 
   config = lib.mkIf cfg.enable {
     programs.gamemode = {

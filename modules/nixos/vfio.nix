@@ -1,16 +1,16 @@
 { config, lib, pkgs, username, ... }:
 let
-  cfg = config.modules.gaming.vfio;
-  vfioIds = config.modules.gaming.vfio.vfioIds;
+  cfg = config.rhx.vfio;
+  vfioIds = cfg.vfioIds;
   vfioIdsFmt = with builtins;
     if (length vfioIds > 0) then concatStringsSep "," vfioIds else "";
 in {
-  options.modules.gaming.vfio = {
-    enable = lib.mkEnableOption "Enable VFIO passthrough.";
+  options.rhx.vfio = {
+    enable = lib.mkEnableOption "Enable vfio nixOS module";
     vfioIds = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = "A list of vfio device ids.";
+      description = "A list of vfio device ids to pass through.";
     };
   };
 

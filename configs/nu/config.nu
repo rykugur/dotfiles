@@ -6,11 +6,7 @@ let abbreviations = abbreviations get_abbreviations
 
 source ./aliases.nu
 
-#ls ./commands | where type == file | each { |file| source $file.name }
-#const path = "~/some/path" 
-#const if ($path | path expand | path exists) {
-#  source $path
-#}
+source ./commands.nu
 
 $env.config = {
   keybindings: [

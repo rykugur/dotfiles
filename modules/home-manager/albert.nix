@@ -1,6 +1,6 @@
 { config, lib, pkgs, username, ... }:
 let
-  cfg = config.modules.wm.albert;
+  cfg = config.rhx.albert;
   dracula-albert-theme = pkgs.fetchFromGitHub {
     owner = "dracula";
     repo = "albert";
@@ -15,8 +15,9 @@ let
     '';
   });
 in {
-  options.modules.wm.albert.enable =
-    lib.mkEnableOption "Enable albert (alfred-like omnilauncher)";
+  options.rhx.albert = {
+    enable = lib.mkEnableOption "Enable albert home-manager module.";
+  };
 
   config = lib.mkIf cfg.enable {
     home-manager.users.${username} = { home.packages = [ albertOverride ]; };

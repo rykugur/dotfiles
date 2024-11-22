@@ -1,1 +1,1 @@
-{ imports = [ ./gaming ./services ./wm ]; }
+{ imports = [ ./nixos ./home-manager ]; }

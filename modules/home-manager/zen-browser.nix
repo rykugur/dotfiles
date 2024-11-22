@@ -6,7 +6,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ inputs.zen-browser.packages.${pkgs.system}.default ];
+    # home.packages = [ inputs.zen-browser.packages.${pkgs.system}.default ];
+    home.packages =
+      lib.optionals (lib.hasAttr pkgs.system inputs.zen-browser.packages)
+      [ inputs.zen-browser.packages.${pkgs.system}.default ];
 
     xdg = {
       enable = true;

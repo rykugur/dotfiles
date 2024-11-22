@@ -1,11 +1,10 @@
-{ inputs, outputs, lib, config, pkgs, hostname, roles, ... }:
-let username = "dustin.jerome";
-in {
+{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   ### system config
   imports = [
     inputs.home-manager.darwinModules.home-manager
 
     # outputs.nixosModules
+    outputs.hmModules
     # roles
   ];
 
@@ -19,10 +18,7 @@ in {
 
   home-manager = {
     # extraSpecialArgs = { inherit inputs outputs hostname username; };
-    extraSpecialArgs = {
-      inherit inputs outputs hostname;
-      username = "dustin.jerome";
-    };
+    extraSpecialArgs = { inherit inputs outputs hostname username; };
     users = { ${username} = import ../../users/work/home.nix; };
     backupFileExtension = "bak";
   };

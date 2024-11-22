@@ -1,4 +1,4 @@
-# this script creates a keys.txt file to be used for sops(-nix)
+# this command creates a keys.txt file to be used for sops(-nix)
 # it assumes that the SSH key you want to use exists already in 1password and that you're logged in
 # if a file already exists at the destination, the script will abort
 def write_stops_age_keysdottxt [out_path: string = "~/.config/sops/age/keys.txt"] {

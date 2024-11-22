@@ -31,6 +31,51 @@
     inherit username;
     homeDirectory = "/home/${username}";
   };
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/mutter" = {
+        auto-maximize = false;
+        check-alive-timeout = "30000";
+      };
+      "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
+      "org/gnome/desktop/wm/preferences" = {
+        audible-bell = false;
+        visual-bell = false;
+      };
+      "org/gnome/desktop/peripherals/keyboard" = {
+        numlock-state = true;
+        remember-numlock-state = true;
+      };
+    };
+  };
+
+  gtk = {
+    enable = true;
+
+    font.name = "CaskaydiaCove Nerd Font Mono 10";
+
+    theme = {
+      name = "Adementary-dark";
+      package = pkgs.adementary-theme;
+    };
+
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "blue";
+      };
+    };
+
+    gtk2.extraConfig = ''
+      gtk-application-prefer-dark-theme=1
+    '';
+
+    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 1; };
+
+    gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; };
+  };
 
   home.packages = with pkgs; [
     prettierd
@@ -56,22 +101,49 @@
     wtype
     xorg.xrandr
     xorg.xbacklight
+
+    steamcmd
+    steam-tui
+
+    bottles
+    protontricks
+    protonup-ng
+    protonup-qt
+    wineWowPackages.waylandFull
+    winetricks
+
+    nwg-look
+    catppuccin-gtk
+    catppuccin-cursors
+    catppuccin-papirus-folders
   ];
 
   rhx = {
+    ags.enable = true;
+    albert.enable = true;
+    discord.enable = true;
+    easyeffects.enable = true;
+    face-tracking.enable = true;
     fuzzel.enable = true;
     git.enable = true;
+    hyprland.enable = true;
     keebs.enable = true;
     kitty.enable = true;
     nushell.enable = true;
     nvim.enable = true;
     obs.enable = true;
     razer.enable = true;
+    ssh.enable = true;
+    starcitizen.enable = true;
+    starsector = {
+      enable = true;
+      mods.enable = true;
+    };
     starship.enable = true;
     swappy.enable = true;
     tmux.enable = true;
-    virtman.enable = true;
     zellij.enable = true;
+    zen-browser.enable = true;
   };
 
   ################## other stuff you shouldn't need to touch
