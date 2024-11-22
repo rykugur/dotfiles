@@ -108,7 +108,6 @@ const nix = {
   snr: "sudo nixos-rebuild"
   snrs: "sudo nixos-rebuild switch"
   snrsf: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
-  rbld: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
 }
 
 const nush = {

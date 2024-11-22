@@ -34,12 +34,14 @@
   };
 
   home.packages = with pkgs; [
+    _1password-cli
     bat
     direnv
     nixd
     nixfmt-classic
     nix-index
     prettierd
+    ripgrep
     stylua
     tldr
   ];

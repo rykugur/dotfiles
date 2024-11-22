@@ -47,3 +47,10 @@ def ndots [] {
   nvim
 }
 
+def rbld [] {
+  if (is-darwin) {
+    darwin-rebuild switch --flake $env.DOTFILES_DIR
+  } else if (is-linux) {
+    sudo nixos-rebuild switch --flake $env.DOTFILES_DIR
+  }
+}
