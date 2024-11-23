@@ -5,12 +5,6 @@ in {
     lib.mkEnableOption "Enable hyprland nixOS module";
 
   config = lib.mkIf cfg.enable {
-    modules.wm = {
-      ags.enable = true;
-      albert.enable = true;
-      swaylock.enable = true;
-    };
-
     programs.hyprland = {
       enable = true;
       package = inputs.hyprland.packages.${pkgs.system}.hyprland;

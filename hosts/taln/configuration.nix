@@ -1,4 +1,4 @@
-{ inputs, outputs, lib, config, pkgs, hostname, username, roles, ... }: {
+{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   imports = [
     ../default.nix
 
@@ -7,7 +7,6 @@
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
-    roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-laptop-ssd
@@ -152,48 +151,6 @@
     };
   };
 
-  home-manager = {
-    extraSpecialArgs = { inherit inputs outputs hostname username; };
-    users = { ${username} = import ../../users/${username}/home.nix; };
-    backupFileExtension = "bak";
-  };
-
-  roles = {
-    desktop.enable = true;
-    dev.enable = true;
-    gaming.enable = true;
-  };
-
-  modules = {
-    gaming = {
-      starsector = {
-        enable = true;
-        mods.enable = true;
-      };
-      wow.enable = true;
-    };
-
-    programs = {
-      _1password.enable = true;
-      fuzzel.enable = true;
-      git.enable = true;
-      keebs.enable = true;
-      nvim.enable = true;
-      obs.enable = true;
-      razer.enable = true;
-      swappy.enable = true;
-    };
-
-    services = {
-      btrfs.enable = true;
-      # easyeffects.enable = true;
-      pipewire.enable = true;
-      ssh.enable = true;
-    };
-
-    wm = { hyprland.enable = true; };
-  };
-
   programs = {
     nix-ld.enable = true;
     seahorse.enable = true;
@@ -222,6 +179,25 @@
 
     blueman = { enable = true; };
     logind = { lidSwitch = "suspend"; };
+  };
+
+  ### custom module stuff
+
+  rhx = {
+    _1password.enable = true;
+    btrfs.enable = true;
+    gamemode.enable = true;
+    hyprland.enable = true;
+    pipewire.enable = true;
+    razer.enable = true;
+    ssh.enable = true;
+    steam.enable = true;
+  };
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs outputs hostname username; };
+    users = { ${username} = import ../../users/${username}/home.nix; };
+    backupFileExtension = "bak";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.gamemode;
+let cfg = config.rhx.steam;
 in {
-  options.rhx.gamemode.enable =
-    lib.mkEnableOption "Enable gamemode nixOS module";
+  options.rhx.steam.enable = lib.mkEnableOption "Enable steam nixOS module";
 
   config = lib.mkIf cfg.enable {
     programs.steam = {

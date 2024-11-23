@@ -23,10 +23,6 @@
     backupFileExtension = "bak";
   };
 
-  ### roles and modules
-
-  # roles = { dev.enable = true; };
-
   ### stuff to mostly ignore
 
   # Set Git commit hash for darwin-version.

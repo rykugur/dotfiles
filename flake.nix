@@ -78,15 +78,15 @@
             inherit username;
           };
         };
-        # # razer blade stealth laptop
-        # "taln" = nixpkgs.lib.nixosSystem {
-        #   modules = [ ./hosts/taln ];
-        #   specialArgs = {
-        #     inherit inputs outputs;
-        #     hostname = "taln";
-        #     inherit username;
-        #   };
-        # };
+        # razer blade stealth laptop
+        "taln" = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/taln ];
+          specialArgs = {
+            inherit inputs outputs;
+            hostname = "taln";
+            inherit username;
+          };
+        };
         # # raspberry pi 5 - dns ad blocker, klipper server
         # "taldain" = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/taldain ];

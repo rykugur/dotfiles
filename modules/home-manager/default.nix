@@ -10,6 +10,7 @@
     ./fuzzel.nix
     ./git.nix
     ./hyprland.nix
+    ./keebs.nix
     ./kitty.nix
     ./nushell.nix
     ./nvim.nix
