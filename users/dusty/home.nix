@@ -215,11 +215,11 @@
     nvim.enable = true;
     obs.enable = true;
     ssh.enable = true;
-    # starcitizen.enable = true;
-    # starsector = {
-    #   enable = true;
-    #   mods.enable = true;
-    # };
+    #starcitizen.enable = true;
+    starsector = {
+      enable = true;
+      mods.enable = true;
+    };
     starship.enable = true;
     swappy.enable = true;
     tmux.enable = true;

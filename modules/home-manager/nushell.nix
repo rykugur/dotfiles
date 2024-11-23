@@ -30,9 +30,9 @@ in {
         source ${nu-scripts}/custom-completions/npm/npm-completions.nu
         source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu
         source ${nu-scripts}/custom-completions/zellij/zellij-completions.nu
-        # $env.config.hooks.env_change.PWD = (
-        #   $env.config.hooks.env_change.PWD | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
-        # )
+        $env.config.hooks.pre_prompt = (
+          $env.config.hooks.pre_prompt | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
+        )
         source ~/.dotfiles/configs/nu/config.nu
       '';
     };

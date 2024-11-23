@@ -37,7 +37,6 @@ alias pingtest = ping -D -O google.com
 alias replace.newlines = awk '{printf \%s\\n\, \$0}'
 alias tmat = sesh connect (sesh list -t | fzf)
 alias top = btop
-alias trim.spaces = sed -E 's/[[:space:]]+/ /g'
 alias whatthecommit = curl -s https://whatthecommit.com/index.txt
 alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 ### fast travel
@@ -45,12 +44,4 @@ alias dots = cd $env.DOTFILES_DIR
 def ndots [] {
   cd $env.DOTFILES_DIR
   nvim
-}
-
-def rbld [] {
-  if (is-darwin) {
-    darwin-rebuild switch --flake $env.DOTFILES_DIR
-  } else if (is-linux) {
-    sudo nixos-rebuild switch --flake $env.DOTFILES_DIR
-  }
 }
