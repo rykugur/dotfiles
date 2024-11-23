@@ -34,7 +34,6 @@ in {
         #   $env.config.hooks.env_change.PWD | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
         # )
         source ~/.dotfiles/configs/nu/config.nu
-        source ~/.local/nushell/config.nu
       '';
     };
 

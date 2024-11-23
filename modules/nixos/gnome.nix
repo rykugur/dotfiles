@@ -4,8 +4,6 @@ in {
   options.rhx.gnome.enable = lib.mkEnableOption "Enable gnome nixOS module";
 
   config = lib.mkIf cfg.enable {
-    modules.wm.gtk.enable = true;
-
     environment.systemPackages = with pkgs; [
       gnome-tweaks
 
