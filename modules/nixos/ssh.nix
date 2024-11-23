@@ -1,4 +1,4 @@
-{ config, lib, username, pkgs, ... }:
+{ config, lib, username, ... }:
 let cfg = config.rhx.ssh;
 in {
   options.rhx.ssh.enable = lib.mkEnableOption "Enable ssh nixOS module";
