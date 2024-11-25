@@ -60,3 +60,4 @@ $env.config = {
   ]
 }
 
+#$env.PATH = $env.PATH | uniq

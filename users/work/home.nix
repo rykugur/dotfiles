@@ -37,6 +37,7 @@
     _1password-cli
     bat
     direnv
+    fnm
     nixd
     nixfmt-classic
     nix-index
@@ -44,6 +45,7 @@
     ripgrep
     stylua
     tldr
+    zoxide
   ];
 
   rhx = {
@@ -57,7 +59,7 @@
     nvim.enable = true;
     # ssh.enable = true;
     starship.enable = true;
-    tmux.enable = true;
+    # tmux.enable = true;
     zellij.enable = true;
   };
 
