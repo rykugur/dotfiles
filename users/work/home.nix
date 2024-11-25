@@ -45,7 +45,6 @@
     ripgrep
     stylua
     tldr
-    zoxide
   ];
 
   rhx = {
