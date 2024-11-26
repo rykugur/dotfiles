@@ -8,6 +8,8 @@ source ./aliases.nu
 
 source ./commands.nu
 
+source ./hooks/fnm.nu
+
 $env.config = {
   keybindings: [
     {

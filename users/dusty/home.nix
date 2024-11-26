@@ -177,7 +177,6 @@
     nmap
     pciutils
     psmisc
-    ripgrep
     silver-searcher
     speedtest-cli
     tree

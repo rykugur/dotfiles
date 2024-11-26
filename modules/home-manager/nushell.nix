@@ -24,10 +24,16 @@ in {
       extraConfig = ''
         use ${nupm}/nupm
         source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
+        source ${nu-scripts}/custom-completions/adb/adb-completions.nu
+        source ${nu-scripts}/custom-completions/bat/bat-completions.nu
+        source ${nu-scripts}/custom-completions/curl/curl-completions.nu
         source ${nu-scripts}/custom-completions/docker/docker-completions.nu
         source ${nu-scripts}/custom-completions/git/git-completions.nu
         source ${nu-scripts}/custom-completions/nix/nix-completions.nu
         source ${nu-scripts}/custom-completions/npm/npm-completions.nu
+        source ${nu-scripts}/custom-completions/op/op-completions.nu
+        source ${nu-scripts}/custom-completions/pnpm/pnpm-completions.nu
+        source ${nu-scripts}/custom-completions/rg/rg-completions.nu
         source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu
         source ${nu-scripts}/custom-completions/zellij/zellij-completions.nu
         $env.config.hooks.pre_prompt = (
