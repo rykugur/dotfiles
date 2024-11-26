@@ -18,6 +18,7 @@ in {
         remember_window_size = "no";
         initial_window_width = "160c";
         initial_window_height = "40c";
+        copy_on_select = "clipboard";
       };
       themeFile = "Catppuccin-Mocha";
     };

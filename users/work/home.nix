@@ -42,7 +42,6 @@
     nixfmt-classic
     nix-index
     prettierd
-    ripgrep
     stylua
     tldr
   ];
