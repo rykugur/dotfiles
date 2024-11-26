@@ -42,7 +42,7 @@ alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 ### fast travel
 alias dots = cd $env.DOTFILES_DIR
 def nlocal [] {
-  cd ~/.local/nushell; nvim
+  cd ~/.local/nushell; nvim config.nu
 }
 def ndots [] {
   cd $env.DOTFILES_DIR; nvim
