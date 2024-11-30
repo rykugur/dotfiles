@@ -197,6 +197,8 @@
 
     libtool
     neovide
+
+    telegram-desktop
   ];
 
   rhx = {
