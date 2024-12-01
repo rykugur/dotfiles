@@ -125,7 +125,7 @@ const dev = {
   fish.profile: "fish --profile-startup ./fish.profile -i -c exit"
   pyhttp: "python -m SimpleHTTPServer"
   pyjson: "python -m json.tool"
-  cwd: "pwd | tr -d "\n" | cmd.copy"
+  cwd: "pwd | tr -d \"\n\" | cmd.copy"
   gri: "grep -i"
   grin: "grep -ni"
   grine: "grep -niRE"
@@ -134,6 +134,8 @@ const dev = {
   ssh.forcePass: "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
   sv: "sudo nvim"
   taill: "tail -Fn 999"
+
+  pn: "pnpm"
 }
 
 export def get_abbreviations [] {
