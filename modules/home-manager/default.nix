@@ -9,7 +9,6 @@
     ./fish.nix
     ./fuzzel.nix
     ./git.nix
-    ./hyprland.nix
     ./keebs.nix
     ./kitty.nix
     ./nushell.nix
@@ -26,5 +25,7 @@
     ./wezterm.nix
     ./zellij.nix
     ./zen-browser.nix
+
+    ./hypr
   ];
 }
