@@ -113,6 +113,7 @@ const nix = {
 const nush = {
   psw: "ps | where"
   pswni: "ps | where name in"
+  pagi: "ps | where name =~" # re-using old alias out of habit
 }
 
 const dev = {

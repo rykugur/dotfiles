@@ -15,7 +15,7 @@ in {
       defaultSopsFile = ../../hosts/${hostname}/secrets.yaml;
       age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
       secrets.ssh_private_key = {
-        path = "${config.home.homeDirectory}/.ssh/id_ed25519";
+        path = "${config.home.homeDirectory}/.ssh/ssh_private_key";
       };
     };
 
@@ -25,7 +25,7 @@ in {
 
         matchBlocks = {
           "jezrien taln tanavast taldain" = {
-            identityFile = "~/.ssh/id_ed25519";
+            identityFile = "${config.home.homeDirectory}/.ssh/ssh_private_key";
             identitiesOnly = true;
             forwardAgent = true;
             # extraOptions = {
