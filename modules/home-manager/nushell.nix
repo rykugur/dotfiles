@@ -44,5 +44,10 @@ in {
     };
 
     programs.starship = { enableNushellIntegration = true; };
+
+    programs.zoxide = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
   };
 }
