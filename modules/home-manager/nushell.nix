@@ -23,6 +23,7 @@ in {
       enable = true;
       extraConfig = ''
         use ${nupm}/nupm
+        use ${nu-scripts}/modules/rbenv/rbenv.nu *
         source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
         source ${nu-scripts}/custom-completions/adb/adb-completions.nu
         source ${nu-scripts}/custom-completions/bat/bat-completions.nu
@@ -41,6 +42,12 @@ in {
         )
         source ~/.dotfiles/configs/nu/config.nu
       '';
+    };
+
+    programs.direnv = {
+      enable = true;
+      enableNushellIntegration = true;
+      nix-direnv.enable = true;
     };
 
     programs.starship = { enableNushellIntegration = true; };

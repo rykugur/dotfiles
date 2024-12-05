@@ -36,14 +36,15 @@
   home.packages = with pkgs; [
     _1password-cli
     bat
-    direnv
     fnm
+    prettierd
+    rbenv
+    stylua
+    tldr
+
     nixd
     nixfmt-classic
     nix-index
-    prettierd
-    stylua
-    tldr
   ];
 
   rhx = {
