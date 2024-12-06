@@ -29,6 +29,7 @@ alias dfh = duf
 alias duh = du -h
 alias getmyip = dig +short myip.opendns.com @resolver1.opendns.com
 alias grep = grep --color
+alias ll = ls -al
 alias murder = kill -9
 alias nv = nvim
 alias v = nvim
