@@ -44,6 +44,9 @@
 
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
+
+    # zellij status bar
+    zjstatus.url = "github:dj95/zjstatus";
   };
 
   outputs = { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:

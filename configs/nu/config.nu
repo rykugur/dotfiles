@@ -64,7 +64,7 @@ $env.config = {
 }
 
 # source our local config.nu file last
-#source ~/.local/nushell/config.nu
+source ~/.local/nushell/config.nu
 
 # finally, clean up PATH
-$env.PATH = ($env.PATH | uniq | to text)
+$env.PATH = ($env.PATH | uniq)
