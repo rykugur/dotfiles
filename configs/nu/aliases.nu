@@ -44,10 +44,12 @@ alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 alias dots = cd $env.DOTFILES_DIR
 def nlocal [] {
   let configFile = $env.LOCAL_CONFIG_FILE
+  let dirName = $configFile | path dirname
   if (not ($configFile | path exists)) {
+    mkdir $dirName
     touch $configFile
   }
-  cd ($configFile | path dirname); nvim $configFile
+  cd $dirName; nvim $configFile
 }
 def ndots [] {
   cd $env.DOTFILES_DIR; nvim
