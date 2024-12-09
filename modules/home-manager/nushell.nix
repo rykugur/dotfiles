@@ -56,5 +56,7 @@ in {
       enable = true;
       enableNushellIntegration = true;
     };
+
+    xdg.enable = true;
   };
 }
