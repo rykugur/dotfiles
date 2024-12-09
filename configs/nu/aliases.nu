@@ -29,6 +29,7 @@ alias dfh = duf
 alias duh = du -h
 alias getmyip = dig +short myip.opendns.com @resolver1.opendns.com
 alias grep = grep --color
+alias ll = ls -al
 alias murder = kill -9
 alias nv = nvim
 alias v = nvim
@@ -42,7 +43,13 @@ alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 ### fast travel
 alias dots = cd $env.DOTFILES_DIR
 def nlocal [] {
-  cd ~/.local/nushell; nvim config.nu
+  let configFile = $env.LOCAL_CONFIG_FILE
+  let dirName = $configFile | path dirname
+  if (not ($configFile | path exists)) {
+    mkdir $dirName
+    touch $configFile
+  }
+  cd $dirName; nvim $configFile
 }
 def ndots [] {
   cd $env.DOTFILES_DIR; nvim

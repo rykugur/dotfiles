@@ -21,6 +21,9 @@ in {
   config = lib.mkIf cfg.enable {
     programs.nushell = {
       enable = true;
+      extraEnv = ''
+        $env.LOCAL_CONFIG_FILE = $"($nu.data-dir)/vendor/autoload/config.nu"
+      '';
       extraConfig = ''
         use ${nupm}/nupm
         use ${nu-scripts}/modules/rbenv/rbenv.nu *
