@@ -40,7 +40,6 @@ in {
             "bind \"Ctrl j\"" = { MoveFocusOrTab = "Down"; };
             "bind \"Ctrl k\"" = { MoveFocusOrTab = "Up"; };
             "bind \"Ctrl l\"" = { MoveFocusOrTab = "Right"; };
-            unbind = [ "Ctrl h" "Ctrl j" "Ctrl k" "Ctrl l" ];
           };
         };
         load_plugins = [ "autolock" ];
