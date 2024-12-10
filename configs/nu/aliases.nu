@@ -41,16 +41,23 @@ alias top = btop
 alias whatthecommit = curl -s https://whatthecommit.com/index.txt
 alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 ### fast travel
-alias dots = cd $env.DOTFILES_DIR
-def nlocal [] {
-  let configFile = $env.LOCAL_CONFIG_FILE
-  let dirName = $configFile | path dirname
-  if (not ($configFile | path exists)) {
-    mkdir $dirName
-    touch $configFile
+def --env dots [--local (-l)] {
+  if $local {
+    cd ($env.LOCAL_CONFIG_FILE | path dirname)
+  } else {
+    cd $env.DOTFILES_DIR
   }
-  cd $dirName; nvim $configFile
 }
-def ndots [] {
-  cd $env.DOTFILES_DIR; nvim
+def --env ndots [--local (-l)] {
+  if $local {
+    let configFile = $env.LOCAL_CONFIG_FILE
+    let dirName = $configFile | path dirname
+    if (not ($configFile | path exists)) {
+      mkdir $dirName
+      touch $configFile
+    }
+    cd $dirName; nvim $configFile
+  } else {
+    cd $env.DOTFILES_DIR; nvim
+  }
 }
