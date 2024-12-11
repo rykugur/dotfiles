@@ -36,10 +36,14 @@ in {
         };
         keybinds = {
           normal = {
-            "bind \"Ctrl h\"" = { MoveFocusOrTab = "Left"; };
-            "bind \"Ctrl j\"" = { MoveFocusOrTab = "Down"; };
-            "bind \"Ctrl k\"" = { MoveFocusOrTab = "Up"; };
-            "bind \"Ctrl l\"" = { MoveFocusOrTab = "Right"; };
+            # "bind \"Ctrl h\"" = { MoveFocusOrTab = "Left"; };
+            # "bind \"Ctrl j\"" = { MoveFocusOrTab = "Down"; };
+            # "bind \"Ctrl k\"" = { MoveFocusOrTab = "Up"; };
+            # "bind \"Ctrl l\"" = { MoveFocusOrTab = "Right"; };
+            "bind \"Ctrl h\"" = { MoveFocus = "Left"; };
+            "bind \"Ctrl j\"" = { MoveFocus = "Down"; };
+            "bind \"Ctrl k\"" = { MoveFocus = "Up"; };
+            "bind \"Ctrl l\"" = { MoveFocus = "Right"; };
           };
         };
         load_plugins = [ "autolock" ];
