@@ -9,6 +9,8 @@ source ./aliases.nu
 
 source ./commands.nu
 
+source ./zellij.nu
+
 source ./hooks/fnm.nu
 
 $env.config = {
@@ -62,11 +64,6 @@ $env.config = {
     }
   ]
 }
-
-# source our local config.nu file last
-#if (ls ~/.local/nushell/config.nu | is-not-empty) {
-#  source ~/.local/nushell/config.nu
-#}
 
 # finally, clean up PATH
 $env.PATH = $env.PATH | uniq

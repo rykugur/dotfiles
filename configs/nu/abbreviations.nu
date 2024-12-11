@@ -137,7 +137,11 @@ const dev = {
   pn: "pnpm"
 }
 
+const zellij = {
+  za: "zellij attach"
+}
+
 export def get_abbreviations [] {
    # surely there's a better way to do this
-  $dev | merge $nush | merge $misc | merge $nix | merge $git | merge $docker
+  $dev | merge $nush | merge $misc | merge $nix | merge $git | merge $docker | merge $zellij
 }
