@@ -112,7 +112,7 @@ const nix = {
 
 const nush = {
   psw: "ps | where"
-  pswni: "ps | where name in"
+  pagi: "ps | where name =~"
 }
 
 const dev = {
@@ -129,7 +129,6 @@ const dev = {
   gri: "grep -i"
   grin: "grep -ni"
   grine: "grep -niRE"
-  pagi: "ps aux | grep -v grep | grep -i"
   pwdc: "pwd | trim.newlines | cmd.copy"
   ssh.forcePass: "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
   sv: "sudo nvim"
