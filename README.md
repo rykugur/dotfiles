@@ -9,4 +9,3 @@ The nixOS config is contained within a flake, with home-manager installed as a n
 ## TODO
 
 - lua_ls - autocomplete with third-party libs
-- Install/switch to CaskaydiaCove Nerd Font.

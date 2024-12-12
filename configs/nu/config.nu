@@ -9,8 +9,6 @@ source ./aliases.nu
 
 source ./commands.nu
 
-source ./zellij.nu
-
 source ./hooks/fnm.nu
 
 $env.config = {

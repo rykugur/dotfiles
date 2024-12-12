@@ -131,9 +131,6 @@
     jellyfin-media-player
     lampray
     mousai
-    (nerdfonts.override {
-      fonts = [ "CascadiaCode" "CascadiaMono" "FiraCode" "FiraMono" ];
-    })
     nemo
     nitch
     nixd

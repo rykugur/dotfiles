@@ -104,6 +104,7 @@ const nix = {
 
   ns: "nix shell"
   nds: "nix-shell"
+  nds: "nix-shell -p"
 
   snr: "sudo nixos-rebuild"
   snrs: "sudo nixos-rebuild switch"
