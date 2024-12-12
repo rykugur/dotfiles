@@ -23,6 +23,7 @@ in {
       enable = true;
       extraEnv = ''
         $env.LOCAL_CONFIG_FILE = $"($nu.data-dir)/vendor/autoload/config.nu"
+        $env.config.table.show_empty = false
       '';
       extraConfig = ''
         use ${nupm}/nupm
