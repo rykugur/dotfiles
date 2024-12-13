@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.kitty;
+let
+  cfg = config.rhx.kitty;
+  font = "ZedMono Nerd Font Mono";
+  # font = "CaskaydiaCove Nerd Font Mono";
 in {
   options.rhx.kitty = {
     enable = lib.mkEnableOption "Enable kitty home-manager module.";
@@ -9,10 +12,10 @@ in {
     programs.kitty = {
       enable = true;
       settings = {
-        font_family = "CaskaydiaCove Nerd Font Mono Regular";
-        bold_font = "CaskaydiaCove Nerd Font Mono Bold";
-        italic_font = "CaskaydiaCove Nerd Font Mono Italic";
-        bold_italic_font = "CaskaydiaCove Nerd Font Mono Bold Italic";
+        font_family = "${font} Regular";
+        bold_font = "${font} Bold";
+        italic_font = "${font} Italic";
+        bold_italic_font = "${font} Bold Italic";
         font_size = 11.0;
         enable_audio_bell = "no";
         remember_window_size = "no";
