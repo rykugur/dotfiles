@@ -186,6 +186,7 @@
   rhx = {
     _1password.enable = true;
     btrfs.enable = true;
+    fonts.enable = true;
     gamemode.enable = true;
     hyprland.enable = true;
     pipewire.enable = true;

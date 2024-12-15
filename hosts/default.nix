@@ -38,13 +38,5 @@
     nix.settings.experimental-features = "nix-command flakes pipe-operators";
 
     users.defaultUserShell = pkgs.nushell;
-
-    fonts.packages = with pkgs; [
-      nerd-fonts.zed-mono
-      nerd-fonts.caskaydia-cove
-      nerd-fonts.caskaydia-mono
-      nerd-fonts.fira-mono
-      nerd-fonts.fira-code
-    ];
   };
 }

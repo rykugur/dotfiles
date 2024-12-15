@@ -94,7 +94,6 @@
     dxvk
     vkd3d
     warp-terminal
-    fira
     arandr
     cliphist
     pywal
@@ -196,6 +195,8 @@
     neovide
 
     telegram-desktop
+
+    vivaldi
   ];
 
   rhx = {
