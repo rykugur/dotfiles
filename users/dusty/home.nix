@@ -201,7 +201,6 @@
   ];
 
   rhx = {
-    ags.enable = true;
     albert.enable = true;
     discord.enable = true;
     easyeffects.enable = true;

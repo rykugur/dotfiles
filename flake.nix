@@ -32,7 +32,6 @@
     swayfx.url = "github:WillPower3309/swayfx";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     gBar.url = "github:scorpion-26/gBar";
-    ags.url = "github:Aylur/ags";
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";

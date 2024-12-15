@@ -1,6 +1,5 @@
 {
   imports = [
-    ./ags.nix
     ./albert.nix
     ./discord.nix
     ./easyeffects.nix
