@@ -8,6 +8,7 @@
     overlays = [
       outputs.overlays.additions
       outputs.overlays.modifications
+      inputs.hyprpanel.overlay
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
 

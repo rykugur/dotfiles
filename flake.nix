@@ -16,7 +16,7 @@
 
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 
-    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+    # proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
 
     ### hyprland stuff
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
@@ -30,21 +30,22 @@
     };
     mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
     swayfx.url = "github:WillPower3309/swayfx";
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     gBar.url = "github:scorpion-26/gBar";
     ags.url = "github:Aylur/ags";
 
+    ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     umu = {
       url =
         "git+https://github.com/Open-Wine-Components/umu-launcher/?dir=packaging/nix&submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-gaming.url = "github:fufexan/nix-gaming";
 
+    ### random stuff
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
-
     # zellij status bar
     zjstatus.url = "github:dj95/zjstatus";
   };

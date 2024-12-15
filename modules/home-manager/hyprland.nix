@@ -17,6 +17,7 @@ in {
       hyprcursor
       hypridle
       hyprlock
+      hyprpanel
       hyprpaper
       slurp
       swappy
