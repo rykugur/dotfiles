@@ -10,7 +10,6 @@ in {
       inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
       # inputs.mcmojave-hyprcursor.packages.${pkgs.system}.default
     ] ++ (with pkgs; [
-      dunst
       libnotify
       grim
       grimblast
