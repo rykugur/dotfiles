@@ -150,7 +150,6 @@
     # mikrotik router mgmt app .
     (winbox.override { wine = wineWowPackages.waylandFull; })
     xdg-utils
-    xfce.thunar
     zenity
 
     feh
@@ -221,6 +220,7 @@
     };
     starship.enable = true;
     swappy.enable = true;
+    thunar.enable = true;
     tmux.enable = true;
     zellij.enable = true;
     zen-browser.enable = true;

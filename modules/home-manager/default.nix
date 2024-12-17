@@ -21,6 +21,7 @@
     ./starship.nix
     ./swaylock.nix
     ./swappy.nix
+    ./thunar.nix
     ./tmux.nix
     ./wezterm.nix
     ./zellij.nix
