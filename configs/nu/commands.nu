@@ -19,6 +19,22 @@ def is-linux [] {
   is-os "linux"
 }
 
+def "cmd.copy" [] {
+  if (is-linux) {
+    $in | wl-copy
+  } else if (is-darwin) {
+    $in | pbcopy
+  }
+}
+
+def "cmd.paste" [] {
+  if (is-linux) {
+    wl-paste
+  } else if (is-darwin) {
+    pbpaste
+  }
+}
+
 def rbld [] {
   if (is-darwin) {
     # have to cd first, doesn't seem to like symlinks (which dotfiles may or may not be)
