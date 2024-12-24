@@ -111,7 +111,7 @@
       value.source = value.flake;
     }) config.nix.registry;
 
-    systemPackages = with pkgs; [ polkit_gnome ];
+    systemPackages = with pkgs; [ polkit_gnome via vial ];
 
     variables = {
       VDPAU_DRIVER = "radeonsi";

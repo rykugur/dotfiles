@@ -169,6 +169,7 @@
     fzf
     jq
     ldns
+    lsof
     lm_sensors
     nmap
     pciutils
