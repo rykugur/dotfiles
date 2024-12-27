@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, ... }:
+{ config, lib, pkgs, ... }:
 let
   cfg = config.rhx.albert;
   dracula-albert-theme = pkgs.fetchFromGitHub {

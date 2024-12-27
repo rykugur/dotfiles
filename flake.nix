@@ -28,10 +28,11 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
     mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
     swayfx.url = "github:WillPower3309/swayfx";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    gBar.url = "github:scorpion-26/gBar";
+    # gBar.url = "github:scorpion-26/gBar";
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -47,6 +48,8 @@
     zen-browser.url = "github:MarceColl/zen-browser-flake";
     # zellij status bar
     zjstatus.url = "github:dj95/zjstatus";
+
+    ghostty.url = "github:ghostty-org/ghostty";
   };
 
   outputs = { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:

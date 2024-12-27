@@ -1,12 +1,14 @@
 {
   imports = [
     ./albert.nix
+    ./browser.nix
     ./discord.nix
     ./easyeffects.nix
     ./face-tracking.nix
     ./firefox.nix
     ./fish.nix
     ./fuzzel.nix
+    ./ghostty.nix
     ./git.nix
     ./hyprland.nix
     ./keebs.nix
@@ -25,6 +27,5 @@
     ./tmux.nix
     ./wezterm.nix
     ./zellij.nix
-    ./zen-browser.nix
   ];
 }

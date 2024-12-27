@@ -127,7 +127,6 @@
     fastfetch
     file
     file-roller
-    google-chrome
     jellyfin-media-player
     lampray
     mousai
@@ -206,6 +205,7 @@
     easyeffects.enable = true;
     face-tracking.enable = true;
     fuzzel.enable = true;
+    ghostty.enable = true;
     git.enable = true;
     hyprland.enable = true;
     keebs.enable = true;

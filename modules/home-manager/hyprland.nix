@@ -8,6 +8,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [
       inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
+      inputs.hyprland-qtutils.packages."${pkgs.system}".default
       # inputs.mcmojave-hyprcursor.packages.${pkgs.system}.default
     ] ++ (with pkgs; [
       libnotify
@@ -17,7 +18,6 @@ in {
       hypridle
       hyprlock
       hyprpanel
-      hyprpaper
       slurp
       swappy
       wlogout
@@ -40,6 +40,19 @@ in {
       package = pkgs.phinger-cursors;
       size = 32;
       gtk.enable = true;
+    };
+
+    services.hyprpaper = {
+      enable = true;
+      settings = {
+        ipc = "on";
+        splash = false;
+        splash_offset = 2.0;
+
+        preload = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
+
+        wallpaper = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
+      };
     };
   };
 }
