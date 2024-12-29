@@ -1,6 +1,7 @@
 $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
 $env.NIXPKGS_ALLOW_UNFREE = 1
 $env.EDITOR = "nvim"
+$env.PATH = ($env.PATH | append $"($env.HOME)/bin")
 
 use ./abbreviations.nu
 let abbreviations = abbreviations get_abbreviations
