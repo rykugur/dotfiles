@@ -18,6 +18,10 @@ in {
           font-family-bold-italic = ZedMono NFM Bold Italic
           font-size = 12
 
+          gtk-single-instance = true
+
+          window-decoration = false
+
           theme = catppuccin-mocha
 
           command = ${pkgs.nushell}/bin/nu --login
