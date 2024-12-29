@@ -1,6 +1,7 @@
 $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
 $env.NIXPKGS_ALLOW_UNFREE = 1
 $env.EDITOR = "nvim"
+$env.STEAM_LIBRARY_DIR = "~/.local/share/steam"
 
 use ./abbreviations.nu
 let abbreviations = abbreviations get_abbreviations
