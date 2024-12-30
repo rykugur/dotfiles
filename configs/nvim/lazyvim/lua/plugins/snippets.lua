@@ -6,5 +6,6 @@ return {
       typescript = { "javascript" },
       typescriptreact = { "javascript" },
     },
+    create_cmp_source = false,
   },
 }
