@@ -22,5 +22,12 @@
       "options.modules.${1:gaming|programs|services|wm}.${2:my-module}.enable = lib.mkEnableOption \"Enable ${3:my module}\";$0"
     ],
     "description": "ez mkEnableOption"
+  },
+  "Comment header": {
+    "prefix": "chdr",
+    "body": [
+      "################################# $1 #################################"
+    ],
+    "description": "Ez comment header"
   }
 }

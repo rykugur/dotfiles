@@ -1,6 +1,12 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ inputs, outputs, pkgs, username, ... }: {
+{ inputs, outputs, pkgs, username, ... }:
+let
+  umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
+    version = inputs.umu.shortRev;
+    truststore = true;
+  };
+in {
   imports = [ outputs.hmModules ];
 
   nixpkgs = {
@@ -81,19 +87,36 @@
   };
 
   home.packages = with pkgs; [
+    ################################# dev #################################
     direnv
     prettierd
     stylua
-
     vscode
 
+    ################################# fonts? #################################
     font-awesome
-    super-slicer-latest
 
-    # TODO: find a place for these VVV
-    n0la_rcon
+    ################################# gaming #################################
+    # bottles
     dxvk
+    gamescope
+    lutris
+    mangohud
+    protontricks
+    protonup-ng
+    protonup-qt
+    steamcmd
+    steam-tui
+    # umuPkg
+    unixtools.xxd
     vkd3d
+    wineWowPackages.waylandFull
+    winetricks
+    xdelta
+
+    ################################# random #################################
+    # super-slicer-latest
+    n0la_rcon
     warp-terminal
     arandr
     cliphist
@@ -104,16 +127,6 @@
     wtype
     xorg.xrandr
     xorg.xbacklight
-
-    steamcmd
-    steam-tui
-
-    bottles
-    protontricks
-    protonup-ng
-    protonup-qt
-    wineWowPackages.waylandFull
-    winetricks
 
     nwg-look
     catppuccin-gtk
@@ -183,20 +196,10 @@
     iotop
     iftop
 
-    inputs.umu.packages.${pkgs.system}.umu
-
-    gamescope
-    lutris
-    mangohud
-    unixtools.xxd
-    xdelta
-
     libtool
     neovide
 
     telegram-desktop
-
-    vivaldi
   ];
 
   rhx = {

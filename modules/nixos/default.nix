@@ -13,5 +13,6 @@
     ./steam.nix
     ./vfio.nix
     ./virtman.nix
+    ./vr.nix
   ];
 }

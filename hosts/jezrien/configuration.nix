@@ -201,6 +201,7 @@
     ssh.enable = true;
     steam.enable = true;
     virtman.enable = true;
+    vr.enable = true;
   };
 
   home-manager = {

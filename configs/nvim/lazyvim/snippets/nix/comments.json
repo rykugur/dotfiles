@@ -1,9 +1,0 @@
-{
-  "Comment header": {
-    "prefix": "chdr",
-    "body": [
-      "################################# $1 #################################"
-    ],
-    "description": "Ez (possibly naive) new module snippet."
-  }
-}
