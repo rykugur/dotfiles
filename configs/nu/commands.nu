@@ -59,5 +59,9 @@ def "sops write-age-key" [] {
 }
 
 def "nix get-hash" [url: string] {
-  nix hash to-sri --type sha256 (nix-prefetch-url $url)
+  nix hash convert --hash-algo sha256 (nix-prefetch-url $url)
+}
+
+def "shash" [url: string] {
+  nix hash convert --hash-algo sha256 (nix-prefetch-url $url)
 }

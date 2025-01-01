@@ -1,6 +1,6 @@
 { config, inputs, lib, pkgs, ... }:
 let
-  cfg = config.rhx.zen-browser;
+  cfg = config.rhx.browser;
   zen-pkg = inputs.zen-browser.packages.${pkgs.system}.default;
   urlHandlerScript = pkgs.writeScript "url_handler" ''
     #!${pkgs.bash}/bin/bash
@@ -16,11 +16,13 @@ let
     fi
   '';
 in {
-  options.rhx.zen-browser = {
-    enable = lib.mkEnableOption "Enable zen-browser home-manager module.";
+  options.rhx.browser = {
+    enable = lib.mkEnableOption "Enable browser home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
+    programs.firefox.enable = true;
+
     home.packages =
       lib.optionals (lib.hasAttr pkgs.system inputs.zen-browser.packages)
       [ zen-pkg ] ++ [ pkgs.google-chrome ];

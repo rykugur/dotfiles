@@ -1,4 +1,4 @@
-{ config, lib, username, pkgs, ... }:
+{ config, lib, ... }:
 let cfg = config.rhx.vr;
 in {
   options.rhx.vr.enable = lib.mkEnableOption "Enable VR nixOS module";

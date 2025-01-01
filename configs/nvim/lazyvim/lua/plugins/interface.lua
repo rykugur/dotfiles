@@ -60,19 +60,19 @@ return {
       },
     },
   },
-  {
-    "nvim-telescope/telescope.nvim",
-    opts = {
-      defaults = {
-        file_ignore_patterns = {
-          "svg",
-          "yarn.lock",
-        },
-        layout_strategy = "vertical",
-        winblend = 0,
-      },
-    },
-  },
+  -- {
+  --   "nvim-telescope/telescope.nvim",
+  --   opts = {
+  --     defaults = {
+  --       file_ignore_patterns = {
+  --         "svg",
+  --         "yarn.lock",
+  --       },
+  --       layout_strategy = "vertical",
+  --       winblend = 0,
+  --     },
+  --   },
+  -- },
   {
     "akinsho/bufferline.nvim",
     opts = {
@@ -117,18 +117,18 @@ return {
       },
     },
   },
-  {
-    "folke/zen-mode.nvim",
-    keys = {
-      {
-        "<leader>uz",
-        function()
-          require("zen-mode").toggle()
-        end,
-        desc = "Toggle Zen-mode",
-      },
-    },
-  },
+  -- {
+  --   "folke/zen-mode.nvim",
+  --   keys = {
+  --     {
+  --       "<leader>uz",
+  --       function()
+  --         require("zen-mode").toggle()
+  --       end,
+  --       desc = "Toggle Zen-mode",
+  --     },
+  --   },
+  -- },
   {
     "swaits/zellij-nav.nvim",
     lazy = true,

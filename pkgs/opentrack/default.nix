@@ -1,5 +1,11 @@
-{ lib, stdenv, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
-stdenv.mkDerivation rec {
+{ stdenv, fetchgit, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
+let
+  sdkSteamVr = fetchgit {
+    url = "https://github.com/ValveSoftware/openvr";
+    rev = "v2.5.1";
+    sha256 = "sha256-bIKjZ7DvJVmDK386WgXaAFQrS0E1TNEUMhfQp7FNnvk=";
+  };
+in stdenv.mkDerivation rec {
   name = "opentrack";
   version = "2023.3.0";
 
@@ -18,7 +24,7 @@ stdenv.mkDerivation rec {
   env.NIX_CFLAGS_COMPILE = "-Wall -Wextra -Wpedantic -ffast-math -O3";
   dontWrapQtApps = true;
 
-  cmakeFlags = [ "-DSDK_WINE=ON" ];
+  cmakeFlags = [ "-DSDK_WINE=ON -DSDK_VALVE_STEAMVR=${sdkSteamVr}" ];
 
   postInstall = ''
     wrapQtApp $out/bin/opentrack

@@ -26,7 +26,6 @@ in {
         $env.config.table.show_empty = false
       '';
       extraConfig = ''
-        use ${nupm}/nupm
         use ${nu-scripts}/modules/rbenv/rbenv.nu *
         source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
         source ${nu-scripts}/custom-completions/adb/adb-completions.nu
@@ -36,7 +35,6 @@ in {
         source ${nu-scripts}/custom-completions/git/git-completions.nu
         source ${nu-scripts}/custom-completions/nix/nix-completions.nu
         source ${nu-scripts}/custom-completions/npm/npm-completions.nu
-        source ${nu-scripts}/custom-completions/op/op-completions.nu
         source ${nu-scripts}/custom-completions/pnpm/pnpm-completions.nu
         source ${nu-scripts}/custom-completions/rg/rg-completions.nu
         source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu

@@ -204,6 +204,7 @@ in {
 
   rhx = {
     albert.enable = true;
+    browser.enable = true;
     discord.enable = true;
     easyeffects.enable = true;
     face-tracking.enable = true;
@@ -227,7 +228,6 @@ in {
     thunar.enable = true;
     tmux.enable = true;
     zellij.enable = true;
-    zen-browser.enable = true;
   };
 
   ################## other stuff you shouldn't need to touch
