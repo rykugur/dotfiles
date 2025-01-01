@@ -67,8 +67,6 @@
       #     patches = [ ./change-hello-to-hi.patch ];
       #   });
       # })
-      outputs.overlays.additions
-      outputs.overlays.modifications
     ];
     config.allowUnfree = true;
   };
