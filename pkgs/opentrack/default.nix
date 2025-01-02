@@ -9,7 +9,7 @@ let
   };
   sdkSteamVr = fetchFromGitHub {
     owner = "ValveSoftware";
-    repor = "openvr";
+    repo = "openvr";
     rev = "v2.5.1";
     sha256 = "sha256-bIKjZ7DvJVmDK386WgXaAFQrS0E1TNEUMhfQp7FNnvk=";
   };
