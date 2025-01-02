@@ -2,6 +2,7 @@
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { inputs, outputs, pkgs, username, ... }:
 let
+  mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
   umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
     version = inputs.umu.shortRev;
     truststore = true;
@@ -102,6 +103,7 @@ in {
     gamescope
     lutris
     mangohud
+    mo2installer
     protontricks
     protonup-ng
     protonup-qt
