@@ -41,6 +41,7 @@
     rbenv
     stylua
     tldr
+    yarn
 
     nixd
     nixfmt-classic
@@ -49,6 +50,7 @@
 
   rhx = {
     fish.enable = true;
+    ghostty.enable = true;
     git = {
       enable = true;
       gitconfig.enable = false;

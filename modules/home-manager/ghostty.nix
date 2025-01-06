@@ -8,7 +8,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ ghostty-pkg ];
+    # installed via brew _for now_ (build failing on nixpkgs)
+    home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) [ ghostty-pkg ];
     home.file = {
       ".config/ghostty/config" = {
         text = ''
