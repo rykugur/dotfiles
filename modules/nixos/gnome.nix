@@ -15,8 +15,5 @@ in {
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
     };
-
-    # this is required I guess
-    hardware.pulseaudio.enable = false;
   };
 }

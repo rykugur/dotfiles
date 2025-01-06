@@ -20,7 +20,7 @@ in {
 
           gtk-single-instance = true
 
-          window-decoration = false
+          window-decoration = true
 
           theme = catppuccin-mocha
 

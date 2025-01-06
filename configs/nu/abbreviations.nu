@@ -15,7 +15,6 @@ const docker = {
 const git = {
   ga: "git add"
   ga.: "git add ."
-  gas: "git add (git status --short | grep -E \"(AM|MM)\" | awk \"{print $2}\")"
   gau: "git add -u"
   gb: "git branch"
   gbc: "git branch --contains"

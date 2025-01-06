@@ -227,7 +227,6 @@ in {
     };
     starship.enable = true;
     swappy.enable = true;
-    thunar.enable = true;
     tmux.enable = true;
     zellij.enable = true;
   };

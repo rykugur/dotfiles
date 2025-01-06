@@ -132,10 +132,12 @@
       gpuOverclock.enable = true;
     };
     nix-ld = { enable = true; };
-    seahorse.enable = true;
+    # seahorse.enable = true;
   };
 
   services = {
+    journald.storage = "volatile"; # potentially fix long boot times?
+
     printing.enable = true;
 
     gnome = {
@@ -197,7 +199,9 @@
     btrfs.enable = true;
     fonts.enable = true;
     gamemode.enable = true;
-    hyprland.enable = true;
+    gnome.enable = true;
+    # hyprland.enable = true;
+    # kde.enable = true;
     pipewire.enable = true;
     razer.enable = true;
     ssh.enable = true;

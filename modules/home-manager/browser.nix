@@ -49,7 +49,6 @@ in {
 
         defaultApplications = {
           "application/pdf" = [ "zen.desktop" ];
-          "inode/directory" = [ "thunar.desktop" ];
           "text/html" = [ "zen.desktop" ];
           "x-scheme-handler/about" = [ "zen.desktop" ];
           "x-scheme-handler/unknown" = [ "zen.desktop" ];

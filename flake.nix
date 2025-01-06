@@ -30,7 +30,6 @@
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
     mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
-    swayfx.url = "github:WillPower3309/swayfx";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     # gBar.url = "github:scorpion-26/gBar";
 
