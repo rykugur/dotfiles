@@ -2,6 +2,7 @@
   description = "Swoleflake";
 
   inputs = {
+    stable-nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -36,9 +37,12 @@
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     umu = {
+      # url =
+      #   "git+https://github.com/Open-Wine-Components/umu-launcher/?dir=packaging/nix&submodules=1";
       url =
-        "git+https://github.com/Open-Wine-Components/umu-launcher/?dir=packaging/nix&submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
+        "github:Open-Wine-Components/umu-launcher/59a82ea8cd284c7535bc06b8f6156abb7da96f6a?dir=packaging/nix";
+      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "stable-nixpkgs";
     };
     nix-gaming.url = "github:fufexan/nix-gaming";
 
