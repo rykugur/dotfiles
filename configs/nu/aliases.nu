@@ -41,6 +41,7 @@ alias tmat = sesh connect (sesh list -t | fzf)
 alias top = btop
 alias whatthecommit = curl -s https://whatthecommit.com/index.txt
 alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
+alias zj = zellij
 ### fast travel
 def --env dots [--local (-l)] {
   if $local {

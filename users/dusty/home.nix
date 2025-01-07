@@ -5,7 +5,8 @@ let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
   umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
     version = inputs.umu.shortRev;
-    truststore = true;
+    truststore = false;
+    # cbor2 = false;
   };
 in {
   imports = [ outputs.hmModules ];
@@ -40,24 +41,6 @@ in {
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
-  };
-  dconf = {
-    enable = true;
-    settings = {
-      "org/gnome/mutter" = {
-        auto-maximize = false;
-        check-alive-timeout = "30000";
-      };
-      "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
-      "org/gnome/desktop/wm/preferences" = {
-        audible-bell = false;
-        visual-bell = false;
-      };
-      "org/gnome/desktop/peripherals/keyboard" = {
-        numlock-state = true;
-        remember-numlock-state = true;
-      };
-    };
   };
 
   gtk = {
@@ -98,7 +81,7 @@ in {
     font-awesome
 
     ################################# gaming #################################
-    # bottles
+    bottles
     dxvk
     gamescope
     lutris
@@ -109,7 +92,7 @@ in {
     protonup-qt
     steamcmd
     steam-tui
-    # umuPkg
+    umuPkg
     unixtools.xxd
     vkd3d
     wineWowPackages.waylandFull
@@ -210,17 +193,14 @@ in {
     discord.enable = true;
     easyeffects.enable = true;
     face-tracking.enable = true;
-    fuzzel.enable = true;
     ghostty.enable = true;
     git.enable = true;
     hyprland.enable = true;
     keebs.enable = true;
-    kitty.enable = true;
     nushell.enable = true;
     nvim.enable = true;
     obs.enable = true;
     ssh.enable = true;
-    #starcitizen.enable = true;
     starsector = {
       enable = true;
       mods.enable = true;

@@ -6,6 +6,9 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    rhx.ranger.enable = true;
+    rhx.thunar.enable = true;
+
     home.packages = [
       inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
       inputs.hyprland-qtutils.packages."${pkgs.system}".default
@@ -51,7 +54,7 @@ in {
 
         preload = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
 
-        wallpaper = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
+        wallpaper = [ ",~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
       };
     };
   };

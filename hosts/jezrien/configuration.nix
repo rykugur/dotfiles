@@ -179,6 +179,9 @@
         # Generic Wootings
         SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31e3", TAG+="uaccess"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="31e3", TAG+="uaccess"
+
+        # Disable KT_USB_AUDIO device
+        ACTION=="add", ATTR{idVendor}=="31b2", ATTR{idProduct}=="0011", OPTIONS+="ignore_device"
       '';
     };
   };
@@ -199,11 +202,8 @@
     btrfs.enable = true;
     fonts.enable = true;
     gamemode.enable = true;
-    gnome.enable = true;
-    # hyprland.enable = true;
-    # kde.enable = true;
+    hyprland.enable = true;
     pipewire.enable = true;
-    razer.enable = true;
     ssh.enable = true;
     steam.enable = true;
     virtman.enable = true;
