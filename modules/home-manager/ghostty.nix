@@ -25,6 +25,8 @@ in {
 
           theme = catppuccin-mocha
 
+          copy-on-select = clipboard
+
           command = ${pkgs.nushell}/bin/nu --login
         '';
       };
