@@ -139,6 +139,7 @@ const dev = {
 
 const zellij = {
   za: "zellij attach"
+  zj: "zellij"
 }
 
 export def get_abbreviations [] {
