@@ -2,6 +2,7 @@
 let
   cfg = config.rhx.ghostty;
   ghostty-pkg = inputs.ghostty.packages.${pkgs.system}.default;
+  useWindowDecoration = if pkgs.stdenv.isDarwin then "true" else "false";
 in {
   options.rhx.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
@@ -17,11 +18,11 @@ in {
           font-family-bold = ZedMono NFM Bold
           font-family-italic = ZedMono NFM Italic
           font-family-bold-italic = ZedMono NFM Bold Italic
-          font-size = 12
+          font-size = 14
 
           gtk-single-instance = true
 
-          window-decoration = false
+          window-decoration = ${useWindowDecoration}
 
           theme = catppuccin-mocha
 
