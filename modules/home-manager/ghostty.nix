@@ -28,6 +28,13 @@ in {
 
           copy-on-select = clipboard
 
+          working-directory = home
+
+          window-height = 40
+          window-width = 160
+
+          adw-toast = false
+
           command = ${pkgs.nushell}/bin/nu --login
         '';
       };
