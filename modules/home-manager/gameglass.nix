@@ -1,10 +1,6 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.rhx.gameglass;
-  # gameglass-appimage = pkgs.fetchurl {
-  #   url = "https://download.gameglass.gg/hub/GameGlass.AppImage";
-  #   sha256 = "0l402438qi006ajqg47shdiimh6aqhn3mvicpbpp9hmzc1iyxz48";
-  # };
   libraries = [ pkgs.libevdev ];
   gameglassLauncher = pkgs.writeShellScriptBin "gameglassLauncher" ''
     LD_LIBRARY_PATH=${
@@ -19,7 +15,6 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = [
       pkgs.gameglass
-      #   pkgs.appimage-run
       (pkgs.makeDesktopItem rec {
         name = "GameGlass";
         exec = "${gameglassLauncher}/bin/gameglassLauncher";
