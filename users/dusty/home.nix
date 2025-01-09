@@ -5,8 +5,7 @@ let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
   umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
     version = inputs.umu.shortRev;
-    truststore = false;
-    # cbor2 = false;
+    truststore = true;
   };
 in {
   imports = [ outputs.hmModules ];
