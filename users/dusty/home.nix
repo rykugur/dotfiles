@@ -5,8 +5,7 @@ let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
   umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
     version = inputs.umu.shortRev;
-    truststore = false;
-    # cbor2 = false;
+    truststore = true;
   };
 in {
   imports = [ outputs.hmModules ];
@@ -192,7 +191,6 @@ in {
     browser.enable = true;
     discord.enable = true;
     easyeffects.enable = true;
-    face-tracking.enable = true;
     ghostty.enable = true;
     git.enable = true;
     hyprland.enable = true;
@@ -201,14 +199,19 @@ in {
     nvim.enable = true;
     obs.enable = true;
     ssh.enable = true;
-    starsector = {
-      enable = true;
-      mods.enable = true;
-    };
     starship.enable = true;
     swappy.enable = true;
     tmux.enable = true;
     zellij.enable = true;
+
+    ### games
+    starsector = {
+      enable = true;
+      mods.enable = true;
+    };
+    # for Star Citizen
+    head-tracking.enable = true;
+    gameglass.enable = true;
   };
 
   ################## other stuff you shouldn't need to touch
