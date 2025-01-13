@@ -45,17 +45,18 @@ in {
         source = ~/.dotfiles/configs/hypr/binds.conf
         source = ~/.dotfiles/configs/hypr/input.conf
         source = ~/.dotfiles/configs/hypr/rules.conf
+
+        source = ${catppuccin-hyprland}/themes/mocha.conf
       '';
     };
 
     programs.hyprlock = {
       enable = true;
-      settings = { source = [ "${catppuccin-hyprland}/themes/mocha.conf" ]; };
-    };
-
-    home.file = {
-      ".config/hypr/hyprlock.conf" = {
-        source = "${catppuccin-hyprlock}/hyprlock.conf";
+      settings = {
+        source = [
+          "${catppuccin-hyprlock}/hyprlock.conf"
+          "${catppuccin-hyprland}/themes/mocha.conf"
+        ];
       };
     };
 
