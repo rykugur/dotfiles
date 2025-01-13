@@ -1,5 +1,16 @@
-{ config, inputs, lib, pkgs, hostname, ... }:
-let cfg = config.rhx.hyprland;
+{ config, fetchgit, inputs, lib, pkgs, hostname, ... }:
+let
+  cfg = config.rhx.hyprland;
+  catppuccin-hyprland = fetchgit {
+    url = "https://github.com/catppuccin/hyprland";
+    rev = "main";
+    sha256 = lib.fakeSha256;
+  };
+  catppuccin-hyprlock = fetchgit {
+    url = "https://github.com/catppuccin/hyprlock";
+    rev = "main";
+    sha256 = lib.fakeSha256;
+  };
 in {
   options.rhx.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland home-manager module.";
@@ -19,7 +30,6 @@ in {
       grimblast
       hyprcursor
       hypridle
-      hyprlock
       hyprpanel
       slurp
       swappy
@@ -36,6 +46,17 @@ in {
         source = ~/.dotfiles/configs/hypr/input.conf
         source = ~/.dotfiles/configs/hypr/rules.conf
       '';
+    };
+
+    programs.hyprlock = {
+      enable = true;
+      settings = { source = [ "${catppuccin-hyprland}/themes/mocha.conf" ]; };
+    };
+
+    home.file = {
+      ".config/hypr/hyprlock.conf" = {
+        source = "${catppuccin-hyprlock}/hyprlock.conf";
+      };
     };
 
     home.pointerCursor = {
