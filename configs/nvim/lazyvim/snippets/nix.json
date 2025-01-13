@@ -2,24 +2,23 @@
   "new module": {
     "prefix": "module",
     "body": [
-      "{ config, lib, pkgs, username, ... }:",
-      "let cfg = config.modules.${1:gaming|programs|services|wm}.${2:my-module};",
+      "{ config, lib, ... }:",
+      "let cfg = config.rhx.${1:my-module};",
       "in {",
-      " options.modules.${3:gaming|programs|services|wm}.${4:my-module}.enable =",
-      "   lib.mkEnableOption \"Enable ${5:my module}\";",
+      " options.rhx.${2:my-module}.enable =",
+      "   lib.mkEnableOption \"Enable ${3:my module}\";",
       "",
-      "config = lib.mkIf cfg.enable {",
-      " home-manager.users.\\${username} = {",
-      "   $6",
-      " };",
-      "};$0"
+      "  config = lib.mkIf cfg.enable {",
+      "    $0",
+      "  };",
+      "}"
     ],
     "description": "Ez (possibly naive) new module snippet."
   },
   "mkEnableOption": {
     "prefix": "mkEnableOption",
     "body": [
-      "options.modules.${1:gaming|programs|services|wm}.${2:my-module}.enable = lib.mkEnableOption \"Enable ${3:my module}\";$0"
+      "options.rhx.${1:my-module}.enable = lib.mkEnableOption \"Enable ${2:my module}\";$0"
     ],
     "description": "ez mkEnableOption"
   },

@@ -15,7 +15,6 @@ const docker = {
 const git = {
   ga: "git add"
   ga.: "git add ."
-  gas: "git add (git status --short | grep -E \"(AM|MM)\" | awk \"{print $2}\")"
   gau: "git add -u"
   gb: "git branch"
   gbc: "git branch --contains"
@@ -100,7 +99,6 @@ const nix = {
   nr: "nix repl"
   nrn: "nix repl --file '<nixpkgs>'"
   nr.: "nix repl --file ."
-  nrf: 'nix repl --expr $"builtins.getFlake \"($env.HOME)/.dotfiles\""'
 
   ns: "nix shell"
   nds: "nix-shell"
@@ -140,6 +138,7 @@ const dev = {
 
 const zellij = {
   za: "zellij attach"
+  zj: "zellij"
 }
 
 export def get_abbreviations [] {

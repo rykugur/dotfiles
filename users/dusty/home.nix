@@ -2,6 +2,7 @@
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { inputs, outputs, pkgs, username, ... }:
 let
+  mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
   umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
     version = inputs.umu.shortRev;
     truststore = true;
@@ -39,24 +40,6 @@ in {
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
-  };
-  dconf = {
-    enable = true;
-    settings = {
-      "org/gnome/mutter" = {
-        auto-maximize = false;
-        check-alive-timeout = "30000";
-      };
-      "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
-      "org/gnome/desktop/wm/preferences" = {
-        audible-bell = false;
-        visual-bell = false;
-      };
-      "org/gnome/desktop/peripherals/keyboard" = {
-        numlock-state = true;
-        remember-numlock-state = true;
-      };
-    };
   };
 
   gtk = {
@@ -97,17 +80,18 @@ in {
     font-awesome
 
     ################################# gaming #################################
-    # bottles
+    bottles
     dxvk
     gamescope
     lutris
     mangohud
+    mo2installer
     protontricks
     protonup-ng
     protonup-qt
     steamcmd
     steam-tui
-    # umuPkg
+    umuPkg
     unixtools.xxd
     vkd3d
     wineWowPackages.waylandFull
@@ -207,27 +191,27 @@ in {
     browser.enable = true;
     discord.enable = true;
     easyeffects.enable = true;
-    face-tracking.enable = true;
-    fuzzel.enable = true;
     ghostty.enable = true;
     git.enable = true;
     hyprland.enable = true;
     keebs.enable = true;
-    kitty.enable = true;
     nushell.enable = true;
     nvim.enable = true;
     obs.enable = true;
     ssh.enable = true;
-    #starcitizen.enable = true;
+    starship.enable = true;
+    swappy.enable = true;
+    tmux.enable = true;
+    zellij.enable = true;
+
+    ### games
     starsector = {
       enable = true;
       mods.enable = true;
     };
-    starship.enable = true;
-    swappy.enable = true;
-    thunar.enable = true;
-    tmux.enable = true;
-    zellij.enable = true;
+    # for Star Citizen
+    head-tracking.enable = true;
+    gameglass.enable = true;
   };
 
   ################## other stuff you shouldn't need to touch

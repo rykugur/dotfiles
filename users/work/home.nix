@@ -40,6 +40,7 @@
     rbenv
     stylua
     tldr
+    yarn
 
     nixd
     nixfmt-classic
@@ -48,6 +49,7 @@
 
   rhx = {
     fish.enable = true;
+    ghostty.enable = true;
     git = {
       enable = true;
       gitconfig.enable = false;
@@ -55,6 +57,7 @@
     kitty.enable = true;
     nushell.enable = true;
     nvim.enable = true;
+    ranger.enable = true;
     # ssh.enable = true;
     starship.enable = true;
     # tmux.enable = true;

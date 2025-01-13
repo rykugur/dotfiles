@@ -1,7 +1,15 @@
-{ stdenv, fetchgit, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
+{ lib, stdenv, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
 let
-  sdkSteamVr = fetchgit {
-    url = "https://github.com/ValveSoftware/openvr";
+  # for neural-net face tracking
+  onnxRuntime = fetchFromGitHub {
+    owner = "microsoft";
+    repo = "onnxruntime";
+    rev = "v1.20.1";
+    sha256 = "sha256-lOCXMEqpZtInE2aH6SKFoNSzzma0/cxgCXWvc2prloo=";
+  };
+  sdkSteamVr = fetchFromGitHub {
+    owner = "ValveSoftware";
+    repo = "openvr";
     rev = "v2.5.1";
     sha256 = "sha256-bIKjZ7DvJVmDK386WgXaAFQrS0E1TNEUMhfQp7FNnvk=";
   };
@@ -24,7 +32,9 @@ in stdenv.mkDerivation rec {
   env.NIX_CFLAGS_COMPILE = "-Wall -Wextra -Wpedantic -ffast-math -O3";
   dontWrapQtApps = true;
 
-  cmakeFlags = [ "-DSDK_WINE=ON -DSDK_VALVE_STEAMVR=${sdkSteamVr}" ];
+  cmakeFlags = [
+    "-DSDK_WINE=ON -DSDK_VALVE_STEAMVR=${sdkSteamVr} -DONNXRuntime_DIR=${onnxRuntime}"
+  ];
 
   postInstall = ''
     wrapQtApp $out/bin/opentrack

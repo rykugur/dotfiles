@@ -1,4 +1,7 @@
 # git aliases
+def gas [] {
+  git status --short | lines | split column " " status file --collapse-empty | where status == MM or status == AM | each { |modified| git add $modified.file } | ignore
+}
 alias gbn = git branch | cut -d' ' -f2
 alias glg = git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
 alias gll = git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative

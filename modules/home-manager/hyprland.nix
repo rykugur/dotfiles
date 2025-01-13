@@ -1,11 +1,25 @@
-{ config, inputs, lib, pkgs, hostname, ... }:
-let cfg = config.rhx.hyprland;
+{ config, fetchgit, inputs, lib, pkgs, hostname, ... }:
+let
+  cfg = config.rhx.hyprland;
+  catppuccin-hyprland = fetchgit {
+    url = "https://github.com/catppuccin/hyprland";
+    rev = "main";
+    sha256 = lib.fakeSha256;
+  };
+  catppuccin-hyprlock = fetchgit {
+    url = "https://github.com/catppuccin/hyprlock";
+    rev = "main";
+    sha256 = lib.fakeSha256;
+  };
 in {
   options.rhx.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
+    rhx.ranger.enable = true;
+    rhx.thunar.enable = true;
+
     home.packages = [
       inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
       inputs.hyprland-qtutils.packages."${pkgs.system}".default
@@ -16,7 +30,6 @@ in {
       grimblast
       hyprcursor
       hypridle
-      hyprlock
       hyprpanel
       slurp
       swappy
@@ -32,7 +45,19 @@ in {
         source = ~/.dotfiles/configs/hypr/binds.conf
         source = ~/.dotfiles/configs/hypr/input.conf
         source = ~/.dotfiles/configs/hypr/rules.conf
+
+        source = ${catppuccin-hyprland}/themes/mocha.conf
       '';
+    };
+
+    programs.hyprlock = {
+      enable = true;
+      settings = {
+        source = [
+          "${catppuccin-hyprlock}/hyprlock.conf"
+          "${catppuccin-hyprland}/themes/mocha.conf"
+        ];
+      };
     };
 
     home.pointerCursor = {
@@ -51,7 +76,7 @@ in {
 
         preload = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
 
-        wallpaper = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
+        wallpaper = [ ",~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
       };
     };
   };

@@ -20,6 +20,10 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernel.sysctl = {
+      "vm.max_map_count" = 16777216;
+      "fs.file-max" = 524288;
+    };
   };
 
   security = {
@@ -128,10 +132,12 @@
       gpuOverclock.enable = true;
     };
     nix-ld = { enable = true; };
-    seahorse.enable = true;
+    # seahorse.enable = true;
   };
 
   services = {
+    journald.storage = "volatile"; # potentially fix long boot times?
+
     printing.enable = true;
 
     gnome = {
@@ -173,6 +179,9 @@
         # Generic Wootings
         SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31e3", TAG+="uaccess"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="31e3", TAG+="uaccess"
+
+        # Disable KT_USB_AUDIO device
+        ACTION=="add", ATTR{idVendor}=="31b2", ATTR{idProduct}=="0011", OPTIONS+="ignore_device"
       '';
     };
   };
@@ -195,7 +204,6 @@
     gamemode.enable = true;
     hyprland.enable = true;
     pipewire.enable = true;
-    razer.enable = true;
     ssh.enable = true;
     steam.enable = true;
     virtman.enable = true;

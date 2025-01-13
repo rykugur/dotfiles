@@ -2,19 +2,8 @@
 let
   cfg = config.rhx.browser;
   zen-pkg = inputs.zen-browser.packages.${pkgs.system}.default;
-  urlHandlerScript = pkgs.writeScript "url_handler" ''
-    #!${pkgs.bash}/bin/bash
-
-    URL="$1"
-
-    echo $URL
-
-    if [[ "$URL" == *"neo.bullx.io"* ]]; then
-        ${pkgs.google-chrome}/bin/google-chrome-stable "$URL"
-    else
-        ${zen-pkg}/bin/zen "$URL"
-    fi
-  '';
+  customHandler =
+    "${pkgs.bash}/bin/bash ${config.home.homeDirectory}/.local/bin/custom-url-handler %U";
 in {
   options.rhx.browser = {
     enable = lib.mkEnableOption "Enable browser home-manager module.";
@@ -27,15 +16,39 @@ in {
       lib.optionals (lib.hasAttr pkgs.system inputs.zen-browser.packages)
       [ zen-pkg ] ++ [ pkgs.google-chrome ];
 
+    home.file.".local/bin/custom-url-handler".text = ''
+      #!${pkgs.bash}/bin/bash
+
+      URL="$1"
+
+      case "$URL" in
+        *neo.bullx.io*)
+          ${pkgs.google-chrome}/bin/google-chrome-stable "$URL" &
+          ;;
+        *)
+          ${zen-pkg}/bin/zen "$URL"
+          ;;
+      esac
+    '';
+    home.file.".local/bin/custom-url-handler".executable = true;
+
     xdg = {
       enable = true;
+
+      desktopEntries."custom-url-handler" = {
+        name = "Custom URL Handler";
+        exec = customHandler;
+        terminal = false;
+        type = "Application";
+        categories = [ "Network" ];
+        mimeType = [ "x-scheme-handler/http" "x-scheme-handler/https" ];
+      };
 
       mimeApps = {
         enable = true;
 
         defaultApplications = {
           "application/pdf" = [ "zen.desktop" ];
-          "inode/directory" = [ "thunar.desktop" ];
           "text/html" = [ "zen.desktop" ];
           "x-scheme-handler/about" = [ "zen.desktop" ];
           "x-scheme-handler/unknown" = [ "zen.desktop" ];
@@ -47,11 +60,8 @@ in {
           "application/x-extension-xhtml" = [ "zen.desktop" ];
           "application/x-extension-xht" = [ "zen.desktop" ];
 
-          # TODO: figure out why this doesn't work
-          # "x-scheme-handler/http" = "${urlHandlerScript}";
-          # "x-scheme-handler/https" = "${urlHandlerScript}";
-          "x-scheme-handler/http" = [ "zen.desktop" ];
-          "x-scheme-handler/https" = [ "zen.desktop" ];
+          "x-scheme-handler/http" = "custom-url-handler.desktop";
+          "x-scheme-handler/https" = "custom-url-handler.desktop";
         };
       };
     };

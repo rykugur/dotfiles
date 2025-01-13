@@ -7,6 +7,7 @@
     ./gamemode.nix
     ./gnome.nix
     ./hyprland.nix
+    ./kde.nix
     ./pipewire.nix
     ./razer.nix
     ./ssh.nix

@@ -2,6 +2,7 @@
   description = "Swoleflake";
 
   inputs = {
+    stable-nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -30,7 +31,6 @@
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
     mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
-    swayfx.url = "github:WillPower3309/swayfx";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     # gBar.url = "github:scorpion-26/gBar";
 
@@ -42,6 +42,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-gaming.url = "github:fufexan/nix-gaming";
+    nix-citizen.url = "github:LovingMelody/nix-citizen";
 
     ### random stuff
     luarocks-nix.url = "github:nix-community/luarocks-nix";
