@@ -1,13 +1,6 @@
 { inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   ### system config
-  imports = [
-    inputs.home-manager.darwinModules.home-manager
-
-    # outputs.nixosModules
-    # outputs.hmModules
-    # (builtins.removeAttrs outputs.hmModules [ "zen-browser" ])
-    # roles
-  ];
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   environment.systemPackages = [ pkgs.nixfmt-classic ];
 
