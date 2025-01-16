@@ -215,9 +215,6 @@ in {
       enable = true;
       mods.enable = true;
     };
-    # for Star Citizen
-    head-tracking.enable = true;
-    gameglass.enable = true;
   };
 
   ################## other stuff you shouldn't need to touch

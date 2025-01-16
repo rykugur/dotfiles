@@ -29,7 +29,6 @@ const git = {
   gco.: "git checkout ."
   gcob: "git checkout -b"
   gcp: "git cherry-pick"
-  gcu: "rm -rf (git status --short | grep \"??\" | cut -d\" \" -f2)"
   gcy: "git commit -m (curl -s https://whatthecommit.com/index.txt)"
   gd: "git diff"
   gds: "git diff --staged"
@@ -138,6 +137,7 @@ const dev = {
 
 const zellij = {
   za: "zellij attach"
+  zj: "zellij"
 }
 
 export def get_abbreviations [] {

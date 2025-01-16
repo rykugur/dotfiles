@@ -6,6 +6,6 @@ appimageTools.wrapType2 rec {
   src = fetchurl {
     url = "https://download.gameglass.gg/hub/GameGlass.AppImage";
     # TODO: this will fail if they change the AppImage file
-    sha256 = "0l402438qi006ajqg47shdiimh6aqhn3mvicpbpp9hmzc1iyxz48";
+    sha256 = "sha256-BJj/FTMXEPHEYsSXSPSRyXe7gUvB3npihx6bVmi2k7w=";
   };
 }

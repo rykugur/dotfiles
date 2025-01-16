@@ -1,19 +1,15 @@
 { inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   ### system config
-  imports = [
-    inputs.home-manager.darwinModules.home-manager
-
-    # outputs.nixosModules
-    # outputs.hmModules
-    # (builtins.removeAttrs outputs.hmModules [ "zen-browser" ])
-    # roles
-  ];
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   environment.systemPackages = [ pkgs.nixfmt-classic ];
 
   users.users.${username} = { home = "/Users/${username}"; };
 
   security.pam.enableSudoTouchIdAuth = true;
+
+  # Necessary for using flakes on this system.
+  nix.settings.experimental-features = "nix-command flakes pipe-operators";
 
   ### home-manager config
 
