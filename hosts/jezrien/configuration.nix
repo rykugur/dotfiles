@@ -20,10 +20,6 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernel.sysctl = {
-      "vm.max_map_count" = 16777216;
-      "fs.file-max" = 524288;
-    };
   };
 
   security = {
@@ -196,7 +192,6 @@
   };
 
   ### custom module stuff
-  #
   rhx = {
     _1password.enable = true;
     btrfs.enable = true;
@@ -205,6 +200,7 @@
     hyprland.enable = true;
     pipewire.enable = true;
     ssh.enable = true;
+    starcitizen.enable = true;
     steam.enable = true;
     virtman.enable = true;
     vr.enable = true;

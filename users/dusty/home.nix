@@ -3,10 +3,7 @@
 { inputs, outputs, pkgs, username, ... }:
 let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
-  umuPkg = inputs.umu.packages.${pkgs.system}.umu.override {
-    version = inputs.umu.shortRev;
-    truststore = true;
-  };
+  umuPkg = inputs.umu.packages.${pkgs.system}.umu;
 in {
   imports = [ outputs.hmModules ];
 
@@ -84,6 +81,14 @@ in {
     dxvk
     gamescope
     lutris
+    (makeDesktopItem rec {
+      name = "Lutris Experimental";
+      exec = "LUTRIS_EXPERIMENTAL_FEATURES_ENABLED=1 lutris %U";
+      icon = "lutris";
+      desktopName = name;
+      genericName = "Lutris w/ LUTRIS_EXPERIMENTAL_FEATURES_ENABLED enabled";
+      categories = [ "Game" ];
+    })
     mangohud
     mo2installer
     protontricks
@@ -94,7 +99,7 @@ in {
     umuPkg
     unixtools.xxd
     vkd3d
-    wineWowPackages.waylandFull
+    wineWowPackages.stagingFull
     winetricks
     xdelta
 
@@ -202,6 +207,7 @@ in {
     starship.enable = true;
     swappy.enable = true;
     tmux.enable = true;
+    wezterm.enable = true;
     zellij.enable = true;
 
     ### games

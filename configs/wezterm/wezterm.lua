@@ -51,5 +51,7 @@ config.enable_wayland = false
 
 config.window_background_opacity = 0.9
 
+config.default_prog = { "nu", "--login" }
+
 -- and finally, return the configuration to wezterm
 return config
