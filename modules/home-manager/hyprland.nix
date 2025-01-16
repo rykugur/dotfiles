@@ -1,15 +1,15 @@
-{ config, fetchgit, inputs, lib, pkgs, hostname, ... }:
+{ config, inputs, lib, pkgs, hostname, ... }:
 let
   cfg = config.rhx.hyprland;
-  catppuccin-hyprland = fetchgit {
+  catppuccin-hyprland = pkgs.fetchgit {
     url = "https://github.com/catppuccin/hyprland";
-    rev = "main";
-    sha256 = lib.fakeSha256;
+    rev = "v1.3";
+    sha256 = "sha256-jkk021LLjCLpWOaInzO4Klg6UOR4Sh5IcKdUxIn7Dis=";
   };
-  catppuccin-hyprlock = fetchgit {
+  catppuccin-hyprlock = pkgs.fetchgit {
     url = "https://github.com/catppuccin/hyprlock";
-    rev = "main";
-    sha256 = lib.fakeSha256;
+    rev = "958e70b1cd8799defd16dee070d07f977d4fd76b";
+    sha256 = "sha256-l4CbAUeb/Tg603QnZ/VWxuGqRBztpHN0HLX/h8ndc5w=";
   };
 in {
   options.rhx.hyprland = {

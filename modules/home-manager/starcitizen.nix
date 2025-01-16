@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, ... }:
 let cfg = config.rhx.starcitizen;
 in {
   options.rhx.starcitizen = {
@@ -6,6 +6,9 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    imports = [ inputs.nix-gaming.packages.${pkgs.system}.star-citizen ];
+    rhx = {
+      head-tracking.enable = true;
+      gameglass.enable = true;
+    };
   };
 }
