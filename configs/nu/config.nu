@@ -13,6 +13,9 @@ source ./commands.nu
 
 source ./hooks/fnm.nu
 
+source ./completions/bun.nu
+source ./completions/yarn-classic.nu
+
 $env.config = {
   keybindings: [
     {
