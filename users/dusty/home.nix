@@ -198,7 +198,6 @@ in {
     easyeffects.enable = true;
     ghostty.enable = true;
     git.enable = true;
-    hyprland.enable = true;
     keebs.enable = true;
     nushell.enable = true;
     nvim.enable = true;
@@ -209,6 +208,9 @@ in {
     tmux.enable = true;
     wezterm.enable = true;
     zellij.enable = true;
+
+    # DE stuff
+    hyprland.enable = true;
 
     ### games
     starsector = {

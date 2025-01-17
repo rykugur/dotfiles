@@ -197,13 +197,15 @@
     btrfs.enable = true;
     fonts.enable = true;
     gamemode.enable = true;
-    hyprland.enable = true;
     pipewire.enable = true;
     ssh.enable = true;
     starcitizen.enable = true;
     steam.enable = true;
     virtman.enable = true;
     vr.enable = true;
+
+    # DE stuff
+    hyprland.enable = true;
   };
 
   home-manager = {
