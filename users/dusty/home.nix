@@ -207,6 +207,7 @@ in {
     swappy.enable = true;
     tmux.enable = true;
     wezterm.enable = true;
+    yazi.enable = true;
     zellij.enable = true;
 
     # DE stuff
