@@ -130,7 +130,7 @@ in {
     file
     file-roller
     jellyfin-media-player
-    lampray
+    # lampray
     mousai
     nemo
     nitch
