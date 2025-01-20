@@ -12,6 +12,7 @@ in {
         # background = "${./wallpaper.png}";
         loginBackground = true;
       })
+      (pkgs.catppuccin-kde.override { flavour = [ "mocha" ]; })
       pkgs.catppuccin-cursors.mochaBlue
     ];
 

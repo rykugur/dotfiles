@@ -49,7 +49,7 @@ config.color_scheme = "Catppuccin Mocha"
 
 config.enable_wayland = false
 
-config.window_background_opacity = 0.9
+config.window_background_opacity = 0.95
 
 config.default_prog = { "nu", "--login" }
 
