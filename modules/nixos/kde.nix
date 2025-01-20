@@ -15,7 +15,7 @@ in {
       pkgs.catppuccin-cursors.mochaBlue
     ];
 
-    programs.seahorse.enable = false;
+    # programs.seahorse.enable = false;
 
     # workaround for error: "The option `programs.ssh.askPassword' has conflicting definition values:" when seahorse (gnome) is also enabled.
     programs.ssh.askPassword =
@@ -26,7 +26,7 @@ in {
 
       displayManager.sddm = {
         enable = true;
-        theme = "catppuccin-mocha";
+        # theme = "catppuccin-mocha";
       };
       desktopManager.plasma6.enable = true;
     };

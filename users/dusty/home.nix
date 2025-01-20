@@ -196,7 +196,6 @@ in {
     browser.enable = true;
     discord.enable = true;
     easyeffects.enable = true;
-    ghostty.enable = true;
     git.enable = true;
     keebs.enable = true;
     nushell.enable = true;
@@ -205,7 +204,9 @@ in {
     ssh.enable = true;
     starship.enable = true;
     swappy.enable = true;
-    tmux.enable = true;
+
+    # term stuff
+    ghostty.enable = true;
     wezterm.enable = true;
     yazi.enable = true;
     zellij.enable = true;

@@ -186,11 +186,14 @@
     btrfs.enable = true;
     fonts.enable = true;
     gamemode.enable = true;
-    hyprland.enable = true;
     pipewire.enable = true;
     razer.enable = true;
     ssh.enable = true;
     steam.enable = true;
+
+    # DE stuff
+    hyprland.enable = true;
+    kde.enable = true;
   };
 
   home-manager = {

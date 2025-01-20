@@ -206,6 +206,7 @@
 
     # DE stuff
     hyprland.enable = true;
+    kde.enable = true;
   };
 
   home-manager = {
