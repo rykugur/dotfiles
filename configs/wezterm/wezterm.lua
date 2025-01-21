@@ -53,5 +53,8 @@ config.window_background_opacity = 0.95
 
 config.default_prog = { "nu", "--login" }
 
+config.initial_rows = 40
+config.initial_cols = 160
+
 -- and finally, return the configuration to wezterm
 return config

@@ -27,6 +27,7 @@ in {
 
       displayManager.sddm = {
         enable = true;
+        autoNumlock = true;
         # theme = "catppuccin-mocha";
       };
       desktopManager.plasma6.enable = true;
