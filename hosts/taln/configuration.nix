@@ -1,12 +1,12 @@
 { inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
   imports = [
-    ../default.nix
-
     ./hardware-configuration.nix
 
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
+
+    ../../roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-laptop-ssd
@@ -86,59 +86,20 @@
     networkmanager.enable = true;
   };
 
-  nixpkgs = {
-    overlays = [
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-    config.allowUnfree = true;
-  };
-
   nix = {
-    gc = {
-      automatic = true;
-      options = "--delete-older-than 10d";
-    };
-
-    optimise.automatic = true;
-
-    nixPath = [ "/etc/nix/path" ];
-
-    registry = (lib.mapAttrs (_: flake: { inherit flake; }))
-      ((lib.filterAttrs (_: lib.isType "flake")) inputs);
-
-    settings = {
-      # Deduplicate and optimize nix store
-      auto-optimise-store = true;
-
-      substituters = [
-        "https://hyprland.cachix.org"
-        "https://nix-gaming.cachix.org"
-        "https://nix-citizen.cachix.org"
-      ];
-      trusted-public-keys = [
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
-      ];
-    };
+    buildMachines = [{
+      hostName = "taldain";
+      system = "aarch64-linux";
+      protocol = "ssh-ng";
+      maxJobs = 3;
+      speedFactor = 2;
+      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      mandatoryFeatures = [ ];
+    }];
+    distributedBuilds = true;
   };
 
-  environment = {
-    etc = lib.mapAttrs' (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    }) config.nix.registry;
-
-    systemPackages = with pkgs; [ polkit_gnome ];
-  };
+  environment = { systemPackages = with pkgs; [ polkit_gnome ]; };
 
   users.users = {
     dusty = {
@@ -182,18 +143,13 @@
   ### custom module stuff
 
   rhx = {
-    _1password.enable = true;
-    btrfs.enable = true;
-    fonts.enable = true;
-    gamemode.enable = true;
-    pipewire.enable = true;
-    razer.enable = true;
-    ssh.enable = true;
-    steam.enable = true;
+    roles = {
+      desktop.enable = true; # also enables dev and terminal roles
+      gaming.enable = true;
+    };
 
-    # DE stuff
-    hyprland.enable = true;
-    kde.enable = true;
+    btrfs.enable = true;
+    razer.enable = true;
   };
 
   home-manager = {

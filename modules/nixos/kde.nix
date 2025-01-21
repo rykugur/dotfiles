@@ -23,6 +23,8 @@ in {
       pkgs.lib.mkForce "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
 
     services = {
+      power-profiles-daemon = { enable = true; };
+
       xserver.enable = true;
 
       displayManager.sddm = {

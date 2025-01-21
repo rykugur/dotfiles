@@ -95,14 +95,6 @@
             inherit username;
           };
         };
-        "tanavast" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/tanavast ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "tanavast";
-            inherit username;
-          };
-        };
         # # raspberry pi 5 - dns ad blocker, klipper server
         # "taldain" = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/taldain ];

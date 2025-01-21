@@ -1,11 +1,16 @@
 # dotfiles / nixOS config
 
+> [!WARNING]
+> THIS IS A(LWAYS A) WORK IN PROGRESS
+
 My personal nixOS config + dotfiles.
 
 The nixOS config is contained within a flake, with home-manager installed as a nixOS module. Most configs are contained within the `./configs` directory, and are symlinked into place by home-manager.
 
-**WORK IN PROGRESS**
+## Modules
 
-## TODO
+Modules come in two flavors: `nixos` and `home-manager`. The `nixos` modules are used to configure the system, while the `home-manager` modules are used to configure the user's home directory.
 
-- fix nixfmt
+## Roles
+
+Roles are abstractions around modules.
