@@ -192,29 +192,28 @@ in {
   ];
 
   rhx = {
-    albert.enable = true;
-    browser.enable = true;
-    discord.enable = true;
-    easyeffects.enable = true;
-    git.enable = true;
+    # albert.enable = true;
+    # browser.enable = true;
+    # discord.enable = true;
+    # easyeffects.enable = true;
+    # git.enable = true;
     keebs.enable = true;
-    nushell.enable = true;
-    nvim.enable = true;
-    obs.enable = true;
-    ssh.enable = true;
-    starship.enable = true;
+    # nushell.enable = true;
+    # nvim.enable = true;
+    # obs.enable = true;
+    # ssh.enable = true;
+    # starship.enable = true;
     swappy.enable = true;
 
     # term stuff
-    ghostty.enable = true;
-    wezterm.enable = true;
-    yazi.enable = true;
-    zellij.enable = true;
+    # ghostty.enable = true;
+    # wezterm.enable = true;
+    # yazi.enable = true;
+    # zellij.enable = true;
 
     # DE stuff
-    hyprland.enable = true;
+    # hyprland.enable = true;
 
-    ### games
     starsector = {
       enable = true;
       mods.enable = true;

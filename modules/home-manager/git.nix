@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 let cfg = config.rhx.git;
 in {
   options.rhx.git = {

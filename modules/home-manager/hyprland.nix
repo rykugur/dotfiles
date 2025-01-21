@@ -17,7 +17,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx.ranger.enable = true;
+    rhx.albert.enable = true;
     rhx.thunar.enable = true;
 
     home.packages = [

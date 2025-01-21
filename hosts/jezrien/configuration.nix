@@ -1,12 +1,12 @@
-{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
+{ inputs, outputs, pkgs, hostname, username, ... }: {
   imports = [
-    ../default.nix
-
     ./hardware-configuration.nix
 
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
+
+    ../../roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
@@ -56,58 +56,71 @@
     # nameservers = [ "10.3.8.203" ];
   };
 
-  nixpkgs = {
-    overlays = [
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-    config.allowUnfree = true;
-  };
-
   nix = {
-    gc = {
-      automatic = true;
-      options = "--delete-older-than 10d";
-    };
-
-    optimise.automatic = true;
-
-    nixPath = [ "/etc/nix/path" ];
-
-    registry = (lib.mapAttrs (_: flake: { inherit flake; }))
-      ((lib.filterAttrs (_: lib.isType "flake")) inputs);
-
-    settings = {
-      # Deduplicate and optimize nix store
-      auto-optimise-store = true;
-
-      substituters = [
-        "https://hyprland.cachix.org"
-        "https://nix-gaming.cachix.org"
-        "https://nix-citizen.cachix.org"
-      ];
-      trusted-public-keys = [
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
-      ];
-    };
+    buildMachines = [{
+      hostName = "taldain";
+      system = "aarch64-linux";
+      protocol = "ssh-ng";
+      maxJobs = 3;
+      speedFactor = 2;
+      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+      mandatoryFeatures = [ ];
+    }];
+    distributedBuilds = true;
   };
+
+  # nixpkgs = {
+  #   overlays = [
+  #     # If you want to use overlays exported from other flakes:
+  #     # neovim-nightly-overlay.overlays.default
+  #
+  #     # Or define it inline, for example:
+  #     # (final: prev: {
+  #     #   hi = final.hello.overrideAttrs (oldAttrs: {
+  #     #     patches = [ ./change-hello-to-hi.patch ];
+  #     #   });
+  #     # })
+  #   ];
+  #   config.allowUnfree = true;
+  # };
+
+  # nix = {
+  #   gc = {
+  #     automatic = true;
+  #     options = "--delete-older-than 10d";
+  #   };
+  #
+  #   optimise.automatic = true;
+  #
+  #   nixPath = [ "/etc/nix/path" ];
+  #
+  #   registry = (lib.mapAttrs (_: flake: { inherit flake; }))
+  #     ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+  #
+  #   settings = {
+  #     # Deduplicate and optimize nix store
+  #     auto-optimise-store = true;
+  #
+  #     substituters = [
+  #       "https://hyprland.cachix.org"
+  #       "https://nix-gaming.cachix.org"
+  #       "https://nix-citizen.cachix.org"
+  #     ];
+  #     trusted-public-keys = [
+  #       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+  #       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+  #       "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
+  #     ];
+  #   };
+  # };
 
   environment = {
-    # This will additionally add your inputs to the system's legacy channels
-    # Making legacy nix commands consistent as well, awesome!
-    etc = lib.mapAttrs' (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    }) config.nix.registry;
+    # # This will additionally add your inputs to the system's legacy channels
+    # # Making legacy nix commands consistent as well, awesome!
+    # etc = lib.mapAttrs' (name: value: {
+    #   name = "nix/path/${name}";
+    #   value.source = value.flake;
+    # }) config.nix.registry;
 
     systemPackages = with pkgs; [ polkit_gnome via vial ];
 
@@ -127,12 +140,15 @@
       enable = true;
       gpuOverclock.enable = true;
     };
+    dconf.enable = true;
     nix-ld = { enable = true; };
     # seahorse.enable = true;
   };
 
   services = {
     journald.storage = "volatile"; # potentially fix long boot times?
+
+    power-profiles-daemon = { enable = true; };
 
     printing.enable = true;
 
@@ -146,8 +162,6 @@
       enable = true;
       displayManager.startx.enable = true;
 
-      windowManager.openbox.enable = true;
-
       xkb = {
         layout = "us";
         variant = "";
@@ -156,26 +170,7 @@
 
     udev = {
       enable = true;
-      packages = [ pkgs.via pkgs.vial ];
       extraRules = ''
-        # Wooting One Legacy
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff01", TAG+="uaccess"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff01", TAG+="uaccess"
-
-        # Wooting One update mode
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2402", TAG+="uaccess"
-
-        # Wooting Two Legacy
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff02", TAG+="uaccess"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff02", TAG+="uaccess"
-
-        # Wooting Two update mode
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2403", TAG+="uaccess"
-
-        # Generic Wootings
-        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31e3", TAG+="uaccess"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="31e3", TAG+="uaccess"
-
         # Disable KT_USB_AUDIO device
         ACTION=="add", ATTR{idVendor}=="31b2", ATTR{idProduct}=="0011", OPTIONS+="ignore_device"
       '';
@@ -193,20 +188,28 @@
 
   ### custom module stuff
   rhx = {
-    _1password.enable = true;
+    roles = {
+      desktop.enable = true; # also enables dev and terminal roles
+      gaming.enable = true;
+      virtualization.enable = true;
+      # vr.enable = true;
+    };
+
+    # _1password.enable = true;
     btrfs.enable = true;
-    fonts.enable = true;
-    gamemode.enable = true;
-    pipewire.enable = true;
-    ssh.enable = true;
+    # fonts.enable = true;
+    # gamemode.enable = true;
+    # pipewire.enable = true;
+    # ssh.enable = true;
     starcitizen.enable = true;
-    steam.enable = true;
-    virtman.enable = true;
+    # steam.enable = true;
+    # virtman.enable = true;
     vr.enable = true;
+    wooting.enable = true;
 
     # DE stuff
-    hyprland.enable = true;
-    kde.enable = true;
+    # hyprland.enable = true;
+    # kde.enable = true;
   };
 
   home-manager = {

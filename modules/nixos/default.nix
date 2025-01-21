@@ -16,5 +16,6 @@
     ./vfio.nix
     ./virtman.nix
     ./vr.nix
+    ./wooting.nix
   ];
 }
