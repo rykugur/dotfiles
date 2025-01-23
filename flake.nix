@@ -30,7 +30,7 @@
       inputs.hyprland.follows = "hyprland";
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
-    mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
+    # mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     # gBar.url = "github:scorpion-26/gBar";
 

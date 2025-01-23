@@ -1,5 +1,6 @@
 { config, lib, inputs, pkgs, ... }: {
   imports = [
+    ./3dp.nix
     ./desktop.nix
     ./dev.nix
     ./gaming.nix

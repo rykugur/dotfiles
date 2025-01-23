@@ -135,6 +135,7 @@
   ### custom module stuff
   rhx = {
     roles = {
+      _3dp.enable = true;
       desktop.enable = true; # also enables dev and terminal roles
       gaming.enable = true;
       virtualization.enable = true;
