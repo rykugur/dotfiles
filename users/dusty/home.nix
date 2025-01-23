@@ -191,6 +191,8 @@ in {
     telegram-desktop
   ];
 
+  xdg.enable = true;
+
   rhx = {
     keebs.enable = true;
     starsector = {

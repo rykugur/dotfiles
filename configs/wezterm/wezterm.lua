@@ -32,11 +32,12 @@ config.use_fancy_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = true
 
 config.font = wezterm.font_with_fallback({
+	"ZedMono Nerd Font Mono",
 	"FiraCode Nerd Font Mono",
 	"EnvyCodeR Nerd Font Mono",
 	"feather",
 })
-config.font_size = 12.0
+config.font_size = 14.0
 
 config.window_padding = {
 	left = 0,
@@ -51,7 +52,7 @@ config.enable_wayland = false
 
 config.window_background_opacity = 0.95
 
-config.default_prog = { "nu", "--login" }
+-- config.default_prog = { "nu", "--login" }
 
 config.initial_rows = 40
 config.initial_cols = 160
