@@ -3,7 +3,14 @@
 -- Add any additional autocmds here
 
 -- NOTE: Ensures that when exiting NeoVim, Zellij returns to normal mode
-vim.api.nvim_create_autocmd("VimLeave", {
-  pattern = "*",
-  command = "silent !zellij action switch-mode normal",
+-- vim.api.nvim_create_autocmd("VimLeave", {
+--   pattern = "*",
+--   command = "silent !zellij action switch-mode normal",
+-- })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "nu",
+  callback = function()
+    vim.bo.commentstring = "# %s"
+  end,
 })
