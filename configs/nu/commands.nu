@@ -66,10 +66,12 @@ def "shash" [url: string] {
   nix hash convert --hash-algo sha256 (nix-prefetch-url $url)
 }
 
-def nrf [url?: string] {
-  mut finalUrl = $url;
-  if ($finalUrl | is-empty) {
-    $finalUrl = $"($env.HOME)/.dotfiles"
+def nrf [--remote (-r)] {
+  let url = if ($remote) {
+    "github:rykugur/dotfiles"
+  } else {
+    $"($env.HOME)/.dotfiles"
   }
-  nix repl --expr $"builtins.getFlake \"($finalUrl)\""
+
+  nix repl --expr $"builtins.getFlake \"($url)\""
 }
