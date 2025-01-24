@@ -16,7 +16,7 @@ def sops-new-host [--yes (-y)] {
   let keysTxtPath = "~/.config/sops/age/keys.txt"
 
   let yes = if (not $yes) {
-    let response = (input $"Write private age key to ($keysTxtPath)? (y/N): ")
+    let response = (input $"Write private age key to ($keysTxtPath)? \(y/N\): ")
     $response == "y" or $response == "Y"
   } else {
     true
