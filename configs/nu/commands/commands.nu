@@ -1,0 +1,1 @@
+source ./sops-nix.nu

@@ -1,3 +1,5 @@
+# TODO: move to ./commands
+
 def is-os [os: string] {
   let os_lowercase = ($nu.os-info.name | str downcase)
   match $os {
@@ -44,19 +46,19 @@ def rbld [--boot (-b)] {
   }
 }
 
-def "op get-ssh-key-id" [] {
-  op item list --categories "SSH Key" --vault "Private" | lines | skip 1 | to text | fzf | split column -r '\s{2,}' ID TITLE VAULT EDITED | get ID | to text
-}
-
-def "sops get-age-key" [] {
-  let private_key_id = (op get-ssh-key-id)
-  nix-shell -p ssh-to-age --run $'op item get ($private_key_id) --fields "label=private key" --reveal | ssh-to-age -private-key'
-}
-
-def "sops write-age-key" [] {
-  mkdir (dirname ~/.config/sops/age/keys.txt)
-  sops get-age-key | save ~/.config/sops/age/keys.txt
-}
+# def "op get-ssh-key-id" [] {
+#   op item list --categories "SSH Key" --vault "Private" | lines | skip 1 | to text | fzf | split column -r '\s{2,}' ID TITLE VAULT EDITED | get ID | to text
+# }
+#
+# def "sops get-age-key" [] {
+#   let private_key_id = (op get-ssh-key-id)
+#   nix-shell -p ssh-to-age --run $'op item get ($private_key_id) --fields "label=private key" --reveal | ssh-to-age -private-key'
+# }
+#
+# def "sops write-age-key" [] {
+#   mkdir (dirname ~/.config/sops/age/keys.txt)
+#   sops get-age-key | save ~/.config/sops/age/keys.txt
+# }
 
 def "nix get-hash" [url: string] {
   nix hash convert --hash-algo sha256 (nix-prefetch-url $url)

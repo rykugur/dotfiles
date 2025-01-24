@@ -15,6 +15,8 @@ source ./completions/yarn-classic.nu
 
 source ./zellij.nu
 
+source ./commands/commands.nu
+
 use ./abbreviations.nu
 $env.config.keybindings = $env.config.keybindings | append (abbreviations get_keybinds)
 $env.config.menus = $env.config.menus | append (abbreviations get_menus)
