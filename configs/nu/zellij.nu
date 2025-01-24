@@ -1,3 +1,5 @@
+#TODO: move to ./commands
+
 def "zellij exists" [session: string] {
   zellij ls | lines | parse "{name} {description}" | where name =~ $session | is-not-empty
 }
