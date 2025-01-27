@@ -2,7 +2,7 @@
   description = "Swoleflake";
 
   inputs = {
-    stable-nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -18,6 +18,9 @@
     raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
 
     # proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     ### hyprland stuff
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
@@ -67,6 +70,8 @@
           inherit system;
           config.allowUnfree = true;
         });
+
+      homelab_nodes = [ "homelab-0" "homelab-1" "homelab-2" ];
     in {
       devShells =
         forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
@@ -104,13 +109,17 @@
         #     hostname = "taldain";
         #     username = "shazbot";
         #   };
-        # };
-        # # homelab
-        # tanavast = nixpkgs.lib.nixosSystem {
-        #   modules = [ ./hosts/tanavast/configuration.nix];
-        #   specialArgs = { inherit inputs outputs; };
-        # };
-      };
+      } // builtins.listToAttrs (map (hostname: {
+        name = hostname;
+        value = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/homelab ];
+          specialArgs = {
+            inherit inputs outputs;
+            inherit hostname username;
+          };
+        };
+      }) homelab_nodes);
+      # };
 
       darwinConfigurations = {
         # work macbook

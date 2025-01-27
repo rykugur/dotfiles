@@ -98,10 +98,6 @@
 
     printing.enable = true;
 
-    gnome = {
-      gnome-browser-connector.enable = true;
-      gnome-keyring.enable = true;
-    };
     gvfs.enable = true;
 
     xserver = {

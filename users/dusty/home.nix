@@ -1,6 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ inputs, outputs, pkgs, username, ... }:
+{ config, inputs, outputs, pkgs, username, hostname, ... }:
 let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
   umuPkg = inputs.umu.packages.${pkgs.system}.umu;
@@ -66,6 +66,11 @@ in {
     gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; };
   };
 
+  sops = {
+    defaultSopsFile = ../../hosts/${hostname}/secrets.yaml;
+    age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+  };
+
   home.packages = with pkgs; [
     ################################# dev #################################
     direnv
@@ -106,7 +111,6 @@ in {
     ################################# random #################################
     # super-slicer-latest
     n0la_rcon
-    warp-terminal
     arandr
     cliphist
     pywal

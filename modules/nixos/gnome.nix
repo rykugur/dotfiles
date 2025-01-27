@@ -10,10 +10,17 @@ in {
       gnomeExtensions.dash-to-dock
     ];
 
-    services.xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+    services = {
+      gnome = {
+        gnome-browser-connector.enable = true;
+        # gnome-keyring.enable = true;
+      };
+
+      xserver = {
+        enable = true;
+        displayManager.gdm.enable = true;
+        desktopManager.gnome.enable = true;
+      };
     };
   };
 }

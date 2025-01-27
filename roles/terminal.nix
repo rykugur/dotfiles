@@ -11,12 +11,13 @@ in {
     home-manager.users.${username} = {
       rhx = {
         ghostty.enable = true;
+
         nushell.enable = true;
-        nvim.enable = true;
         starship.enable = true;
-        wezterm.enable = true;
         yazi.enable = true;
         zellij.enable = true;
+
+        nvim.enable = true;
       };
     };
   };

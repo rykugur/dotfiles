@@ -12,10 +12,9 @@ in {
     home.packages = with pkgs; [ age sops ];
 
     sops = {
-      defaultSopsFile = ../../hosts/${hostname}/secrets.yaml;
-      age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
       secrets.ssh_private_key = {
         path = "${config.home.homeDirectory}/.ssh/id_ed25519";
+        mode = "0400";
       };
     };
 
@@ -24,7 +23,7 @@ in {
         enable = true;
 
         matchBlocks = {
-          "jezrien taln tanavast taldain" = {
+          "jezrien taln tanavast taldain homelab*" = {
             identityFile = "~/.ssh/id_ed25519";
             identitiesOnly = true;
             forwardAgent = true;

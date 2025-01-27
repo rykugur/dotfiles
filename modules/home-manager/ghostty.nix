@@ -21,8 +21,6 @@ in {
           font-family-bold-italic = ${font} Bold Italic
           font-size = 16
 
-          gtk-single-instance = true
-
           window-decoration = ${useWindowDecoration}
 
           theme = catppuccin-mocha

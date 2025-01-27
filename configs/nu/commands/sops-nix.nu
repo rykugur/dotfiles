@@ -28,3 +28,7 @@ def sops-new-host [--yes (-y)] {
     $privateAgeKey | save $keysTxtPath
   }
 }
+
+def get-private-age-key [] {
+  sops-nix get-private-age-key
+}
