@@ -14,7 +14,7 @@ def --env ndots [--local (-l)] {
       mkdir $dirName
       touch $configFile
     }
-    cd $dirName; nvim
+    cd $dirName; nvim config.nu
   } else {
     cd $env.DOTFILES_DIR; nvim
   }
