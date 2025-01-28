@@ -22,6 +22,10 @@ in {
       ssh = {
         enable = true;
 
+        extraConfig = ''
+          AddKeysToAgent yes
+        '';
+
         matchBlocks = {
           "jezrien taln tanavast taldain homelab*" = {
             identityFile = "~/.ssh/id_ed25519";
