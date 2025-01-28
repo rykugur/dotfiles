@@ -14,19 +14,6 @@ in {
       helmfile
     ];
 
-    sops = {
-      secrets.config_yaml = { sopsFile = ../../hosts/homelab/secrets.yaml; };
-    };
-
     programs.kubecolor = { enable = true; };
-
-    programs.nushell = lib.mkIf config.rhx.nushell.enable {
-      extraEnv = ''
-        $env.KUBECONFIG = "${config.sops.secrets.config_yaml.path}"
-      '';
-      extraConfig = ''
-        alias k = kubecolor
-      '';
-    };
   };
 }

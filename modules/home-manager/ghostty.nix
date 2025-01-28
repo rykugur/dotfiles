@@ -32,7 +32,7 @@ in {
           window-height = 40
           window-width = 160
 
-          adw-toast = false
+          app-notifications = false
 
           command = ${pkgs.nushell}/bin/nu --login
         '';

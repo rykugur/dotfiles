@@ -49,24 +49,6 @@ alias tmat = sesh connect (sesh list -t | fzf)
 alias top = btop
 alias whatthecommit = curl -s https://whatthecommit.com/index.txt
 alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
-### fast travel
-def --env dots [--local (-l)] {
-  if $local {
-    cd ($env.LOCAL_CONFIG_FILE | path dirname)
-  } else {
-    cd $env.DOTFILES_DIR
-  }
-}
-def --env ndots [--local (-l)] {
-  if $local {
-    let configFile = $env.LOCAL_CONFIG_FILE
-    let dirName = $configFile | path dirname
-    if (not ($configFile | path exists)) {
-      mkdir $dirName
-      touch $configFile
-    }
-    cd $dirName; nvim
-  } else {
-    cd $env.DOTFILES_DIR; nvim
-  }
-}
+
+# kubernetes
+alias k = kubecolor
