@@ -8,6 +8,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       kubectl
+      kubectx # also contains kubens
 
       kubernetes-helm
       helmfile

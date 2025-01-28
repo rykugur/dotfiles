@@ -103,9 +103,14 @@ const nix = {
   nds: "nix-shell"
   ndsp: "nix-shell -p"
 
+  snrb: "sudo nixos-rebuild boot"
+  snrbf: "sudo nixos-rebuild boot --flake $env.DOTFILES_DIR"
+  snrbfu: "sudo nixos-rebuild boot --flake $env.DOTFILES_DIR --update"
+  snb: "sudo nixos-rebuild boot"
   snr: "sudo nixos-rebuild"
   snrs: "sudo nixos-rebuild switch"
   snrsf: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
+  snrsfu: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR --update"
 }
 
 const nush = {

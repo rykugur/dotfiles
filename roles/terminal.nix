@@ -1,4 +1,4 @@
-{ config, lib, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let cfg = config.rhx.roles.terminal;
 in {
   options.rhx.roles.terminal.enable = lib.mkEnableOption "Enable terminal role";
@@ -9,6 +9,8 @@ in {
 
     # home-manager config
     home-manager.users.${username} = {
+      home.packages = with pkgs; [ cmatrix ];
+
       rhx = {
         ghostty.enable = true;
 

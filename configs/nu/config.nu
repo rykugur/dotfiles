@@ -6,8 +6,6 @@ $env.PATH = ($env.PATH | append $"($env.HOME)/bin")
 
 source ./aliases.nu
 
-source ./commands.nu
-
 source ./hooks/fnm.nu
 
 source ./completions/bun.nu
