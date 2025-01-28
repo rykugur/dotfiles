@@ -139,7 +139,7 @@
     };
 
     btrfs.enable = true;
-    starcitizen.enable = true;
+    #starcitizen.enable = true;
     vr.enable = true;
     wooting.enable = true;
   };
