@@ -33,16 +33,22 @@
   sops = {
     defaultSopsFile = ./secrets.yaml;
     defaultSopsFormat = "yaml";
+    age.keyFile = "/var/lib/sops-nix/key.txt";
 
-    secrets = { token = { }; };
+    secrets = {
+      token = { };
+      private_age_key = {
+        path = "/var/lib/sops-nix/key.txt";
+        mode = "0440";
+      };
+    };
   };
 
   services = {
     k3s = {
       enable = true;
       role = "server";
-      # TODO: use sops-nix
-      tokenFile = /var/lib/rancher/k3s/server/token;
+      tokenFile = config.sops.secrets.token;
       extraFlags = toString ([
         ''--write-kubeconfig-mode "0644"''
         "--cluster-init"
