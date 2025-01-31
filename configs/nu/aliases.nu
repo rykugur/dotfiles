@@ -54,4 +54,4 @@ alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 alias k = kubecolor
 alias "k get" = kubecolor get -o wide
 alias ktx = kubectx
-alias knl = kubens
+alias kns = kubens
