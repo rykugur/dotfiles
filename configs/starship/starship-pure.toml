@@ -8,7 +8,6 @@ $git_status\
 $cmd_duration\
 $line_break\
 $nix_shell\
-$python\
 $character"""
 
 [directory]
