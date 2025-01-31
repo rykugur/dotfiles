@@ -51,4 +51,4 @@ alias whatthecommit = curl -s https://whatthecommit.com/index.txt
 alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 
 # kubernetes
-alias k = kubecolor
+alias k = kubecolor -o wide
