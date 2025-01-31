@@ -33,25 +33,23 @@
   sops = {
     defaultSopsFile = ./secrets.yaml;
     defaultSopsFormat = "yaml";
-    age.keyFile = "/var/lib/sops-nix/key.txt";
-
-    secrets = {
-      token = { };
-      private_age_key = {
-        path = "/var/lib/sops-nix/key.txt";
-        mode = "0440";
-      };
+    age = {
+      keyFile = "/var/lib/sops-nix/key.txt";
+      generateKey = false;
     };
+
+    secrets = { token = { }; };
   };
 
   services = {
     k3s = {
       enable = true;
       role = "server";
-      tokenFile = config.sops.secrets.token;
+      tokenFile = config.sops.secrets.token.path;
       extraFlags = toString ([
         ''--write-kubeconfig-mode "0644"''
-        "--cluster-init"
+        # "--cluster-init" # I don't think we need this since we have
+        # k3s.clusterInit below
         "--disable servicelb"
         "--disable traefik"
         "--disable local-storage"
@@ -89,6 +87,8 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAgLk3xlBbjNte2VW4ZE6ewngB07bZ1MdkOBnJFFnzQV"
       # jezrien
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+urk8awyDQhOmONXIsAcHzaIlvHSiTD4rL/5GAHo6D"
+      # taln
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMuqj/tHToO+z85WFIkZ62Us4pvGW5sbHpIXC1zikNqs"
     ];
   };
 

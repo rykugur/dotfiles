@@ -52,7 +52,17 @@
 
   networking = {
     hostName = hostname;
-    search = [ "router.lan" ];
+    # nameservers = [ "10.3.8.250" ];
+    networkmanager = {
+      enable = true;
+      dns = "none";
+      insertNameservers = [ "10.3.8.250" ];
+    };
+
+    useDHCP = false;
+    dhcpcd.enable = false;
+
+    # search = [ "pihole.home" "router.lan" ];
     # nameservers = [ "10.3.8.203" ];
   };
 

@@ -1,0 +1,20 @@
+---
+DNS1: 10.3.8.1
+persistentVolumeClaim:
+  enabled: true
+ingress:
+  enabled: true
+  ingressClassName: nginx-internal
+  hosts:
+    - "pihole.home"
+serviceWeb:
+  loadBalancerIP: 10.3.8.250
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole-svc
+  type: LoadBalancer
+serviceDns:
+  loadBalancerIP: 10.3.8.250
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole-svc
+  type: LoadBalancer
+replicaCount: 1
