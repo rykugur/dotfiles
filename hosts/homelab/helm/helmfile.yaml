@@ -3,6 +3,8 @@ repositories:
     url: https://charts.longhorn.io
   - name: metallb
     url: https://metallb.github.io/metallb
+  - name: mojo2600
+    url: https://mojo2600.github.io/pihole-kubernetes/
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
   - name: bitnami
