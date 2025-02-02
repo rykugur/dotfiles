@@ -52,7 +52,9 @@ alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
 
 # kubernetes
 alias k = kubecolor
-alias kg = kubecolor get
-alias kgw = kubecolor get -o wide
+alias kg = k get
+alias kgn = kg nodes
+alias kgp = kg pods
+alias kgs = kg services
 alias ktx = kubectx
 alias kns = kubens
