@@ -52,7 +52,6 @@
 
   networking = {
     hostName = hostname;
-    # nameservers = [ "10.3.8.250" ];
     networkmanager = {
       enable = true;
       dns = "none";

@@ -38,14 +38,17 @@
       generateKey = false;
     };
 
-    secrets = { token = { }; };
+    secrets = {
+      k3s_token = { };
+      cloudflare_api_token = { };
+    };
   };
 
   services = {
     k3s = {
       enable = true;
       role = "server";
-      tokenFile = config.sops.secrets.token.path;
+      tokenFile = config.sops.secrets.k3s_token.path;
       extraFlags = toString ([
         ''--write-kubeconfig-mode "0644"''
         # "--cluster-init" # I don't think we need this since we have
