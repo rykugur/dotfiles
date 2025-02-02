@@ -1,22 +1,5 @@
 { inputs, pkgs, ... }: {
 
-  default = pkgs.mkShell {
-    NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
-
-    packages = with pkgs; [ nodejs yarn ];
-  };
-
-  nvim = pkgs.mkShell {
-    NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
-    # packages required to build some plugins
-    packages = with pkgs; [ cargo cmake gcc go nodejs luaPackages.lua ];
-
-    shellHook = ''
-      nvim
-      exit
-    '';
-  };
-
   lua = pkgs.mkShell {
     packages = [
       inputs.luarocks-nix.packages.${pkgs.system}.default
@@ -30,5 +13,19 @@
       fish
       exit
     '';
+  };
+
+  kubes = pkgs.mkShell {
+    buildInputs = with pkgs; [
+      kubectl
+      kubectx
+      kubecolor
+
+      kubernetes-helm
+      helmfile
+
+      docker
+      minikube
+    ];
   };
 }

@@ -1,3 +1,5 @@
+use std/log
+
 def rbld [--boot (-b)] {
   rbld switch
 }
@@ -17,6 +19,16 @@ def "rbld boot" [] {
     cd $env.DOTFILES_DIR; darwin-rebuild boot --flake .
   } else if (is-linux) {
     sudo nixos-rebuild boot --flake $env.DOTFILES_DIR
+  }
+}
+
+def nd [] {
+  const targets = ["lua", "kubes"]
+  let selection = ($targets | str join "\n" | fzf)
+  if ($selection | is-not-empty) {
+    nix develop $"($env.DOTFILES_DIR)#($selection)" -c $env.SHELL
+  } else {
+    log info "No target selected."
   }
 }
 
