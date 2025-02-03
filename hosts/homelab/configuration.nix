@@ -38,10 +38,7 @@
       generateKey = false;
     };
 
-    secrets = {
-      k3s_token = { };
-      cloudflare_api_token = { };
-    };
+    secrets = { k3s_token = { }; };
   };
 
   services = {

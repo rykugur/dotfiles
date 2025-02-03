@@ -38,6 +38,10 @@ releases:
     version: 4.12.0
     values:
       - ./values/nginx-internal.values.yaml
+    hooks:
+      - events: ["preapply"]
+        command: "kubectl"
+        args: ["apply", "-f", "nginx-certificate.yaml"]
 
   - name: externaldns-pihole
     namespace: pihole-system
@@ -52,3 +56,7 @@ releases:
     chart: jetstack/cert-manager
     values:
       - ./values/cert-manager.values.yaml
+    hooks:
+      - events: ["preapply"]
+        command: "kubectl"
+        args: ["apply", "-f", "certmanager-clusterissuer.yaml"]
