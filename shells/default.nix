@@ -17,6 +17,7 @@
 
   kubes = pkgs.mkShell {
     buildInputs = with pkgs; [
+      k9s
       kubectl
       kubectx
       kubecolor
