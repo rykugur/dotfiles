@@ -10,25 +10,6 @@ return {
       },
     },
   },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     servers = {
-  --       lua_ls = {
-  --         workspace = {
-  --           checkThirdParty = true,
-  --           library = {
-  --             "${3rd}/love2d/library",
-  --             -- "~/.luarocks/share/lua/5.1/?.lua",
-  --             -- "~/.luarocks/share/lua/5.1/?/init.lua",
-  --             -- vim.fn.expand("~/.luarocks/share/lua/5.1/?.lua"),
-  --             -- vim.fn.expand("~/.luarocks/share/lua/5.1/?/init.lua"),
-  --           },
-  --         },
-  --       },
-  --     },
-  --   },
-  -- },
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -44,48 +25,6 @@ return {
       },
     },
   },
-  -- {
-  --   "nvim-neotest/neotest",
-  --   dependencies = {
-  --     "haydenmeade/neotest-jest",
-  --     "marilari88/neotest-vitest",
-  --   },
-  --   keys = {
-  --     {
-  --       "<leader>tl",
-  --       function()
-  --         require("neotest").run.run_last()
-  --       end,
-  --       desc = "Run Last Test",
-  --     },
-  --     {
-  --       "<leader>tL",
-  --       function()
-  --         require("neotest").run.run_last({ strategy = "dap" })
-  --       end,
-  --       desc = "Debug Last Test",
-  --     },
-  --     {
-  --       "<leader>tw",
-  --       "<cmd>lua require('neotest').run.run({ jestCommand = 'jest --watch ' })<cr>",
-  --       desc = "Run Watch",
-  --     },
-  --   },
-  --   opts = function(_, opts)
-  --     table.insert(
-  --       opts.adapters,
-  --       require("neotest-jest")({
-  --         jestCommand = "yarn jest --",
-  --         jestConfigFile = "custom.jest.config.ts",
-  --         env = { CI = true },
-  --         cwd = function()
-  --           return vim.fn.getcwd()
-  --         end,
-  --       })
-  --     )
-  --     table.insert(opts.adapters, require("neotest-vitest"))
-  --   end,
-  -- },
   { "mistricky/codesnap.nvim", build = "make", opts = { has_breadcrumbs = true } },
   {
     "linrongbin16/gitlinker.nvim",

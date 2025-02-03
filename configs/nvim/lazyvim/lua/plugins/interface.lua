@@ -32,24 +32,6 @@ return {
       hint = "floating-big-letter",
     },
   },
-  -- switching to zellij
-  -- {
-  --   "christoomey/vim-tmux-navigator",
-  --   cmd = {
-  --     "TmuxNavigateLeft",
-  --     "TmuxNavigateDown",
-  --     "TmuxNavigateUp",
-  --     "TmuxNavigateRight",
-  --     "TmuxNavigatePrevious",
-  --   },
-  --   keys = {
-  --     { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
-  --     { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
-  --     { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
-  --     { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-  --     { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
-  --   },
-  -- },
   {
     "nvim-lualine/lualine.nvim",
     opts = {
@@ -60,19 +42,6 @@ return {
       },
     },
   },
-  -- {
-  --   "nvim-telescope/telescope.nvim",
-  --   opts = {
-  --     defaults = {
-  --       file_ignore_patterns = {
-  --         "svg",
-  --         "yarn.lock",
-  --       },
-  --       layout_strategy = "vertical",
-  --       winblend = 0,
-  --     },
-  --   },
-  -- },
   {
     "akinsho/bufferline.nvim",
     opts = {
@@ -117,18 +86,6 @@ return {
       },
     },
   },
-  -- {
-  --   "folke/zen-mode.nvim",
-  --   keys = {
-  --     {
-  --       "<leader>uz",
-  --       function()
-  --         require("zen-mode").toggle()
-  --       end,
-  --       desc = "Toggle Zen-mode",
-  --     },
-  --   },
-  -- },
   {
     "swaits/zellij-nav.nvim",
     lazy = true,
