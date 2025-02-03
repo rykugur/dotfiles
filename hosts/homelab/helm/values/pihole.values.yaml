@@ -7,6 +7,10 @@ ingress:
   ingressClassName: nginx-internal
   hosts:
     - "pihole.home"
+  # tls:
+  #   - secretName: nginx-certificate-secret
+  #     hosts:
+  #       - "ryk.sh"
 serviceWeb:
   loadBalancerIP: 10.3.8.250
   annotations:
