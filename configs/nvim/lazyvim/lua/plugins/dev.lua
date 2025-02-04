@@ -1,15 +1,4 @@
 return {
-  { "justinsgithub/wezterm-types", lazy = true },
-  {
-    "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
-    opts = {
-      library = {
-        { path = "LazyVim", words = { "LazyVim" } },
-        { path = "wezterm-types", mods = { "wezterm" } },
-      },
-    },
-  },
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -22,6 +11,7 @@ return {
         "luadoc",
         "markdown",
         "nix",
+        "nu",
       },
     },
   },
@@ -35,7 +25,6 @@ return {
       { "<leader>gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
     },
   },
-  { "mfussenegger/nvim-dap", opts = { manual_mode = false }, dependencies = { "rcarriga/nvim-dap-ui" } },
   {
     "LintaoAmons/scratch.nvim",
     event = "VeryLazy",
