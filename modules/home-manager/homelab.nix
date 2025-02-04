@@ -5,7 +5,7 @@ let
     owner = "catppuccin";
     repo = "k9s";
     rev = "fdbec82284744a1fc2eb3e2d24cb92ef87ffb8b4";
-    sha256 = lib.fakeSha256;
+    sha256 = "sha256-9h+jyEO4w0OnzeEKQXJbg9dvvWGZYQAO4MbgDn6QRzM=";
   };
 in {
   options.rhx.homelab = {
