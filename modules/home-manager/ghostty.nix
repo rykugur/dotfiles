@@ -3,7 +3,8 @@ let
   cfg = config.rhx.ghostty;
   ghostty-pkg = inputs.ghostty.packages.${pkgs.system}.default;
   useWindowDecoration = if pkgs.stdenv.isDarwin then "true" else "false";
-  font = "ZedMono NFM";
+  # font = "ZedMono NFM";
+  font = "CaskaydiaCove NFM";
 in {
   options.rhx.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
