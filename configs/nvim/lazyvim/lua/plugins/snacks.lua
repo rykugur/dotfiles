@@ -8,8 +8,10 @@ return {
       -- your configuration comes here
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
+      animate = { enabled = true },
       bigfile = { enabled = true },
       dashboard = { enabled = true },
+      explorer = { enabled = true },
       git = { enabled = true },
       gitbrowse = { enabled = true },
       indent = { enabled = true },
@@ -17,7 +19,7 @@ return {
       picker = { enabled = true },
       notifier = { enabled = true },
       quickfile = { enabled = true },
-      scroll = { enabled = true },
+      scroll = { enabled = false }, -- leaving this enabled breaks scrolling for me
       statuscolumn = { enabled = true },
       words = { enabled = true },
     },
