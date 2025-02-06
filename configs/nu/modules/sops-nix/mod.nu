@@ -1,13 +1,13 @@
-use ../1password
+use ../op
 
 export def get-private-age-key [] {
-  let sshKeyId = if ($in | is-not-empty) { $in } else { 1password get-ssh-key-id }
+  let sshKeyId = if ($in | is-not-empty) { $in } else { op get-ssh-key-id }
   if ($sshKeyId | is-empty) {
     log error "No SSH key found or selected"
     return
   }
 
-  let privateKey = 1password get-private-key $sshKeyId
+  let privateKey = op get-private-key $sshKeyId
   if ($privateKey | is-empty) {
     log error "No private key found"
     return
@@ -17,13 +17,13 @@ export def get-private-age-key [] {
 }
 
 export def get-public-age-key [] {
-  let sshKeyId = if ($in | is-not-empty) { $in } else { 1password get-ssh-key-id }
+  let sshKeyId = if ($in | is-not-empty) { $in } else { op get-ssh-key-id }
   if ($sshKeyId | is-empty) {
     log error "No SSH key found or selected"
     return
   }
 
-  let publicKey = 1password get-public-key $sshKeyId
+  let publicKey = op get-public-key $sshKeyId
   if ($publicKey | is-empty) {
     log error "No public key found"
     return

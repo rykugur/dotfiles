@@ -1,9 +1,9 @@
 use std log
-use ../modules/1password
+use ../modules/op
 use ../modules/sops-nix
 
 def sops-new-host [--yes (-y)] {
-  let sshKeyId = 1password get-ssh-key-id
+  let sshKeyId = op get-ssh-key-id
   if ($sshKeyId | is-empty) {
     log error "No SSH key found or selected"
     return
