@@ -1,23 +1,13 @@
-export def get-ssh-key-id [] {
-  op item list --categories "SSH Key" | lines | skip 1 | split column -r '\s{2,}' ID TITLE VAULT | input list --fuzzy 'Select SSH Key' | get ID
-}
-
-export def get-public-key [sshKeyId: string] {
-  op item get $sshKeyId --fields "label=public key"
-}
-
-export def get-private-key [sshKeyId: string] {
-  op item get $sshKeyId --fields "label=private key" --reveal
-}
+use ../1password
 
 export def get-private-age-key [] {
-  let sshKeyId = if ($in | is-not-empty) { $in } else { get-ssh-key-id }
+  let sshKeyId = if ($in | is-not-empty) { $in } else { 1password get-ssh-key-id }
   if ($sshKeyId | is-empty) {
     log error "No SSH key found or selected"
     return
   }
 
-  let privateKey = get-private-key $sshKeyId
+  let privateKey = 1password get-private-key $sshKeyId
   if ($privateKey | is-empty) {
     log error "No private key found"
     return
@@ -27,13 +17,13 @@ export def get-private-age-key [] {
 }
 
 export def get-public-age-key [] {
-  let sshKeyId = if ($in | is-not-empty) { $in } else { get-ssh-key-id }
+  let sshKeyId = if ($in | is-not-empty) { $in } else { 1password get-ssh-key-id }
   if ($sshKeyId | is-empty) {
     log error "No SSH key found or selected"
     return
   }
 
-  let publicKey = get-public-key $sshKeyId
+  let publicKey = 1password get-public-key $sshKeyId
   if ($publicKey | is-empty) {
     log error "No public key found"
     return
