@@ -1,7 +1,11 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ outputs, pkgs, username, ... }: {
-  imports = [ outputs.hmModules ];
+{ config, inputs, outputs, pkgs, username, ... }: {
+  imports = [
+    outputs.hmModules
+
+    inputs.sops-nix.homeManagerModules.sops
+  ];
 
   nixpkgs = {
     # You can add overlays here
@@ -47,6 +51,17 @@
     nixfmt-classic
     nix-index
   ];
+
+  sops = {
+    defaultSopsFile = ../../hosts/work-macbook/secrets.yaml;
+
+    age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+
+    secrets.ssh_private_key = {
+      path = "${config.home.homeDirectory}/.ssh/id_ed25519";
+      mode = "0400";
+    };
+  };
 
   rhx = {
     fish.enable = true;
