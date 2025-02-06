@@ -33,6 +33,7 @@ in {
         source ${nu-scripts}/custom-completions/curl/curl-completions.nu
         source ${nu-scripts}/custom-completions/docker/docker-completions.nu
         source ${nu-scripts}/custom-completions/git/git-completions.nu
+        source ${nu-scripts}/custom-completions/just/just-completions.nu
         source ${nu-scripts}/custom-completions/nix/nix-completions.nu
         source ${nu-scripts}/custom-completions/npm/npm-completions.nu
         source ${nu-scripts}/custom-completions/pnpm/pnpm-completions.nu
