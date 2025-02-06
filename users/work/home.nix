@@ -36,6 +36,7 @@
     _1password-cli
     bat
     fnm
+    just
     prettierd
     rbenv
     stylua
