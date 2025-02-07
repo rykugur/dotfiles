@@ -69,6 +69,13 @@ in {
   sops = {
     defaultSopsFile = ../../hosts/${hostname}/secrets.yaml;
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+
+    secrets = {
+      homelab_ssh_private_key = {
+        # temporary hack... maybe
+        sopsFile = ../../hosts/jezrien/secrets.yaml;
+      };
+    };
   };
 
   home.packages = with pkgs; [

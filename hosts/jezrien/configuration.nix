@@ -2,7 +2,6 @@
   imports = [
     ./hardware-configuration.nix
 
-    inputs.sops-nix.nixosModules.default
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
@@ -85,15 +84,6 @@
     dconf.enable = true;
     nix-ld = { enable = true; };
     # seahorse.enable = true;
-  };
-
-  sops = {
-    defaultSopsFile = ./secrets.yaml;
-    defaultSopsFormat = "yaml";
-
-    age = { sshKeyPaths = [ "/home/dusty/.ssh/id_ed25519" ]; };
-
-    secrets = { homelab_ssh_private_key = { }; };
   };
 
   services = {
