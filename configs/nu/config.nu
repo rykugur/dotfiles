@@ -6,7 +6,6 @@ $env.PATH = $env.PATH | append $"($env.HOME)/bin"
 
 source ./aliases.nu
 source ./commands/commands.nu
-source ./hooks/fnm.nu
 source ./zellij.nu
 
 use ./modules/1password
