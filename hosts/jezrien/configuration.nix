@@ -2,6 +2,7 @@
   imports = [
     ./hardware-configuration.nix
 
+    inputs.sops-nix.nixosModules.default
     inputs.home-manager.nixosModules.home-manager
 
     outputs.nixosModules
@@ -52,30 +53,14 @@
 
   networking = {
     hostName = hostname;
-    networkmanager = {
-      enable = true;
-      dns = "none";
-      insertNameservers = [ "10.3.8.250" ];
-    };
+    # networkmanager = {
+    #   enable = true;
+    # dns = "none";
+    # insertNameservers = [ "10.3.8.250" ];
+    # };
 
-    useDHCP = false;
-    dhcpcd.enable = false;
-
-    # search = [ "pihole.home" "router.lan" ];
-    # nameservers = [ "10.3.8.203" ];
-  };
-
-  nix = {
-    buildMachines = [{
-      hostName = "taldain";
-      system = "aarch64-linux";
-      protocol = "ssh-ng";
-      maxJobs = 3;
-      speedFactor = 2;
-      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
-      mandatoryFeatures = [ ];
-    }];
-    distributedBuilds = true;
+    # useDHCP = false;
+    # dhcpcd.enable = false;
   };
 
   environment = {
@@ -100,6 +85,15 @@
     dconf.enable = true;
     nix-ld = { enable = true; };
     # seahorse.enable = true;
+  };
+
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    defaultSopsFormat = "yaml";
+
+    age = { sshKeyPaths = [ "/home/dusty/.ssh/id_ed25519" ]; };
+
+    secrets = { homelab_ssh_private_key = { }; };
   };
 
   services = {
