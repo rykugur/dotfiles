@@ -13,6 +13,7 @@
     ./git.nix
     ./gnome.nix
     ./head-tracking.nix
+    ./helix.nix
     ./homelab.nix
     ./hyprland.nix
     ./keebs.nix

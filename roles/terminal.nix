@@ -19,6 +19,7 @@ in {
         yazi.enable = true;
         zellij.enable = true;
 
+        helix.enable = true;
         nvim.enable = true;
       };
     };
