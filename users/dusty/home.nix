@@ -3,7 +3,7 @@
 { config, inputs, outputs, pkgs, username, hostname, ... }:
 let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
-  umuPkg = inputs.umu.packages.${pkgs.system}.umu;
+  umuPkg = inputs.umu.packages.${pkgs.system}.umu-launcher;
 in {
   imports = [ outputs.hmModules ];
 
@@ -100,8 +100,16 @@ in {
     protontricks
     protonup-ng
     protonup-qt
+    pyfa
+    (makeDesktopItem rec {
+      name = "Pyfa";
+      exec = "pyfa";
+      icon = "pyfa";
+      desktopName = name;
+      genericName = "Pyfa fitting tool";
+      categories = [ "Game" ];
+    })
     steamcmd
-    steam-tui
     umuPkg
     unixtools.xxd
     vkd3d
