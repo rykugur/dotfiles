@@ -5,15 +5,12 @@ $env.STEAM_LIBRARY_DIR = "~/.local/share/steam"
 $env.PATH = $env.PATH | append $"($env.HOME)/bin"
 
 source ./aliases.nu
-
+source ./commands/commands.nu
 source ./hooks/fnm.nu
+source ./zellij.nu
 
 source ./completions/bun.nu
 source ./completions/yarn-classic.nu
-
-source ./zellij.nu
-
-source ./commands/commands.nu
 
 use ./abbreviations.nu
 $env.config.keybindings = $env.config.keybindings | append (abbreviations get_keybinds)
