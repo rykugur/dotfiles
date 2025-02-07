@@ -9,6 +9,9 @@ source ./commands/commands.nu
 source ./hooks/fnm.nu
 source ./zellij.nu
 
+use ./modules/1password
+use ./modules/sops-nix
+
 source ./completions/bun.nu
 source ./completions/yarn-classic.nu
 
