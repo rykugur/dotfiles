@@ -80,6 +80,8 @@
     zellij.enable = true;
   };
 
+  xdg.enable = true;
+
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
 

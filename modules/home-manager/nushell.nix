@@ -23,10 +23,11 @@ in {
       enable = true;
       extraEnv = ''
         $env.LOCAL_CONFIG_FILE = $"($nu.data-dir)/vendor/autoload/config.nu"
+        $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
         $env.config.table.show_empty = false
+        source ~/.dotfiles/configs/nu/env.nu
       '';
       extraConfig = ''
-        use ${nu-scripts}/modules/rbenv/rbenv.nu *
         source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
         source ${nu-scripts}/custom-completions/adb/adb-completions.nu
         source ${nu-scripts}/custom-completions/bat/bat-completions.nu
