@@ -70,12 +70,12 @@
       gitconfig.enable = false;
     };
     kitty.enable = true;
+    helix.enable = true;
     nvim.enable = true;
 
     ghostty.enable = true;
     nushell.enable = true;
     starship.enable = true;
-    wezterm.enable = true;
     yazi.enable = true;
     zellij.enable = true;
   };

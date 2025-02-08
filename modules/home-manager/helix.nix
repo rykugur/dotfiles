@@ -16,6 +16,25 @@ in {
     programs.helix = {
       enable = true;
       settings = { theme = "catppuccin_mocha"; };
+      languages = {
+        language-server.typescript-language-server = with pkgs.nodePackages; {
+          command =
+            "${typescript-language-server}/bin/typescript-language-server";
+          args = [
+            "--stdio"
+            "--tsserver-path=${typescript}/lib/node_modules/typescript/lib"
+          ];
+        };
+        # language = [{
+        #   name = "typescript";
+        #   language-servers = [ "typescript-language-server" ];
+        #   formatter = with pkgs.nodePackages; {
+        #     command = "${prettier}/bin/prettier";
+        #     autoformat = true;
+        #     # args = [ "fmt", "--stdin", "typescript" ];
+        #   };
+        # }];
+      };
     };
 
     home.file = {
