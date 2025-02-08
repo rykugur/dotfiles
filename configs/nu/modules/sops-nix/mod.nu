@@ -1,4 +1,4 @@
-use ../1password [get-ssh-key-id get-private-key get-public-key]
+use 1password [get-ssh-key-id get-private-key get-public-key]
 
 export def get-private-age-key [] {
   let sshKeyId = if ($in | is-not-empty) { $in } else { get-ssh-key-id }
