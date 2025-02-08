@@ -17,13 +17,47 @@ in {
       enable = true;
       settings = { theme = "catppuccin_mocha"; };
       languages = {
-        language-server.typescript-language-server = with pkgs.nodePackages; {
-          command =
-            "${typescript-language-server}/bin/typescript-language-server";
-          args = [
-            "--stdio"
-            "--tsserver-path=${typescript}/lib/node_modules/typescript/lib"
-          ];
+        language-server = {
+          marksman = with pkgs; { command = "${marksman}/bin/marksman"; };
+          markdown-oxide = with pkgs; {
+            command = "${markdown-oxide}/bin/markdown-oxide";
+          };
+          nixd = with pkgs; { command = "${nixd}/bin/nixd"; };
+          nil = with pkgs; { command = "${nil}/bin/nil"; };
+          nu = with pkgs; { command = "${nushell}/bin/nu"; };
+          typescript-language-server = with pkgs.nodePackages; {
+            command =
+              "${typescript-language-server}/bin/typescript-language-server";
+            args = [
+              "--stdio"
+              "--tsserver-path=${typescript}/lib/node_modules/typescript/lib"
+            ];
+            #   config = {
+            #     typescript = {
+            #       inlayHints = {
+            #         includeInlayEnumMemberValueHints = true;
+            #         includeInlayFunctionLikeReturnTypeHints = true;
+            #         includeInlayFunctionParameterTypeHints = true;
+            #         includeInlayParameterNameHints = "all";
+            #         includeInlayParameterNameHintsWhenArgumentMatchesName = true;
+            #         includeInlayPropertyDeclarationTypeHints = true;
+            #         includeInlayVariableTypeHints = true;
+            #       };
+            #     };
+            #     javascript = {
+            #       inlayHints = {
+            #         includeInlayEnumMemberValueHints = true;
+            #         includeInlayFunctionLikeReturnTypeHints = true;
+            #         includeInlayFunctionParameterTypeHints = true;
+            #         includeInlayParameterNameHints = "all";
+            #         includeInlayParameterNameHintsWhenArgumentMatchesName = true;
+            #         includeInlayPropertyDeclarationTypeHints = true;
+            #         includeInlayVariableTypeHints = true;
+            #
+            #       };
+            #     };
+            #   };
+          };
         };
         # language = [{
         #   name = "typescript";
