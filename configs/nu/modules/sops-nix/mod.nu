@@ -54,8 +54,10 @@ export def setup-new-host [--yes (-y)] {
   }
 
   if ($yes) {
-    log info $"writing keys.txt file to ($keysTxtPath)"
+    log info $"Writing keys.txt file to ($keysTxtPath)"
     mkdir -v ~/.config/sops/age
     $privateAgeKey | save $keysTxtPath
+  } else {
+    log info "Skipped writing keys.txt file"
   }
 }

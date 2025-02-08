@@ -2,10 +2,6 @@ source ./aliases.nu
 source ./commands/commands.nu
 source ./zellij.nu
 
-# TODO: autoload or add to NU_LIB_DIRS?
-use ./modules/1password
-use ./modules/sops-nix
-
 source ./completions/bun.nu
 source ./completions/yarn-classic.nu
 
