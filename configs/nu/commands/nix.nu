@@ -40,6 +40,10 @@ def "shash" [url: string] {
   nix hash convert --hash-algo sha256 (nix-prefetch-url $url)
 }
 
+def "nr." [] {
+  nix repl --expr $"builtins.getFlake \"(pwd)\""
+}
+
 def nrf [--remote (-r)] {
   let url = if ($remote) {
     "github:rykugur/dotfiles"

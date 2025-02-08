@@ -97,7 +97,6 @@ const nix = {
 
   nr: "nix repl"
   nrn: "nix repl --file '<nixpkgs>'"
-  nr.: "nix repl --file ."
 
   ns: "nix shell"
   nds: "nix-shell"
