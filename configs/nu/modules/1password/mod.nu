@@ -1,5 +1,17 @@
 export def get-ssh-key-id [] {
-  ^op item list --categories "SSH Key" | lines | skip 1 | split column -r '\s{2,}' ID TITLE VAULT | input list --fuzzy 'Select SSH Key' | get ID
+  try {
+    let selection = (^op item list --categories "SSH Key" 
+      | lines
+      | skip 1
+      | split column -r '\s{2,}' ID TITLE VAULT
+      | input list --fuzzy 'Select SSH Key')
+
+    if ($selection | is-empty) {
+      return
+    }
+
+    return ($selection | get ID)
+  } catch {}
 }
 
 export def get-public-key [] {
