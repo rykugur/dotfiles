@@ -2,7 +2,6 @@
 let
   cfg = config.rhx.ghostty;
   ghostty-pkg = inputs.ghostty.packages.${pkgs.system}.default;
-  useWindowDecoration = if pkgs.stdenv.isDarwin then "true" else "false";
   # font = "ZedMono NFM";
   font = "CaskaydiaCove NFM";
 in {
@@ -21,8 +20,6 @@ in {
           font-family-italic = ${font} Italic
           font-family-bold-italic = ${font} Bold Italic
           font-size = 16
-
-          window-decoration = ${useWindowDecoration}
 
           theme = catppuccin-mocha
 

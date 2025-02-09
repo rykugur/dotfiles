@@ -1,4 +1,5 @@
 use 1password [get-ssh-key-id get-private-key get-public-key]
+use std/log
 
 export def get-private-age-key [] {
   let sshKeyId = if ($in | is-not-empty) { $in } else { get-ssh-key-id }
@@ -13,6 +14,15 @@ export def get-private-age-key [] {
     return
   }
 
+  $privateKey | nix run nixpkgs#ssh-to-age -- -private-key
+}
+
+export def get-private-age-key-from-private-ssh-key [] {
+  if ($in | is-empty) {
+    log error "No private key provided. Usage: 'someKey' | get-private-age-key-from-private-ssh-key"
+  }
+
+  let privateKey = $in
   $privateKey | nix run nixpkgs#ssh-to-age -- -private-key
 }
 
