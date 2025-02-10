@@ -18,52 +18,50 @@ in {
       settings = { theme = "catppuccin_mocha"; };
       languages = {
         language-server = {
+          lua-language-server = {
+            command = "${pkgs.lua-language-server}/bin/lua-language-server";
+          };
+          helm_ls = { command = "${pkgs.helm-ls}/bin/helm_ls"; };
           marksman = with pkgs; { command = "${marksman}/bin/marksman"; };
           markdown-oxide = with pkgs; {
             command = "${markdown-oxide}/bin/markdown-oxide";
           };
-          nixd = with pkgs; { command = "${nixd}/bin/nixd"; };
-          nil = with pkgs; { command = "${nil}/bin/nil"; };
-          nu = with pkgs; { command = "${nushell}/bin/nu"; };
+          nixd = { command = "${pkgs.nixd}/bin/nixd"; };
+          nil = { command = "${pkgs.nil}/bin/nil"; };
+          nu = { command = "${pkgs.nushell}/bin/nu"; };
+          yaml-language-server = {
+            command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
+          };
           typescript-language-server = with pkgs.nodePackages; {
             command =
               "${typescript-language-server}/bin/typescript-language-server";
-            #   config = {
-            #     typescript = {
-            #       inlayHints = {
-            #         includeInlayEnumMemberValueHints = true;
-            #         includeInlayFunctionLikeReturnTypeHints = true;
-            #         includeInlayFunctionParameterTypeHints = true;
-            #         includeInlayParameterNameHints = "all";
-            #         includeInlayParameterNameHintsWhenArgumentMatchesName = true;
-            #         includeInlayPropertyDeclarationTypeHints = true;
-            #         includeInlayVariableTypeHints = true;
-            #       };
-            #     };
-            #     javascript = {
-            #       inlayHints = {
-            #         includeInlayEnumMemberValueHints = true;
-            #         includeInlayFunctionLikeReturnTypeHints = true;
-            #         includeInlayFunctionParameterTypeHints = true;
-            #         includeInlayParameterNameHints = "all";
-            #         includeInlayParameterNameHintsWhenArgumentMatchesName = true;
-            #         includeInlayPropertyDeclarationTypeHints = true;
-            #         includeInlayVariableTypeHints = true;
-            #
-            #       };
-            #     };
-            #   };
           };
         };
-        # language = [{
-        #   name = "typescript";
-        #   language-servers = [ "typescript-language-server" ];
-        #   formatter = with pkgs.nodePackages; {
-        #     command = "${prettier}/bin/prettier";
-        #     autoformat = true;
-        #     # args = [ "fmt", "--stdin", "typescript" ];
-        #   };
-        # }];
+        language = [
+          {
+            name = "helm";
+            auto-format = false;
+          }
+          {
+            name = "lua";
+            auto-format = true;
+            formatter = { command = "${pkgs.luaformatter}/bin/lua-format"; };
+          }
+          {
+            name = "markdown";
+            rulers = [ 80 ];
+          }
+          {
+            name = "nix";
+            auto-format = true;
+            formatter = { command = "${pkgs.nixfmt-classic}/bin/nixfmt"; };
+          }
+          {
+            name = "yaml";
+            auto-format = false;
+            formatter = { command = "${pkgs.yamlfmt}/bin/yamlfmt"; };
+          }
+        ];
       };
     };
 
