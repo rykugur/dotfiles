@@ -48,7 +48,7 @@ in {
             auto-format = true;
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "javascript" ];
+              args = [ "--parser" "typescript" ];
             };
           }
           {
