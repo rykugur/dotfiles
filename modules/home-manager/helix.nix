@@ -9,13 +9,22 @@ in {
     programs.helix = {
       enable = true;
       settings = {
-        theme = "catppuccin_mocha";
+        editor = {
+          bufferline = "multiple";
+          clipboard-provider =
+            "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
+          end-of-line-diagnostics = "hint";
+          inline-diagnostics = { cursor-line = "error"; };
+        };
         keys = {
           normal = {
             "K" = "hover";
+            "S-h" = "goto_previous_buffer";
+            "S-l" = "goto_next_buffer";
             # "A-k" = "keep_selections";
           };
         };
+        theme = "catppuccin_mocha";
       };
       languages = {
         language-server = {
