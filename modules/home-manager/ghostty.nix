@@ -33,6 +33,11 @@ in {
           app-notifications = false
 
           command = ${pkgs.nushell}/bin/nu --login
+
+          keybind = alt+h=goto_split:left
+          keybind = alt+j=goto_split:down
+          keybind = alt+k=goto_split:up
+          keybind = alt+l=goto_split:right
         '';
       };
     };

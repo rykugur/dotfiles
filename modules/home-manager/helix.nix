@@ -1,12 +1,5 @@
 { config, lib, pkgs, ... }:
-let
-  cfg = config.rhx.helix;
-  catppuccin = pkgs.fetchFromGitHub {
-    owner = "catppuccin";
-    repo = "helix";
-    rev = "adc26c3cdeba268962e1aef2c8acf9a691abd76e";
-    sha256 = "sha256-6SIjwpfUuEmdYrwiYA5f1StFAAFmIsAY+H/Day4SMHc=";
-  };
+let cfg = config.rhx.helix;
 in {
   options.rhx.helix = {
     enable = lib.mkEnableOption "Enable helix home-manager module.";
@@ -15,7 +8,15 @@ in {
   config = lib.mkIf cfg.enable {
     programs.helix = {
       enable = true;
-      settings = { theme = "catppuccin_mocha"; };
+      settings = {
+        theme = "catppuccin_mocha";
+        keys = {
+          normal = {
+            "K" = "hover";
+            # "A-k" = "keep_selections";
+          };
+        };
+      };
       languages = {
         language-server = {
           lua-language-server = {
@@ -43,6 +44,14 @@ in {
             auto-format = false;
           }
           {
+            name = "javascript";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "javascript" ];
+            };
+          }
+          {
             name = "lua";
             auto-format = true;
             formatter = { command = "${pkgs.luaformatter}/bin/lua-format"; };
@@ -57,6 +66,14 @@ in {
             formatter = { command = "${pkgs.nixfmt-classic}/bin/nixfmt"; };
           }
           {
+            name = "typescript";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "typescript" ];
+            };
+          }
+          {
             name = "yaml";
             auto-format = false;
             formatter = { command = "${pkgs.yamlfmt}/bin/yamlfmt"; };
@@ -64,11 +81,5 @@ in {
         ];
       };
     };
-
-    home.file = {
-      ".config/helix/themes/catppuccin_mocha.toml".source =
-        "${catppuccin}/themes/default/catppuccin_mocha.toml";
-    };
-
   };
 }
