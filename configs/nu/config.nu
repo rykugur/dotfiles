@@ -19,6 +19,3 @@ $env.config.keybindings ++= [
     event: {send: HistoryHintComplete}
   }
 ]
-
-# finally, clean up PATH
-$env.PATH = $env.PATH | uniq
