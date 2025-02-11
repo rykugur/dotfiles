@@ -32,15 +32,12 @@ in {
             identityFile = "~/.ssh/id_ed25519";
             identitiesOnly = true;
             forwardAgent = true;
-            # extraOptions = {
-            #   "IdentitiesOnly" = "yes";
-            #   "IdentityAgent" = "~/.1password/agent.sock";
-            # };
           };
 
           "github.com" = {
-            # TODO: change to sops-nix?
-            extraOptions = { "IdentityAgent" = "~/.1password/agent.sock"; };
+            identityFile = "~/.ssh/id_ed25519";
+            identitiesOnly = true;
+            forwardAgent = false;
           };
         };
       };
