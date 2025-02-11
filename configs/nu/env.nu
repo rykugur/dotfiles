@@ -1,6 +1,6 @@
 $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
 $env.NIXPKGS_ALLOW_UNFREE = 1
-$env.EDITOR = "nvim"
+$env.EDITOR = "hx"
 $env.STEAM_LIBRARY_DIR = "~/.local/share/steam"
 $env.NU_LOG_LEVEL = "DEBUG"
 

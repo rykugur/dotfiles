@@ -36,6 +36,7 @@ alias cat = bat
 alias dfh = duf
 #alias dupes = find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD
 alias duh = du -h
+alias e = ^($env.EDITOR)
 alias getmyip = dig +short myip.opendns.com @resolver1.opendns.com
 alias grep = grep --color
 alias ll = ls -al

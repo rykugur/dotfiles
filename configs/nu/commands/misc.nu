@@ -1,12 +1,4 @@
-def --env dots [--local (-l)] {
-  if $local {
-    cd ($env.LOCAL_CONFIG_FILE | path dirname)
-  } else {
-    cd $env.DOTFILES_DIR
-  }
-}
-
-def --env ndots [--local (-l)] {
+def --env dots [--edit (-e) --local (-l)] {
   if $local {
     let configFile = $env.LOCAL_CONFIG_FILE
     let dirName = $configFile | path dirname
@@ -14,9 +6,15 @@ def --env ndots [--local (-l)] {
       mkdir $dirName
       touch $configFile
     }
-    cd $dirName; nvim config.nu
+    cd $dirName
+    if ($edit) {
+      ^($env.EDITOR) config.nu
+    }
   } else {
-    cd $env.DOTFILES_DIR; nvim
+    cd $env.DOTFILES_DIR
+    if ($edit) {
+      ^($env.EDITOR)
+    }
   }
 }
 
