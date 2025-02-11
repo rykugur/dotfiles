@@ -25,6 +25,7 @@ in {
 
           copy-on-select = clipboard
 
+          window-inherit-working-directory = false
           working-directory = home
 
           window-height = 40

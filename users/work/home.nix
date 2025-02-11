@@ -39,7 +39,6 @@
   home.packages = with pkgs; [
     _1password-cli
     bat
-    fnm
     just
     prettierd
     rbenv

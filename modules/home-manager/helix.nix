@@ -14,6 +14,7 @@ in {
           clipboard-provider =
             "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
           end-of-line-diagnostics = "hint";
+          indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
         };
         keys = {
