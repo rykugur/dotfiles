@@ -7,10 +7,10 @@ in {
     # enable nixOS modules for desktop role
     rhx = {
       roles = {
-        # force enable terminal role
-        terminal.enable = true;
         # force enable dev role - all of my desktops are dev machines too
         dev.enable = true;
+        # force enable terminal role
+        terminal.enable = true;
       };
 
       _1password.enable = true;
