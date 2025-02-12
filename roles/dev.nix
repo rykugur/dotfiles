@@ -8,6 +8,13 @@ in {
     # rhx = {};
 
     # home-manager config
-    home-manager.users.${username} = { rhx = { git.enable = true; }; };
+    home-manager.users.${username} = {
+      rhx = {
+        git = {
+          enable = true;
+          gitconfig.enable = true;
+        };
+      };
+    };
   };
 }
