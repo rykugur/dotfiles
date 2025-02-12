@@ -18,3 +18,7 @@ configure the user's home directory.
 ## Roles
 
 Roles are abstractions around modules.
+
+## TODO
+
+- Figure out wtf is going on with zellij and nushell paths.
