@@ -29,6 +29,11 @@ in {
       };
       languages = {
         language-server = {
+          golangci-lint-lsp = {
+            command =
+              "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
+          };
+          gopls = { command = "${pkgs.gopls}/bin/gopls"; };
           lua-language-server = {
             command = "${pkgs.lua-language-server}/bin/lua-language-server";
           };
