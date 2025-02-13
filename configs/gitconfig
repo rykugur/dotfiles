@@ -1,11 +1,12 @@
 [user]
 	email = rollhax@gmail.com
 	name = rykugur
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKcd6tFE57ACXk/hPy73FEwRUd3xQwIzDC6GXnk8AVx/
+	# signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKcd6tFE57ACXk/hPy73FEwRUd3xQwIzDC6GXnk8AVx/
+	signingKey = ~/.ssh/id_ed25519
 [gpg]
 	format = ssh
-[gpg "ssh"]
-	program = /run/current-system/sw/bin/op-ssh-sign
+# [gpg "ssh"]
+# 	program = /run/current-system/sw/bin/op-ssh-sign
 [commit]
   gpgsign = true
 [alias]
