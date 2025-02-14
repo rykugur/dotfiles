@@ -16,6 +16,7 @@ in {
           end-of-line-diagnostics = "hint";
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
+          lsp = { display-inlay-hints = true; };
         };
         keys = {
           normal = {
