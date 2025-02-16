@@ -41,7 +41,6 @@ in {
 
       extraConfig = ''
         source = ~/.dotfiles/configs/hypr/default.conf
-        source = ~/.dotfiles/hosts/${hostname}/hyprland.conf
         source = ~/.dotfiles/configs/hypr/binds.conf
         source = ~/.dotfiles/configs/hypr/input.conf
         source = ~/.dotfiles/configs/hypr/rules.conf
