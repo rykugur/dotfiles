@@ -70,8 +70,6 @@
           inherit system;
           config.allowUnfree = true;
         });
-
-      homelab_nodes = [ "homelab-0" "homelab-1" "homelab-2" ];
     in {
       devShells =
         forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
@@ -91,15 +89,6 @@
             inherit username;
           };
         };
-        # razer blade stealth laptop
-        "taln" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/taln ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "taln";
-            inherit username;
-          };
-        };
         # # raspberry pi 5 - dns ad blocker, klipper server
         # "taldain" = nixpkgs.lib.nixosSystem {
         #   modules = [ ./hosts/taldain ];
@@ -109,19 +98,11 @@
         #     hostname = "taldain";
         #     username = "shazbot";
         #   };
-      } // builtins.listToAttrs (map (hostname: {
-        name = hostname;
-        value = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/homelab ];
-          specialArgs = {
-            inherit inputs outputs;
-            inherit hostname username;
-          };
-        };
-      }) homelab_nodes);
-      # };
+      };
 
       darwinConfigurations = {
+        # home macbook pro
+        "rayse" = nix-darwin.lib.darwinSystem { };
         # work macbook
         "HJ0704F9VK" = nix-darwin.lib.darwinSystem {
           modules = [ ./hosts/work-macbook/configuration.nix ];
