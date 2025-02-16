@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, hostname, ... }:
+{ config, inputs, lib, pkgs, ... }:
 let
   cfg = config.rhx.hyprland;
   catppuccin-hyprland = pkgs.fetchgit {
