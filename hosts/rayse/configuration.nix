@@ -14,10 +14,13 @@
       dock = {
         autohide = true;
 
+        show-recents = false;
+
         magnification = true;
         largesize = 64;
         tilesize = 48;
       };
+      NSGlobalDomain = { NSWindowShouldDragOnGesture = true; };
     };
   };
 

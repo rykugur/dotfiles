@@ -1,5 +1,6 @@
 {
   imports = [
+    ./aerospace.nix
     ./albert.nix
     ./browser.nix
     ./discord.nix
