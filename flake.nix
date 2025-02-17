@@ -102,7 +102,15 @@
 
       darwinConfigurations = {
         # home macbook pro
-        "rayse" = nix-darwin.lib.darwinSystem { };
+        "rayse" = nix-darwin.lib.darwinSystem {
+          modules = [ ./hosts/rayse/configuration.nix ];
+          specialArgs = {
+            inherit inputs outputs;
+            hostname = "rayse";
+            username = "dusty";
+          };
+          
+        };
         # work macbook
         "HJ0704F9VK" = nix-darwin.lib.darwinSystem {
           modules = [ ./hosts/work-macbook/configuration.nix ];
