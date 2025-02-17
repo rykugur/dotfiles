@@ -1,6 +1,6 @@
 { inputs, outputs, pkgs, hostname, username, ... }: {
   ### system config
-  # imports = [ inputs.home-manager.darwinModules.home-manager ];
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   users.users.${username} = { home = "/Users/${username}"; };
 
@@ -11,13 +11,13 @@
 
   ### home-manager config
 
-  # home-manager = {
-  #   extraSpecialArgs = { inherit inputs outputs hostname username; };
-  #   # TODO: may need a separate macbook user?
-  #   # or just move in-line for now?
-  #   users = { ${username} = import ../../users/tmp-rayse/home.nix; };
-  #   backupFileExtension = "bak";
-  # };
+  home-manager = {
+    extraSpecialArgs = { inherit inputs outputs hostname username; };
+    # TODO: may need a separate macbook user?
+    # or just move in-line for now?
+    users = { ${username} = import ../../users/tmp-rayse/home.nix; };
+    backupFileExtension = "bak";
+  };
 
   ### stuff to mostly ignore
 

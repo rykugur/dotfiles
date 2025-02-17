@@ -39,11 +39,6 @@
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    umu = {
-      url =
-        "git+https://github.com/Open-Wine-Components/umu-launcher/?dir=packaging/nix&submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-citizen.url = "github:LovingMelody/nix-citizen";
 

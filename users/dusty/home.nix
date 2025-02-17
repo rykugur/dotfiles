@@ -3,7 +3,6 @@
 { config, inputs, outputs, pkgs, username, hostname, ... }:
 let
   mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
-  umuPkg = inputs.umu.packages.${pkgs.system}.umu-launcher;
 in {
   imports = [ outputs.hmModules ];
 
@@ -120,7 +119,6 @@ in {
       categories = [ "Game" ];
     })
     steamcmd
-    umuPkg
     unixtools.xxd
     vkd3d
     wineWowPackages.stagingFull
