@@ -9,6 +9,18 @@
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes pipe-operators";
 
+  system = {
+    defaults = {
+      dock = {
+        autohide = true;
+
+        magnification = true;
+        largesize = 64;
+        tilesize = 48;
+      };
+    };
+  };
+
   ### home-manager config
 
   home-manager = {

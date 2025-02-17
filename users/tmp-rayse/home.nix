@@ -51,22 +51,22 @@
     # nix-index
   ];
 
-  # sops = {
-  #   defaultSopsFile = ../../hosts/work-macbook/secrets.yaml;
+  sops = {
+    defaultSopsFile = ../../hosts/rayse/secrets.yaml;
 
-  #   age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+    age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
-  #   secrets.ssh_private_key = {
-  #     path = "${config.home.homeDirectory}/.ssh/id_ed25519";
-  #     mode = "0400";
-  #   };
-  # };
+    # secrets.ssh_private_key = {
+    #   path = "${config.home.homeDirectory}/.ssh/id_ed25519";
+    #   mode = "0400";
+    # };
+  };
 
   rhx = {
     # fish.enable = true;
     git = {
       enable = true;
-      gitconfig.enable = false;
+      gitconfig.enable = true;
     };
     # kitty.enable = true;
     helix.enable = true;

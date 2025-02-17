@@ -25,6 +25,9 @@ in {
         $env.LOCAL_CONFIG_FILE = $"($nu.data-dir)/vendor/autoload/config.nu"
         $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
         $env.config.table.show_empty = false
+        $env.config.hooks.pre_prompt = (
+          $env.config.hooks.pre_prompt | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
+        )
         source ~/.dotfiles/configs/nu/env.nu
       '';
       extraConfig = ''
@@ -42,9 +45,6 @@ in {
         source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu
         source ${nu-scripts}/custom-completions/zellij/zellij-completions.nu
         source ${nu-scripts}/custom-menus/zoxide-menu.nu
-        $env.config.hooks.pre_prompt = (
-          $env.config.hooks.pre_prompt | append (source ${nu-scripts}/nu-hooks/nu-hooks/direnv/config.nu)
-        )
         source ~/.dotfiles/configs/nu/config.nu
       '';
     };

@@ -12,7 +12,10 @@ in {
         enable = true;
         userName = "Dusty";
         userEmail = "rollhax@gmail.com";
+
+        diff-so-fancy = { enable = true; };
       };
+
       gh.enable = true;
     };
 
