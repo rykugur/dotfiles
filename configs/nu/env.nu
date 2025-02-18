@@ -4,6 +4,8 @@ $env.EDITOR = "hx"
 $env.STEAM_LIBRARY_DIR = "~/.local/share/steam"
 $env.NU_LOG_LEVEL = "DEBUG"
 
+$env.EVE_SETTINGS_DIR = "TODO"
+
 $env.NU_LIB_DIRS = [
   $"($env.DOTFILES_DIR)/configs/nu/modules"
 ]
