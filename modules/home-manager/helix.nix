@@ -13,10 +13,30 @@ in {
           bufferline = "multiple";
           clipboard-provider =
             "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
+          cursor-shape = {
+            insert = "bar";
+            normal = "block";
+            select = "underline";
+          };
           end-of-line-diagnostics = "hint";
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
           lsp = { display-inlay-hints = true; };
+          middle-click-paste = true;
+          # shell = [ "${pkgs.nushell}/bin/nu" ];
+          # statusline = {
+          #   left = [ "mode" "spinner" ];
+          #   center = [ "file-name" ];
+          #   right = [
+          #     "diagnostics"
+          #     "version-control"
+          #     "selections"
+          #     "position"
+          #     "file-encoding"
+          #     "file-line-ending"
+          #     "file-type"
+          #   ];
+          # };
         };
         keys = {
           normal = {
