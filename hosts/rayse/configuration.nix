@@ -20,7 +20,12 @@
         largesize = 64;
         tilesize = 48;
       };
-      NSGlobalDomain = { NSWindowShouldDragOnGesture = true; };
+      NSGlobalDomain = {
+        ApplePressAndHoldEnabled = false;
+        InitialKeyRepeat = 15;
+        KeyRepeat = 2;
+        NSWindowShouldDragOnGesture = true;
+      };
     };
   };
 
