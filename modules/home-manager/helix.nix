@@ -44,6 +44,7 @@ in {
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
             # "A-k" = "keep_selections";
+            # "space" = { "e" = "file_browser"; };
           };
         };
         theme = "catppuccin_mocha";
