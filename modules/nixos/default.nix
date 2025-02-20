@@ -3,7 +3,6 @@
     ./1password.nix
     ./btrfs.nix
     ./docker.nix
-    ./fonts.nix
     ./gamemode.nix
     ./gnome.nix
     ./hyprland.nix

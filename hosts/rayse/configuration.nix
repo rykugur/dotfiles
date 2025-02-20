@@ -1,6 +1,11 @@
-{ inputs, outputs, pkgs, hostname, username, ... }: {
+{ inputs, outputs, hostname, username, ... }: {
   ### system config
-  imports = [ inputs.home-manager.darwinModules.home-manager ];
+  imports = [
+    inputs.home-manager.darwinModules.home-manager
+
+    outputs.baseModules
+    outputs.darwinModules
+  ];
 
   users.users.${username} = { home = "/Users/${username}"; };
 
@@ -28,6 +33,8 @@
       };
     };
   };
+
+  rhx = { fonts.enable = true; };
 
   ### home-manager config
 

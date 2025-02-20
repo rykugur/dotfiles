@@ -70,6 +70,9 @@
         forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
 
       overlays = import ./overlays { inherit inputs; };
+
+      baseModules = import ./modules/base;
+      darwinModules = import ./modules/darwin;
       nixosModules = import ./modules/nixos;
       hmModules = import ./modules/home-manager;
 
@@ -104,7 +107,7 @@
             hostname = "rayse";
             username = "dusty";
           };
-          
+
         };
         # work macbook
         "HJ0704F9VK" = nix-darwin.lib.darwinSystem {

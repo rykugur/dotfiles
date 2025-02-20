@@ -4,6 +4,7 @@
 
     inputs.home-manager.nixosModules.home-manager
 
+    outputs.baseModules
     outputs.nixosModules
 
     ../../roles
