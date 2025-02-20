@@ -34,7 +34,10 @@
     };
   };
 
-  rhx = { fonts.enable = true; };
+  rhx = {
+    aerospace.enable = true;
+    fonts.enable = true;
+  };
 
   ### home-manager config
 

@@ -20,6 +20,16 @@ in {
               alt-6 = "workspace 6";
               alt-7 = "workspace 7";
 
+              alt-shift-1 = "move-node-to-workspace 1";
+              alt-shift-2 = "move-node-to-workspace 2";
+              alt-shift-3 = "move-node-to-workspace 3";
+              alt-shift-4 = "move-node-to-workspace 4";
+              alt-shift-5 = "move-node-to-workspace 5";
+              alt-shift-6 = "move-node-to-workspace 6";
+              alt-shift-7 = "move-node-to-workspace 7";
+
+              alt-tab = "workspace-back-and-forth";
+
               alt-h = "focus left";
               alt-j = "focus down";
               alt-k = "focus up";
@@ -31,12 +41,20 @@ in {
               alt-shift-l = "move right";
 
               alt-r = "mode resize";
+
+              alt-minus = "resize smart -50";
+              alt-equal = "resize smart +50";
+
+              alt-slash = "layout tiles horizontal vertical";
+              alt-comma = "layout accordion horizontal vertical";
             };
           };
           resize = {
             binding = {
-              minus = "resize smart -50";
-              plus = "resize smart +50";
+              h = "resize width -50";
+              j = "resize height -50";
+              k = "resize height +50";
+              l = "resize width +50";
             };
           };
         };
