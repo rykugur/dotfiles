@@ -35,7 +35,7 @@
   };
 
   rhx = {
-    aerospace.enable = true;
+    # aerospace.enable = true;
     fonts.enable = true;
   };
 

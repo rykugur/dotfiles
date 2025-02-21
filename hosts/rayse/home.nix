@@ -66,7 +66,7 @@
   # };
 
   rhx = {
-    aerospace.enable = true;
+    # aerospace.enable = true;
     # fish.enable = true;
     git = {
       enable = true;
