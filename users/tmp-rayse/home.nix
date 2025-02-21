@@ -85,7 +85,8 @@
     zellij.enable = true;
   };
 
-  # xdg.enable = true;
+  # also requires XDG_CONFIG_HOME to be set!
+  xdg.enable = true;
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
