@@ -34,6 +34,20 @@
     };
   };
 
+  # adding this here because nushell + nix-darwin is weird AF
+  homebrew = {
+    enable = true;
+
+    brews =
+      [ { name = "kubectl"; } { name = "kubecolor"; } { name = "kubectx"; } ];
+
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "uninstall";
+      upgrade = true;
+    };
+  };
+
   rhx = {
     # aerospace.enable = true;
     fonts.enable = true;
