@@ -43,9 +43,7 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs outputs hostname username; };
-    # TODO: may need a separate macbook user?
-    # or just move in-line for now?
-    users = { ${username} = import ../../users/tmp-rayse/home.nix; };
+    users = { ${username} = import ./home.nix; };
     backupFileExtension = "bak";
   };
 

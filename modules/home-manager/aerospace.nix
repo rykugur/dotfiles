@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.rhx.aerospace;
 in {
   options.rhx.aerospace = {
@@ -40,6 +40,14 @@ in {
               alt-shift-k = "move up";
               alt-shift-l = "move right";
 
+              alt-f = "fullscreen";
+
+              alt-s = "layout v_accordion";
+              alt-w = "layout h_accordion";
+              alt-e = "layout tiles horizontal vertical";
+
+              alt-shift-space = "layout floating tiling";
+
               alt-r = "mode resize";
 
               alt-minus = "resize smart -50";
@@ -55,6 +63,8 @@ in {
               j = "resize height -50";
               k = "resize height +50";
               l = "resize width +50";
+              enter = "mode main";
+              esc = "mode main";
             };
           };
         };
