@@ -22,6 +22,9 @@ in {
       URL="$1"
 
       case "$URL" in
+        *axiom.trade*)
+          ${pkgs.google-chrome}/bin/google-chrome-stable "$URL" &
+          ;;
         *neo.bullx.io*)
           ${pkgs.google-chrome}/bin/google-chrome-stable "$URL" &
           ;;
