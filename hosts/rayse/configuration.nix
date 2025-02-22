@@ -38,8 +38,13 @@
   homebrew = {
     enable = true;
 
-    brews =
-      [ { name = "kubectl"; } { name = "kubecolor"; } { name = "kubectx"; } ];
+    brews = [
+      { name = "kubectl"; }
+      { name = "kubecolor"; }
+      { name = "kubectx"; }
+      { name = "helm"; }
+      { name = "helmfile"; }
+    ];
 
     onActivation = {
       autoUpdate = true;
