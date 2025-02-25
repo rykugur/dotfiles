@@ -16,3 +16,9 @@ def "zellij create-or-attach" [session: string, --layout: string = nil] {
     }
   }
 }
+
+# leaving this here for now until I'm not lazy and want to add it to the
+# nu-scripts zellij completions
+def "zellij delete-all-sessions" [] {
+  ^zellij delete-all-sessions
+}
