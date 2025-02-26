@@ -75,6 +75,10 @@ in {
             command =
               "${typescript-language-server}/bin/typescript-language-server";
           };
+          vscode-json-language-server = with pkgs.nodePackages; {
+            command =
+              "${vscode-json-languageserver}/bin/vscode-json-languageserver";
+          };
         };
         language = [
           {
