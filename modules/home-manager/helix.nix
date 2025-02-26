@@ -19,6 +19,7 @@ in {
             select = "underline";
           };
           end-of-line-diagnostics = "hint";
+          file-picker = { hidden = false; };
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
           lsp = { display-inlay-hints = true; };
