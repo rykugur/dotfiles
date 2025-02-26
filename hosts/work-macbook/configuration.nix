@@ -15,7 +15,7 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs outputs hostname username; };
-    users = { ${username} = import ../../users/work/home.nix; };
+    users = { ${username} = import ./home.nix; };
     backupFileExtension = "bak";
   };
 
