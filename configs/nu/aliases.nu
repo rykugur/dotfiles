@@ -33,6 +33,7 @@ alias awk7 = awk '{print \$7}'
 alias awk8 = awk '{print \$8}'
 alias awk9 = awk '{print \$9}'
 alias cat = bat
+alias cd = z
 alias dfh = duf
 #alias dupes = find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD
 alias duh = du -h
