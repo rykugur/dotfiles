@@ -10,4 +10,5 @@
 [commit]
   gpgsign = true
 [alias]
+  back = reset HEAD~1
   undo = reset --soft HEAD^

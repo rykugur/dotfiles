@@ -32,18 +32,18 @@ in {
       '';
       extraConfig = ''
         source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
-        source ${nu-scripts}/custom-completions/adb/adb-completions.nu
-        source ${nu-scripts}/custom-completions/bat/bat-completions.nu
-        source ${nu-scripts}/custom-completions/curl/curl-completions.nu
-        source ${nu-scripts}/custom-completions/docker/docker-completions.nu
-        source ${nu-scripts}/custom-completions/git/git-completions.nu
-        source ${nu-scripts}/custom-completions/just/just-completions.nu
-        source ${nu-scripts}/custom-completions/nix/nix-completions.nu
-        source ${nu-scripts}/custom-completions/npm/npm-completions.nu
-        source ${nu-scripts}/custom-completions/pnpm/pnpm-completions.nu
-        source ${nu-scripts}/custom-completions/rg/rg-completions.nu
-        source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu
-        source ${nu-scripts}/custom-completions/zellij/zellij-completions.nu
+        # source ${nu-scripts}/custom-completions/adb/adb-completions.nu
+        # source ${nu-scripts}/custom-completions/bat/bat-completions.nu
+        # source ${nu-scripts}/custom-completions/curl/curl-completions.nu
+        # source ${nu-scripts}/custom-completions/docker/docker-completions.nu
+        # source ${nu-scripts}/custom-completions/git/git-completions.nu
+        # source ${nu-scripts}/custom-completions/just/just-completions.nu
+        # source ${nu-scripts}/custom-completions/nix/nix-completions.nu
+        # source ${nu-scripts}/custom-completions/npm/npm-completions.nu
+        # source ${nu-scripts}/custom-completions/pnpm/pnpm-completions.nu
+        # source ${nu-scripts}/custom-completions/rg/rg-completions.nu
+        # source ${nu-scripts}/custom-completions/ssh/ssh-completions.nu
+        # source ${nu-scripts}/custom-completions/zellij/zellij-completions.nu
         source ${nu-scripts}/custom-menus/zoxide-menu.nu
         source ~/.dotfiles/configs/nu/config.nu
       '';
@@ -55,12 +55,12 @@ in {
       nix-direnv.enable = true;
     };
 
-    # programs.carapace = {
-    #   enable = true;
-    #   enableBashIntegration = false;
-    #   enableNushellIntegration = true;
-    #   enableZshIntegration = false;
-    # };
+    programs.carapace = {
+      enable = true;
+      enableBashIntegration = false;
+      enableNushellIntegration = true;
+      enableZshIntegration = false;
+    };
 
     programs.starship = { enableNushellIntegration = true; };
 
