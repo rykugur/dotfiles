@@ -55,6 +55,7 @@ in {
             command =
               "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
           };
+          eslint = { command = "${pkgs.eslint}/bin/eslint"; };
           gopls = { command = "${pkgs.gopls}/bin/gopls"; };
           lua-language-server = {
             command = "${pkgs.lua-language-server}/bin/lua-language-server";
@@ -70,9 +71,9 @@ in {
           yaml-language-server = {
             command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
           };
-          typescript-language-server = with pkgs.nodePackages; {
-            command =
-              "${typescript-language-server}/bin/typescript-language-server";
+          typescript-language-server = {
+            command = "${pkgs.vtsls}/bin/vtsls";
+            # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
           };
         };
         language = [
@@ -82,6 +83,14 @@ in {
           }
           {
             name = "javascript";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "typescript" ];
+            };
+          }
+          {
+            name = "jsx";
             auto-format = true;
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
@@ -104,6 +113,14 @@ in {
           }
           {
             name = "typescript";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "typescript" ];
+            };
+          }
+          {
+            name = "tsx";
             auto-format = true;
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
