@@ -1,4 +1,4 @@
-{ inputs, outputs, lib, config, pkgs, hostname, username, ... }: {
+{ inputs, outputs, pkgs, hostname, username, ... }: {
   ### system config
   imports = [ inputs.home-manager.darwinModules.home-manager ];
 
@@ -6,7 +6,10 @@
 
   users.users.${username} = { home = "/Users/${username}"; };
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
+
+  # workaround
+  ids.gids.nixbld = 30000;
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes pipe-operators";
