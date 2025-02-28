@@ -19,6 +19,7 @@ in {
             select = "underline";
           };
           end-of-line-diagnostics = "hint";
+          file-picker = { hidden = false; };
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
           lsp = { display-inlay-hints = true; };
@@ -74,6 +75,10 @@ in {
           typescript-language-server = {
             command = "${pkgs.vtsls}/bin/vtsls";
             # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
+          };
+          vscode-json-language-server = with pkgs.nodePackages; {
+            command =
+              "${vscode-json-languageserver}/bin/vscode-json-languageserver";
           };
         };
         language = [

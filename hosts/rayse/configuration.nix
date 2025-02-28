@@ -9,7 +9,7 @@
 
   users.users.${username} = { home = "/Users/${username}"; };
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes pipe-operators";
@@ -31,6 +31,25 @@
         KeyRepeat = 2;
         NSWindowShouldDragOnGesture = true;
       };
+    };
+  };
+
+  # adding this here because nushell + nix-darwin is weird AF
+  homebrew = {
+    enable = true;
+
+    brews = [
+      { name = "kubectl"; }
+      { name = "kubecolor"; }
+      { name = "kubectx"; }
+      { name = "helm"; }
+      { name = "helmfile"; }
+    ];
+
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "uninstall";
+      upgrade = true;
     };
   };
 
