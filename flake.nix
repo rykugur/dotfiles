@@ -42,15 +42,17 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-citizen.url = "github:LovingMelody/nix-citizen";
 
-    ### random stuff
+    ### helix
     helix.url = "github:helix-editor/helix";
+    scls.url = "github:estin/simple-completion-language-server";
+
+    ### random stuff
+    ghostty.url = "github:ghostty-org/ghostty";
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     # zen-browser.url = "github:MarceColl/zen-browser-flake";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     # zellij status bar
     zjstatus.url = "github:dj95/zjstatus";
-
-    ghostty.url = "github:ghostty-org/ghostty";
   };
 
   outputs = { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:

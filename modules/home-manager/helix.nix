@@ -1,5 +1,7 @@
 { config, inputs, lib, pkgs, ... }:
-let cfg = config.rhx.helix;
+let
+  cfg = config.rhx.helix;
+  sclsPkg = inputs.scls.defaultPackage.${pkgs.system};
 in {
   options.rhx.helix = {
     enable = lib.mkEnableOption "Enable helix home-manager module.";
@@ -43,7 +45,6 @@ in {
             command =
               "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
           };
-          eslint = { command = "${pkgs.eslint}/bin/eslint"; };
           gopls = { command = "${pkgs.gopls}/bin/gopls"; };
           lua-language-server = {
             command = "${pkgs.lua-language-server}/bin/lua-language-server";
@@ -56,8 +57,12 @@ in {
           nixd = { command = "${pkgs.nixd}/bin/nixd"; };
           nil = { command = "${pkgs.nil}/bin/nil"; };
           nu = { command = "${pkgs.nushell}/bin/nu"; };
-          # scls = {};
+          # for snippets
+          scls = {
+            command = "${sclsPkg}/bin/simple-completion-language-server";
+          };
           typescript-language-server = {
+            # vtsls seems to be better, and fixes a weird error I was getting on _some_ files.
             command = "${pkgs.vtsls}/bin/vtsls";
             # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
           };
@@ -76,8 +81,8 @@ in {
           }
           {
             name = "javascript";
-            # lanaguage-servers = [ "typescript-language-server" "eslint" ];
             auto-format = true;
+            language-servers = [ "typescript-language-server" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -86,6 +91,7 @@ in {
           {
             name = "jsx";
             auto-format = true;
+            language-servers = [ "typescript-language-server" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -108,6 +114,7 @@ in {
           {
             name = "typescript";
             auto-format = true;
+            language-servers = [ "typescript-language-server" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -116,6 +123,7 @@ in {
           {
             name = "tsx";
             auto-format = true;
+            language-servers = [ "typescript-language-server" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
