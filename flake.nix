@@ -43,6 +43,7 @@
     nix-citizen.url = "github:LovingMelody/nix-citizen";
 
     ### random stuff
+    helix.url = "github:helix-editor/helix";
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     # zen-browser.url = "github:MarceColl/zen-browser-flake";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";

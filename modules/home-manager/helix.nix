@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 let cfg = config.rhx.helix;
 in {
   options.rhx.helix = {
@@ -8,6 +8,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.helix = {
       enable = true;
+      package = inputs.helix.packages.${pkgs.system}.default;
       settings = {
         editor = {
           bufferline = "multiple";
@@ -24,20 +25,6 @@ in {
           inline-diagnostics = { cursor-line = "error"; };
           lsp = { display-inlay-hints = true; };
           middle-click-paste = true;
-          # shell = [ "${pkgs.nushell}/bin/nu" ];
-          # statusline = {
-          #   left = [ "mode" "spinner" ];
-          #   center = [ "file-name" ];
-          #   right = [
-          #     "diagnostics"
-          #     "version-control"
-          #     "selections"
-          #     "position"
-          #     "file-encoding"
-          #     "file-line-ending"
-          #     "file-type"
-          #   ];
-          # };
         };
         keys = {
           normal = {
@@ -69,9 +56,7 @@ in {
           nixd = { command = "${pkgs.nixd}/bin/nixd"; };
           nil = { command = "${pkgs.nil}/bin/nil"; };
           nu = { command = "${pkgs.nushell}/bin/nu"; };
-          yaml-language-server = {
-            command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
-          };
+          # scls = {};
           typescript-language-server = {
             command = "${pkgs.vtsls}/bin/vtsls";
             # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
@@ -79,6 +64,9 @@ in {
           vscode-json-language-server = with pkgs.nodePackages; {
             command =
               "${vscode-json-languageserver}/bin/vscode-json-languageserver";
+          };
+          yaml-language-server = {
+            command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
           };
         };
         language = [
@@ -88,6 +76,7 @@ in {
           }
           {
             name = "javascript";
+            # lanaguage-servers = [ "typescript-language-server" "eslint" ];
             auto-format = true;
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
