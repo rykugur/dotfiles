@@ -22,3 +22,7 @@ def "zellij create-or-attach" [session: string, --layout: string = nil] {
 def "zellij delete-all-sessions" [] {
   ^zellij delete-all-sessions
 }
+
+def "zellij murder-all-sessions" [] {
+  ^zellij kill-all-sessions; zellij delete-all-sessions
+}
