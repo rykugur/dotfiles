@@ -61,6 +61,7 @@ in {
           scls = {
             command = "${sclsPkg}/bin/simple-completion-language-server";
           };
+          taplo = { command = "${pkgs.taplo}/bin/taplo"; };
           typescript-language-server = {
             # vtsls seems to be better, and fixes a weird error I was getting on _some_ files.
             command = "${pkgs.vtsls}/bin/vtsls";
@@ -135,6 +136,13 @@ in {
             formatter = { command = "${pkgs.yamlfmt}/bin/yamlfmt"; };
           }
         ];
+      };
+    };
+
+    home.file = {
+      ".config/helix/snippets" = {
+        source = ../../configs/helix/snippets;
+        recursive = true;
       };
     };
   };
