@@ -41,6 +41,10 @@ in {
       };
       languages = {
         language-server = {
+          ansible-language-server = {
+            command =
+              "${pkgs.ansible-language-server}/bin/ansible-language-server";
+          };
           golangci-lint-lsp = {
             command =
               "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
