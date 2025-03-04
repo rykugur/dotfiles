@@ -25,7 +25,10 @@ in {
           file-picker = { hidden = false; };
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
-          lsp = { display-inlay-hints = true; };
+          lsp = {
+            auto-signature-help = false;
+            display-inlay-hints = true;
+          };
           middle-click-paste = true;
         };
         keys = {
@@ -36,11 +39,16 @@ in {
             # "A-k" = "keep_selections";
             # "space" = { "e" = "file_browser"; };
           };
+          insert = { "F1" = "signature_help"; };
         };
         theme = "catppuccin_mocha";
       };
       languages = {
         language-server = {
+          ansible-language-server = {
+            command =
+              "${pkgs.ansible-language-server}/bin/ansible-language-server";
+          };
           golangci-lint-lsp = {
             command =
               "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
