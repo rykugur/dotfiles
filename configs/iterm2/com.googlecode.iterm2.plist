@@ -1709,7 +1709,7 @@
 			<key>Columns</key>
 			<integer>235</integer>
 			<key>Command</key>
-			<string>login -pfql dustin.jerome /opt/homebrew/bin/fish</string>
+			<string>/bin/zsh --login</string>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Alpha Component</key>
