@@ -1,4 +1,4 @@
-{ config, lib, inputs, pkgs, ... }: {
+{ config, lib, inputs, outputs, pkgs, ... }: {
   imports = [
     ./3dp.nix
     ./desktop.nix
@@ -65,6 +65,8 @@
       overlays = [
         # If you want to use overlays exported from other flakes:
         # neovim-nightly-overlay.overlays.default
+        outputs.overlays.additions
+        outputs.overlays.modifications
 
         # Or define it inline, for example:
         # (final: prev: {

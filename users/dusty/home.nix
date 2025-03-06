@@ -1,8 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 { config, inputs, outputs, pkgs, username, hostname, ... }:
-let
-  mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
+let mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
 in {
   imports = [ outputs.hmModules ];
 
@@ -118,7 +117,6 @@ in {
       genericName = "Pyfa fitting tool";
       categories = [ "Game" ];
     })
-    steamcmd
     unixtools.xxd
     vkd3d
     wineWowPackages.stagingFull
@@ -215,6 +213,7 @@ in {
   xdg.enable = true;
 
   rhx = {
+    head-tracking.enable = true;
     keebs.enable = true;
     starsector = {
       enable = true;
