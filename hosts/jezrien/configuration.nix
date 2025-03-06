@@ -17,8 +17,9 @@
 
   # TODO: find a better spot for this
   nix.settings = {
-    extra-substituters = ["https://helix.cachix.org"];
-    extra-trusted-public-keys = ["helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="];
+    extra-substituters = [ "https://helix.cachix.org" ];
+    extra-trusted-public-keys =
+      [ "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=" ];
   };
 
   boot = {
@@ -70,7 +71,7 @@
   };
 
   environment = {
-    systemPackages = with pkgs; [ polkit_gnome via vial ];
+    systemPackages = with pkgs; [ polkit_gnome via vial vulkan-tools ];
 
     variables = {
       VDPAU_DRIVER = "radeonsi";
@@ -139,7 +140,7 @@
     };
 
     btrfs.enable = true;
-    #starcitizen.enable = true;
+    starcitizen.enable = true;
     vr.enable = true;
     wooting.enable = true;
   };
