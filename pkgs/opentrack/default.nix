@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
+{ stdenv, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
 let
   # for neural-net face tracking
   onnxRuntime = fetchFromGitHub {
@@ -15,6 +15,7 @@ let
   };
 in stdenv.mkDerivation rec {
   name = "opentrack";
+  # version = "2024.1.1";
   version = "2023.3.0";
 
   src = fetchFromGitHub {

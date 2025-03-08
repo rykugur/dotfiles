@@ -5,7 +5,7 @@
   gameglass = pkgs.callPackage ./gameglass.nix { };
   lampray = pkgs.callPackage ./lampray { };
   n0la_rcon = pkgs.callPackage ./n0la_rcon.nix { };
-  opentrack = pkgs.callPackage ./opentrack { };
+  # opentrack = pkgs.callPackage ./opentrack { };
   starsectorMods = pkgs.callPackage ./starsector { };
   tpm = pkgs.callPackage ./tpm.nix { };
 }

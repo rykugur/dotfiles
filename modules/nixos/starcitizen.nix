@@ -23,6 +23,7 @@ in {
       '';
       # Experimental script
       helperScript.enable = true;
+      # leaving this on breaks EAC
       # umu.enable = true;
     };
   };

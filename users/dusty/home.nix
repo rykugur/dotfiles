@@ -109,14 +109,6 @@ in {
     protonup-ng
     protonup-qt
     pyfa
-    (makeDesktopItem rec {
-      name = "Pyfa";
-      exec = "pyfa";
-      icon = "pyfa";
-      desktopName = name;
-      genericName = "Pyfa fitting tool";
-      categories = [ "Game" ];
-    })
     unixtools.xxd
     vkd3d
     wineWowPackages.stagingFull

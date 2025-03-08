@@ -95,8 +95,6 @@
   };
 
   services = {
-    journald.storage = "volatile"; # potentially fix long boot times?
-
     printing.enable = true;
 
     gvfs.enable = true;
