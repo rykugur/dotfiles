@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.rhx.starcitizen;
 in {
   options.rhx.starcitizen = {
@@ -6,9 +6,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx = {
-      head-tracking.enable = true;
-      gameglass.enable = true;
-    };
+    home.packages = with pkgs; [ opentrack ];
+
+    rhx = { gameglass.enable = true; };
   };
 }

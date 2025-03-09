@@ -1,12 +1,12 @@
-{ stdenv, fetchFromGitHub, fetchurl, makeDesktopItem, pkgs, }:
+{ stdenv, fetchFromGitHub, fetchurl, fetchzip, makeDesktopItem, pkgs, }:
 let
   # for neural-net face tracking
-  onnxRuntime = fetchFromGitHub {
-    owner = "microsoft";
-    repo = "onnxruntime";
-    rev = "v1.20.1";
-    sha256 = "sha256-lOCXMEqpZtInE2aH6SKFoNSzzma0/cxgCXWvc2prloo=";
+  onnxRuntime = fetchzip {
+    url =
+      "https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-1.21.0.tgz";
+    sha256 = "sha256-f2svIZMpx/id1zVJNwEUKegaRA7FyqElPujutRtJrYk=";
   };
+
   sdkSteamVr = fetchFromGitHub {
     owner = "ValveSoftware";
     repo = "openvr";

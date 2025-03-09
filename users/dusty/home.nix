@@ -205,8 +205,8 @@ in {
   xdg.enable = true;
 
   rhx = {
-    head-tracking.enable = true;
     keebs.enable = true;
+    starcitizen.enable = true;
     starsector = {
       enable = true;
       mods.enable = true;

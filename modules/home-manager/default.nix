@@ -13,7 +13,6 @@
     ./ghostty.nix
     ./git.nix
     ./gnome.nix
-    ./head-tracking.nix
     ./helix.nix
     ./homelab.nix
     ./hyprland.nix
@@ -24,8 +23,7 @@
     ./obs.nix
     ./ranger.nix
     ./ssh.nix
-    # TODO: figure out a way around this, issues on nix-darwin
-    # ./starcitizen.nix
+    ./starcitizen.nix
     ./starsector.nix
     ./starship.nix
     ./swaylock.nix
