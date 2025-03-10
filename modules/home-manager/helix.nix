@@ -43,6 +43,7 @@ in {
         };
         theme = "catppuccin_mocha";
       };
+
       languages = {
         language-server = {
           ansible-language-server = {
@@ -83,6 +84,7 @@ in {
             command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
           };
         };
+
         language = [
           {
             name = "helm";
