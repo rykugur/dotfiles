@@ -73,9 +73,19 @@ in {
         splash = false;
         splash_offset = 2.0;
 
-        preload = [ "~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
+        preload = [ "~/.wallpapers/cyberpunk_skull.png" ];
 
-        wallpaper = [ ",~/.wallpapers/StarCitizen_40_4k_Wallpaper_01.jpg" ];
+        wallpaper = [ ",~/.wallpapers/cyberpunk_skull.png" ];
+      };
+    };
+
+    xdg = {
+      enable = true;
+
+      mimeApps = {
+        enable = true;
+
+        defaultApplications = { "inode/directory" = [ "nemo.desktop" ]; };
       };
     };
   };
