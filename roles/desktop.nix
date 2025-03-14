@@ -19,7 +19,7 @@ in {
       ssh.enable = true;
 
       # DE stuff
-      # hyprland.enable = true;
+      hyprland.enable = true;
       # kde.enable = true;
       gnome.enable = true;
     };
@@ -29,7 +29,7 @@ in {
       rhx = {
         browser.enable = true;
         easyeffects.enable = true;
-        # hyprland.enable = true;
+        hyprland.enable = true;
         homelab.enable = true;
         ssh.enable = true;
       };

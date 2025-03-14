@@ -1,5 +1,6 @@
 source ./aliases.nu
 source ./commands/commands.nu
+source ./games/games.nu
 source ./zellij.nu
 
 use ./abbreviations.nu
