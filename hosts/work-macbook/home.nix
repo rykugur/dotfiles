@@ -63,12 +63,12 @@
   };
 
   rhx = {
-    fish.enable = true;
+    # fish.enable = true;
     git = {
       enable = true;
       gitconfig.enable = false;
     };
-    kitty.enable = true;
+    # kitty.enable = true;
     helix.enable = true;
     nvim.enable = true;
 

@@ -70,15 +70,28 @@ in {
           scls = {
             command = "${sclsPkg}/bin/simple-completion-language-server";
           };
+          tailwindcss-ls = {
+            command =
+              "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
+          };
           taplo = { command = "${pkgs.taplo}/bin/taplo"; };
           typescript-language-server = {
             # vtsls seems to be better, and fixes a weird error I was getting on _some_ files.
             command = "${pkgs.vtsls}/bin/vtsls";
             # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
           };
-          vscode-json-language-server = with pkgs.nodePackages; {
+          vscode-css-language-server = {
             command =
-              "${vscode-json-languageserver}/bin/vscode-json-languageserver";
+              "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
+          };
+          vscode-html-language-server = {
+            command =
+              "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
+
+          };
+          vscode-json-language-server = {
+            command =
+              "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server";
           };
           yaml-language-server = {
             command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
@@ -87,8 +100,18 @@ in {
 
         language = [
           {
+            name = "css";
+            language-servers =
+              [ "vscode-css-language-server" "tailwindcss-ls" ];
+          }
+          {
             name = "helm";
             auto-format = false;
+          }
+          {
+            name = "html";
+            language-servers =
+              [ "vscode-html-language-server" "tailwindcss-ls" ];
           }
           {
             name = "javascript";

@@ -17,6 +17,10 @@ def "zellij create-or-attach" [session: string, --layout: string = nil] {
   }
 }
 
+def "zellij fzf" [] {
+  zellij attach (zellij ls | lines | parse "{name} {description}" | get name | ansi strip | to text | fzf)
+}
+
 # leaving this here for now until I'm not lazy and want to add it to the
 # nu-scripts zellij completions
 def "zellij delete-all-sessions" [] {
