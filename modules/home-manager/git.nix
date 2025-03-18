@@ -14,12 +14,14 @@ in {
         userEmail = "rollhax@gmail.com";
 
         diff-so-fancy = { enable = true; };
+        lfs = { enable = true; };
       };
 
       gh = {
         enable = true;
         settings = { git_protocol = "ssh"; };
       };
+
     };
 
     home.file.".gitconfig" =
