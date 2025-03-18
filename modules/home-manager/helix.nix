@@ -153,7 +153,8 @@ in {
           {
             name = "jsx";
             auto-format = true;
-            language-servers = [ "typescript-language-server" "scls" ];
+            language-servers =
+              [ "typescript-language-server" "tailwindcss-ls" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -185,7 +186,8 @@ in {
           {
             name = "tsx";
             auto-format = true;
-            language-servers = [ "typescript-language-server" "scls" ];
+            language-servers =
+              [ "typescript-language-server" "tailwindcss-ls" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
