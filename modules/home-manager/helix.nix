@@ -95,6 +95,34 @@ in {
           };
           yaml-language-server = {
             command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
+            config = {
+              yaml = {
+                completion = true;
+                validation = true;
+                hover = true;
+                schemas = {
+                  kubernetes = [
+                    "*deployment*.{yml,yaml}"
+                    "*service*.{yml,yaml}"
+                    "*configmap*.{yml,yaml}"
+                    "*secret*.{yml,yaml}"
+                    "*pod*.{yml,yaml}"
+                    "*namespace*.{yml,yaml}"
+                    "*ingress*.{yml,yaml}"
+                  ];
+                  "https://json.schemastore.org/github-workflow.json" =
+                    ".github/workflows/*.{yml,yaml}";
+                  "https://json.schemastore.org/docker-compose.yml" =
+                    "docker-compose*.{yml,yaml}";
+                  "https://json.schemastore.org/kustomization.json" =
+                    "kustomization.{yml,yaml}";
+                  "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/kustomization.json" =
+                    [ "*kustomization.{yml,yaml}" "*kustomize.{yml,yaml}" ];
+                  "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json" =
+                    [ "*workflow*.{yml,yaml}" "*template*.{yml,yaml}" ];
+                };
+              };
+            };
           };
         };
 
@@ -125,7 +153,8 @@ in {
           {
             name = "jsx";
             auto-format = true;
-            language-servers = [ "typescript-language-server" "scls" ];
+            language-servers =
+              [ "typescript-language-server" "tailwindcss-ls" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -157,7 +186,8 @@ in {
           {
             name = "tsx";
             auto-format = true;
-            language-servers = [ "typescript-language-server" "scls" ];
+            language-servers =
+              [ "typescript-language-server" "tailwindcss-ls" "scls" ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
