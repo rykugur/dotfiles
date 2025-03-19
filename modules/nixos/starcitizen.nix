@@ -23,8 +23,12 @@ in {
         export DXVK_HUD=compiler;
         export MANGO_HUD=1;
       '';
+
       # Experimental script
       helperScript.enable = true;
+
+      patchXwayland = true;
+
       # leaving this on breaks EAC
       # umu.enable = true;
     };
