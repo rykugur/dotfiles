@@ -40,6 +40,7 @@
     _1password-cli
     bat
     docker
+    fd
     fzf
     just
     silver-searcher
