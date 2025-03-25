@@ -42,15 +42,9 @@
     docker
     fzf
     just
-    # prettierd
-    # rbenv
+    silver-searcher
     stylua
     tldr
-    # yarn
-
-    # nixd
-    # nixfmt-classic
-    # nix-index
   ];
 
   sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
