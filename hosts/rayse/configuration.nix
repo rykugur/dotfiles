@@ -12,13 +12,22 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   # Necessary for using flakes on this system.
-  nix.settings = {
-    experimental-features = "nix-command flakes pipe-operators";
+  nix = {
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 10d";
+    };
 
-    # TODO: find a better spot for this
-    extra-substituters = [ "https://helix.cachix.org" ];
-    extra-trusted-public-keys =
-      [ "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=" ];
+    optimise.automatic = true;
+
+    settings = {
+      experimental-features = "nix-command flakes pipe-operators";
+
+      # TODO: find a better spot for this
+      extra-substituters = [ "https://helix.cachix.org" ];
+      extra-trusted-public-keys =
+        [ "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=" ];
+    };
   };
 
   system = {
