@@ -82,11 +82,7 @@ in {
               "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
           };
           taplo = { command = "${pkgs.taplo}/bin/taplo"; };
-          typescript-language-server = {
-            # vtsls seems to be better, and fixes a weird error I was getting on _some_ files.
-            command = "${pkgs.vtsls}/bin/vtsls";
-            # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
-          };
+          typescript-language-server = { command = "${pkgs.vtsls}/bin/vtsls"; };
           vscode-css-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
@@ -94,11 +90,26 @@ in {
           vscode-eslint-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server";
+            config = {
+              format = false;
+              quiet = false;
+              rulesCustomizations = [ ];
+              run = "onType";
+              validate = "on";
+              codeAction = {
+                disableRuleComment = {
+                  enable = true;
+                  location = "separateLine";
+                };
+                showDocumentation = { enable = true; };
+              };
+              experimental = { useFlatConfig = true; };
+              problems = { shortenToSingleLine = false; };
+            };
           };
           vscode-html-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
-
           };
           vscode-json-language-server = {
             command =
