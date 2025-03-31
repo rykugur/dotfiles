@@ -39,17 +39,13 @@
   home.packages = with pkgs; [
     _1password-cli
     bat
+    docker
+    fd
     fzf
     just
-    # prettierd
-    # rbenv
+    silver-searcher
     stylua
     tldr
-    # yarn
-
-    # nixd
-    # nixfmt-classic
-    # nix-index
   ];
 
   sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
@@ -74,7 +70,7 @@
     };
     # kitty.enable = true;
     helix.enable = true;
-    nvim.enable = true;
+    # nvim.enable = true;
 
     ghostty.enable = true;
     # homelab.enable = true; # dunno why this doesn't work on macOS

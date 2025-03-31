@@ -2,9 +2,9 @@
   description = "Swoleflake";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
+    # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +20,7 @@
     # proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
 
     disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs-stable";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     ### hyprland stuff
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";

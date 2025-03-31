@@ -21,7 +21,7 @@ in {
       # DE stuff
       hyprland.enable = true;
       # kde.enable = true;
-      gnome.enable = true;
+      # gnome.enable = true;
     };
 
     # home-manager config

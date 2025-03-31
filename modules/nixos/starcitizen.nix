@@ -29,8 +29,8 @@ in {
 
       patchXwayland = true;
 
-      # leaving this on breaks EAC
-      # umu.enable = true;
+      umu.enable = true;
+      disableEAC = false;
     };
   };
 }
