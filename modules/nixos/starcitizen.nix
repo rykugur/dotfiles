@@ -29,8 +29,8 @@ in {
 
       patchXwayland = true;
 
-      # umu.enable = true;
-      # disableEAC = false;
+      umu.enable = true;
+      disableEAC = false;
     };
   };
 }
