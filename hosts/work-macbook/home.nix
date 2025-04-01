@@ -76,6 +76,7 @@
     ghostty.enable = true;
     nushell.enable = true;
     starship.enable = true;
+    tmux.enable = true;
     yazi.enable = true;
     zellij.enable = true;
   };
