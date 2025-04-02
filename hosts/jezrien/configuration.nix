@@ -80,6 +80,8 @@
   };
 
   services = {
+    flatpak.enable = true;
+
     printing.enable = true;
 
     gvfs.enable = true;
