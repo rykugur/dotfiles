@@ -36,6 +36,13 @@ in {
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
+            "S-z" = [
+              ":sh rm -f /tmp/unique-file"
+              ":insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file"
+              '':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty''
+              ":open %sh{cat /tmp/unique-file}"
+              ":redraw"
+            ];
             # "A-k" = "keep_selections";
             # "space" = { "e" = "file_browser"; };
           };
@@ -75,19 +82,34 @@ in {
               "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
           };
           taplo = { command = "${pkgs.taplo}/bin/taplo"; };
-          typescript-language-server = {
-            # vtsls seems to be better, and fixes a weird error I was getting on _some_ files.
-            command = "${pkgs.vtsls}/bin/vtsls";
-            # command = "${pkgs.nodePackages.typescript-language-server}/bin/typescript-language-server";
-          };
+          typescript-language-server = { command = "${pkgs.vtsls}/bin/vtsls"; };
           vscode-css-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
           };
+          vscode-eslint-language-server = {
+            command =
+              "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server";
+            config = {
+              format = false;
+              quiet = false;
+              rulesCustomizations = [ ];
+              run = "onType";
+              validate = "on";
+              codeAction = {
+                disableRuleComment = {
+                  enable = true;
+                  location = "separateLine";
+                };
+                showDocumentation = { enable = true; };
+              };
+              experimental = { useFlatConfig = true; };
+              problems = { shortenToSingleLine = false; };
+            };
+          };
           vscode-html-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
-
           };
           vscode-json-language-server = {
             command =
@@ -144,7 +166,11 @@ in {
           {
             name = "javascript";
             auto-format = true;
-            language-servers = [ "typescript-language-server" "scls" ];
+            language-servers = [
+              "typescript-language-server"
+              "vscode-eslint-language-server"
+              "scls"
+            ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -153,8 +179,12 @@ in {
           {
             name = "jsx";
             auto-format = true;
-            language-servers =
-              [ "typescript-language-server" "tailwindcss-ls" "scls" ];
+            language-servers = [
+              "typescript-language-server"
+              "vscode-eslint-language-server"
+              "tailwindcss-ls"
+              "scls"
+            ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -177,7 +207,11 @@ in {
           {
             name = "typescript";
             auto-format = true;
-            language-servers = [ "typescript-language-server" "scls" ];
+            language-servers = [
+              "typescript-language-server"
+              "vscode-eslint-language-server"
+              "scls"
+            ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];
@@ -186,8 +220,12 @@ in {
           {
             name = "tsx";
             auto-format = true;
-            language-servers =
-              [ "typescript-language-server" "tailwindcss-ls" "scls" ];
+            language-servers = [
+              "typescript-language-server"
+              "vscode-eslint-language-server"
+              "tailwindcss-ls"
+              "scls"
+            ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
               args = [ "--parser" "typescript" ];

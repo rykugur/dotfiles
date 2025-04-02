@@ -10,6 +10,7 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
+      outputs.overlays.modifications
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
 
@@ -75,6 +76,7 @@
     ghostty.enable = true;
     nushell.enable = true;
     starship.enable = true;
+    tmux.enable = true;
     yazi.enable = true;
     zellij.enable = true;
   };
