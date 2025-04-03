@@ -29,7 +29,7 @@ in {
           ${pkgs.google-chrome}/bin/google-chrome-stable "$URL" &
           ;;
         *)
-          ${zen-pkg}/bin/zen "$URL"
+          ${zen-pkg}/bin/zen-beta "$URL"
           ;;
       esac
     '';

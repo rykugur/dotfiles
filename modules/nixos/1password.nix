@@ -12,7 +12,7 @@ in {
           text = ''
             chrome
             vivald-bin
-            .zen-wrapped
+            .zen-beta-wrapped
           '';
           mode = "0755";
         };
