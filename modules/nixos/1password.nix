@@ -12,10 +12,12 @@ in {
           text = ''
             chrome
             vivald-bin
+            # because they keep fucking changing it...
             .zen-beta-wrapped
             .zen-beta-wrapp
             .zen-beta
             zen-beta
+            zen
           '';
           mode = "0755";
         };
