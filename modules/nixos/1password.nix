@@ -13,6 +13,9 @@ in {
             chrome
             vivald-bin
             .zen-beta-wrapped
+            .zen-beta-wrapp
+            .zen-beta
+            zen-beta
           '';
           mode = "0755";
         };
