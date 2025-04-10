@@ -103,11 +103,11 @@
 
       darwinConfigurations = {
         # home macbook pro
-        "rayse" = nix-darwin.lib.darwinSystem {
-          modules = [ ./hosts/rayse/configuration.nix ];
+        "taln" = nix-darwin.lib.darwinSystem {
+          modules = [ ./hosts/taln/configuration.nix ];
           specialArgs = {
             inherit inputs outputs;
-            hostname = "rayse";
+            hostname = "taln";
             username = "dusty";
           };
 

@@ -51,7 +51,7 @@
   sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
   # sops = {
-  #   defaultSopsFile = ../../hosts/rayse/secrets.yaml;
+  #   defaultSopsFile = ../../hosts/taln/secrets.yaml;
 
   #   age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
