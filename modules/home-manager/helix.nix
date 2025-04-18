@@ -177,6 +177,14 @@ in {
             };
           }
           {
+            name = "json";
+            auto-format = true;
+            formatter = {
+              command = "${pkgs.nodePackages.prettier}/bin/prettier";
+              args = [ "--parser" "typescript" ];
+            };
+          }
+          {
             name = "jsx";
             auto-format = true;
             language-servers = [
