@@ -2,7 +2,7 @@ $env.eve-online = {
   PFX_DIR: $"($env.HOME)/.local/share/Steam/steamapps/compatdata/8500/pfx",
   CCP_SETTINGS_DIR: (
     if (is-linux) {
-      $"($env.HOME)/.local/share/Steam/steamapps/compatdata/8500/pfx/drive_c/users/steamuser/AppData/Local/CCP/EVE/c_ccp_eve_tq_tranquility",
+      $"($env.HOME)/.local/share/Steam/steamapps/compatdata/8500/pfx/drive_c/users/steamuser/AppData/Local/CCP/EVE/c_ccp_eve_tq_tranquility"
     } else {
       $"($env.HOME)/Library/Application Support/CCP/EVE/_users_($env.USER)_library_application_support_eve_online_sharedcache_tq_eve.app_contents_resources_build_tranquility"
     }
