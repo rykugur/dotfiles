@@ -124,24 +124,24 @@ in {
                 hover = true;
                 schemas = {
                   kubernetes = [
-                    "*deployment*.{yml,yaml}"
-                    "*service*.{yml,yaml}"
-                    "*configmap*.{yml,yaml}"
-                    "*secret*.{yml,yaml}"
-                    "*pod*.{yml,yaml}"
-                    "*namespace*.{yml,yaml}"
-                    "*ingress*.{yml,yaml}"
+                    "*deployment*.yaml"
+                    "*service*.yaml"
+                    "*configmap*.yaml"
+                    "*secret*.yaml"
+                    "*pod*.yaml"
+                    "*namespace*.yaml"
+                    "*ingress*.yaml"
                   ];
                   "https://json.schemastore.org/github-workflow.json" =
-                    ".github/workflows/*.{yml,yaml}";
+                    ".github/workflows/*.yaml";
                   "https://json.schemastore.org/docker-compose.yml" =
-                    "docker-compose*.{yml,yaml}";
+                    "docker-compose*.yaml";
                   "https://json.schemastore.org/kustomization.json" =
-                    "kustomization.{yml,yaml}";
+                    "kustomization.yaml";
                   "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/kustomization.json" =
-                    [ "*kustomization.{yml,yaml}" "*kustomize.{yml,yaml}" ];
+                    [ "*kustomization.yaml" "*kustomize.yaml" ];
                   "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json" =
-                    [ "*workflow*.{yml,yaml}" "*template*.{yml,yaml}" ];
+                    [ "*workflow*.yaml" "*template*.yaml" ];
                 };
               };
             };
