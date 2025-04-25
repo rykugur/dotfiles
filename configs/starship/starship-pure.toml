@@ -10,6 +10,10 @@ $line_break\
 $nix_shell\
 $character"""
 
+right_format = """
+$kubernetes
+"""
+
 [directory]
 style = "blue"
 
@@ -42,5 +46,10 @@ format = "[$duration]($style) "
 style = "yellow"
 
 [python]
+disabled = true
 format = "[$virtualenv]($style) "
 style = "bright-black"
+
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style)'
