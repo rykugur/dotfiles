@@ -6,6 +6,14 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
+    karabiner-elements = prev.karabiner-elements.overrideAttrs (old: {
+      version = "14.13.0";
+
+      src = prev.fetchurl {
+        inherit (old.src) url;
+        hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
+      };
+    });
     vscode-langservers-extracted =
       prev.vscode-langservers-extracted.overrideAttrs (oldAttrs: rec {
         version = "4.8.0";

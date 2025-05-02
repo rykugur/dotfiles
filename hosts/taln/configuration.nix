@@ -7,6 +7,15 @@
     outputs.darwinModules
   ];
 
+  nixpkgs = {
+    overlays = [
+      # If you want to use overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+      outputs.overlays.additions
+      outputs.overlays.modifications
+    ];
+  };
+
   users.users.${username} = { home = "/Users/${username}"; };
 
   security.pam.services.sudo_local.touchIdAuth = true;
@@ -49,6 +58,8 @@
       };
     };
   };
+
+  services = { karabiner-elements = { enable = true; }; };
 
   # adding this here because nushell + nix-darwin is weird AF
   homebrew = {
