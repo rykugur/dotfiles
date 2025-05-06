@@ -63,14 +63,12 @@
 
   rhx = {
     # aerospace.enable = true;
-    # fish.enable = true;
     git = {
       enable = true;
       gitconfig.enable = true;
     };
-    # kitty.enable = true;
+    jujutsu.enable = true;
     helix.enable = true;
-    # nvim.enable = true;
 
     ghostty.enable = true;
     # homelab.enable = true; # dunno why this doesn't work on macOS

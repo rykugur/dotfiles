@@ -16,6 +16,7 @@
     ./helix.nix
     ./homelab.nix
     ./hyprland.nix
+    ./jujutsu.nix
     ./keebs.nix
     ./kitty.nix
     ./nushell.nix

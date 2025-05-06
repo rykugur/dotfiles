@@ -110,8 +110,8 @@
             hostname = "taln";
             username = "dusty";
           };
-
         };
+
         # work macbook
         "HJ0704F9VK" = nix-darwin.lib.darwinSystem {
           modules = [ ./hosts/work-macbook/configuration.nix ];
