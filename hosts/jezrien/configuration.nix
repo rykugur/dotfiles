@@ -100,7 +100,7 @@
       enable = true;
       extraRules = ''
         # Disable KT_USB_AUDIO device
-        ACTION=="add", ATTR{idVendor}=="31b2", ATTR{idProduct}=="0011", OPTIONS+="ignore_device"
+        ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="31b2", ATTR{idProduct}=="0011", ATTR{authorized}="0"
       '';
     };
   };
@@ -126,7 +126,7 @@
 
     btrfs.enable = true;
     starcitizen.enable = true;
-    vr.enable = true;
+    # vr.enable = true;
     wooting.enable = true;
   };
 

@@ -14,6 +14,7 @@ in {
           enable = true;
           gitconfig.enable = true;
         };
+        jujutsu.enable = true;
       };
     };
   };
