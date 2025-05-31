@@ -8,7 +8,13 @@ in {
   config = lib.mkIf cfg.enable {
     programs.jujutsu = {
       enable = true;
-      # settings = {};
+      settings = {
+        ui = { default-command = "status"; };
+        user = {
+          name = "rykugur";
+          email = "rollhax@gmail.com";
+        };
+      };
     };
   };
 }
