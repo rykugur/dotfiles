@@ -64,16 +64,17 @@
     };
   };
 
-  hardware.graphics = {
-    extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
-    extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+  hardware = {
+    amdgpu.overdrive.enable = true;
+
+    graphics = {
+      extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+      extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+    };
   };
 
   programs = {
-    corectrl = {
-      enable = true;
-      gpuOverclock.enable = true;
-    };
+    corectrl = { enable = true; };
     dconf.enable = true;
     nix-ld = { enable = true; };
     # seahorse.enable = true;

@@ -34,9 +34,6 @@ in {
         export MANGO_HUD=1;
       '';
 
-      # Experimental script
-      helperScript.enable = true;
-
       patchXwayland = true;
 
       umu.enable = true;
