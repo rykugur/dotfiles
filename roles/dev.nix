@@ -1,4 +1,4 @@
-{ config, lib, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let cfg = config.rhx.roles.dev;
 in {
   options.rhx.roles.dev.enable = lib.mkEnableOption "Enable dev role";
@@ -16,6 +16,8 @@ in {
         };
         jujutsu.enable = true;
       };
+
+      home.packages = with pkgs; [ bruno yaak ];
     };
   };
 }

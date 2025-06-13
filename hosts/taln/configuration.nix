@@ -57,9 +57,11 @@
         NSWindowShouldDragOnGesture = true;
       };
     };
+
+    primaryUser = username;
   };
 
-  services = { karabiner-elements = { enable = true; }; };
+  # services = { karabiner-elements = { enable = true; }; };
 
   # adding this here because nushell + nix-darwin is weird AF
   homebrew = {
