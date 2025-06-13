@@ -56,7 +56,13 @@
   };
 
   environment = {
-    systemPackages = with pkgs; [ polkit_gnome via vial vulkan-tools ];
+    systemPackages = with pkgs; [
+      nfs-utils
+      polkit_gnome
+      via
+      vial
+      vulkan-tools
+    ];
 
     variables = {
       VDPAU_DRIVER = "radeonsi";
