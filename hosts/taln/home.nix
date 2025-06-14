@@ -72,6 +72,7 @@
     jujutsu.enable = true;
     helix.enable = true;
 
+    # atuin.enable = true;
     ghostty.enable = true;
     # homelab.enable = true; # dunno why this doesn't work on macOS
     nushell.enable = true;

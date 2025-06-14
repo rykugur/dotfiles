@@ -2,6 +2,7 @@
   imports = [
     ./aerospace.nix
     ./albert.nix
+    ./atuin.nix
     ./browser.nix
     ./discord.nix
     ./easyeffects.nix
