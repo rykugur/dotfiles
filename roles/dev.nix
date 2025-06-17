@@ -10,6 +10,7 @@ in {
     # home-manager config
     home-manager.users.${username} = {
       rhx = {
+        atuin.enable = true;
         git = {
           enable = true;
           gitconfig.enable = true;
