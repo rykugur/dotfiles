@@ -16,6 +16,7 @@ in {
     programs.atuin = {
       enable = true;
       enableNushellIntegration = true;
+      flags = [ "--disable-up-arrow" ];
     };
 
     home.file = {
