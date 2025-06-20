@@ -7,18 +7,18 @@ def rbld [--boot (-b)] {
 def "rbld switch" [] {
   if (is-darwin) {
     # have to cd first, doesn't seem to like symlinks (which dotfiles may or may not be)
-    cd $env.DOTFILES_DIR; sudo darwin-rebuild switch --flake .
+    cd $env.DOTFILES_DIR; sudo darwin-rebuild switch --flake . e+o>| nom
   } else if (is-linux) {
-    sudo nixos-rebuild switch --flake $env.DOTFILES_DIR
+    sudo nixos-rebuild switch --flake $env.DOTFILES_DIR e+o>| nom
   }
 }
 
 def "rbld boot" [] {
   if (is-darwin) {
     # have to cd first, doesn't seem to like symlinks (which dotfiles may or may not be)
-    cd $env.DOTFILES_DIR; sudo darwin-rebuild boot --flake .
+    cd $env.DOTFILES_DIR; sudo darwin-rebuild boot --flake . e+o>| nom
   } else if (is-linux) {
-    sudo nixos-rebuild boot --flake $env.DOTFILES_DIR
+    sudo nixos-rebuild boot --flake $env.DOTFILES_DIR e+o>| nom
   }
 }
 

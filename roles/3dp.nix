@@ -9,7 +9,7 @@ in {
 
     # home-manager config
     home-manager.users.${username} = {
-      home.packages = with pkgs; [ orca-slicer super-slicer freecad-wayland ];
+      home.packages = with pkgs; [ qidi-slicer-bin freecad-wayland ];
     };
   };
 }
