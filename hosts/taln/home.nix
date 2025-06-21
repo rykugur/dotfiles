@@ -37,6 +37,8 @@
   };
 
   home.packages = with pkgs; [
+    nix-output-monitor
+
     _1password-cli
     bat
     docker
