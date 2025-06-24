@@ -9,22 +9,7 @@ in {
     programs.neovim = { enable = true; };
 
     home = {
-      packages = with pkgs; [
-        fd
-        lazygit
-        nixfmt-classic
-        ripgrep
-
-        # below pkgs are required for plugins/updates and I'm tired of having to enter a shell to update lazyvim
-        cargo
-        cmake
-        gnumake
-        gcc
-        go
-        luaPackages.lua
-        luarocks-nix
-        nodejs
-      ];
+      packages = with pkgs; [ fd lazygit nixfmt-classic ripgrep ];
 
       file = {
         ".config/nvim" = {

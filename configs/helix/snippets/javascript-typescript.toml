@@ -1,5 +1,0 @@
-[[snippets]]
-prefix = "derp"
-scope = [ "javascript", "javascriptreact", "typescript", "typescriptreact" ]
-body = 'console.log("DERP99: $1", $0)'
-description = "DERP logging is best logging"

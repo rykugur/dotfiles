@@ -10,8 +10,9 @@
 
   # TODO: find a better spot for this
   nix.settings = {
-    extra-substituters = ["https://helix.cachix.org"];
-    extra-trusted-public-keys = ["helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="];
+    extra-substituters = [ "https://helix.cachix.org" ];
+    extra-trusted-public-keys =
+      [ "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=" ];
   };
 
   # workaround
@@ -27,6 +28,8 @@
     users = { ${username} = import ./home.nix; };
     backupFileExtension = "bak";
   };
+
+  system.primaryUser = username;
 
   ### stuff to mostly ignore
 

@@ -28,6 +28,7 @@ in {
           lsp = {
             auto-signature-help = false;
             display-inlay-hints = true;
+            snippets = true;
           };
           middle-click-paste = true;
         };
