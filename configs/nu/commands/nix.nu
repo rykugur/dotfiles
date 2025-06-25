@@ -1,13 +1,16 @@
 use std/log
 
 def rbld [--boot (-b)] {
-  rbld switch
+  if ($boot) {
+    rbld boot
+  } else {
+    rbld switch
+  }
 }
 
 def "rbld switch" [] {
   if (is-darwin) {
-    # have to cd first, doesn't seem to like symlinks (which dotfiles may or may not be)
-    cd $env.DOTFILES_DIR; sudo darwin-rebuild switch --flake . e+o>| nom
+    sudo darwin-rebuild switch --flake $env.DOTFILES_DIR e+o>| nom
   } else if (is-linux) {
     sudo nixos-rebuild switch --flake $env.DOTFILES_DIR e+o>| nom
   }
@@ -15,8 +18,7 @@ def "rbld switch" [] {
 
 def "rbld boot" [] {
   if (is-darwin) {
-    # have to cd first, doesn't seem to like symlinks (which dotfiles may or may not be)
-    cd $env.DOTFILES_DIR; sudo darwin-rebuild boot --flake . e+o>| nom
+    log error "darwin-rebuild doesn't support boot flag, ignoring"
   } else if (is-linux) {
     sudo nixos-rebuild boot --flake $env.DOTFILES_DIR e+o>| nom
   }
@@ -42,6 +44,14 @@ def "shash" [url: string] {
 
 def "nr." [] {
   nix repl --expr $"builtins.getFlake \"(pwd)\""
+}
+
+def "nrd" [] {
+  nix repl --expr $"builtins.getFlake \"($env.DOTFILES_DIR)\""
+}
+
+def "nrn" [] {
+  nix repl --file '<nixpkgs>'
 }
 
 def nrf [--remote (-r)] {
