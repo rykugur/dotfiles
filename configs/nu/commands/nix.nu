@@ -10,9 +10,9 @@ def rbld [--boot (-b)] {
 
 def "rbld switch" [] {
   if (is-darwin) {
-    sudo darwin-rebuild switch --flake $env.DOTFILES_DIR e+o>| nom
+    nh darwin switch $env.DOTFILES_DIR
   } else if (is-linux) {
-    sudo nixos-rebuild switch --flake $env.DOTFILES_DIR e+o>| nom
+    nh oh switch $env.DOTFILES_DIR
   }
 }
 
@@ -20,7 +20,7 @@ def "rbld boot" [] {
   if (is-darwin) {
     log error "darwin-rebuild doesn't support boot flag, ignoring"
   } else if (is-linux) {
-    sudo nixos-rebuild boot --flake $env.DOTFILES_DIR e+o>| nom
+    nh os boot $env.DOTFILES_DIR
   }
 }
 

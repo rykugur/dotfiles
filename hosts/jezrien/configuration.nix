@@ -57,7 +57,7 @@
 
   environment = {
     systemPackages = with pkgs; [
-      nix-output-monitor
+      nh
 
       nfs-utils
       polkit_gnome
