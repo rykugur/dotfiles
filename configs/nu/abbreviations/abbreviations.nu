@@ -95,9 +95,6 @@ const nix = {
   nfc: "nix flake check"
   nfu: "nix flake update"
 
-  nr: "nix repl"
-  nrn: "nix repl --file '<nixpkgs>'"
-
   ns: "nix shell"
   nds: "nix-shell"
   ndsp: "nix-shell -p"

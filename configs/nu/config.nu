@@ -1,9 +1,8 @@
-source ./aliases.nu
-source ./commands/commands.nu
-source ./games/games.nu
+source ./aliases/index.nu
+source ./commands/index.nu
 source ./zellij.nu
 
-use ./abbreviations.nu
+use ./abbreviations/abbreviations.nu
 $env.config.keybindings = $env.config.keybindings | append (abbreviations get_keybinds)
 $env.config.menus = $env.config.menus | append (abbreviations get_menus)
 
