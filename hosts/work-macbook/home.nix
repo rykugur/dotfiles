@@ -69,6 +69,8 @@
       enable = true;
       gitconfig.enable = false;
     };
+    jujutsu.enable = true;
+
     # kitty.enable = true;
     helix.enable = true;
     nvim.enable = true;
