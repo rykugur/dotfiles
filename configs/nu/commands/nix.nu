@@ -12,7 +12,7 @@ def "rbld switch" [] {
   if (is-darwin) {
     nh darwin switch $env.DOTFILES_DIR
   } else if (is-linux) {
-    nh oh switch $env.DOTFILES_DIR
+    nh os switch $env.DOTFILES_DIR
   }
 }
 
