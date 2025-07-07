@@ -71,6 +71,7 @@
     };
     jujutsu.enable = true;
     helix.enable = true;
+    # zed-editor.enable = true;
 
     # atuin.enable = true;
     ghostty.enable = true;

@@ -34,6 +34,7 @@
     ./tmux.nix
     ./wezterm.nix
     ./yazi.nix
+    ./zed-editor.nix
     ./zellij.nix
   ];
 }
