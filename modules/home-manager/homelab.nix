@@ -17,9 +17,8 @@ in {
       kubectl
       kubectx # also contains kubens
 
-      kubernetes-helm
-      helmfile
-      kubernetes-helmPlugins.helm-secrets
+      kubernetes-helm-wrapped
+      helmfile-wrapped
     ];
 
     programs.k9s = {
