@@ -5,16 +5,13 @@
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
-  modifications = final: prev: rec {
-    kubernetes-helm-wrapped = prev.wrapHelm.kubernetes-helm {
+  modifications = final: prev: {
+    kubernetes-helm-wrapped = prev.wrapHelm prev.kubernetes-helm {
       plugins = with prev.kubernetes-helmPlugins; [
-        helm-secrets
         helm-diff
-        helm-git
+        helm-secrets
+        helm-s3
       ];
-    };
-    helmfile-wrapped = prev.helmfile-wrapped.override {
-      inherit (kubernetes-helm-wrapped) pluginsDir;
     };
     karabiner-elements = prev.karabiner-elements.overrideAttrs (old: {
       version = "14.13.0";
