@@ -19,6 +19,7 @@ in {
 
       kubernetes-helm
       helmfile
+      kubernetes-helmPlugins.helm-secrets
     ];
 
     programs.k9s = {
