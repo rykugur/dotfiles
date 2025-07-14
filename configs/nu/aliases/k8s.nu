@@ -1,3 +1,5 @@
+alias hf = helmfile
+
 alias k = kubecolor
 alias kg = k get
 alias kgn = kg nodes
