@@ -10,7 +10,10 @@ in {
     programs.zed-editor = {
       enable = true;
       extensions = [ "nix" "catppuccin" ];
-      userSettings = { theme = "Catppuccin Mocha"; };
+      userSettings = {
+        helix_mode = true;
+        theme = "Catppuccin Mocha";
+      };
     };
   };
 }
