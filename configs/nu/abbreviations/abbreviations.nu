@@ -136,6 +136,14 @@ const dev = {
   pn: "pnpm"
 }
 
+const k8s = {
+  k: "kubectl"
+  kg: "kubectl get"
+  kgn: "kubectl get nodes"
+  kgp: "kubectl get pods"
+  kgs: "kubectl get services"
+}
+
 const zellij = {
   za: "zellij attach"
   zj: "zellij"
@@ -143,7 +151,7 @@ const zellij = {
 
 def get_abbreviations [] {
    # surely there's a better way to do this
-  $dev | merge $nush | merge $misc | merge $nix | merge $git | merge $docker | merge $zellij
+  $dev | merge $nush | merge $misc | merge $nix | merge $git | merge $docker | merge $zellij | merge $k8s
 }
 
 export def get_menus [] {
