@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.rhx.zed-editor;
 in {
   options.rhx.zed-editor = {
@@ -9,6 +9,10 @@ in {
     # home.packages = [];
     programs.zed-editor = {
       enable = true;
+      # package = pkgs.zed-editor-fhs;
+
+      extraPackages = with pkgs; [ nil nixd ];
+
       extensions = [ "nix" "catppuccin" ];
       userSettings = {
         helix_mode = true;
