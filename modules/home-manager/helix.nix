@@ -251,7 +251,7 @@ in {
 
     home.file = {
       ".config/helix/snippets" = {
-        source = ../../configs/helix/snippets;
+        source = ../../configs/snippets;
         recursive = true;
       };
     };
