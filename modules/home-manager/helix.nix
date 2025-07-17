@@ -242,8 +242,11 @@ in {
           }
           {
             name = "yaml";
-            auto-format = false;
-            formatter = { command = "${pkgs.yamlfmt}/bin/yamlfmt"; };
+            auto-format = true;
+            formatter = {
+              command = lib.getExe pkgs.yamlfmt;
+              args = [ "-" ];
+            };
           }
         ];
       };
