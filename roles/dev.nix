@@ -16,6 +16,7 @@ in {
           gitconfig.enable = true;
         };
         jujutsu.enable = true;
+        zed-editor.enable = true;
       };
 
       home.packages = with pkgs; [ bruno yaak ];
