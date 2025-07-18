@@ -254,11 +254,6 @@ in {
               command = lib.getExe pkgs.yamlfmt;
               args = [ "-" ];
             };
-            # indent = {
-            #   tab-width = 2;
-            #   unit = "";
-            # };
-            # language-servers = [ "yaml-language-server" ];
           }
         ];
       };
