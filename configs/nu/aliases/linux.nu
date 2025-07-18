@@ -7,6 +7,7 @@ alias awk6 = awk '{print \$6}'
 alias awk7 = awk '{print \$7}'
 alias awk8 = awk '{print \$8}'
 alias awk9 = awk '{print \$9}'
+alias db = distrobox
 alias cat = bat
 # alias cd = z
 alias dfh = duf
