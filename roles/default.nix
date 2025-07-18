@@ -41,10 +41,11 @@
     };
 
     nix = {
-      gc = {
-        automatic = true;
-        options = "--delete-older-than 10d";
-      };
+      # using nh now instead
+      # gc = {
+      #   automatic = true;
+      #   options = "--delete-older-than 10d";
+      # };
 
       optimise.automatic = true;
 

@@ -57,8 +57,6 @@
 
   environment = {
     systemPackages = with pkgs; [
-      nh
-
       nfs-utils
       polkit_gnome
       via
@@ -85,7 +83,13 @@
     corectrl = { enable = true; };
     dconf.enable = true;
     nix-ld = { enable = true; };
-    # seahorse.enable = true;
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 14d --keep 3";
+      # flake = "/home/${username}/.dotfiles/flake.nix";
+    };
   };
 
   services = {
