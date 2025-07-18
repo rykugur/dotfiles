@@ -205,6 +205,8 @@ in {
   xdg.enable = true;
 
   rhx = {
+    ghostty.hideWindowDecoration = true;
+
     keebs.enable = true;
     starcitizen.enable = true;
     starsector = {

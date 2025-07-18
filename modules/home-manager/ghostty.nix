@@ -7,6 +7,8 @@ let
 in {
   options.rhx.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
+    hideWindowDecoration =
+      lib.mkEnableOption "Whether to hide window-decoration or not.";
   };
 
   config = lib.mkIf cfg.enable {
@@ -28,6 +30,9 @@ in {
           window-inherit-working-directory = false
           working-directory = home
 
+          window-decoration = ${
+            if cfg.hideWindowDecoration then "none" else "auto"
+          }
           window-height = 40
           window-width = 160
 
