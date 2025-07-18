@@ -118,33 +118,38 @@ in {
           };
           yaml-language-server = {
             command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
+            args = [ "--stdio" ];
             config = {
               yaml = {
-                completion = true;
+                # config = { yaml = { schemas = { kubernetes = "**/*.yaml", "http://json.schemastore.org/kustomization" = "kustomization.{yml,yaml}", "http://json.schemastore.org/chart" = "Chart.{yml,yaml}" }, format = { enable = true }, validate = true, completion = true, hover = true } }                completion = true;
                 validation = true;
                 hover = true;
-                schemaStore = { enable = true; };
+                # schemaStore = { enable = true; };
                 format = { enable = true; };
                 schemas = {
-                  kubernetes = [
-                    "*deployment*.yaml"
-                    "*service*.yaml"
-                    "*configmap*.yaml"
-                    "*secret*.yaml"
-                    "*pod*.yaml"
-                    "*namespace*.yaml"
-                    "*ingress*.yaml"
-                  ];
-                  "https://json.schemastore.org/github-workflow.json" =
-                    ".github/workflows/*.yaml";
-                  "https://json.schemastore.org/docker-compose.yml" =
-                    "docker-compose*.yaml";
-                  "https://json.schemastore.org/kustomization.json" =
-                    "kustomization.yaml";
-                  "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/kustomization.json" =
-                    [ "*kustomization.yaml" "*kustomize.yaml" ];
-                  "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json" =
-                    [ "*workflow*.yaml" "*template*.yaml" ];
+                  kubernetes = [ "**/*.yaml" ];
+                  "http://json.schemastore.org/kustomization" =
+                    "kustomization.{yml,yaml}";
+                  "http://json.schemastore.org/chart" = "Chart.{yml,yaml}";
+                  # kubernetes = [
+                  #   "*deployment*.yaml"
+                  #   "*service*.yaml"
+                  #   "*configmap*.yaml"
+                  #   "*secret*.yaml"
+                  #   "*pod*.yaml"
+                  #   "*namespace*.yaml"
+                  #   "*ingress*.yaml"
+                  # ];
+                  # "https://json.schemastore.org/github-workflow.json" =
+                  #   ".github/workflows/*.yaml";
+                  # "https://json.schemastore.org/docker-compose.yml" =
+                  #   "docker-compose*.yaml";
+                  # "https://json.schemastore.org/kustomization.json" =
+                  #   "kustomization.yaml";
+                  # "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/kustomization.json" =
+                  #   [ "*kustomization.yaml" "*kustomize.yaml" ];
+                  # "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json" =
+                  #   [ "*workflow*.yaml" "*template*.yaml" ];
                 };
               };
             };
@@ -249,7 +254,11 @@ in {
               command = lib.getExe pkgs.yamlfmt;
               args = [ "-" ];
             };
-            language-servers = [ "yaml-language-server" ];
+            # indent = {
+            #   tab-width = 2;
+            #   unit = "";
+            # };
+            # language-servers = [ "yaml-language-server" ];
           }
         ];
       };
