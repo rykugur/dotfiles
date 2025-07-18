@@ -1,5 +1,7 @@
 {
   imports = [
+    ./hyprland
+
     ./aerospace.nix
     ./albert.nix
     ./atuin.nix
@@ -16,7 +18,6 @@
     ./gnome.nix
     ./helix.nix
     ./homelab.nix
-    ./hyprland.nix
     ./jujutsu.nix
     ./keebs.nix
     ./kitty.nix

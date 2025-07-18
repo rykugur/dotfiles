@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, username, ... }:
 let cfg = config.rhx.hyprland;
 in {
   options.rhx.hyprland.enable =
@@ -19,5 +19,8 @@ in {
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
+
+    # force-enable HM module when nixos module is enabled
+    home-manager.users.${username}.rhx.hyprland.enable = true;
   };
 }

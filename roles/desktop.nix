@@ -29,7 +29,6 @@ in {
       rhx = {
         browser.enable = true;
         easyeffects.enable = true;
-        hyprland.enable = true;
         homelab.enable = true;
         ssh.enable = true;
       };

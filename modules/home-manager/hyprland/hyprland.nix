@@ -18,6 +18,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     rhx.albert.enable = true;
+    rhx.hyprpanel.enable = true;
     rhx.thunar.enable = true;
 
     home.packages = [
@@ -30,7 +31,6 @@ in {
       grimblast
       hyprcursor
       hypridle
-      hyprpanel
       slurp
       swappy
       wlogout
