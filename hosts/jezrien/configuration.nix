@@ -134,12 +134,10 @@
       desktop.enable = true; # also enables dev and terminal roles
       gaming.enable = true;
       virtualization.enable = true;
-      # vr.enable = true;
     };
 
     btrfs.enable = true;
     starcitizen.enable = true;
-    # vr.enable = true;
     wooting.enable = true;
   };
 

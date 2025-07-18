@@ -6,7 +6,10 @@ in {
 
   config = lib.mkIf cfg.enable {
     # enable nixOS modules for desktop role
-    rhx = { virtman.enable = true; };
+    rhx = {
+      distrobox.enable = true;
+      virtman.enable = true;
+    };
 
     # home-manager config
     home-manager.users.${username} = {

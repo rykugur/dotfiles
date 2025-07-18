@@ -13,8 +13,11 @@
     ./starcitizen.nix
     ./steam.nix
     ./vfio.nix
-    ./virtman.nix
     ./vr.nix
     ./wooting.nix
+
+    # vms
+    ./distrobox.nix
+    ./virtman.nix
   ];
 }

@@ -115,7 +115,6 @@ in {
     xdelta
 
     ################################# random #################################
-    # super-slicer-latest
     n0la_rcon
     arandr
     cliphist
@@ -207,7 +206,6 @@ in {
     ghostty.hideWindowDecoration = true;
 
     keebs.enable = true;
-    starcitizen.enable = true;
     starsector = {
       enable = true;
       mods.enable = true;

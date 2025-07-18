@@ -1,4 +1,4 @@
-{ config, inputs, lib, ... }:
+{ config, inputs, lib, username, ... }:
 let cfg = config.rhx.starcitizen;
 in {
   imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
@@ -39,5 +39,7 @@ in {
       umu.enable = true;
       disableEAC = false;
     };
+
+    home-manager.users.${username} = { rhx.starcitizen.enable = true; };
   };
 }
