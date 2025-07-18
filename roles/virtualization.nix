@@ -1,4 +1,4 @@
-{ config, lib, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let cfg = config.rhx.roles.virtualization;
 in {
   options.rhx.roles.virtualization.enable =
@@ -11,6 +11,7 @@ in {
     # home-manager config
     home-manager.users.${username} = {
       # rhx = {};
+      home.packages = with pkgs; [ lima ];
     };
   };
 }
