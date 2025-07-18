@@ -59,23 +59,22 @@
   # services = { karabiner-elements = { enable = true; }; };
 
   # adding this here because nushell + nix-darwin is weird AF
-  # homebrew = {
-  #   enable = true;
+  homebrew = {
+    enable = true;
 
-  #   brews = [
-  #     { name = "kubectl"; }
-  #     { name = "kubecolor"; }
-  #     { name = "kubectx"; }
-  #     { name = "helm"; }
-  #     { name = "helmfile"; }
-  #   ];
+    brews = [{ name = "lima"; }];
+    # { name = "kubectl"; }
+    # { name = "kubecolor"; }
+    # { name = "kubectx"; }
+    # { name = "helm"; }
+    # { name = "helmfile"; }
 
-  #   onActivation = {
-  #     autoUpdate = true;
-  #     cleanup = "uninstall";
-  #     upgrade = true;
-  #   };
-  # };
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "uninstall";
+      upgrade = true;
+    };
+  };
 
   rhx = {
     # aerospace.enable = true;
