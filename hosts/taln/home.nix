@@ -56,7 +56,6 @@
     };
     jujutsu.enable = true;
     helix.enable = true;
-    nvim.enable = true;
     # zed-editor.enable = true;
 
     # atuin.enable = true;
