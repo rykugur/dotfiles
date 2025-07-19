@@ -74,6 +74,7 @@ in {
           nixd = { command = "${pkgs.nixd}/bin/nixd"; };
           nil = { command = "${pkgs.nil}/bin/nil"; };
           nu = { command = "${pkgs.nushell}/bin/nu"; };
+          omnisharp = { command = lib.getExe pkgs.omnisharp-roslyn; };
           # for snippets
           scls = {
             command = "${sclsPkg}/bin/simple-completion-language-server";
