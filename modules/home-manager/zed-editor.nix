@@ -9,7 +9,7 @@ in {
     # home.packages = [];
     programs.zed-editor = {
       enable = true;
-      # package = pkgs.zed-editor-fhs;
+      package = pkgs.zed-editor-fhs;
 
       extraPackages = with pkgs; [ nil nixd ];
 
@@ -17,6 +17,12 @@ in {
       userSettings = {
         helix_mode = true;
         theme = "Catppuccin Mocha";
+        extraPackages = [
+          pkgs.dotnet-sdk_8
+          pkgs.omnisharp-roslyn
+          pkgs.icu
+          pkgs.nixfmt-classic
+        ];
 
         # ui_font_size = lib.mkForce 12;
         # buffer_font_size = lib.mkForce 14;
@@ -45,10 +51,20 @@ in {
 
         lsp = {
           nix = { binary = { path_lookup = true; }; };
-          # nil = { binary = { path = lib.getExe pkgs.nil; }; };
-          # nixd = { binary = { path = lib.getExe pkgs.nixd; }; };
+          omnisharp = {
+            binary = {
+              path = lib.getExe pkgs.omnisharp-roslyn;
+              arguments = [ "-lsp" ];
+            };
+          };
         };
-        # languages = { nix = { language_servers = [ "nil" "nixd" ]; }; };
+        languages = {
+          CSharp = { formatter = "language_server"; };
+          Nix = {
+            formatter = { external = { command = "nixfmt"; }; };
+            language_servers = [ "nil" "!nixd" ];
+          };
+        };
       };
     };
 
