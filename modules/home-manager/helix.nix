@@ -127,19 +127,18 @@ in {
                 # schemaStore = { enable = true; };
                 format = { enable = true; };
                 schemas = {
-                  kubernetes = [ "**/*.yaml" ];
+                  kubernetes = [
+                    "*deployment*.yaml"
+                    "*service*.yaml"
+                    "*configmap*.yaml"
+                    "*secret*.yaml"
+                    "*pod*.yaml"
+                    "*namespace*.yaml"
+                    "*ingress*.yaml"
+                  ];
                   "http://json.schemastore.org/kustomization" =
                     "kustomization.{yml,yaml}";
                   "http://json.schemastore.org/chart" = "Chart.{yml,yaml}";
-                  # kubernetes = [
-                  #   "*deployment*.yaml"
-                  #   "*service*.yaml"
-                  #   "*configmap*.yaml"
-                  #   "*secret*.yaml"
-                  #   "*pod*.yaml"
-                  #   "*namespace*.yaml"
-                  #   "*ingress*.yaml"
-                  # ];
                   # "https://json.schemastore.org/github-workflow.json" =
                   #   ".github/workflows/*.yaml";
                   # "https://json.schemastore.org/docker-compose.yml" =
