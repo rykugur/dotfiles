@@ -33,8 +33,8 @@ in {
           window-decoration = ${
             if cfg.hideWindowDecoration then "none" else "auto"
           }
-          window-height = 40
-          window-width = 160
+          window-height = 50
+          window-width = 125
 
           app-notifications = false
 

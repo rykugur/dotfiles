@@ -203,7 +203,7 @@ in {
   xdg.enable = true;
 
   rhx = {
-    ghostty.hideWindowDecoration = true;
+    ghostty.hideWindowDecoration = false;
 
     keebs.enable = true;
     starsector = {
