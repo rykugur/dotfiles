@@ -4,7 +4,8 @@ use std/log
 
 # ASSUMPTIONS/GOTCHAS
 # - EVE clients are on separate workspaces (hyprland doesn't handle toggling focus and fullscreen very well).
-# - EVE clients are sorted by pid, toggle order will follow that.
+# - EVE clients can be on special workspaces, but we only support the default one right now
+# - EVE clients are sorted by focusHistoryID, toggle order will follow that.
 
 # TODO: can we make focus changes not change fullscreenstate?
  
