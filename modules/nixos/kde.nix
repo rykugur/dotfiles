@@ -1,4 +1,4 @@
-{ config, fetchFromGitHub, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.rhx.kde;
 in {
   options.rhx.kde.enable = lib.mkEnableOption "Enable kde nixOS module";

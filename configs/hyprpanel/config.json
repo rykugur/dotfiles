@@ -47,5 +47,7 @@
   "theme.bar.floating": false,
   "theme.bar.buttons.enableBorders": false,
   "menus.power.showLabel": false,
-  "menus.clock.time.military": true
+  "menus.clock.time.military": true,
+  "theme.font.name": "CaskaydiaMono Nerd Font Propo",
+  "theme.font.label": "CaskaydiaMono Nerd Font Propo Bold"
 }
