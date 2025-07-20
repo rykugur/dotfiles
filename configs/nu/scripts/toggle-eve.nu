@@ -6,7 +6,6 @@ use std/log
 # - EVE clients are on separate workspaces (hyprland doesn't handle toggling focus and fullscreen very well).
 # - EVE clients are sorted by pid, toggle order will follow that.
 
-# TODO: special workspace handling will fail with speical workspaces not named "special"
 # TODO: can we make focus changes not change fullscreenstate?
  
 def is_special [workspace] {
