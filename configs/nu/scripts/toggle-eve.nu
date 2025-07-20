@@ -30,27 +30,32 @@ def toggle_eve_workspace [workspace] {
   }
 }
 
-let eve_clients = (hyprctl clients -j | from json | where {|c| $c.title | str starts-with "EVE - "} | sort-by pid)
+def get_sorted_eve_clients [] {
+  let eve_clients = (hyprctl clients -j | from json | where {|c| $c.title | str starts-with "EVE - "})
+  $eve_clients | where focusHistoryID >= 0 | sort-by focusHistoryID
+}
+
+let eve_clients = get_sorted_eve_clients
 if ($eve_clients | is-empty) {
   exit 0
 }
 
 let focused_window = (hyprctl activewindow -j | from json)
+let len = ($eve_clients | length)
+let current_idx = ($eve_clients | enumerate | where item.address == $focused_window.address | get -i 0.index)
+
 if not ($focused_window.title | str starts-with "EVE - ") {
-  # just focus the first eve client
-  toggle_workspace ($eve_clients | first | get workspace)
+  # just focused the most recently / last focused
+  toggle_eve_workspace $eve_clients.0.workspace
 } else {
-  # we're focusing an eve client, switch to the next one
-  let len = ($eve_clients | length)
-  let current_idx = ($eve_clients | enumerate | where item.address == $focused_window.address | get -i 0.index)
-  let current_client = ($eve_clients | get $current_idx)
-  let next_idx = ($current_idx + 1) mod $len
-  let next_client = ($eve_clients | get $next_idx)
+  # we're already focused on an eve client, go to the next one
+  # we can just use index 1 since we always sort by focusHistoryID
 
   # special case - if the current focused client is on a special workspace,
   # we need to toggle it first
-  if (is_special $current_client.workspace) {
+  if (is_special $focused_window.workspace) {
     toggle_special_workspace
   }
-  toggle_eve_workspace $next_client.workspace
+
+  toggle_eve_workspace $eve_clients.1.workspace
 }
