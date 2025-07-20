@@ -32,22 +32,7 @@
         "windowtitle"
       ],
       "middle": [
-        "media"
-      ],
-      "right": [
-        "volume",
-        "clock",
-        "notifications"
-      ]
-    },
-    "2": {
-      "left": [
-        "dashboard",
-        "workspaces",
-        "windowtitle"
-      ],
-      "middle": [
-        "media"
+        "custom/active-eve-client"
       ],
       "right": [
         "volume",

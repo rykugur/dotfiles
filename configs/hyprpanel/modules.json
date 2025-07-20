@@ -1,0 +1,12 @@
+{
+  "custom/active-eve-client": {
+    "icon": "🚀",
+    "label": "{}",
+    "execute": "~/.dotfiles/configs/nu/scripts/active-eve-client.nu",
+    "interval": 2500,
+    "hideOnEmpty": true,
+    "actions": {
+      "onLeftClick": "~/.dotfiles/configs/nu/scripts/toggle-eve.nu"
+    }
+  }
+}

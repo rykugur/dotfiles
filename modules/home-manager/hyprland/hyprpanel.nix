@@ -31,12 +31,13 @@ in {
       # };
     };
 
-    home.file = {
-      ".config/hyprpanel/config.json" = {
-        source = config.lib.file.mkOutOfStoreSymlink
-          "${config.home.homeDirectory}/.dotfiles/configs/hyprpanel/config.json";
-        # source = ../../../configs/hyprpanel/config.json;
-      };
-    };
+    # f that - old fashioned symlink for now for the FASTEST iteration
+    # home.file = {
+    #   ".config/hyprpanel" = {
+    #     source = config.lib.file.mkOutOfStoreSymlink
+    #       "${config.home.homeDirectory}/.dotfiles/configs/hyprpanel";
+    #     recursive = true;
+    #   };
+    # };
   };
 }

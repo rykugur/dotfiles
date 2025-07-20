@@ -35,9 +35,6 @@
       inputs.hyprland.follows = "hyprland";
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
-    # mcmojave-hyprcursor.url = "github:libadoxon/mcmojave-hyprcursor";
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    # gBar.url = "github:scorpion-26/gBar";
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -51,7 +48,6 @@
     ### random stuff
     ghostty.url = "github:ghostty-org/ghostty";
     luarocks-nix.url = "github:nix-community/luarocks-nix";
-    # zen-browser.url = "github:MarceColl/zen-browser-flake";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     # zellij status bar
     zjstatus.url = "github:dj95/zjstatus";
