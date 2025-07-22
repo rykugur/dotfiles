@@ -122,9 +122,9 @@ in {
             args = [ "--stdio" ];
             config = {
               yaml = {
-                # config = { yaml = { schemas = { kubernetes = "**/*.yaml", "http://json.schemastore.org/kustomization" = "kustomization.{yml,yaml}", "http://json.schemastore.org/chart" = "Chart.{yml,yaml}" }, format = { enable = true }, validate = true, completion = true, hover = true } }                completion = true;
-                validation = true;
+                completion = true;
                 hover = true;
+                validate = true;
                 # schemaStore = { enable = true; };
                 format = { enable = true; };
                 schemas = {
@@ -140,16 +140,6 @@ in {
                   "http://json.schemastore.org/kustomization" =
                     "kustomization.{yml,yaml}";
                   "http://json.schemastore.org/chart" = "Chart.{yml,yaml}";
-                  # "https://json.schemastore.org/github-workflow.json" =
-                  #   ".github/workflows/*.yaml";
-                  # "https://json.schemastore.org/docker-compose.yml" =
-                  #   "docker-compose*.yaml";
-                  # "https://json.schemastore.org/kustomization.json" =
-                  #   "kustomization.yaml";
-                  # "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/kustomization.json" =
-                  #   [ "*kustomization.yaml" "*kustomize.yaml" ];
-                  # "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json" =
-                  #   [ "*workflow*.yaml" "*template*.yaml" ];
                 };
               };
             };
@@ -250,6 +240,10 @@ in {
           {
             name = "yaml";
             auto-format = true;
+            indent = {
+              tab-width = 2;
+              unit = " ";
+            };
             formatter = {
               command = lib.getExe pkgs.yamlfmt;
               args = [ "-" ];
