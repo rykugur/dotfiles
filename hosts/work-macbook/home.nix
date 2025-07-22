@@ -41,6 +41,7 @@
     _1password-cli
     bat
     just
+    nh
     prettierd
     rbenv
     stylua
@@ -62,6 +63,15 @@
       mode = "0400";
     };
   };
+
+  # TODO: these are in roles/terminal but that is failing on nix-darwin
+  # will remove these once I figure that out
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+  programs.carapace.enable = true;
+  programs.zoxide.enable = true;
 
   rhx = {
     # fish.enable = true;

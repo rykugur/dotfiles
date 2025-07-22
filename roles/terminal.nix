@@ -11,6 +11,15 @@ in {
     home-manager.users.${username} = {
       home.packages = with pkgs; [ cmatrix ];
 
+      programs.direnv = {
+        enable = true;
+        nix-direnv.enable = true;
+      };
+
+      programs.carapace.enable = true;
+
+      programs.zoxide.enable = true;
+
       rhx = {
         ghostty.enable = true;
 
