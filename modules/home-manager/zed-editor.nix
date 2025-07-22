@@ -13,7 +13,7 @@ in {
 
       extraPackages = with pkgs; [ nil nixd ];
 
-      extensions = [ "nix" "catppuccin" "catppuccin-icons" ];
+      extensions = [ "nix" "catppuccin" "catppuccin-icons" "helm" ];
       userSettings = {
         helix_mode = true;
         theme = "Catppuccin Mocha";
