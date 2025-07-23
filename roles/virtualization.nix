@@ -14,7 +14,7 @@ in {
     # home-manager config
     home-manager.users.${username} = {
       # rhx = {};
-      home.packages = with pkgs; [ lima ];
+      home.packages = with pkgs; [ lima minikube ];
     };
   };
 }
