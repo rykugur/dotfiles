@@ -62,7 +62,7 @@
   homebrew = {
     enable = true;
 
-    brews = [{ name = "lima"; }];
+    brews = [ { name = "lima"; } { name = "minikube"; } ];
     # { name = "kubectl"; }
     # { name = "kubecolor"; }
     # { name = "kubectx"; }
