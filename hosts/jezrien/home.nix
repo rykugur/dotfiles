@@ -156,6 +156,7 @@
     ldns
     lsof
     lm_sensors
+    ncdu
     nmap
     pciutils
     psmisc
