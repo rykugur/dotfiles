@@ -242,7 +242,7 @@ in {
             auto-format = true;
             indent = {
               tab-width = 2;
-              unit = " ";
+              unit = "  ";
             };
             formatter = {
               command = lib.getExe pkgs.yamlfmt;
