@@ -149,6 +149,7 @@
     };
 
     btrfs.enable = true;
+    kde.enable = true;
     starcitizen.enable = true;
     wooting.enable = true;
   };

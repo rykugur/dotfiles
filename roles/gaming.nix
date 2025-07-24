@@ -1,5 +1,7 @@
-{ config, lib, pkgs, username, ... }:
-let cfg = config.rhx.roles.gaming;
+{ config, inputs, lib, pkgs, username, ... }:
+let
+  cfg = config.rhx.roles.gaming;
+  mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
 in {
   options.rhx.roles.gaming.enable = lib.mkEnableOption "Enable gaming role";
 
@@ -14,6 +16,7 @@ in {
     home-manager.users.${username} = {
       rhx = {
         discord.enable = true;
+        lutris.enable = true;
         obs.enable = true;
       };
 
@@ -26,6 +29,31 @@ in {
 
         # for star citizen
         gameglass
+
+        protontricks
+        protonup-ng
+        protonup-qt
+        winetricks
+
+        # misc
+        bottles
+        dxvk
+        gamescope
+        (makeDesktopItem rec {
+          name = "Lutris Experimental";
+          exec = "LUTRIS_EXPERIMENTAL_FEATURES_ENABLED=1 lutris %U";
+          icon = "lutris";
+          desktopName = name;
+          genericName =
+            "Lutris w/ LUTRIS_EXPERIMENTAL_FEATURES_ENABLED enabled";
+          categories = [ "Game" ];
+        })
+        mangohud
+        mo2installer
+        pyfa
+        unixtools.xxd
+        vkd3d
+        xdelta
       ];
     };
   };

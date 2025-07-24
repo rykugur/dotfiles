@@ -21,6 +21,7 @@
     ./jujutsu.nix
     ./keebs.nix
     ./kitty.nix
+    ./lutris.nix
     ./nushell.nix
     ./nvim.nix
     ./obs.nix

@@ -1,8 +1,6 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ config, inputs, outputs, pkgs, username, hostname, ... }:
-let mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
-in {
+{ config, outputs, pkgs, username, hostname, ... }: {
   imports = [ outputs.hmModules ];
 
   nixpkgs = {
@@ -90,29 +88,6 @@ in {
     font-awesome
 
     ################################# gaming #################################
-    bottles
-    dxvk
-    gamescope
-    lutris
-    (makeDesktopItem rec {
-      name = "Lutris Experimental";
-      exec = "LUTRIS_EXPERIMENTAL_FEATURES_ENABLED=1 lutris %U";
-      icon = "lutris";
-      desktopName = name;
-      genericName = "Lutris w/ LUTRIS_EXPERIMENTAL_FEATURES_ENABLED enabled";
-      categories = [ "Game" ];
-    })
-    mangohud
-    mo2installer
-    protontricks
-    protonup-ng
-    protonup-qt
-    pyfa
-    unixtools.xxd
-    vkd3d
-    wineWowPackages.stagingFull
-    winetricks
-    xdelta
 
     ################################# random #################################
     n0la_rcon
