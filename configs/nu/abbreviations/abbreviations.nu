@@ -130,7 +130,6 @@ const dev = {
   grine: "grep -niRE"
   pwdc: "pwd | trim.newlines | cmd.copy"
   ssh.forcePass: "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
-  sv: "sudo nvim"
   taill: "tail -Fn 999"
 
   pn: "pnpm"
