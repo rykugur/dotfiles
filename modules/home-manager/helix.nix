@@ -205,8 +205,8 @@ in {
             name = "markdown";
             rulers = [ 80 ];
             formatter = {
-              command = lib.getExe pkgs.dprint;
-              args = [ "fmt" "--stdin" "md" ];
+              command = lib.getExe pkgs.deno;
+              args = [ "fmt" "-" "--ext" "md" ];
             };
           }
           {
