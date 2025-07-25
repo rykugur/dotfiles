@@ -119,17 +119,6 @@
     };
   };
 
-  containers.sandbox = {
-    autoStart = false;
-    privateNetwork = true;
-    hostAddress = "192.168.100.10";
-    localAddress = "192.168.100.11";
-    config = { pkgs, ... }: {
-      environment.systemPackages = with pkgs; [ git helix ];
-      services.openssh.enable = true;
-    };
-  };
-
   users.users = {
     ${username} = {
       isNormalUser = true;
