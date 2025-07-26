@@ -26,7 +26,7 @@ in {
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
           lsp = {
-            auto-signature-help = true;
+            auto-signature-help = false;
             display-inlay-hints = true;
             snippets = true;
           };
@@ -44,10 +44,11 @@ in {
               ":open %sh{cat /tmp/unique-file}"
               ":redraw"
             ];
-            # "A-k" = "keep_selections";
-            # "space" = { "e" = "file_browser"; };
           };
-          insert = { "F1" = "signature_help"; };
+          insert = {
+            "F1" = "signature_help";
+            "C-p" = "signature_help";
+          };
         };
         theme = "catppuccin_mocha";
       };
