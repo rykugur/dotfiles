@@ -124,9 +124,9 @@ in {
               yaml = {
                 completion = true;
                 hover = true;
-                validate = true;
-                # schemaStore = { enable = true; };
-                format = { enable = true; };
+                validate = false;
+                schemaStore = { enable = true; };
+                format = { enable = false; };
                 schemas = {
                   kubernetes = [
                     "*deployment*.yaml"
@@ -249,8 +249,8 @@ in {
               unit = "  ";
             };
             formatter = {
-              command = lib.getExe pkgs.yamlfmt;
-              args = [ "-" ];
+              command = lib.getExe pkgs.prettier;
+              args = [ "--parser" "yaml" ];
             };
           }
         ];
