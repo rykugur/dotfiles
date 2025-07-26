@@ -26,7 +26,7 @@ in {
           indent-guides = { render = true; };
           inline-diagnostics = { cursor-line = "error"; };
           lsp = {
-            auto-signature-help = false;
+            auto-signature-help = true;
             display-inlay-hints = true;
             snippets = true;
           };
@@ -116,6 +116,45 @@ in {
           vscode-json-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server";
+            config = {
+              schemas = [
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/deployment.json";
+                  fileMatch = [ "*deployment*.json" ];
+                }
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/service.json";
+                  fileMatch = [ "*service*.json" ];
+                }
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/configmap.json";
+                  fileMatch = [ "*configmap*.json" ];
+                }
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/secret.json";
+                  fileMatch = [ "*secret*.json" ];
+                }
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/pod.json";
+                  fileMatch = [ "*pod*.json" ];
+                }
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/namespace.json";
+                  fileMatch = [ "*namespace*.json" ];
+                }
+                {
+                  uri =
+                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/ingress.json";
+                  fileMatch = [ "*ingress*.json" ];
+                }
+              ];
+            };
           };
           yaml-language-server = {
             command = "${pkgs.yaml-language-server}/bin/yaml-language-server";
