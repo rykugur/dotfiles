@@ -248,6 +248,7 @@ in {
           }
           {
             name = "markdown";
+            auto-format = true;
             rulers = [ 80 ];
             formatter = {
               command = lib.getExe pkgs.deno;

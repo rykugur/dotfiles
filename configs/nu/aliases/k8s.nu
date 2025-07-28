@@ -15,3 +15,5 @@ alias kpf = kubectl port-forward
 
 alias ktx = kubectx
 alias kns = kubens
+
+alias fgk = flux get kustomization
