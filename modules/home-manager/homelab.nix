@@ -19,6 +19,8 @@ in {
 
       kubernetes-helm-wrapped
       helmfile-wrapped
+
+      fluxcd
     ];
 
     programs.k9s = {
