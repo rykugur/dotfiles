@@ -34,6 +34,11 @@ in {
         };
         keys = {
           normal = {
+            backspace = {
+              backspace = ":buffer-close";
+              a = ":buffer-close-all";
+              o = ":buffer-close-others";
+            };
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
