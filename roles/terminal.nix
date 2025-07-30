@@ -22,6 +22,7 @@ in {
 
       rhx = {
         ghostty.enable = true;
+        kitty.enable = true;
 
         nushell.enable = true;
         starship.enable = true;

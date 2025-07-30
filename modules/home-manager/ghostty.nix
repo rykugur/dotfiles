@@ -1,8 +1,6 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   cfg = config.rhx.ghostty;
-  ghostty-pkg = inputs.ghostty.packages.${pkgs.system}.default;
-  # font = "ZedMono NFM";
   font = "CaskaydiaCove NFM";
 in {
   options.rhx.ghostty = {
@@ -12,39 +10,38 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    # installed via brew _for now_ (build failing on nixpkgs)
-    home.packages = lib.mkIf (!pkgs.stdenv.isDarwin) [ ghostty-pkg ];
-    home.file = {
-      ".config/ghostty/config" = {
-        text = ''
-          font-family = ${font}
-          font-family-bold = ${font} Bold
-          font-family-italic = ${font} Italic
-          font-family-bold-italic = ${font} Bold Italic
-          font-size = 16
+    programs.ghostty = {
+      enable = true;
+      settings = {
+        font-family = "${font}";
+        font-family-bold = "${font} Bold";
+        font-family-italic = "${font} Italic";
+        font-family-bold-italic = "${font} Bold Italic";
+        font-size = 16;
 
-          theme = catppuccin-mocha
+        theme = "catppuccin-mocha";
 
-          copy-on-select = clipboard
+        copy-on-select = "clipboard";
 
-          window-inherit-working-directory = false
-          working-directory = home
+        window-inherit-working-directory = false;
 
-          window-decoration = ${
-            if cfg.hideWindowDecoration then "none" else "auto"
-          }
-          window-height = 50
-          window-width = 125
+        working-directory = "home";
 
-          app-notifications = false
+        window-decoration =
+          "${if cfg.hideWindowDecoration then "none" else "auto"}";
+        window-height = 50;
+        window-width = 125;
 
-          command = ${pkgs.nushell}/bin/nu --login
+        app-notifications = false;
 
-          keybind = alt+h=goto_split:left
-          keybind = alt+j=goto_split:down
-          keybind = alt+k=goto_split:up
-          keybind = alt+l=goto_split:right
-        '';
+        command = "${pkgs.nushell}/bin/nu --login";
+
+        keybind = [
+          "alt+h=goto_split:left"
+          "alt+j=goto_split:down"
+          "alt+k=goto_split:up"
+          "alt+l=goto_split:right"
+        ];
       };
     };
   };
