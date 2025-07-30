@@ -224,7 +224,7 @@ in {
             auto-format = true;
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "typescript" ];
+              args = [ "--parser" "json" ];
             };
           }
           {
