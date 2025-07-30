@@ -27,9 +27,6 @@ in {
         steamtinkerlaunch
         wmctrl
 
-        # for star citizen
-        gameglass
-
         protontricks
         protonup-ng
         protonup-qt
