@@ -36,15 +36,6 @@ in {
         bottles
         dxvk
         gamescope
-        (makeDesktopItem rec {
-          name = "Lutris Experimental";
-          exec = "LUTRIS_EXPERIMENTAL_FEATURES_ENABLED=1 lutris %U";
-          icon = "lutris";
-          desktopName = name;
-          genericName =
-            "Lutris w/ LUTRIS_EXPERIMENTAL_FEATURES_ENABLED enabled";
-          categories = [ "Game" ];
-        })
         mangohud
         mo2installer
         pyfa
