@@ -5,7 +5,6 @@
   sptarkov-server = pkgs.mkShell {
     buildInputs = with pkgs; [ fnm git-lfs ];
     shellHook = ''
-      export WINEPREFIX=/home/dusty/tmp/eft-spt
       eval "$(fnm env)"
       fnm use
     '';
