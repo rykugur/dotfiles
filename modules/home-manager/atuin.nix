@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 let
   cfg = config.rhx.atuin;
   catppuccin = pkgs.fetchFromGitHub {
@@ -15,6 +15,8 @@ in {
   config = lib.mkIf cfg.enable {
     programs.atuin = {
       enable = true;
+      package = inputs.atuin.packages.${pkgs.system}.default;
+
       enableNushellIntegration = true;
       flags = [ "--disable-up-arrow" ];
     };

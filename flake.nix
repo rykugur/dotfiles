@@ -44,9 +44,9 @@
     scls.url = "github:estin/simple-completion-language-server";
 
     ### random stuff
+    atuin.url = "github:atuinsh/atuin";
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    # zellij status bar
     zjstatus.url = "github:dj95/zjstatus";
   };
 
