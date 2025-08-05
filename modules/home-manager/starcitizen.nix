@@ -6,7 +6,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    # home.packages = with pkgs; [ opentrack ];
+    home.packages = with pkgs; [ opentrack ];
 
     # disabling until I decide how to proceed
     # rhx = { gameglass.enable = true; };
