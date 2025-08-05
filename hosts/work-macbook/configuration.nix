@@ -8,13 +8,6 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  # TODO: find a better spot for this
-  nix.settings = {
-    extra-substituters = [ "https://helix.cachix.org" ];
-    extra-trusted-public-keys =
-      [ "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs=" ];
-  };
-
   # workaround
   ids.gids.nixbld = 30000;
 

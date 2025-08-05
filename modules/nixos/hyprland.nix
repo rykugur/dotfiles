@@ -13,13 +13,6 @@ in {
 
     xdg.portal = { enable = true; };
 
-    nix.settings = {
-      substituters = [ "https://hyprland.cachix.org" ];
-      trusted-public-keys = [
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-    };
-
     # force-enable HM module when nixos module is enabled
     home-manager.users.${username}.rhx.hyprland.enable = true;
   };
