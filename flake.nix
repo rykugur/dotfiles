@@ -33,6 +33,10 @@
       inputs.hyprland.follows = "hyprland";
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
