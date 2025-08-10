@@ -23,10 +23,6 @@ in {
       home.packages = with pkgs; [
         steamcmd
 
-        # for eve
-        steamtinkerlaunch
-        wmctrl
-
         protontricks
         protonup-ng
         protonup-qt
@@ -38,6 +34,7 @@ in {
         gamescope
         mangohud
         mo2installer
+        moonlight-qt
         pyfa
         unixtools.xxd
         vkd3d
