@@ -28,7 +28,7 @@ in {
         '';
 
         matchBlocks = {
-          "jezrien taln tanavast homelab*" = {
+          "jezrien taln roshar scadrial homelab*" = {
             identityFile = "~/.ssh/id_ed25519";
             identitiesOnly = true;
             forwardAgent = true;
