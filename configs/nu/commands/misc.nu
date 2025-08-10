@@ -64,3 +64,7 @@ def --env y [...args] {
   }
   rm -fp $tmp
 }
+
+def "ghostty fix terminfo" [host: string] {
+  infocmp -x xterm-ghostty | ssh $host -- tic -x -
+}
