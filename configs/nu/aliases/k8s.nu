@@ -6,6 +6,9 @@ alias k = kubectl
 alias ka = kubectl apply
 alias kaf = kubectl apply -f
 
+alias kdel = kubectl delete
+alias kdes = kubectl describe
+
 alias kg = kubectl get
 alias kgn = kubectl get nodes
 alias kgp = kubectl get pods
