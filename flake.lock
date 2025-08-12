@@ -1724,11 +1724,11 @@
         "nixpkgs": "nixpkgs_11"
       },
       "locked": {
-        "lastModified": 1754790958,
-        "narHash": "sha256-wNAb/x865z3Z+MvtDgTpBSLMNDU4wzbs7fslO/d6Wjk=",
+        "lastModified": 1754972926,
+        "narHash": "sha256-2CEQSI3o7XWMc/DOdeNf6gTKjgGf8hHS0TB0HYPmSmA=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "42092ff506bdc99820bc47ec8f6d6b5d5d64e989",
+        "rev": "508a7c0c5c993d237773be89f5ca91ff8c997b44",
         "type": "github"
       },
       "original": {

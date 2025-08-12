@@ -71,6 +71,8 @@
       extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
       extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
     };
+
+    xone.enable = true;
   };
 
   programs = {
@@ -132,7 +134,6 @@
     };
 
     btrfs.enable = true;
-    # kde.enable = true;
     starcitizen.enable = true;
     wooting.enable = true;
   };

@@ -150,6 +150,7 @@
 
     dnsutils
     duf
+    dysk
     eza
     fzf
     jq
