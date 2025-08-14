@@ -12,7 +12,6 @@
     ./fish.nix
     ./flameshot.nix
     ./fuzzel.nix
-    ./gameglass.nix
     ./ghostty.nix
     ./git.nix
     ./gnome.nix

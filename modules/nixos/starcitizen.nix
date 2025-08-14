@@ -1,4 +1,4 @@
-{ config, inputs, lib, username, ... }:
+{ config, inputs, lib, pkgs, username, ... }:
 let cfg = config.rhx.starcitizen;
 in {
   imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
@@ -24,6 +24,8 @@ in {
         export DXVK_HUD=compiler;
         export MANGO_HUD=1;
       '';
+
+      # package = inputs.nix-citizen.packages.${pkgs.system}.star-citizen-umu;
 
       patchXwayland = true;
 

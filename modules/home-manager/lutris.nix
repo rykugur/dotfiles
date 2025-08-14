@@ -23,6 +23,15 @@ in {
       steamPackage = osConfig.programs.steam.package;
       protonPackages = [ pkgs.proton-ge-bin ];
       winePackages = [ pkgs.wineWowPackages.stagingFull ];
+
+    };
+
+    # force lutris to use nixpkgs umu-launcher
+    home.file = {
+      ".local/share/lutris/runtime/umu/umu-run" = {
+        source = "${pkgs.umu-launcher}/bin/umu-run";
+        force = true;
+      };
     };
   };
 }

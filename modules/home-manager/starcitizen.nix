@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 let cfg = config.rhx.starcitizen;
 in {
   options.rhx.starcitizen = {
@@ -6,9 +6,9 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [ opentrack ];
-
-    # disabling until I decide how to proceed
-    # rhx = { gameglass.enable = true; };
+    home.packages = with pkgs; [
+      opentrack
+      inputs.nix-citizen.packages.${pkgs.system}.gameglass
+    ];
   };
 }
