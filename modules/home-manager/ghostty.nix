@@ -12,6 +12,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.ghostty = {
       enable = true;
+      package = if pkgs.stdenv.isDarwin then null else pkgs.ghostty;
       settings = {
         font-family = "${font}";
         font-family-bold = "${font} Bold";
