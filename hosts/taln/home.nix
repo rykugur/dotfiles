@@ -58,7 +58,7 @@
 
     # atuin.enable = true;
     ghostty.enable = true;
-    homelab.enable = true; # dunno why this doesn't work on macOS
+    homelab.enable = true;
     nushell.enable = true;
     ssh.enable = true;
     starship.enable = true;
