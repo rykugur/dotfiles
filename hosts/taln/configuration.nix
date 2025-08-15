@@ -24,7 +24,10 @@
 
     optimise.automatic = true;
 
-    settings = { experimental-features = "nix-command flakes pipe-operators"; };
+    settings = {
+      experimental-features = "nix-command flakes pipe-operators";
+      trusted-users = [ "root" "@wheel" ];
+    };
   };
 
   system = {
