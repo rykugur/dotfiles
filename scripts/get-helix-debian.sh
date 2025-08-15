@@ -32,7 +32,9 @@ curl -L -o "$FILE_NAME" "$DEB_URL"
 if [ $? -eq 0 ]; then
     echo "Successfully downloaded $FILE_NAME"
     dpkg -i $FILE_NAME
+    rm $FILE_NAME
 else
     echo "Error: Failed to download $FILE_NAME"
     exit 1
+    rm $FILE_NAME
 fi
