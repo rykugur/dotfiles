@@ -7,6 +7,7 @@
     ./gnome.nix
     ./hyprland.nix
     ./kde.nix
+    ./obs-studio.nix
     ./pipewire.nix
     ./razer.nix
     ./ssh.nix
@@ -14,6 +15,9 @@
     ./steam.nix
     ./vfio.nix
     ./vr.nix
+
+    # keebs
+    ./moonlander.nix
     ./wooting.nix
 
     # vms

@@ -23,7 +23,6 @@
     ./lutris.nix
     ./nushell.nix
     ./nvim.nix
-    ./obs.nix
     ./ranger.nix
     ./ssh.nix
     ./starcitizen.nix

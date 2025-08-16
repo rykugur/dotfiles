@@ -9,6 +9,7 @@ in {
     # enable nixOS modules for desktop role
     rhx = {
       gamemode.enable = true;
+      obs-studio.enable = true;
       steam.enable = true;
     };
 
@@ -17,7 +18,6 @@ in {
       rhx = {
         discord.enable = true;
         lutris.enable = true;
-        obs.enable = true;
       };
 
       home.packages = with pkgs; [
