@@ -1,5 +1,5 @@
 def "starcitizen getWinePath" [] {
-  nix eval nixpkgs#wineWowPackages.staging.outPath
+  nix eval --raw $"($env.DOTFILES_DIR)#nixosConfigurations.jezrien.pkgs.wine-astral.outPath"
 }
 
 def "starcitizen controllerSettings" [] {
