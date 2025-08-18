@@ -48,9 +48,12 @@ in {
         source = ~/.dotfiles/configs/hypr/binds.conf
         source = ~/.dotfiles/configs/hypr/input.conf
         source = ~/.dotfiles/configs/hypr/rules.conf
+        source = ~/.dotfiles/configs/hypr/plugins.conf
 
         source = ${catppuccin-hyprland}/themes/mocha.conf
       '';
+
+      plugins = [ pkgs.hyprlandPlugins.hy3 ];
     };
 
     programs.hyprlock = {

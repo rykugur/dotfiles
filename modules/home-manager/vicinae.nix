@@ -1,4 +1,4 @@
-{ config, nixosConfig, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   cfg = config.rhx.vicinae;
@@ -81,7 +81,7 @@ in {
 
       Service = {
         Type = "simple";
-        ExecStart = "${cfg.package}/bin/vicinae server";
+        ExecStart = "${vicinaePkg}/bin/vicinae server";
         Restart = "on-failure";
         RestartSec = 3;
       };

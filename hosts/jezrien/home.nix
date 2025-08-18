@@ -132,8 +132,6 @@
     tigervnc
     tldr
     vlc
-    # mikrotik router mgmt app .
-    (winbox.override { wine = wineWowPackages.waylandFull; })
     xdg-utils
     zenity
 
