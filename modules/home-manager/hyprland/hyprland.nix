@@ -17,9 +17,12 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx.albert.enable = true;
     rhx.hyprpanel.enable = true;
     rhx.thunar.enable = true;
+
+    # launchers
+    rhx.albert.enable = true;
+    rhx.walker.enable = true;
 
     home.packages = [
       inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop

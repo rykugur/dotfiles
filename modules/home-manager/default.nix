@@ -32,6 +32,7 @@
     ./swappy.nix
     ./thunar.nix
     ./tmux.nix
+    ./walker.nix
     ./wezterm.nix
     ./yazi.nix
     ./zed-editor.nix

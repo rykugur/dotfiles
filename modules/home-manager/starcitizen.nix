@@ -10,5 +10,15 @@ in {
       opentrack
       inputs.nix-citizen.packages.${pkgs.system}.gameglass
     ];
+
+    xdg.desktopEntries.gameglass = {
+      name = "GameGlass";
+      icon = "gameglass";
+      exec =
+        "${inputs.nix-citizen.packages.${pkgs.system}.gameglass}/bin/gameglass";
+      terminal = false;
+      type = "Application";
+      categories = [ "Game" "Utility" ];
+    };
   };
 }
