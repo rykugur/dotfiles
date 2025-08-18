@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, ... }:
 let cfg = config.rhx.walker;
 in {
   options.rhx.walker = {

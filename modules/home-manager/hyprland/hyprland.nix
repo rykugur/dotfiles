@@ -22,6 +22,7 @@ in {
 
     # launchers
     rhx.albert.enable = true;
+    rhx.vicinae.enable = true;
     rhx.walker.enable = true;
 
     home.packages = [

@@ -32,6 +32,7 @@
     ./swappy.nix
     ./thunar.nix
     ./tmux.nix
+    ./vicinae.nix
     ./walker.nix
     ./wezterm.nix
     ./yazi.nix
