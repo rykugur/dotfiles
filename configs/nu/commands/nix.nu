@@ -47,7 +47,8 @@ def "nr." [] {
 }
 
 def "nrd" [] {
-  nix repl --expr $"builtins.getFlake \"($env.DOTFILES_DIR)\""
+  cd $env.DOTFILES_DIR
+  nr.
 }
 
 def "nrn" [] {
