@@ -4,7 +4,7 @@ let
   catppuccin-btop = pkgs.fetchgit {
     url = "https://github.com/catppuccin/btop?tab=readme-ov-file";
     rev = "f437574b600f1c6d932627050b15ff5153b58fa3";
-    sha256 = "sha256-AAAAAAAAAA";
+    sha256 = lib.fakeSha256;
   };
 
   themesDir = "${catppuccin-btop}/themes";
