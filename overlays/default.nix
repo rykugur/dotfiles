@@ -27,6 +27,16 @@
         rev = "v1.3";
         sha256 = "sha256-jkk021LLjCLpWOaInzO4Klg6UOR4Sh5IcKdUxIn7Dis=";
       };
+      hyprlock = prev.fetchgit {
+        url = "https://github.com/catppuccin/hyprlock";
+        rev = "f650895064ae80db7c0e095829fce83fd85d0b26";
+        sha256 = "sha256-kgVlPaWeaH/p0qGc1+Lj2H6YlDAk5CemNo1FFF8ymZ8=";
+      };
+      waybar = prev.fetchgit {
+        url = "https://github.com/catppuccin/waybar";
+        rev = "ee8ed32b4f63e9c417249c109818dcc05a2e25da";
+        sha256 = "sha256-za0y6hcN2rvN6Xjf31xLRe4PP0YyHu2i454ZPjr+lWA=";
+      };
       yazi = prev.fetchFromGitHub {
         owner = "catppuccin";
         repo = "yazi";

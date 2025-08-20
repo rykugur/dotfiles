@@ -23,6 +23,7 @@
 
   home.packages = with pkgs; [
     nh
+    nix-prefetch-scripts
 
     _1password-cli
     bat

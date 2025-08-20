@@ -1,0 +1,34 @@
+{ ... }: {
+  wayland.windowManager.hyprland.settings = {
+    input = {
+      kb_layout = "us";
+      kb_variant = "";
+      kb_model = "";
+      kb_options = "";
+      kb_rules = "";
+
+      numlock_by_default = true;
+
+      follow_mouse = 2;
+      # fixes oddities with drop-down menu items, e.g. steam
+      mouse_refocus = false;
+
+      touchpad = {
+        natural_scroll = "no";
+        tap-to-click = true;
+        clickfinger_behavior = true;
+      };
+
+      sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
+
+      repeat_rate = 60;
+      repeat_delay = 200;
+    };
+
+    gestures = {
+      workspace_swipe = true;
+      workspace_swipe_fingers = 3;
+      workspace_swipe_invert = false;
+    };
+  };
+}
