@@ -165,7 +165,6 @@
     usbutils
     wget
 
-    btop
     iotop
     iftop
 
@@ -178,6 +177,7 @@
   xdg.enable = true;
 
   rhx = {
+    btop.enable = true;
     keebs.enable = true;
     starsector = {
       enable = true;

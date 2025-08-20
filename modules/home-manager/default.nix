@@ -6,6 +6,7 @@
     ./albert.nix
     ./atuin.nix
     ./browser.nix
+    ./btop.nix
     ./discord.nix
     ./easyeffects.nix
     ./firefox.nix
