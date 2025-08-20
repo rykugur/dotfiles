@@ -6,7 +6,6 @@
       "$mainMod, C, exec, ~/.dotfiles/configs/hypr/scripts/conditional-killactive.nu"
       "$mainMod SHIFT, C, killactive,"
       "$mainMod SHIFT, E, exec, wlogout"
-      "$mainMod, E, exec, $fileManager"
 
       "$mainMod, R, exec, albert toggle"
       "$mainMod, space, exec, albert toggle"
