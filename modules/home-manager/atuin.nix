@@ -1,12 +1,12 @@
 { config, inputs, lib, pkgs, ... }:
 let
   cfg = config.rhx.atuin;
-  catppuccin = pkgs.fetchFromGitHub {
-    owner = "catppuccin";
-    repo = "atuin";
-    rev = "abfab12de743aa73cf20ac3fa61e450c4d96380c";
-    sha256 = "sha256-t/Pq+hlCcdSigtk5uzw3n7p5ey0oH/D5S8GO/0wlpKA=";
-  };
+  # catppuccin = pkgs.fetchFromGitHub {
+  #   owner = "catppuccin";
+  #   repo = "atuin";
+  #   rev = "abfab12de743aa73cf20ac3fa61e450c4d96380c";
+  #   sha256 = "sha256-t/Pq+hlCcdSigtk5uzw3n7p5ey0oH/D5S8GO/0wlpKA=";
+  # };
 in {
   options.rhx.atuin = {
     enable = lib.mkEnableOption "Enable atuin home-manager module.";
@@ -23,7 +23,8 @@ in {
 
     home.file = {
       ".config/atuin/themes/catppuccin-mocha-blue.toml" = {
-        source = "${catppuccin}/themes/mocha/catppuccin-mocha-blue.toml";
+        source =
+          "${pkgs.catppuccin-ports.atuin}/themes/mocha/catppuccin-mocha-blue.toml";
       };
     };
   };

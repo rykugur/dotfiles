@@ -1,4 +1,4 @@
-{ ... }: {
+{ inputs, ... }: {
   # This one brings our custom packages from the 'pkgs' directory
   additions = final: _prev: import ../pkgs { pkgs = final; };
 
@@ -6,6 +6,35 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
   modifications = final: prev: {
+    hyprprop = inputs.hyprland-contrib.packages.${prev.system}.hyprprop;
+    hyprland-qtutils =
+      inputs.hyprland-qtutils.packages."${prev.system}".default;
+
+    catppuccin-ports = {
+      atuin = prev.fetchFromGitHub {
+        owner = "catppuccin";
+        repo = "atuin";
+        rev = "abfab12de743aa73cf20ac3fa61e450c4d96380c";
+        sha256 = "sha256-t/Pq+hlCcdSigtk5uzw3n7p5ey0oH/D5S8GO/0wlpKA=";
+      };
+      btop = prev.fetchgit {
+        url = "https://github.com/catppuccin/btop";
+        rev = "f437574b600f1c6d932627050b15ff5153b58fa3";
+        sha256 = "sha256-mEGZwScVPWGu+Vbtddc/sJ+mNdD2kKienGZVUcTSl+c=";
+      };
+      hyprland = prev.fetchgit {
+        url = "https://github.com/catppuccin/hyprland";
+        rev = "v1.3";
+        sha256 = "sha256-jkk021LLjCLpWOaInzO4Klg6UOR4Sh5IcKdUxIn7Dis=";
+      };
+      yazi = prev.fetchFromGitHub {
+        owner = "catppuccin";
+        repo = "yazi";
+        rev = "5d3a1eecc304524e995fe5b936b8e25f014953e8";
+        hash = "sha256-UVcPdQFwgBxR6n3/1zRd9ZEkYADkB5nkuom5SxzPTzk=";
+      };
+    };
+
     kubernetes-helm-wrapped = prev.wrapHelm prev.kubernetes-helm {
       plugins = with prev.kubernetes-helmPlugins; [
         helm-diff

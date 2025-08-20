@@ -1,18 +1,13 @@
 { config, inputs, lib, pkgs, ... }:
-let
-  cfg = config.rhx.hyprland;
-  catppuccin-hyprland = pkgs.fetchgit {
-    url = "https://github.com/catppuccin/hyprland";
-    rev = "v1.3";
-    sha256 = "sha256-jkk021LLjCLpWOaInzO4Klg6UOR4Sh5IcKdUxIn7Dis=";
-  };
+let cfg = config.rhx.hyprland;
 in {
+  # imports = [ (import ./hyprlock.nix { inherit pkgs catppuccin-hyprland; }) ];
+
   options.rhx.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
-    imports = [ (import ./hyprlock.nix { inherit catppuccin-hyprland; }) ];
     rhx.hyprpanel.enable = true;
     rhx.thunar.enable = true;
 
@@ -21,11 +16,7 @@ in {
     rhx.vicinae.enable = true;
     rhx.walker.enable = true;
 
-    home.packages = [
-      inputs.hyprland-contrib.packages.${pkgs.system}.hyprprop
-      inputs.hyprland-qtutils.packages."${pkgs.system}".default
-      # inputs.mcmojave-hyprcursor.packages.${pkgs.system}.default
-    ] ++ (with pkgs; [
+    home.packages = [ pkgs.hyprprop pkgs.hyprland-qtutils ] ++ (with pkgs; [
       libnotify
       grim
       grimblast
@@ -46,7 +37,7 @@ in {
         source = ~/.dotfiles/configs/hypr/rules.conf
         source = ~/.dotfiles/configs/hypr/plugins.conf
 
-        source = ${catppuccin-hyprland}/themes/mocha.conf
+        source = ${pkgs.catppuccin-ports.hyprland}/themes/mocha.conf
       '';
 
       plugins = [ pkgs.hyprlandPlugins.hy3 ];
