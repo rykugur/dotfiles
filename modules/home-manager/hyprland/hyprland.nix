@@ -6,17 +6,13 @@ let
     rev = "v1.3";
     sha256 = "sha256-jkk021LLjCLpWOaInzO4Klg6UOR4Sh5IcKdUxIn7Dis=";
   };
-  catppuccin-hyprlock = pkgs.fetchgit {
-    url = "https://github.com/catppuccin/hyprlock";
-    rev = "958e70b1cd8799defd16dee070d07f977d4fd76b";
-    sha256 = "sha256-l4CbAUeb/Tg603QnZ/VWxuGqRBztpHN0HLX/h8ndc5w=";
-  };
 in {
   options.rhx.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
+    imports = [ (import ./hyprlock.nix { inherit catppuccin-hyprland; }) ];
     rhx.hyprpanel.enable = true;
     rhx.thunar.enable = true;
 
@@ -54,16 +50,6 @@ in {
       '';
 
       plugins = [ pkgs.hyprlandPlugins.hy3 ];
-    };
-
-    programs.hyprlock = {
-      enable = true;
-      settings = {
-        source = [
-          "${catppuccin-hyprlock}/hyprlock.conf"
-          "${catppuccin-hyprland}/themes/mocha.conf"
-        ];
-      };
     };
 
     home.pointerCursor = {
