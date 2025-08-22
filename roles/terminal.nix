@@ -9,7 +9,7 @@ in {
 
     # home-manager config
     home-manager.users.${username} = {
-      home.packages = with pkgs; [ cmatrix ];
+      home.packages = with pkgs; [ cmatrix glow ];
 
       programs.direnv = {
         enable = true;
