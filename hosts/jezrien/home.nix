@@ -1,7 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
-{ config, outputs, pkgs, username, hostname, ... }: {
-  imports = [ outputs.hmModules ];
+{ config, lib, outputs, pkgs, username, hostname, ... }: {
+  imports = [ outputs.hmModules ./home-packages.nix ];
 
   nixpkgs = {
     # You can add overlays here
@@ -76,108 +76,27 @@
     };
   };
 
-  home.packages = with pkgs; [
-    ################################# dev #################################
-    direnv
-    just
-    prettierd
-    stylua
-    vscode
-
-    ################################# nix #################################
-    nix-prefetch-scripts
-
-    ################################# fonts? #################################
-    font-awesome
-
-    ################################# gaming #################################
-
-    ################################# random #################################
-    n0la_rcon
-    arandr
-    cliphist
-    pywal
-    wev
-    wl-clipboard
-    wl-clipboard-x11
-    wtype
-    xorg.xrandr
-    xorg.xbacklight
-
-    nwg-look
-    catppuccin-gtk
-    catppuccin-cursors
-    catppuccin-papirus-folders
-
-    baobab
-    bat
-    bottom
-    easyeffects
-    fastfetch
-    file
-    file-roller
-    jellyfin-media-player
-    # lampray
-    mousai
-    nemo
-    nitch
-    nixd
-    nix-index
-    nvtopPackages.full
-    obsidian
-    pavucontrol
-    playerctl
-    radeontop
-    seahorse
-    solaar
-    spotify
-    sshfs
-    tigervnc
-    tldr
-    vlc
-    xdg-utils
-    zenity
-
-    feh
-    xfce.ristretto
-
-    wofi
-    wofi-emoji
-
-    p7zip
-    unzip
-    xz
-    zip
-
-    dnsutils
-    duf
-    dysk
-    eza
-    fzf
-    jq
-    ldns
-    lsof
-    lm_sensors
-    ncdu
-    nmap
-    pciutils
-    psmisc
-    silver-searcher
-    speedtest-cli
-    tree
-    usbutils
-    wget
-
-    iotop
-    iftop
-
-    libtool
-    neovide
-
-    telegram-desktop
-  ];
-
   xdg.enable = true;
+
+  wayland.windowManager.hyprland.settings = let
+    workspaces = [
+      "1,monitor:DP-1"
+      "2,monitor:DP-1"
+      "$gamingWorkspace,monitor:DP-1"
+      "$steamWorkspace,monitor:DP-2"
+      "5,monitor:DP-2"
+    ];
+  in {
+    monitor = [ "DP-1,3440x1440@175,0x1440,1" "DP-2,3440x1440@144,0x0,1,vr,0" ];
+
+    workspace = workspaces;
+
+    # map each workspace to two bind strings
+    bind = lib.concatMap (index: [
+      "$mainMod, ${index}, workspace, ${index}"
+      "$mainMod SHIFT, ${index}, movetoworkspace, ${index}"
+    ]) workspaces;
+  };
 
   rhx = {
     btop.enable = true;
