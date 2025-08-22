@@ -75,3 +75,7 @@ def "1password copy-ssh-pub-key" [host: string] {
 
   ssh $host $"mkdir ~/.ssh; echo ($key) >> ~/.ssh/authorized_keys"
 }
+
+def "proxmox install helix" [host: string] {
+  ssh $host $"curl -L https://shlink.ryk.sh/helix-deb | bash"
+}
