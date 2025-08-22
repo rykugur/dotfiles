@@ -21,5 +21,6 @@ Roles are abstractions around modules.
 
 ## TODO
 
-- [ ] Figure out wtf is going on with zellij and nushell paths.
-- [ ] Add hypridle/hyprlock
+- [ ] Refactory hyprland
+  - [ ] omarchy-nix?
+- [ ] Clean up home.nix
