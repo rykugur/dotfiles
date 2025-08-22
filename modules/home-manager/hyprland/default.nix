@@ -40,7 +40,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx.hyprland.hyprpanel.enable = true;
     rhx.thunar.enable = true;
 
     # launchers
