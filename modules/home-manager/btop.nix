@@ -16,18 +16,6 @@ in {
   options.rhx.btop = {
     enable = lib.mkEnableOption "Enable btop home-manager module.";
     # TODO: would be cool to genericize this
-    theme = lib.mkOption {
-      type = lib.types.enum [
-        "catppuccin-mocha"
-        "catppuccin-latte"
-        "catppuccin-macchiato"
-        "catppuccin-frappe"
-      ];
-      default = "catppuccin-mocha";
-      description =
-        "Select a Catppuccin theme for btop. Available themes are catppuccin-mocha, catppuccin-latte, catppuccin-macchiato, and catppuccin-frappe.";
-    };
-
   };
 
   config = lib.mkIf cfg.enable {
@@ -36,7 +24,7 @@ in {
       themes = formattedThemes;
 
       settings = {
-        color_theme = cfg.theme;
+        color_theme = config.rhx.hyprland.theme;
         theme_background = false;
       };
     };

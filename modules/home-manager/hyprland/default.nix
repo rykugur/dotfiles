@@ -17,6 +17,18 @@ in {
   options.rhx.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland home-manager module.";
 
+    theme = lib.mkOption {
+      type = lib.types.enum [
+        "catppuccin-mocha"
+        "catppuccin-latte"
+        "catppuccin-macchiato"
+        "catppuccin-frappe"
+      ];
+      default = "catppuccin-mocha";
+      description =
+        "Catppuccin theme for hyprland and its submodules. Available themes are catppuccin-mocha, catppuccin-latte, catppuccin-macchiato, and catppuccin-frappe.";
+    };
+
     hyprpanel.enable =
       lib.mkEnableOption "Enable hyprpanel for hyprland home-manager module.";
 
