@@ -31,7 +31,7 @@ curl -L -o "$FILE_NAME" "$DEB_URL"
 # Check if download was successful
 if [ $? -eq 0 ]; then
     echo "Successfully downloaded $FILE_NAME"
-    dpkg -i $FILE_NAME
+    sudo dpkg -i $FILE_NAME
     rm $FILE_NAME
 else
     echo "Error: Failed to download $FILE_NAME"
