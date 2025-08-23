@@ -10,7 +10,10 @@ in {
       enable = true;
       package = inputs.atuin.packages.${pkgs.system}.default;
 
-      enableNushellIntegration = true;
+      enableFishIntegration = config.programs.fish.enable;
+      enableNushellIntegration = config.programs.nushell.enable;
+      enableZshIntegration = config.programs.zsh.enable;
+
       flags = [ "--disable-up-arrow" ];
     };
 

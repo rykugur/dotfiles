@@ -1,23 +1,15 @@
 # random dumping-ground; some day I'll clean this up
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    ################################# dev #################################
-    direnv
-    just
-    prettierd
-    stylua
-    vscode
-
     ################################# nix #################################
     nix-prefetch-scripts
+    nixd
+    nix-index
 
     ################################# fonts? #################################
     font-awesome
 
-    ################################# gaming #################################
-
     ################################# random #################################
-    n0la_rcon
     arandr
     cliphist
     pywal
@@ -34,19 +26,14 @@
     catppuccin-papirus-folders
 
     baobab
-    bat
     bottom
     fastfetch
     file
     file-roller
     jellyfin-media-player
-    # lampray
     mousai
     nemo
     nitch
-    nixd
-    nix-index
-    nvtopPackages.full
     obsidian
     pavucontrol
     playerctl
@@ -67,35 +54,7 @@
     wofi
     wofi-emoji
 
-    p7zip
-    unzip
-    xz
-    zip
-
-    dnsutils
-    duf
-    dysk
-    eza
-    fzf
-    jq
-    ldns
-    lsof
-    lm_sensors
-    ncdu
-    nmap
-    pciutils
-    psmisc
-    silver-searcher
-    speedtest-cli
-    tree
-    usbutils
-    wget
-
-    iotop
-    iftop
-
     libtool
-    neovide
 
     telegram-desktop
   ];

@@ -8,7 +8,9 @@ in {
   config = lib.mkIf cfg.enable {
     programs.yazi = {
       enable = true;
-      enableNushellIntegration = true;
+      enableFishIntegration = config.programs.fish.enable;
+      enableNushellIntegration = config.programs.nushell.enable;
+      enableZshIntegration = config.programs.zsh.enable;
     };
 
     home.file = {

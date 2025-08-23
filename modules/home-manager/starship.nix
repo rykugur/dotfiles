@@ -9,6 +9,11 @@ in {
     programs.starship = let flavor = "mocha";
     in {
       enable = true;
+
+      enableFishIntegration = config.programs.fish.enable;
+      enableNushellIntegration = config.programs.nushell.enable;
+      enableZshIntegration = config.programs.zsh.enable;
+
       settings = {
         palette = "catppuccin_${flavor}";
         hostname = { ssh_symbol = ""; };

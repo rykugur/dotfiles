@@ -17,6 +17,11 @@
         rev = "abfab12de743aa73cf20ac3fa61e450c4d96380c";
         sha256 = "sha256-t/Pq+hlCcdSigtk5uzw3n7p5ey0oH/D5S8GO/0wlpKA=";
       };
+      bat = prev.fetchgit {
+        url = "https://github.com/catppuccin/bat";
+        rev = "6810349b28055dce54076712fc05fc68da4b8ec0";
+        sha256 = "sha256-lJapSgRVENTrbmpVyn+UQabC9fpV1G1e+CdlJ090uvg=";
+      };
       btop = prev.fetchgit {
         url = "https://github.com/catppuccin/btop";
         rev = "f437574b600f1c6d932627050b15ff5153b58fa3";

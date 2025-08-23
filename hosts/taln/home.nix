@@ -1,20 +1,22 @@
 { config, inputs, outputs, pkgs, username, ... }: {
   imports = [
-    outputs.hmModules
+    ../../home/common.nix
 
-    inputs.sops-nix.homeManagerModules.sops
+    # outputs.hmModules
+
+    # inputs.sops-nix.homeManagerModules.sops
   ];
 
-  nixpkgs = {
-    overlays = [ outputs.overlays.additions outputs.overlays.modifications ];
-    config = {
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-      # workaround for obsidian
-      permittedInsecurePackages = [ "electron-25.9.0" ];
-    };
-  };
+  # nixpkgs = {
+  #   overlays = [ outputs.overlays.additions outputs.overlays.modifications ];
+  #   config = {
+  #     allowUnfree = true;
+  #     # Workaround for https://github.com/nix-community/home-manager/issues/2942
+  #     allowUnfreePredicate = _: true;
+  #     # workaround for obsidian
+  #     permittedInsecurePackages = [ "electron-25.9.0" ];
+  #   };
+  # };
 
   home = {
     inherit username;
@@ -36,18 +38,15 @@
     tldr
   ];
 
-  sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-
-  # TODO: these are in roles/terminal but that is failing on nix-darwin
-  # will remove these once I figure that out
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-  programs.carapace.enable = true;
-  programs.zoxide.enable = true;
+  # sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
   rhx = {
+    # TODO: these are in roles/terminal but that is failing on nix-darwin
+    # will remove these once I figure that out
+    direnv.enable = true;
+    carapace.enable = true;
+    zoxide.enable = true;
+
     # aerospace.enable = true;
     git = {
       enable = true;
@@ -68,7 +67,7 @@
   };
 
   # also requires XDG_CONFIG_HOME to be set!
-  xdg.enable = true;
+  # xdg.enable = true;
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;

@@ -9,21 +9,42 @@ in {
 
     # home-manager config
     home-manager.users.${username} = {
-      home.packages = with pkgs; [ cmatrix glow ];
+      home.packages = with pkgs; [
+        cmatrix
+        dnsutils
+        duf
+        dysk
+        fzf
+        jq
+        iftop
+        iotop
+        glow
+        ldns
+        lsof
+        lm_sensors
+        ncdu
+        nmap
+        pciutils
+        p7zip
+        psmisc
+        silver-searcher
+        speedtest-cli
+        tree
+        unzip
+        usbutils
+        wget
+        xz
+        zip
 
-      programs.direnv = {
-        enable = true;
-        nix-direnv.enable = true;
-      };
-
-      programs.carapace.enable = true;
-
-      programs.zoxide.enable = true;
+      ];
 
       rhx = {
         ghostty.enable = true;
         kitty.enable = true;
 
+        bat.enable = true;
+        carapace.enable = true;
+        direnv.enable = true;
         nushell.enable = true;
         starship.enable = true;
         yazi.enable = true;
