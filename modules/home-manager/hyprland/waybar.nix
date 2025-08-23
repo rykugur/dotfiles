@@ -6,7 +6,7 @@ in {
       enable = true;
 
       settings = let ghosttyCmd = "ghostty --gtk-single-instance=true";
-      in {
+      in [{
         layer = "top";
         position = "top";
         spacing = 0;
@@ -125,7 +125,7 @@ in {
         #   tooltip = true;
         #   tooltip-format = "{}";
         # };
-      };
+      }];
 
       style = ''
         @import "${pkgs.catppuccin-ports.waybar}/themes/mocha.css";
