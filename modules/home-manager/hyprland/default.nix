@@ -40,12 +40,14 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx.thunar.enable = true;
+    rhx = {
+      nemo.enable = true;
 
-    # launchers
-    rhx.albert.enable = true;
-    rhx.vicinae.enable = true;
-    rhx.walker.enable = true;
+      # launchers
+      albert.enable = true;
+      vicinae.enable = true;
+      walker.enable = true;
+    };
 
     home.packages = with pkgs; [
       hyprprop
@@ -55,20 +57,17 @@ in {
       grimblast
       hyprcursor
       hypridle
+      pywal
       slurp
       swappy
+      wev
+      wl-clipboard
+      wl-clipboard-x11
       wlogout
+      # wofi
+      # wofi-emoji
+      wtype
     ];
-
-    programs.hyprlock = {
-      enable = true;
-      settings = {
-        source = [
-          "${pkgs.catppuccin-ports.hyprlock}/hyprlock.conf"
-          "${pkgs.catppuccin-ports.hyprland}/themes/mocha.conf"
-        ];
-      };
-    };
 
     home.pointerCursor = {
       name = "phinger-cursors-dark";
@@ -77,31 +76,6 @@ in {
       gtk.enable = true;
     };
 
-    services = {
-      hyprpaper = {
-        enable = true;
-        settings = {
-          ipc = "on";
-          splash = false;
-          splash_offset = 2.0;
-
-          preload = [ "~/.wallpapers/cyberpunk_skull.png" ];
-
-          wallpaper = [ ",~/.wallpapers/cyberpunk_skull.png" ];
-        };
-      };
-
-      hyprpolkitagent.enable = true;
-    };
-
-    xdg = {
-      enable = true;
-
-      mimeApps = {
-        enable = true;
-
-        defaultApplications = { "inode/directory" = [ "nemo.desktop" ]; };
-      };
-    };
+    services.hyprpolkitagent.enable = true;
   };
 }

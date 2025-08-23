@@ -1,5 +1,5 @@
 { lib, pkgs, username, ... }: {
-  imports = [ ../../home/common.nix ./home-packages.nix ];
+  imports = [ ../../home ./home-packages.nix ];
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
 

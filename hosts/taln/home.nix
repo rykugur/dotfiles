@@ -1,5 +1,5 @@
-{ config, inputs, outputs, pkgs, username, ... }: {
-  imports = [ ../../home/common.nix ];
+{ pkgs, username, ... }: {
+  imports = [ ../../home ];
 
   home = {
     inherit username;

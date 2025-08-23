@@ -12,11 +12,6 @@
     ################################# random #################################
     arandr
     cliphist
-    pywal
-    wev
-    wl-clipboard
-    wl-clipboard-x11
-    wtype
     xorg.xrandr
     xorg.xbacklight
 
@@ -50,9 +45,6 @@
 
     feh
     xfce.ristretto
-
-    wofi
-    wofi-emoji
 
     libtool
 

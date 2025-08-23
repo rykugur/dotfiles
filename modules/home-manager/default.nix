@@ -25,6 +25,7 @@
     ./keebs.nix
     ./kitty.nix
     ./lutris.nix
+    ./nemo.nix
     ./nushell.nix
     ./nvim.nix
     ./ranger.nix
