@@ -1,22 +1,5 @@
 { config, inputs, outputs, pkgs, username, ... }: {
-  imports = [
-    ../../home/common.nix
-
-    # outputs.hmModules
-
-    # inputs.sops-nix.homeManagerModules.sops
-  ];
-
-  # nixpkgs = {
-  #   overlays = [ outputs.overlays.additions outputs.overlays.modifications ];
-  #   config = {
-  #     allowUnfree = true;
-  #     # Workaround for https://github.com/nix-community/home-manager/issues/2942
-  #     allowUnfreePredicate = _: true;
-  #     # workaround for obsidian
-  #     permittedInsecurePackages = [ "electron-25.9.0" ];
-  #   };
-  # };
+  imports = [ ../../home/common.nix ];
 
   home = {
     inherit username;
@@ -37,8 +20,6 @@
     stylua
     tldr
   ];
-
-  # sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
   rhx = {
     # TODO: these are in roles/terminal but that is failing on nix-darwin
@@ -65,9 +46,6 @@
     yazi.enable = true;
     zellij.enable = true;
   };
-
-  # also requires XDG_CONFIG_HOME to be set!
-  # xdg.enable = true;
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;
