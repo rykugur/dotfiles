@@ -3,11 +3,6 @@
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
 
-  home = {
-    inherit username;
-    homeDirectory = "/home/${username}";
-  };
-
   gtk = {
     enable = true;
 

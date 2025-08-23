@@ -1,4 +1,4 @@
-{ config, inputs, outputs, hostname, username, ... }: {
+{ config, inputs, outputs, pkgs, hostname, username, ... }: {
   imports = [
     outputs.hmModules
 
@@ -17,6 +17,12 @@
   sops = {
     defaultSopsFile = ../hosts/${hostname}/secrets.yaml;
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+  };
+
+  home = let homePath = if pkgs.stdenv.isDarwin then "/Users" else "/home";
+  in {
+    inherit username;
+    homeDirectory = "${homePath}/${username}";
   };
 
   # also requires XDG_CONFIG_HOME to be set!
