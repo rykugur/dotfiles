@@ -46,6 +46,18 @@ in {
       description = "Enable quickshell for hyprland home-manager module.";
     };
 
+    hypridle.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = config.rhx.hyprland.enable;
+      description = "Enable hypridle";
+    };
+
+    hyprlock.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = config.rhx.hyprland.enable;
+      description = "Enable hyprlock";
+    };
+
     hyprpanel.enable =
       lib.mkEnableOption "Enable hyprpanel for hyprland home-manager module.";
 
