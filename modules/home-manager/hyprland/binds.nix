@@ -1,9 +1,18 @@
-{ config, lib, ... }: {
+{ config, lib, ... }:
+let cfg = config.rhx.hyprland;
+in {
   wayland.windowManager.hyprland.settings = let
-    moveFocusCommand =
-      if config.rhx.hyprland.hy3.enable then "hy3:movefocus" else "movefocus";
+    launcherCommand = if cfg.caelestia.enable then
+      "global, caelestia:launcher"
+    else
+      "exec, albert toggle";
+    moveFocusCommand = if cfg.hy3.enable then "hy3:movefocus" else "movefocus";
     moveWindowCommand =
-      if config.rhx.hyprland.hy3.enable then "hy3:movewindow" else "movewindow";
+      if cfg.hy3.enable then "hy3:movewindow" else "movewindow";
+    screenshotCommand = if cfg.caelestia.enable then
+      "global, caelestia:screenshot"
+    else
+      ''exec, grim -g "$(slurp)" - | wl-copy'';
 
     workspaces = config.rhx.hyprland.workspaces;
     workspaceBinds = lib.concatMap (i:
@@ -20,9 +29,8 @@
       "$mainMod SHIFT, C, killactive,"
       "$mainMod SHIFT, E, exec, wlogout"
 
-      "$mainMod, R, exec, albert toggle"
-      "$mainMod, space, exec, albert toggle"
-      "$mainMod SHIFT, R, exec, fuzzel" # fallback
+      "$mainMod, R, ${launcherCommand}"
+      "$mainMod, space, ${launcherCommand}"
 
       "$mainMod, F, fullscreen"
       "$mainMod, V, togglefloating"
@@ -42,10 +50,10 @@
       "$mainMod, mouse_down, workspace, e+1"
       "$mainMod, mouse_up, workspace, e-1"
 
-      "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-notify.nu"
-      ''$mainMod SHIFT, Print, exec, grim -g "$(slurp)" - | swappy -f -''
-      ''$mainMod SHIFT, S, exec, grim -g "$(slurp)" - | wl-copy''
-      "$mainMod SHIFT, V, exec, cliphist list | wofi --show dmenu"
+      "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-wlcopy.nu"
+      "$mainMod SHIFT, S, ${screenshotCommand}"
+      "$mainMod SHIFT, Print, ${screenshotCommand}"
+      # "$mainMod SHIFT, V, exec, cliphist list | wofi --show dmenu"
 
       "$mainMod, g, exec, ~/.dotfiles/configs/nu/scripts/toggle-eve.nu"
 
@@ -58,9 +66,7 @@
         , XF86MonBrightnessUp, exec, xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
       ''
         , XF86MonBrightnessDown, exec, xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
-    ] ++ workspaceBinds ++ (lib.optionals config.rhx.hyprland.hy3.enable [
-      # "$mainMod, ???, hy3:changegroup, opposite"
-    ]);
+    ] ++ workspaceBinds;
 
     binde = [
       ", XF86AudioRaiseVolume, exec, amixer sset Master 5%+"

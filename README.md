@@ -24,3 +24,4 @@ Roles are abstractions around modules.
 - [ ] Refactory hyprland
   - [ ] omarchy-nix?
 - [ ] Clean up home.nix
+- [ ] Use flake-parts, move away from misterio77 learner flakes?

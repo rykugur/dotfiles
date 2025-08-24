@@ -14,7 +14,7 @@ in {
     ./hyprlock.nix
 
     # bars
-    ./quickshell.nix
+    ./caelestia.nix
     ./hyprpanel.nix
     ./waybar.nix
   ];
@@ -40,10 +40,10 @@ in {
       description = "Enable hy3 plugin for i3 like tiling.";
     };
 
-    quickshell.enable = lib.mkOption {
+    caelestia.enable = lib.mkOption {
       type = lib.types.bool;
       default = config.rhx.hyprland.enable;
-      description = "Enable quickshell for hyprland home-manager module.";
+      description = "Enable caelestia dots for hyprland home-manager module.";
     };
 
     hypridle.enable = lib.mkOption {
@@ -67,7 +67,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     rhx = {
-      nemo.enable = true;
+      nautilus.enable = true;
 
       # launchers
       albert.enable = true;

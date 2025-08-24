@@ -13,7 +13,8 @@
       "wl-paste --watch cliphist store"
       "solaar -w hide"
       "corectrl --minimize-systray"
-    ] ++ (lib.optionals config.rhx.hyprland.quickshell.enable
-      [ "caelestia-shell -d" ]);
+    ];
+    # ++ (lib.optionals config.rhx.hyprland.quickshell.enable
+    #   [ "caelestia-shell -d" ]);
   };
 }
