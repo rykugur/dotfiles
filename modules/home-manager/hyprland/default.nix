@@ -10,6 +10,7 @@ in {
     ./vars.nix
 
     ./hypridle.nix
+    ./hyprlock.nix
     ./hyprpanel.nix
     ./waybar.nix
   ];
@@ -25,8 +26,25 @@ in {
         "catppuccin-frappe"
       ];
       default = "catppuccin-mocha";
-      description =
-        "Catppuccin theme for hyprland and its submodules. Available themes are catppuccin-mocha, catppuccin-latte, catppuccin-macchiato, and catppuccin-frappe.";
+      description = "Catppuccin theme for hyprland and its submodules.";
+    };
+
+    monitors = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Monitors to define.";
+    };
+
+    workspaces = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ "1" "2" "3" ];
+      description = "Workspaces to define.";
+    };
+
+    hy3.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable hy3 plugin for i3 like tiling.";
     };
 
     hyprpanel.enable =

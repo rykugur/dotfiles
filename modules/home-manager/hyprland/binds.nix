@@ -1,5 +1,18 @@
-{ ... }: {
-  wayland.windowManager.hyprland.settings = {
+{ config, lib, ... }: {
+  wayland.windowManager.hyprland.settings = let
+    moveFocusCommand =
+      if config.rhx.hyprland.hy3.enable then "hy3:movefocus" else "movefocus";
+    moveWindowCommand =
+      if config.rhx.hyprland.hy3.enable then "hy3:movewindow" else "movewindow";
+
+    workspaces = config.rhx.hyprland.workspaces;
+    workspaceBinds = lib.concatMap (i:
+      let index = toString (i + 1);
+      in [
+        "$mainMod, ${index}, workspace, ${index}"
+        "$mainMod SHIFT, ${index}, movetoworkspace, ${index}"
+      ]) (lib.lists.range 0 ((lib.lists.length workspaces) - 1));
+  in {
     bind = [
       "$mainMod, Return, exec, $terminal"
       "$mainMod, E, exec, $fileManager"
@@ -14,26 +27,14 @@
       "$mainMod, F, fullscreen"
       "$mainMod, V, togglefloating"
 
-      "$mainMod, h, hy3:movefocus, l"
-      "$mainMod, j, hy3:movefocus, d"
-      "$mainMod, k, hy3:movefocus, u"
-      "$mainMod, l, hy3:movefocus, r"
-      "$mainMod SHIFT, h, hy3:movewindow, l"
-      "$mainMod SHIFT, j, hy3:movewindow, d"
-      "$mainMod SHIFT, k, hy3:movewindow, u"
-      "$mainMod SHIFT, l, hy3:movewindow, r "
-
-      # TODO: would be nice to make this dynamic based on the length of the workspace list.
-      # "$mainMod, 1, workspace, 1"
-      # "$mainMod, 2, workspace, 2"
-      # "$mainMod, 3, workspace, 3"
-      # "$mainMod, 4, workspace, 4"
-      # "$mainMod, 5, workspace, 5"
-      # "$mainMod SHIFT, 1, movetoworkspace, 1"
-      # "$mainMod SHIFT, 2, movetoworkspace, 2"
-      # "$mainMod SHIFT, 3, movetoworkspace, 3"
-      # "$mainMod SHIFT, 4, movetoworkspace, 4"
-      # "$mainMod SHIFT, 5, movetoworkspace, 5"
+      "$mainMod, h, ${moveFocusCommand}, l"
+      "$mainMod, j, ${moveFocusCommand}, d"
+      "$mainMod, k, ${moveFocusCommand}, u"
+      "$mainMod, l, ${moveFocusCommand}, r"
+      "$mainMod SHIFT, h, ${moveWindowCommand}, l"
+      "$mainMod SHIFT, j, ${moveWindowCommand}, d"
+      "$mainMod SHIFT, k, ${moveWindowCommand}, u"
+      "$mainMod SHIFT, l, ${moveWindowCommand}, r "
 
       "$mainMod, 0, togglespecialworkspace, special"
       "$mainMod SHIFT, 0, movetoworkspace, special"
@@ -57,7 +58,7 @@
         , XF86MonBrightnessUp, exec, xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
       ''
         , XF86MonBrightnessDown, exec, xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
-    ];
+    ] ++ workspaceBinds;
 
     binde = [
       ", XF86AudioRaiseVolume, exec, amixer sset Master 5%+"

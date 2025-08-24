@@ -24,7 +24,7 @@ in {
       themes = formattedThemes;
 
       settings = {
-        color_theme = config.rhx.hyprland.theme;
+        color_theme = "catppuccin-mocha";
         theme_background = false;
       };
     };

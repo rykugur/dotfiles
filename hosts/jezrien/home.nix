@@ -1,4 +1,4 @@
-{ lib, pkgs, username, ... }: {
+{ pkgs, ... }: {
   imports = [ ../../home ./home-packages.nix ];
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
@@ -37,28 +37,6 @@
     };
   };
 
-  # xdg.enable = true;
-
-  wayland.windowManager.hyprland.settings = let
-    workspaces = [
-      "1,monitor:DP-1"
-      "2,monitor:DP-1"
-      "$gamingWorkspace,monitor:DP-1"
-      "$steamWorkspace,monitor:DP-2"
-      "5,monitor:DP-2"
-    ];
-  in {
-    monitor = [ "DP-1,3440x1440@175,0x1440,1" "DP-2,3440x1440@144,0x0,1,vr,0" ];
-
-    workspace = workspaces;
-
-    # map each workspace to two bind strings
-    bind = lib.concatMap (index: [
-      "$mainMod, ${index}, workspace, ${index}"
-      "$mainMod SHIFT, ${index}, movetoworkspace, ${index}"
-    ]) workspaces;
-  };
-
   rhx = {
     btop.enable = true;
     keebs.enable = true;
@@ -67,6 +45,18 @@
       mods.enable = true;
     };
     swappy.enable = true;
+
+    hyprland = {
+      monitors =
+        [ "DP-1,3440x1440@175,0x1440,1" "DP-2,3440x1440@144,0x0,1,vrr,0" ];
+      workspaces = [
+        "1,monitor:DP-1"
+        "2,monitor:DP-1"
+        "$gamingWorkspace,monitor:DP-1"
+        "$steamWorkspace,monitor:DP-2"
+        "5,monitor:DP-2"
+      ];
+    };
   };
 
   ################## other stuff you shouldn't need to touch
