@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.hyprland.waybar;
+let cfg = config.rhx.hyprland;
 in {
   config = lib.mkIf cfg.enable {
     wayland.windowManager.hyprland = {

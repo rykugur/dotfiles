@@ -7,27 +7,20 @@ in {
     ./configuration.nix
     ./input.nix
     ./looknfeel.nix
+    ./rules.nix
     ./vars.nix
 
     ./hypridle.nix
     ./hyprlock.nix
+
+    # bars
+    ./quickshell.nix
     ./hyprpanel.nix
     ./waybar.nix
   ];
 
   options.rhx.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland home-manager module.";
-
-    theme = lib.mkOption {
-      type = lib.types.enum [
-        "catppuccin-mocha"
-        "catppuccin-latte"
-        "catppuccin-macchiato"
-        "catppuccin-frappe"
-      ];
-      default = "catppuccin-mocha";
-      description = "Catppuccin theme for hyprland and its submodules.";
-    };
 
     monitors = lib.mkOption {
       type = lib.types.listOf lib.types.str;
@@ -47,14 +40,17 @@ in {
       description = "Enable hy3 plugin for i3 like tiling.";
     };
 
+    quickshell.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false; # config.rhx.hyprland.enable;
+      description = "Enable quickshell for hyprland home-manager module.";
+    };
+
     hyprpanel.enable =
       lib.mkEnableOption "Enable hyprpanel for hyprland home-manager module.";
 
-    waybar.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = config.rhx.hyprland.enable;
-      description = "Enable waybar for hyprland home-manager module.";
-    };
+    waybar.enable =
+      lib.mkEnableOption "Enable waybar for hyprland home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {

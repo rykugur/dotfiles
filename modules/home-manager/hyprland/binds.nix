@@ -58,7 +58,9 @@
         , XF86MonBrightnessUp, exec, xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
       ''
         , XF86MonBrightnessDown, exec, xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
-    ] ++ workspaceBinds;
+    ] ++ workspaceBinds ++ (lib.optionals config.rhx.hyprland.hy3.enable [
+      # "$mainMod, ???, hy3:changegroup, opposite"
+    ]);
 
     binde = [
       ", XF86AudioRaiseVolume, exec, amixer sset Master 5%+"
