@@ -42,7 +42,7 @@ in {
 
     quickshell.enable = lib.mkOption {
       type = lib.types.bool;
-      default = false; # config.rhx.hyprland.enable;
+      default = config.rhx.hyprland.enable;
       description = "Enable quickshell for hyprland home-manager module.";
     };
 
