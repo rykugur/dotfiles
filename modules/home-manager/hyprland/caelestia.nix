@@ -27,13 +27,8 @@ in {
           weatherLocation = "44.747998,-93.133574";
         };
       };
-      # extraConfig = {};
-      cli = {
-        enable = true;
 
-        # settings = {};
-        # extraConfig = {};
-      };
+      cli = { enable = true; };
     };
   };
 }

@@ -32,7 +32,6 @@
     obsidian
     pavucontrol
     playerctl
-    radeontop
     seahorse
     solaar
     spotify
@@ -42,6 +41,9 @@
     vlc
     xdg-utils
     zenity
+
+    amdgpu_top
+    radeontop
 
     feh
     xfce.ristretto
