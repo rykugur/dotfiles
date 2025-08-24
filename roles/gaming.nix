@@ -35,6 +35,7 @@ in {
         mangohud
         mo2installer
         moonlight-qt
+        n0la_rcon
         pyfa
         unixtools.xxd
         vkd3d

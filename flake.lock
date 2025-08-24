@@ -54,6 +54,52 @@
         "type": "github"
       }
     },
+    "caelestia-cli": {
+      "inputs": {
+        "caelestia-shell": [
+          "caelestia-shell"
+        ],
+        "nixpkgs": [
+          "caelestia-shell",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755952278,
+        "narHash": "sha256-Y4F8sFJ3P3MExSuwDAnccfG1RxU4VdoW9yDRtDqG8qA=",
+        "owner": "caelestia-dots",
+        "repo": "cli",
+        "rev": "db1e0da5bbd259f1218b4ae54d0327b0c4a46f78",
+        "type": "github"
+      },
+      "original": {
+        "owner": "caelestia-dots",
+        "repo": "cli",
+        "type": "github"
+      }
+    },
+    "caelestia-shell": {
+      "inputs": {
+        "caelestia-cli": "caelestia-cli",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "quickshell": "quickshell"
+      },
+      "locked": {
+        "lastModified": 1756014375,
+        "narHash": "sha256-AOC8cyXcJjZ7WsV2vkMRoJ8q15joVWbtpodTTjAI2LU=",
+        "owner": "caelestia-dots",
+        "repo": "shell",
+        "rev": "92efbc61f72923304b92057d16760cd4d29dc67f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "caelestia-dots",
+        "repo": "shell",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1754269165,
@@ -1264,6 +1310,27 @@
     "quickshell": {
       "inputs": {
         "nixpkgs": [
+          "caelestia-shell",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1753595452,
+        "narHash": "sha256-vqkSDvh7hWhPvNjMjEDV4KbSCv2jyl2Arh73ZXe274k=",
+        "ref": "refs/heads/master",
+        "rev": "a5431dd02dc23d9ef1680e67777fed00fe5f7cda",
+        "revCount": 665,
+        "type": "git",
+        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
+      }
+    },
+    "quickshell_2": {
+      "inputs": {
+        "nixpkgs": [
           "nixpkgs"
         ]
       },
@@ -1311,6 +1378,7 @@
     "root": {
       "inputs": {
         "atuin": "atuin",
+        "caelestia-shell": "caelestia-shell",
         "disko": "disko",
         "flake-parts": "flake-parts",
         "helix": "helix",
@@ -1325,7 +1393,7 @@
         "nix-gaming": "nix-gaming_2",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_8",
-        "quickshell": "quickshell",
+        "quickshell": "quickshell_2",
         "raspberry-pi-nix": "raspberry-pi-nix",
         "scls": "scls",
         "sops-nix": "sops-nix",

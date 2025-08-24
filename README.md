@@ -11,8 +11,8 @@ are symlinked into place by home-manager.
 
 ## Modules
 
-Modules come in two flavors: `nixos` and `home-manager`. The `nixos` modules
-are used to configure the system, while the `home-manager` modules are used to
+Modules come in two flavors: `nixos` and `home-manager`. The `nixos` modules are
+used to configure the system, while the `home-manager` modules are used to
 configure the user's home directory.
 
 ## Roles
@@ -21,4 +21,7 @@ Roles are abstractions around modules.
 
 ## TODO
 
-- Figure out wtf is going on with zellij and nushell paths.
+- [ ] Refactory hyprland
+  - [ ] omarchy-nix?
+- [ ] Clean up home.nix
+- [ ] Use flake-parts, move away from misterio77 learner flakes?

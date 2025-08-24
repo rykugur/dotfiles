@@ -30,7 +30,6 @@
     environment.systemPackages = with pkgs; [ git neovim nix-search-cli ];
 
     # Necessary for using flakes on this system.
-
     environment = {
       # This will additionally add your inputs to the system's legacy channels
       # Making legacy nix commands consistent as well, awesome!

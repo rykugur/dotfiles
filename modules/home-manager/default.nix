@@ -5,7 +5,11 @@
     ./aerospace.nix
     ./albert.nix
     ./atuin.nix
+    ./bat.nix
     ./browser.nix
+    ./btop.nix
+    ./carapace.nix
+    ./direnv.nix
     ./discord.nix
     ./easyeffects.nix
     ./firefox.nix
@@ -21,6 +25,8 @@
     ./keebs.nix
     ./kitty.nix
     ./lutris.nix
+    ./nautilus.nix
+    ./nemo.nix
     ./nushell.nix
     ./nvim.nix
     ./ranger.nix
@@ -38,5 +44,6 @@
     ./yazi.nix
     ./zed-editor.nix
     ./zellij.nix
+    ./zoxide.nix
   ];
 }

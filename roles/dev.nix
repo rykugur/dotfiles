@@ -19,7 +19,7 @@ in {
         zed-editor.enable = true;
       };
 
-      home.packages = with pkgs; [ bruno yaak ];
+      home.packages = with pkgs; [ just prettierd stylua vscode yaak ];
     };
   };
 }

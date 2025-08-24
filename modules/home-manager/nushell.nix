@@ -30,10 +30,5 @@ in {
         source ~/.dotfiles/configs/nu/config.nu
       '';
     };
-
-    programs.direnv.enableNushellIntegration = true;
-    programs.carapace.enableNushellIntegration = true;
-    programs.starship.enableNushellIntegration = true;
-    programs.zoxide.enableNushellIntegration = true;
   };
 }

@@ -34,12 +34,12 @@ def nd [] {
   }
 }
 
-def "nix get-hash" [url: string] {
-  nix hash convert --hash-algo sha256 (nix-prefetch-url $url)
+def "nix get-hash" [url: string rev: string] {
+  nix-prefetch-git --url $url --rev $rev
 }
 
-def "shash" [url: string] {
-  nix hash convert --hash-algo sha256 (nix-prefetch-url $url)
+def "shash" [url: string rev: string] {
+  nix get-hash $url $rev
 }
 
 def "nr." [] {
@@ -47,7 +47,8 @@ def "nr." [] {
 }
 
 def "nrd" [] {
-  nix repl --expr $"builtins.getFlake \"($env.DOTFILES_DIR)\""
+  cd $env.DOTFILES_DIR
+  nr.
 }
 
 def "nrn" [] {

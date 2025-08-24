@@ -1,10 +1,6 @@
-{ config, inputs, lib, pkgs, ... }:
-let cfg = config.rhx.hyprpanel;
+{ config, lib, ... }:
+let cfg = config.rhx.hyprland.hyprpanel;
 in {
-  options.rhx.hyprpanel = {
-    enable = lib.mkEnableOption "Enable hyprpanel home-manager module.";
-  };
-
   config = lib.mkIf cfg.enable {
     programs.hyprpanel = {
       enable = true;
@@ -39,5 +35,7 @@ in {
     #     recursive = true;
     #   };
     # };
+
+    # apparently f that too, just using the file on disk for now lol
   };
 }
