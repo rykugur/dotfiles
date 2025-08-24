@@ -14,7 +14,5 @@
       "solaar -w hide"
       "corectrl --minimize-systray"
     ];
-    # ++ (lib.optionals config.rhx.hyprland.quickshell.enable
-    #   [ "caelestia-shell -d" ]);
   };
 }
