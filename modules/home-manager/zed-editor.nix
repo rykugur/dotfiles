@@ -26,7 +26,7 @@ in {
 
         # ui_font_size = lib.mkForce 12;
         # buffer_font_size = lib.mkForce 14;
-        font_family = "FiraCode Nerd Font Mono";
+        font_family = "CaskaydiaCove NFM";
         font_features = null;
         line_height = "comfortable";
 

@@ -6,7 +6,7 @@
   gtk = {
     enable = true;
 
-    font.name = "CaskaydiaCove Nerd Font Mono 10";
+    font.name = "CaskaydiaCove NFM 10";
 
     theme = {
       name = "Adementary-dark";

@@ -1,5 +1,8 @@
-{ ... }: {
+{ config, lib, ... }: {
   wayland.windowManager.hyprland.settings = {
+    exec = [ ] ++ (lib.optionals config.rhx.hyprland.waybar.enable
+      [ "pkill -SIGUSR2 waybar || waybar" ]);
+
     exec-once = [
       "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
       "1password"

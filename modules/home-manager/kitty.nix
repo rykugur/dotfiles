@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.rhx.kitty;
-  font = "ZedMono Nerd Font Mono";
-  # font = "CaskaydiaCove Nerd Font Mono";
+  # font = "ZedMono Nerd Font Mono";
+  font = "CaskaydiaCove NFM";
 in {
   options.rhx.kitty = {
     enable = lib.mkEnableOption "Enable kitty home-manager module.";
