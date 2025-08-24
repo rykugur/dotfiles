@@ -34,7 +34,7 @@ in {
 
         source = [ "${pkgs.catppuccin-ports.hyprland}/themes/mocha.conf" ];
 
-        plugin = {
+        plugin = lib.optionalAttrs cfg.hy3.enable {
           hy3 = {
             no_gaps_when_only = 0;
             autotile = {
@@ -46,7 +46,7 @@ in {
         };
       };
 
-      plugins = [ pkgs.hyprlandPlugins.hy3 ];
+      plugins = lib.optionals cfg.hy3.enable [ pkgs.hyprlandPlugins.hy3 ];
     };
   };
 }

@@ -6,6 +6,28 @@ in {
       "global, caelestia:launcher"
     else
       "exec, albert toggle";
+    mediaCommands = {
+      brightnessUp = if cfg.caelestia.enable then
+        "global, caelestia:brightnessUp"
+      else
+        "exec, xbacklight +5";
+      brightnessDown = if cfg.caelestia.enable then
+        "global, caelestia:brightnessDown"
+      else
+        "exec, xbacklight -5";
+      mediaToggle = if cfg.caelestia.enable then
+        "global, caelestia:mediaToggle"
+      else
+        "exec, playerctl play-pause";
+      mediaNext = if cfg.caelestia.enable then
+        "global, caelestia:mediaNext"
+      else
+        "exec, playerctl next";
+      mediaPrev = if cfg.caelestia.enable then
+        "global, caelestia:mediaPrev"
+      else
+        "exec, playerctl previous";
+    };
     moveFocusCommand = if cfg.hy3.enable then "hy3:movefocus" else "movefocus";
     moveWindowCommand =
       if cfg.hy3.enable then "hy3:movewindow" else "movewindow";
@@ -59,14 +81,12 @@ in {
       "$mainMod, g, exec, ~/.dotfiles/configs/nu/scripts/toggle-eve.nu"
 
       ", XF86AudioMute, exec, amixer sset Master toggle"
-      ", XF86AudioPlay, exec, playerctl play-pause"
-      ", XF86AudioPause, exec, playerctl play-pause"
-      ", XF86AudioNext, exec, playerctl next"
-      ", XF86AudioPrev, exec, playerctl previous"
-      ''
-        , XF86MonBrightnessUp, exec, xbacklight +5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
-      ''
-        , XF86MonBrightnessDown, exec, xbacklight -5 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"''
+      ", XF86AudioPlay, ${mediaCommands.mediaToggle}"
+      ", XF86AudioPause, ${mediaCommands.mediaToggle}"
+      ", XF86AudioNext, ${mediaCommands.mediaNext}"
+      ", XF86AudioPrev, ${mediaCommands.mediaPrev}"
+      ", XF86MonBrightnessUp, exec, ${mediaCommands.brightnessUp}"
+      ", XF86MonBrightnessDown, exec, ${mediaCommands.brightnessDown}"
     ] ++ workspaceBinds;
 
     binde = [

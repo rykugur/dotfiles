@@ -42,19 +42,19 @@ in {
 
     caelestia.enable = lib.mkOption {
       type = lib.types.bool;
-      default = config.rhx.hyprland.enable;
+      default = cfg.enable;
       description = "Enable caelestia dots for hyprland home-manager module.";
     };
 
     hypridle.enable = lib.mkOption {
       type = lib.types.bool;
-      default = config.rhx.hyprland.enable;
+      default = cfg.enable;
       description = "Enable hypridle";
     };
 
     hyprlock.enable = lib.mkOption {
       type = lib.types.bool;
-      default = config.rhx.hyprland.enable;
+      default = cfg.enable;
       description = "Enable hyprlock";
     };
 
@@ -66,14 +66,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx = {
-      nautilus.enable = true;
-
-      # launchers
-      albert.enable = true;
-      vicinae.enable = true;
-      walker.enable = true;
-    };
+    rhx = { nautilus.enable = true; };
 
     home.packages = with pkgs; [
       hyprprop
