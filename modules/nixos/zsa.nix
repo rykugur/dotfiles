@@ -1,8 +1,7 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.rhx.moonlander;
+{ config, lib, ... }:
+let cfg = config.rhx.zsa;
 in {
-  options.rhx.moonlander.enable =
-    lib.mkEnableOption "Enable moonlander nixOS module";
+  options.rhx.zsa.enable = lib.mkEnableOption "Enable zsa nixOS module";
 
   config = lib.mkIf cfg.enable {
     services = {

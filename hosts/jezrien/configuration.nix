@@ -126,6 +126,8 @@
 
   ### custom module stuff
   rhx = {
+    keyboardVendor = "zsa";
+
     roles = {
       _3dp.enable = true;
       desktop.enable = true; # also enables dev and terminal roles
@@ -135,7 +137,6 @@
 
     btrfs.enable = true;
     starcitizen.enable = true;
-    wooting.enable = true;
   };
 
   home-manager = {
