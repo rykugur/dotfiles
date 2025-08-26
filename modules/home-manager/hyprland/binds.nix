@@ -48,8 +48,8 @@ in {
       "$mainMod, Return, exec, $terminal"
       "$mainMod SHIFT, Return, exec, [float] $terminal"
       "$mainMod, E, exec, $fileManager"
-      "$mainMod, C, exec, ~/.dotfiles/configs/hypr/scripts/conditional-killactive.nu"
-      "$mainMod SHIFT, C, killactive,"
+      "$mainMod, Q, exec, ~/.dotfiles/configs/hypr/scripts/conditional-killactive.nu"
+      "$mainMod SHIFT, Q, killactive,"
       "$mainMod SHIFT, E, exec, wlogout"
 
       "$mainMod, R, ${launcherCommand}"

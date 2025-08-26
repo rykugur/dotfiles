@@ -49,6 +49,7 @@ in {
         starship.enable = true;
         yazi.enable = true;
         zellij.enable = true;
+        zoxide.enable = true;
 
         helix.enable = true;
         nvim.enable = true;

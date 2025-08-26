@@ -120,7 +120,7 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/${username}";
-      extraGroups = [ "wheel" "networkmanager" "corectrl" ];
+      extraGroups = [ "wheel" "plugdev" "networkmanager" "corectrl" ];
     };
   };
 
