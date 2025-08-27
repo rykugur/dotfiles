@@ -74,8 +74,7 @@ in {
       "$mainMod, mouse_up, workspace, e-1"
 
       "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-wlcopy.nu"
-      "$mainMod SHIFT, S, ${screenshotCommand}"
-      "$mainMod SHIFT, Print, ${screenshotCommand}"
+      "$mainMod, Print, ${screenshotCommand}"
       # "$mainMod SHIFT, V, exec, cliphist list | wofi --show dmenu"
 
       "$mainMod, g, exec, ~/.dotfiles/configs/nu/scripts/toggle-eve.nu"
