@@ -73,7 +73,7 @@ def "1password copy-ssh-pub-key" [host: string] {
   use 1password
   let key = 1password get-public-key
 
-  ssh $host $"mkdir ~/.ssh; echo ($key) >> ~/.ssh/authorized_keys"
+  ssh $host $"mkdir ~/.ssh 2> null; echo ($key) >> ~/.ssh/authorized_keys"
 }
 
 def "1password get-ssh-pub-key" [] {
