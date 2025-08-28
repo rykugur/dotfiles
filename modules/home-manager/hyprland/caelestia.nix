@@ -10,6 +10,12 @@ in {
       description =
         "Whether the device is a laptop or not. Controls stuff like battery, brigthness, etc being visible.";
     };
+
+    showBluetooth = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to show the bluetooth widget on the status bar.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -17,18 +23,28 @@ in {
       enable = true;
 
       settings = {
+        bar = {
+          status = {
+            showAudio = lib.mkDefault true;
+            showBattery = cfg.isLaptop;
+            showBluetooth = cfg.isLaptop or cfg.showBluetooth;
+          };
+          workspaces = {
+            activeTrail = lib.mkDefault true;
+            perMonitorWorkspaces = lib.mkDefault true;
+          };
+        };
         general = {
           apps = { terminal = [ "ghostty --gtk-single-instance=true" ]; };
         };
-        status = { showBattery = cfg.isLaptop; };
         paths = { sessionGif = "undefined"; };
         services = {
-          useFahrenheit = true;
-          weatherLocation = "44.747998,-93.133574";
+          useFahrenheit = lib.mkDefault true;
+          weatherLocation = lib.mkDefault "44.747998,-93.133574";
         };
       };
 
-      cli = { enable = true; };
+      cli = { enable = lib.mkDefault true; };
     };
   };
 }
