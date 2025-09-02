@@ -14,7 +14,9 @@ in {
       mimeApps = {
         enable = true;
 
-        defaultApplications = { "inode/directory" = [ "nautilus.desktop" ]; };
+        defaultApplications = {
+          "inode/directory" = [ "org.gnome.Nautilus.desktop" ];
+        };
       };
     };
   };
