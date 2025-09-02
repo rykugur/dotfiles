@@ -32,13 +32,13 @@
       "float, class:(steam), title:(Friends List)"
       "stayfocused, title:^()$,class:^(steam)$"
       "minsize 1 1, title:^()$,class:^(steam)$"
-      "workspace $gamingWorkspace, class:(dota2)"
-      "workspace $gamingWorkspace, class:^(RimWorldLinux)$"
+      "workspace $gamingWorkspace silent, class:(dota2)"
+      "workspace $gamingWorkspace silent, class:^(RimWorldLinux)$"
       "workspace $steamWorkspace silent, class:^(steam_app_8500)$,title:^(EVE Launcher)$,initialClass:^(steam_app_8500)$,initialTitle:^(EVE Launcher)$"
       "fullscreenstate:2 -1, initialTitle:^(EVE)$"
-      "workspace $gamingWorkspace, class:(Project Zomboid)"
+      "workspace $gamingWorkspace silent, class:(Project Zomboid)"
       "fullscreen, class:(Project Zomboid)"
-      "workspace $gamingWorkspace, class:(X4)"
+      "workspace $gamingWorkspace silent, class:(X4)"
     ];
   };
 }

@@ -1,3 +1,4 @@
+# TODO: fix lock/suspend/etc shortcuts
 { config, inputs, lib, ... }:
 let cfg = config.rhx.hyprland.caelestia;
 in {

@@ -75,7 +75,6 @@ in {
       grim
       grimblast
       hyprcursor
-      hypridle
       pywal
       slurp
       swappy
