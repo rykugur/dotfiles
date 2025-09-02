@@ -37,10 +37,14 @@ def --env "eve gits" [] {
   cd $gitSettingsDir
 }
 
-def "eve eanm" [] {
+def "eve EANM" [] {
   let _hostname = (hostname | str replace ".local" "")
   let dir = $gitSettingsDir
   cd $"($dir)/($_hostname)"; nix run nixpkgs#zulu24 -- -jar $"($dir)/EANM.jar"
+}
+
+def "eve CustomShipLabeler" [] {
+  nix run nixpkgs#zulu24 -- -jar $"($gitSettingsDir)/EVE_CustomShipLabelerV1.jar"
 }
 
 def "eve pi get name" [] {
