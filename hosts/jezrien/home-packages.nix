@@ -25,7 +25,8 @@
     fastfetch
     file
     file-roller
-    jellyfin-media-player
+    # jellyfin-media-player - it or a depdendency uses insecure qtwebengine
+    # so just using a chrome PWA for now
     mousai
     nemo
     nitch
