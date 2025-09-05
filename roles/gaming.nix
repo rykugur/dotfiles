@@ -28,10 +28,14 @@ in {
         protonup-qt
         winetricks
 
+        # specific games
+        vintagestory
+
         # misc
         bottles
         dxvk
         gamescope
+        heroic
         mangohud
         mo2installer
         moonlight-qt
