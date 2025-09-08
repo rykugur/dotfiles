@@ -29,6 +29,7 @@
     ./nemo.nix
     ./nushell.nix
     ./nvim.nix
+    ./oh-my-posh.nix
     ./ranger.nix
     ./ssh.nix
     ./starcitizen.nix
