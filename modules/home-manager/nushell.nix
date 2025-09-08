@@ -28,6 +28,8 @@ in {
         source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
         source ${nu-scripts}/custom-menus/zoxide-menu.nu
         source ~/.dotfiles/configs/nu/config.nu
+
+        ${pkgs.oh-my-posh}/bin/oh-my-posh init nu --config ~/.config/oh-my-posh/config.omp.json
       '';
     };
   };

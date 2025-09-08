@@ -41,8 +41,9 @@
     ghostty.enable = true;
     homelab.enable = true;
     nushell.enable = true;
+    oh-my-posh.enable = true;
     ssh.enable = true;
-    starship.enable = true;
+    # starship.enable = true;
     yazi.enable = true;
     zellij.enable = true;
   };

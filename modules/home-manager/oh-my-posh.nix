@@ -6,8 +6,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.oh-oh-my-posh ];
+    home.packages = [ pkgs.oh-my-posh ];
 
-    # home.file = {};
+    home.file = {
+      ".config/oh-my-posh/config.omp.json".source =
+        ../../configs/oh-my-posh/config.catppuccin_mocha.json;
+    };
   };
 }

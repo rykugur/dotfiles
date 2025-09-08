@@ -15,7 +15,6 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  # Necessary for using flakes on this system.
   nix = {
     gc = {
       automatic = true;
