@@ -14,3 +14,6 @@ in {
     };
   };
 }
+
+# needs to be at the end of nushell config:
+# ${pkgs.oh-my-posh}/bin/oh-my-posh init nu --config ~/.config/oh-my-posh/config.omp.json

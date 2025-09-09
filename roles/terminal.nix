@@ -46,8 +46,7 @@ in {
         carapace.enable = true;
         direnv.enable = true;
         nushell.enable = true;
-        oh-my-posh.enable = true;
-        # starship.enable = true;
+        starship.enable = true;
         yazi.enable = true;
         zellij.enable = true;
         zoxide.enable = true;
