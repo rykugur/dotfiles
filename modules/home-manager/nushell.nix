@@ -29,6 +29,7 @@ in {
         source ${nu-scripts}/custom-menus/zoxide-menu.nu
         source ~/.dotfiles/configs/nu/config.nu
 
+        # TODO: this should be configurable
         ${pkgs.oh-my-posh}/bin/oh-my-posh init nu --config ~/.config/oh-my-posh/config.omp.json
       '';
     };

@@ -1,5 +1,5 @@
 # TODO: fix lock/suspend/etc shortcuts
-{ config, inputs, lib, ... }:
+{ config, inputs, lib, pkgs, ... }:
 let cfg = config.rhx.hyprland.caelestia;
 in {
   imports = [ inputs.caelestia-shell.homeManagerModules.default ];
@@ -22,6 +22,10 @@ in {
   config = lib.mkIf cfg.enable {
     programs.caelestia = {
       enable = true;
+
+      package =
+        inputs.caelestia-shell.packages.${pkgs.system}.with-cli.plugin.overrideAttrs
+        (old: { buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.fftw ]; });
 
       settings = {
         bar = {
