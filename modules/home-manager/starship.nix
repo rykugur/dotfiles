@@ -1,36 +1,39 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.rhx.starship;
-  # TODO: add jetpack and catppuccin powerline presets as options
+
+  flavor = "mocha";
+  catppuccin-starship = pkgs.fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "starship";
+    rev = "5906cc369dd8207e063c0e6e2d27bd0c0b567cb8";
+    sha256 = "sha256-FLHjbClpTqaK4n2qmepCPkb8rocaAo3qeV4Zp1hia0g=";
+  };
+  configTOML = builtins.fromTOML
+    (builtins.readFile "${catppuccin-starship}/starship.toml");
+  paletteTOML = builtins.fromTOML
+    (builtins.readFile "${catppuccin-starship}/themes/${flavor}.toml");
 in {
   options.rhx.starship = {
     enable = lib.mkEnableOption "Enable starship home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
-    programs.starship = let flavor = "mocha";
-    in {
+    programs.starship = {
       enable = true;
 
       enableFishIntegration = config.programs.fish.enable;
       enableNushellIntegration = config.programs.nushell.enable;
       enableZshIntegration = config.programs.zsh.enable;
 
-      settings = {
+      settings = (paletteTOML // configTOML) // {
         palette = "catppuccin_${flavor}";
         hostname = { ssh_symbol = ""; };
         nix_shell = {
           format = "[$name]($style)";
           heuristic = true;
         };
-      } // builtins.fromTOML
-        (builtins.readFile ../../configs/starship/starship-pure.toml)
-        // builtins.fromTOML (builtins.readFile (pkgs.fetchFromGitHub {
-          owner = "catppuccin";
-          repo = "starship";
-          rev = "5629d2356f62a9f2f8efad3ff37476c19969bd4f";
-          sha256 = "sha256-nsRuxQFKbQkyEI4TXgvAjcroVdG+heKX5Pauq/4Ota0=";
-        } + /palettes/${flavor}.toml));
+      };
     };
   };
 }
