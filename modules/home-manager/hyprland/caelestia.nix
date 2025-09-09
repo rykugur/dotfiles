@@ -24,8 +24,10 @@ in {
       enable = true;
 
       package =
-        inputs.caelestia-shell.packages.${pkgs.system}.with-cli.plugin.overrideAttrs
-        (old: { buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.fftw ]; });
+        inputs.caelestia-shell.packages.${pkgs.system}.with-cli.override {
+          libcava = pkgs.libcava.overrideAttrs
+            (prev: final: { propagatedBuildInputs = prev.buildInputs; });
+        };
 
       settings = {
         bar = {
