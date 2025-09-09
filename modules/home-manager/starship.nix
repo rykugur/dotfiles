@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.starship;
+let
+  cfg = config.rhx.starship;
+  # TODO: add jetpack and catppuccin powerline presets as options
 in {
   options.rhx.starship = {
     enable = lib.mkEnableOption "Enable starship home-manager module.";
