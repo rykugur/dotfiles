@@ -9,14 +9,10 @@ in {
       users = [ "${username}" ];
     };
 
-    environment.systemPackages = with pkgs; [
-      git
-      neovim
-      nix-search-cli
-      polkit_gnome
-      polychromatic
-    ];
+    # services.input-remapper ={
+    #   enable = true;
+    # };
 
-    users.users.${username} = { extraGroups = [ "openrazer" ]; };
+    environment.systemPackages = with pkgs; [ polychromatic ];
   };
 }

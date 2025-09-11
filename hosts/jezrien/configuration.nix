@@ -136,6 +136,7 @@
     };
 
     btrfs.enable = true;
+    razer.enable = true;
     starcitizen.enable = true;
   };
 
