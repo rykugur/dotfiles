@@ -11,8 +11,6 @@ let
   };
   configTOML = builtins.fromTOML
     (builtins.readFile "${catppuccin-starship}/starship.toml");
-  paletteTOML = builtins.fromTOML
-    (builtins.readFile "${catppuccin-starship}/themes/${flavor}.toml");
 in {
   options.rhx.starship = {
     enable = lib.mkEnableOption "Enable starship home-manager module.";
@@ -26,13 +24,14 @@ in {
       enableNushellIntegration = config.programs.nushell.enable;
       enableZshIntegration = config.programs.zsh.enable;
 
-      settings = (paletteTOML // configTOML) // {
+      settings = configTOML // {
         palette = "catppuccin_${flavor}";
         hostname = { ssh_symbol = ""; };
         nix_shell = {
           format = "[$name]($style)";
           heuristic = true;
         };
+        kubernetes = { disabled = false; };
       };
     };
   };
