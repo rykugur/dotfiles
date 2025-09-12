@@ -31,7 +31,10 @@ in {
           format = "[$name]($style)";
           heuristic = true;
         };
-        kubernetes = { disabled = false; };
+        kubernetes = {
+          disabled = false;
+          detect_env_vars = [ "k8s" "homelab" ];
+        };
       };
     };
   };
