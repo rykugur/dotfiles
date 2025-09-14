@@ -64,3 +64,25 @@ def nrf [--remote (-r)] {
 
   nix repl --expr $"builtins.getFlake \"($url)\""
 }
+
+$env.abbreviations = $env.abbreviations | merge {
+  nb: "nix build"
+  ndb: "nix-build"
+
+  nf: "nix flake"
+  nfc: "nix flake check"
+  nfu: "nix flake update"
+
+  ns: "nix shell"
+  nds: "nix-shell"
+  ndsp: "nix-shell -p"
+
+  snrb: "sudo nixos-rebuild boot"
+  snrbf: "sudo nixos-rebuild boot --flake $env.DOTFILES_DIR"
+  snrbfu: "sudo nixos-rebuild boot --flake $env.DOTFILES_DIR --update"
+  snb: "sudo nixos-rebuild boot"
+  snr: "sudo nixos-rebuild"
+  snrs: "sudo nixos-rebuild switch"
+  snrsf: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR"
+  snrsfu: "sudo nixos-rebuild switch --flake $env.DOTFILES_DIR --update"
+}

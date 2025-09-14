@@ -86,3 +86,48 @@ def "1password get-ssh-pub-key" [] {
 def "proxmox install helix" [host: string] {
   ssh $host $"curl -L https://shlink.ryk.sh/helix-deb | sh"
 }
+
+$env.abbreviations = $env.abbreviations | merge {
+  ### dev
+  adb.reverse: "adb reverse tcp:8081 tcp:8081; adb reverse tcp:8080 tcp:8080"
+  adb.start: "adb shell am start"
+  adb.reset-perms: "adb shell pm reset-permissions"
+  .gw: "./gradlew"
+  agb: "ag --ignore-dir build --ignore-dir node_modules"
+  agbt: "ag --ignore-dir build --ignore-dir node_modules --ignore-dir __tests__"
+  fish.profile: "fish --profile-startup ./fish.profile -i -c exit"
+  pyhttp: "python -m SimpleHTTPServer"
+  pyjson: "python -m json.tool"
+  cwd: "pwd | tr -d \"\n\" | cmd.copy"
+  gri: "grep -i"
+  grin: "grep -ni"
+  grine: "grep -niRE"
+  pwdc: "pwd | trim.newlines | cmd.copy"
+  ssh.forcePass: "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
+  taill: "tail -Fn 999"
+  pn: "pnpm"
+  ### nushell
+  psw: "ps | where"
+  pagi: "ps | where name =~"
+  ### pacman
+  pac: "pacman"
+  pacs: "pacman -S"
+  supac: "sudo pacman"
+  supacr: "sudo pacman -R"
+  supacrs: "sudo pacman -Rs"
+  supacrcs: "sudo pacman -Rcs"
+  supacs: "sudo pacman -S"
+  supac.update: "sudo pacman -Sy archlinux-keyring; and sudo pacman -Su"
+  ### systemctl
+  sc: systemctl
+  sc.list: "systemctl list-unit-files"
+  sc.enabled: "systemctl list-unit-files | grep enabled"
+  ssc: "sudo systemctl"
+  ### tmux
+  tm: "tmux"
+  tmls: "tmux ls"
+  tmf: "tmuxifier"
+  ### zellij
+  za: "zellij attach"
+  zj: "zellij"
+}
