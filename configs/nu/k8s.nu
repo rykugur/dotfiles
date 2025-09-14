@@ -20,3 +20,5 @@ alias ktx = kubectx
 alias kns = kubens
 
 alias fgk = flux get kustomization
+
+alias mk = minikube
