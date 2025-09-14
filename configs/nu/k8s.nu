@@ -22,3 +22,14 @@ alias kns = kubens
 alias fgk = flux get kustomization
 
 alias mk = minikube
+
+def "kaf sops" [filePath: string] {
+  use std/log
+  
+  if (not ($filePath | path exists)) {
+    log error $"filePath ($filePath) doesn't exist; exiting."
+    return;
+  }
+
+  sops -d $filePath | kubectl apply -f -
+}
