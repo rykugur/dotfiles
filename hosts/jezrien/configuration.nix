@@ -72,6 +72,8 @@
       extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
     };
 
+    keyboard.qmk.enable = true;
+
     xone.enable = true;
   };
 

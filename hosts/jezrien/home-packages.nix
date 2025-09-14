@@ -34,7 +34,6 @@
     pavucontrol
     playerctl
     seahorse
-    solaar
     spotify
     sshfs
     tigervnc
