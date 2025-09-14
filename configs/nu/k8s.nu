@@ -16,6 +16,11 @@ alias kgn = kubectl get nodes
 alias kgp = kubectl get pods
 alias kgs = kubectl get services
 
+alias kgw = kubectl get -o wide
+alias kgwn = kubectl get -o wide nodes
+alias kgwp = kubectl get -o wide pods
+alias kgws = kubectl get -o wide services
+
 alias kpf = kubectl port-forward
 
 alias ktx = kubectx
