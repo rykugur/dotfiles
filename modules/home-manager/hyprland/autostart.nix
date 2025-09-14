@@ -11,7 +11,6 @@
       "steam"
       "playerctld daemon"
       "wl-paste --watch cliphist store"
-      "solaar -w hide"
       "corectrl --minimize-systray"
     ];
   };
