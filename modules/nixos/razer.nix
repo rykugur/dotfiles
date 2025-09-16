@@ -9,10 +9,8 @@ in {
       users = [ "${username}" ];
     };
 
-    # services.input-remapper ={
-    #   enable = true;
-    # };
+    services = { input-remapper.enable = true; };
 
-    environment.systemPackages = with pkgs; [ polychromatic ];
+    environment.systemPackages = with pkgs; [ piper polychromatic ];
   };
 }
