@@ -2,6 +2,12 @@
 let
   cfg = config.rhx.ghostty;
   font = "CaskaydiaCove NFM";
+  # catppuccin-ghostty = pkgs.fetchFromGitHub {
+  #   owner = "catppuccin";
+  #   repo = "ghostty";
+  #   rev = "10b3c5f56f2aa519b0e12255346a97d71a8bfeaf";
+  #   sha256 = "sha256-4seUhPr6nv0ld9XMrQS4Ko9QnC1ZOEiRjENSfgHIvR0=";
+  # };
 in {
   options.rhx.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
@@ -20,7 +26,7 @@ in {
         font-family-bold-italic = "${font} Bold Italic";
         font-size = 16;
 
-        theme = "catppuccin-mocha";
+        theme = "Catppuccin Mocha";
 
         copy-on-select = "clipboard";
 
