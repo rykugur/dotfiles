@@ -38,6 +38,8 @@ in {
               backspace = ":buffer-close";
               a = ":buffer-close-all";
               o = ":buffer-close-others";
+              q = ":quit-all";
+              Q = ":quit-all!";
             };
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
