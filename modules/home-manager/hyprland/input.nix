@@ -24,11 +24,5 @@
       repeat_rate = 60;
       repeat_delay = 200;
     };
-
-    gestures = {
-      workspace_swipe = true;
-      workspace_swipe_fingers = 3;
-      workspace_swipe_invert = false;
-    };
   };
 }
