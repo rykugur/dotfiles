@@ -42,7 +42,23 @@ in {
           };
         };
         general = {
-          apps = { terminal = [ "ghostty --gtk-single-instance=true" ]; };
+          apps = {
+            explorer = [ "nautilus" ];
+            terminal = [ "ghostty --gtk-single-instance=true" ];
+          };
+          idle = {
+            timeouts = [
+              {
+                timeout = 300;
+                idleAction = "lock";
+              }
+              {
+                timeout = 360;
+                idleAction = "dpms off";
+                returnAction = "dpms on";
+              }
+            ];
+          };
         };
         paths = { sessionGif = "undefined"; };
         services = {

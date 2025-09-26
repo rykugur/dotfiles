@@ -48,13 +48,13 @@ in {
 
     hypridle.enable = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.enable;
+      default = false;
       description = "Enable hypridle";
     };
 
     hyprlock.enable = lib.mkOption {
       type = lib.types.bool;
-      default = cfg.enable;
+      default = false;
       description = "Enable hyprlock";
     };
 
