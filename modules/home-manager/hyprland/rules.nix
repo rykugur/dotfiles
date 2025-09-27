@@ -3,6 +3,7 @@
     windowrulev2 = [
       "float, class:(1Password)"
       "float, class:(com.github.iwalton3.jellyfin-media-player)"
+      "float, class:(Google-chrome) title:(Jellyfin)"
       "float, class:(com.obsproject.Studio)"
       "float, class:(galculator)"
       "float, class:(neovide)"
