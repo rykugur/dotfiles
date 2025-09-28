@@ -65,6 +65,7 @@ in {
           useFahrenheit = lib.mkDefault true;
           weatherLocation = lib.mkDefault "44.747998,-93.133574";
         };
+        session = { commands = { hibernate = [ "systemctl" "suspend" ]; }; };
       };
 
       cli = { enable = lib.mkDefault true; };
