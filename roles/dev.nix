@@ -19,7 +19,15 @@ in {
         zed-editor.enable = true;
       };
 
-      home.packages = with pkgs; [ just prettierd stylua vscode yaak ];
+      home.packages = with pkgs; [
+        just
+        prettierd
+        stylua
+        vscode
+        yaak
+        bruno
+        insomnia
+      ];
     };
   };
 }
