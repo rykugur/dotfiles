@@ -49,11 +49,11 @@ in {
           idle = {
             timeouts = [
               {
-                timeout = 300;
+                timeout = 600;
                 idleAction = "lock";
               }
               {
-                timeout = 360;
+                timeout = 900;
                 idleAction = "dpms off";
                 returnAction = "dpms on";
               }
