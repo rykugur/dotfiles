@@ -5,12 +5,11 @@ in {
     lib.mkEnableOption "Enable obs-studio nixOS module";
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ libva-utils obs-cli ];
+    environment.systemPackages = with pkgs; [ libva-utils ];
 
     programs.obs-studio = {
       enable = true;
 
-      # pkgs.obs-cli
       plugins = with pkgs.obs-studio-plugins; [
         input-overlay
         wlrobs
