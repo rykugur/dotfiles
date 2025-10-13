@@ -42,7 +42,7 @@
     keebs.enable = true;
     starsector = {
       enable = true;
-      mods.enable = true;
+      mods.enable = false; # just doing this manually for now
     };
     swappy.enable = true;
 
