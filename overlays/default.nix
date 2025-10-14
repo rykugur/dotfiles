@@ -76,33 +76,28 @@
       });
 
     lib = prev.lib // {
-      fetch7zip = { url, sha256 }:
+      fetch7z = { url, sha256 }:
         let
           filename = builtins.baseNameOf url;
           pname = final.lib.strings.removeSuffix ".7z" filename;
-        in prev.stdenv.mkDerivation {
-          name = pname;
-          inherit pname;
-          src = builtins.fetchurl { inherit url sha256; };
-
-          buildInputs = [ prev.p7zip ];
-
+          archive = prev.fetchurl { inherit url sha256; };
+        in prev.runCommand pname {
+          src = archive;
+          nativeBuildInputs = [ prev.p7zip ];
           preferLocalBuild = true;
-          buildCommand = ''
-            mkdir -p $out
-            7za x $src -o$out
-          '';
-        };
+          allowSubstitutes = false;
+          # outputHashMode = "recursive";
+          # outputHashAlgo = "sha256";
+        } ''
+          mkdir -p $out
+          7za x $src -o$out
+
+          # strip top-level dir
+          if [ "$(ls -A $out)" = "${pname}" ] || [ "$(ls -A $out)" = "GraphicsLib_1.12.1" ]; then  # Adjust if needed
+            mv $out/* $out/ 2>/dev/null || true
+            rmdir $out/$(ls -A $out 2>/dev/null) 2>/dev/null || true
+          fi          
+        '';
     };
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
-    # example patch:
-    # super-slicer = prev.super-slicer.overrideAttrs (o: {
-    #   patches = (o.patches or [ ]) ++ [
-    #     # can be removed once https://github.com/NixOS/nixpkgs/pull/298652 is merged
-    #     ./patches/super-slicer.patch
-    #   ];
-    # });
   };
 }

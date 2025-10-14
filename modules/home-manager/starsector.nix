@@ -1,80 +1,26 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.rhx.starsector;
-  mkStarsectorMod = { name ? "nutsack", src, deps ? [ ], }:
-    pkgs.stdenv.mkDerivation {
-      inherit name;
-      pname = name;
-      inherit src;
-
-      phases = [ "installPhase" ];
-
-      installPhase = ''
-        runHook preInstall
-
-        mkdir -p $out
-        cp -rf $src/* $out
-
-        runHook postInstall
-      '';
-    };
-
-  lazylib = mkStarsectorMod {
-    name = "lazylib";
-    src = pkgs.fetchzip {
-      url =
-        "https://github.com/LazyWizard/lazylib/releases/download/2.8b/LazyLib.2.8b.zip";
-      sha256 = "sha256-u9usk9JChw2y152cbAYeyELHPkpHjfgFlzIliP/Ph/I=";
-    };
+  lazylib = pkgs.fetchzip {
+    url =
+      "https://github.com/MagicLibStarsector/MagicLib/releases/latest/download/MagicLib.zip";
+    sha256 = "sha256-jY8KYF95K4grSL9CgJ/5wckC6VpprhKqXH7PcI/KErg=";
   };
-
-  magiclib = mkStarsectorMod {
-    name = "magiclib";
-    src = pkgs.fetchzip {
-      url =
-        "https://github.com/MagicLibStarsector/MagicLib/releases/download/1.4.3/MagicLib.zip";
-      sha256 = "sha256-UaQbJ9EsxZr597CmUOIZeKi9mx2Y85IxqIo7y6gCPTc=";
-    };
+  magiclib = pkgs.fetchzip {
+    url =
+      "https://github.com/LazyWizard/lazylib/releases/download/3.0/LazyLib.3.0.zip";
+    sha256 = "sha256-TO1jF90DRgS9cPOxFtXfff9+6Ll0S+bv2ULQ+2qsL38=";
   };
-
-  nexerelin = mkStarsectorMod {
-    name = "nexerelin";
-    src = pkgs.fetchzip {
-      url =
-        "https://github.com/Histidine91/Nexerelin/releases/download/v0.11.1b/Nexerelin_0.11.1b.zip";
-      sha256 = "sha256-S7M4fAgwl4IxTPGle9RkzD00ElWNYGN+BLPaJMZLWoQ=";
-    };
+  nexerelin = pkgs.fetchzip {
+    url =
+      "https://github.com/Histidine91/Nexerelin/releases/download/v0.12.1/Nexerelin_0.12.1.zip";
+    sha256 = "sha256-VaUNVsSlBXOTHpf+sjzY5Oim3ObbcsX8GEHr9K+wtcc=";
   };
-
-  graphicslib = mkStarsectorMod {
-    name = "graphicslib";
-    src = pkgs.lib.fetch7zip {
-      url =
-        "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.9.0.7z";
-      sha256 = "sha256-LwLO5A0Af6vKJcnGWk9rylzhvwolWCJV5aqoaY+6ra4=";
-    };
+  graphicslib = pkgs.lib.fetch7z {
+    url =
+      "https://bitbucket.org/DarkRevenant/graphicslib/downloads/GraphicsLib_1.12.1.7z";
+    sha256 = "sha256-g1qlppfSUaA5CgrxyedJyBSZmfqr0Nq7tgNnBJ53v7A=";
   };
-
-  # mkModsDirDrv = mods:
-  #   let
-  #     recursiveDeps = modDrv: [ modDrv ] ++ map recursiveDeps modDrv.deps;
-  #     modDrvs = lib.unique (lib.flatten (map recursiveDeps mods));
-  #   in {
-  #     modsDirDrv = pkgs.stdenv.mkDerivation {
-  #       name = "starsector-mods";
-  #       preferLocalBuild = true;
-  #       buildCommand = ''
-  #         mkdir -p $out
-  #         cd $out
-  #         for modDrv in ${toString modDrvs}; do
-  #           ln -s $modDrv/* .
-  #         done
-  #       '';
-  #     };
-  #   };
-
-  # modsDrv = with pkgs.starsectorMods.starsectorMods;
-  #   mkModDirDrv [ lazylib magiclib nexerelin graphicslib ];
 in {
   options.rhx.starsector = {
     enable = lib.mkEnableOption "Enable starsector home-manager module.";
