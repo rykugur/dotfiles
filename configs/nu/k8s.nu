@@ -6,6 +6,8 @@ alias k = kubectl
 alias ka = kubectl apply
 alias kaf = kubectl apply -f
 
+alias kd = kubectl describe
+
 alias kdel = kubectl delete
 alias kdes = kubectl describe
 

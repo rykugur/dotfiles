@@ -6,6 +6,7 @@ source ./git.nu
 source ./linux.nu
 source ./misc.nu
 source ./nix.nu
+source ./pz.nu
 source ./zellij.nu
 
 source ./eve.nu
