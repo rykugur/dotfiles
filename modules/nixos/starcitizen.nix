@@ -21,8 +21,8 @@ in {
       # Additional commands before the game starts
       preCommands = ''
         export PULSE_LATENCY_MSEC=40
-        export DXVK_HUD=compiler;
-        export MANGO_HUD=1;
+        export DXVK_HUD=compiler
+        export MANGO_HUD=1
       '';
 
       # package = inputs.nix-citizen.packages.${pkgs.system}.star-citizen-umu;
