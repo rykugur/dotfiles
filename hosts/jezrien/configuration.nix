@@ -56,6 +56,8 @@
       via
       vial
       vulkan-tools
+
+      inputs.winboat.packages.${pkgs.system}.winboat
     ];
 
     variables = {

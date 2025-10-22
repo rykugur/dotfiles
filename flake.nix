@@ -54,6 +54,7 @@
     ### random stuff
     atuin.url = "github:atuinsh/atuin";
     luarocks-nix.url = "github:nix-community/luarocks-nix";
+    winboat.url = "github:TibixDev/winboat";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zjstatus.url = "github:dj95/zjstatus";
   };
