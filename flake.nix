@@ -22,6 +22,11 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ### hyprland stuff
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-contrib = {
