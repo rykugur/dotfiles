@@ -17,6 +17,7 @@ in {
     ./steam.nix
     ./vfio.nix
     ./vr.nix
+    ./winboat.nix
 
     # keebs
     ./wooting.nix

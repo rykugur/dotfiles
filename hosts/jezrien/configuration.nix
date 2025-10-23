@@ -56,8 +56,6 @@
       via
       vial
       vulkan-tools
-
-      inputs.winboat.packages.${pkgs.system}.winboat
     ];
 
     variables = {
@@ -142,6 +140,7 @@
     btrfs.enable = true;
     razer.enable = true;
     starcitizen.enable = true;
+    winboat.enable = true;
   };
 
   home-manager = {
