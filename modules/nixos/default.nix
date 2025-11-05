@@ -4,28 +4,29 @@ in {
   imports = [
     ./1password.nix
     ./btrfs.nix
-    ./docker.nix
-    ./gamemode.nix
-    ./gnome.nix
-    ./hyprland.nix
-    ./kde.nix
-    ./obs-studio.nix
     ./pipewire.nix
     ./razer.nix
     ./ssh.nix
+    ./vr.nix
+
+    # TODO: move to gaming folder
+    ./gamemode.nix
+    ./obs-studio.nix
     ./starcitizen.nix
     ./steam.nix
-    ./vfio.nix
-    ./vr.nix
-    ./winboat.nix
 
     # keebs
+    # TODO: move to keebs folder
     ./wooting.nix
     ./zsa.nix
 
     # vms
+    # TODO: move to vm folder
     ./distrobox.nix
+    ./docker.nix
+    ./vfio.nix
     ./virtman.nix
+    ./winboat.nix
   ];
 
   options.rhx.keyboardVendor = lib.mkOption {

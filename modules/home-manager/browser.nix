@@ -5,6 +5,8 @@ let
   customHandler =
     "${pkgs.bash}/bin/bash ${config.home.homeDirectory}/.local/bin/custom-url-handler %U";
 in {
+  imports = [ inputs.zen-browser.homeModules.default ];
+
   options.rhx.browser = {
     enable = lib.mkEnableOption "Enable browser home-manager module.";
   };

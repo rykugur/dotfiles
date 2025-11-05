@@ -14,7 +14,6 @@ in {
     ./hyprlock.nix
 
     # bars
-    ./caelestia.nix
     ./hyprpanel.nix
     ./waybar.nix
   ];
@@ -40,12 +39,6 @@ in {
       description = "Enable hy3 plugin for i3 like tiling.";
     };
 
-    caelestia.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = cfg.enable;
-      description = "Enable caelestia dots for hyprland home-manager module.";
-    };
-
     hypridle.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -66,7 +59,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    rhx = { nautilus.enable = true; };
+    rhx = {
+      caelestia.enable = true;
+      nautilus.enable = true;
+      thunar.enable = true;
+    };
 
     home.packages = with pkgs; [
       hyprprop

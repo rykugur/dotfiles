@@ -1,10 +1,12 @@
 # TODO: fix lock/suspend/etc shortcuts
 { config, inputs, lib, pkgs, ... }:
-let cfg = config.rhx.hyprland.caelestia;
+let cfg = config.rhx.caelestia;
 in {
   imports = [ inputs.caelestia-shell.homeManagerModules.default ];
 
-  options.rhx.hyprland.caelestia = {
+  options.rhx.caelestia = {
+    enable = lib.mkEnableOption "Enable caelestia HM module";
+
     isLaptop = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -69,6 +71,26 @@ in {
       };
 
       cli = { enable = lib.mkDefault true; };
+    };
+
+    # wayland.windowManager.hyprland.settings =
+    #   lib.mkIf config.rhx.hyprland.enable {
+    #     bind = [
+    #       "$mainMod, R, global, caelestia:launcher"
+    #       "$mainMod, Print, global, caelestia:screenshot"
+    #       ", XF86AudioPlay, global, caelestia:mediaToggle"
+    #       ", XF86AudioPause, global, caelestia:mediaToggle"
+    #       ", XF86AudioNext, global, caelestia:mediaNext"
+    #       ", XF86AudioPrev, global, caelestia:mediaPrev"
+    #       ", XF86MonBrightnessUp, global, caelestia:brightnessUp"
+    #       ", XF86MonBrightnessDown, global, caelestia:brightnessDown"
+    #     ];
+    #   };
+
+    programs.niri.settings = lib.mkIf config.rhx.niri.enable {
+      binds = with config.lib.niri.actions; {
+        "Mod+Space".action = spawn [ "caelestia" "launcher" ];
+      };
     };
   };
 }

@@ -3,12 +3,20 @@ let cfg = config.rhx.stylix;
 in {
   imports = [ inputs.stylix.nixosModules.stylix ];
 
-  options.rhx.stylix.enable = lib.mkEnableOption "Enable certain stylix";
+  options.rhx.stylix.enable = lib.mkEnableOption "Enable stylid nixOS module.";
 
   config = lib.mkIf cfg.enable {
     stylix = {
+      enable = true;
+
       base16Scheme =
         "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+
+      cursor = {
+        package = pkgs.phinger-cursors;
+        name = "phinger-cursors-dark";
+        size = 32;
+      };
 
       fonts = {
         serif = {
@@ -30,9 +38,18 @@ in {
           package = pkgs.noto-fonts-emoji;
           name = "Noto Color Emoji";
         };
-      };
-    };
 
-    stylix.image = ../../configs/wallpapers/wallpaper.png;
+        sizes = {
+          applications = 10;
+          terminal = 13;
+          desktop = 10;
+          popups = 10;
+        };
+      };
+
+      image = ../../configs/wallpapers/wallpaper.png;
+
+      targets = { opencode.enable = false; };
+    };
   };
 }

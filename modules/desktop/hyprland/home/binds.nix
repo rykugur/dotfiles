@@ -2,28 +2,28 @@
 let cfg = config.rhx.hyprland;
 in {
   wayland.windowManager.hyprland.settings = let
-    launcherCommand = if cfg.caelestia.enable then
+    launcherCommand = if config.rhx.caelestia.enable then
       "global, caelestia:launcher"
     else
       "exec, albert toggle";
     mediaCommands = {
-      brightnessUp = if cfg.caelestia.enable then
+      brightnessUp = if config.rhx.caelestia.enable then
         "global, caelestia:brightnessUp"
       else
         "exec, xbacklight +5";
-      brightnessDown = if cfg.caelestia.enable then
+      brightnessDown = if config.rhx.caelestia.enable then
         "global, caelestia:brightnessDown"
       else
         "exec, xbacklight -5";
-      mediaToggle = if cfg.caelestia.enable then
+      mediaToggle = if config.rhx.caelestia.enable then
         "global, caelestia:mediaToggle"
       else
         "exec, playerctl play-pause";
-      mediaNext = if cfg.caelestia.enable then
+      mediaNext = if config.rhx.caelestia.enable then
         "global, caelestia:mediaNext"
       else
         "exec, playerctl next";
-      mediaPrev = if cfg.caelestia.enable then
+      mediaPrev = if config.rhx.caelestia.enable then
         "global, caelestia:mediaPrev"
       else
         "exec, playerctl previous";
@@ -31,7 +31,7 @@ in {
     moveFocusCommand = if cfg.hy3.enable then "hy3:movefocus" else "movefocus";
     moveWindowCommand =
       if cfg.hy3.enable then "hy3:movewindow" else "movewindow";
-    screenshotCommand = if cfg.caelestia.enable then
+    screenshotCommand = if config.rhx.caelestia.enable then
       "global, caelestia:screenshot"
     else
       ''exec, grim -g "$(slurp)" - | wl-copy'';

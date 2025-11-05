@@ -47,8 +47,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ### niri
     niri.url = "github:sodiboo/niri-flake";
+    dank-material-shell.url = "github:AvengeMedia/DankMaterialShell";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
