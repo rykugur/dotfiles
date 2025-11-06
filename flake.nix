@@ -89,6 +89,8 @@
       nixosModules = import ./modules/nixos;
       hmModules = import ./modules/home-manager;
 
+      modules = import ./modules;
+
       nixosConfigurations = let username = "dusty";
       in {
         # primary/gaming desktop
@@ -96,6 +98,7 @@
           modules = [
             outputs.baseModules
             outputs.nixosModules
+            outputs.modules
 
             ./roles
 

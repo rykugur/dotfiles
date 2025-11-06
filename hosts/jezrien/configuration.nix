@@ -133,7 +133,36 @@
     };
 
     btrfs.enable = true;
-    # niri.enable = true;
+    niri = {
+      enable = true;
+      monitors = {
+        "DP-1" = {
+          mode = {
+            width = 3440;
+            height = 1440;
+            refresh = 175.0;
+          };
+          position = {
+            x = 0;
+            y = 1440;
+          };
+          variable-refresh-rate = "on-demand";
+          focus-at-startup = true;
+        };
+        "DP-2" = {
+          mode = {
+            width = 3440;
+            height = 1440;
+            refresh = 144.0;
+          };
+          position = {
+            x = 0;
+            y = 0;
+          };
+          variable-refresh-rate = "on-demand";
+        };
+      };
+    };
     razer.enable = true;
     starcitizen.enable = true;
     stylix.enable = true;
