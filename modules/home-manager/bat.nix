@@ -10,14 +10,6 @@ in {
       enable = true;
 
       extraPackages = with pkgs.bat-extras; [ batdiff batman batgrep batwatch ];
-      config = { theme = "Catppuccin Mocha"; };
-    };
-
-    home.file = {
-      ".config/bat/themes" = {
-        source = pkgs.catppuccin-ports.bat;
-        recursive = true;
-      };
     };
   };
 }

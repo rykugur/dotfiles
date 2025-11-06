@@ -12,12 +12,5 @@ in {
       enableNushellIntegration = config.programs.nushell.enable;
       enableZshIntegration = config.programs.zsh.enable;
     };
-
-    home.file = {
-      ".config/yazi/theme.toml" = {
-        source =
-          "${pkgs.catppuccin-ports.yazi}/themes/mocha/catppuccin-mocha-blue.toml";
-      };
-    };
   };
 }

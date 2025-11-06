@@ -1,7 +1,8 @@
 { config, inputs, lib, pkgs, username, ... }:
 let
   cfg = config.rhx.roles.gaming;
-  mo2installer = inputs.nix-gaming.packages.${pkgs.system}.mo2installer;
+  mo2installer =
+    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.mo2installer;
 in {
   options.rhx.roles.gaming.enable = lib.mkEnableOption "Enable gaming role";
 
@@ -39,7 +40,6 @@ in {
         mangohud
         mo2installer
         moonlight-qt
-        n0la_rcon
         pyfa
         unixtools.xxd
         vkd3d

@@ -7,6 +7,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     stylix = {
+      enable = true;
+
       base16Scheme =
         "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
 
@@ -27,7 +29,7 @@ in {
         };
 
         emoji = {
-          package = pkgs.noto-fonts-emoji;
+          package = pkgs.noto-fonts-color-emoji;
           name = "Noto Color Emoji";
         };
       };

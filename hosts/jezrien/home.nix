@@ -3,33 +3,6 @@
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
 
-  gtk = {
-    enable = true;
-
-    font.name = "CaskaydiaCove NFM 10";
-
-    theme = {
-      name = "Adementary-dark";
-      package = pkgs.adementary-theme;
-    };
-
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.catppuccin-papirus-folders.override {
-        # flavor = "mocha";
-        accent = "blue";
-      };
-    };
-
-    gtk2.extraConfig = ''
-      gtk-application-prefer-dark-theme=1
-    '';
-
-    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 1; };
-
-    gtk4.extraConfig = { gtk-application-prefer-dark-theme = 1; };
-  };
-
   sops.secrets = {
     homelab_ssh_private_key = {
       # temporary hack... maybe

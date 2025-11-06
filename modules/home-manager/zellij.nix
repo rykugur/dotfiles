@@ -6,14 +6,15 @@ let
       "https://github.com/fresh2dev/zellij-autolock/releases/download/0.2.1/zellij-autolock.wasm";
     sha256 = "sha256-3KvHgNdJdb8Nd83OxxrKFuzM6nAjn0G0wyebOI9zs40=";
   };
-  zjstatus-pkg = inputs.zjstatus.packages.${pkgs.system}.default;
+  zjstatus-pkg =
+    inputs.zjstatus.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
   options.rhx.zellij = {
     enable = lib.mkEnableOption "Enable zellij home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
-    # home.packages = [ inputs.zjstatus.packages.${pkgs.system}.default ];
+    # home.packages = [ inputs.zjstatus.packages.${pkgs.stdenv.hostPlatform.system}.default ];
 
     programs.zellij = {
       enable = true;

@@ -25,7 +25,7 @@ in {
         export MANGO_HUD=1
       '';
 
-      # package = inputs.nix-citizen.packages.${pkgs.system}.star-citizen-umu;
+      # package = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.star-citizen-umu;
 
       patchXwayland = true;
 

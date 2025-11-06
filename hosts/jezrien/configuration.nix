@@ -63,8 +63,8 @@
     amdgpu.overdrive.enable = true;
 
     graphics = {
-      extraPackages = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
-      extraPackages32 = with pkgs; [ vaapiVdpau libvdpau-va-gl ];
+      extraPackages = with pkgs; [ libva-vdpau-driver libvdpau-va-gl ];
+      extraPackages32 = with pkgs; [ libva-vdpau-driver libvdpau-va-gl ];
     };
 
     keyboard.qmk.enable = true;

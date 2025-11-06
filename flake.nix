@@ -57,7 +57,6 @@
 
     ### helix
     helix.url = "github:helix-editor/helix";
-    scls.url = "github:estin/simple-completion-language-server";
 
     ### random stuff
     atuin.url = "github:atuinsh/atuin";

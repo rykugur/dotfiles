@@ -52,7 +52,6 @@ in {
         zoxide.enable = true;
 
         helix.enable = true;
-        nvim.enable = true;
       };
     };
   };

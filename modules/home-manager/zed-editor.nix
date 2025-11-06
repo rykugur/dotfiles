@@ -16,7 +16,6 @@ in {
       extensions = [ "nix" "catppuccin" "catppuccin-icons" "helm" ];
       userSettings = {
         helix_mode = true;
-        theme = "Catppuccin Mocha";
         extraPackages = [
           pkgs.dotnet-sdk_8
           pkgs.omnisharp-roslyn

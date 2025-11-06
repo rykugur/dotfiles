@@ -1,7 +1,5 @@
 { config, inputs, lib, pkgs, ... }:
-let
-  cfg = config.rhx.helix;
-  sclsPkg = inputs.scls.defaultPackage.${pkgs.system};
+let cfg = config.rhx.helix;
 in {
   options.rhx.helix = {
     enable = lib.mkEnableOption "Enable helix home-manager module.";
@@ -10,7 +8,8 @@ in {
   config = lib.mkIf cfg.enable {
     programs.helix = {
       enable = true;
-      package = inputs.helix.packages.${pkgs.system}.default;
+      package =
+        inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.default;
       settings = {
         editor = {
           bufferline = "multiple";
@@ -57,7 +56,8 @@ in {
             "C-p" = "signature_help";
           };
         };
-        theme = "catppuccin_mocha";
+        # TODO: set this manually for work macbook
+        # theme = "catppuccin_mocha";
       };
 
       languages = {
@@ -85,7 +85,8 @@ in {
           omnisharp = { command = lib.getExe pkgs.omnisharp-roslyn; };
           # for snippets
           scls = {
-            command = "${sclsPkg}/bin/simple-completion-language-server";
+            command =
+              "${pkgs.simple-completion-language-server}/bin/simple-completion-language-server";
           };
           tailwindcss-ls = {
             command =

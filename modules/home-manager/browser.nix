@@ -1,7 +1,8 @@
 { config, inputs, lib, pkgs, ... }:
 let
   cfg = config.rhx.browser;
-  zen-pkg = inputs.zen-browser.packages.${pkgs.system}.default;
+  zen-pkg =
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
   customHandler =
     "${pkgs.bash}/bin/bash ${config.home.homeDirectory}/.local/bin/custom-url-handler %U";
 in {
@@ -12,8 +13,8 @@ in {
   config = lib.mkIf cfg.enable {
     programs.firefox.enable = true;
 
-    home.packages =
-      lib.optionals (lib.hasAttr pkgs.system inputs.zen-browser.packages)
+    home.packages = lib.optionals
+      (lib.hasAttr pkgs.stdenv.hostPlatform.system inputs.zen-browser.packages)
       [ zen-pkg ] ++ [ pkgs.google-chrome ];
 
     home.file.".local/bin/custom-url-handler".text = ''

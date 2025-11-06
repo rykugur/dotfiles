@@ -24,7 +24,7 @@ in {
       enable = true;
 
       package =
-        inputs.caelestia-shell.packages.${pkgs.system}.with-cli.override {
+        inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli.override {
           libcava = pkgs.libcava.overrideAttrs
             (prev: final: { propagatedBuildInputs = prev.buildInputs; });
         };
