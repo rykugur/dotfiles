@@ -1,9 +1,9 @@
 { config, inputs, lib, nixosConfig, ... }:
-let cfg = config.rhx.noctalia;
+let rhxCfg = nixosConfig.rhx;
 in {
   imports = [ inputs.noctalia.homeModules.default ];
 
-  config = lib.mkIf nixosConfig.rhx.noctalia.enable {
+  config = lib.mkIf rhxCfg.noctalia.enable {
     programs.noctalia-shell = {
       enable = true;
 
@@ -57,8 +57,8 @@ in {
       };
     };
 
-    programs.niri.settings = lib.mkIf
-      (nixosConfig.rhx.niri.enable && nixosConfig.rhx.niri.bar == "noctalia") {
+    programs.niri.settings =
+      lib.mkIf (rhxCfg.niri.enable && rhxCfg.niri.bar == "noctalia") {
         binds = with config.lib.niri.actions; {
           "Mod+Shift+E".action =
             spawn [ "noctalia-shell" "ipc" "call" "sessionMenu" "toggle" ];
