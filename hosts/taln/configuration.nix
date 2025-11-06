@@ -1,11 +1,6 @@
 { inputs, outputs, hostname, username, ... }: {
   ### system config
-  imports = [
-    inputs.home-manager.darwinModules.home-manager
-
-    outputs.baseModules
-    outputs.darwinModules
-  ];
+  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   nixpkgs = {
     overlays = [ outputs.overlays.additions outputs.overlays.modifications ];

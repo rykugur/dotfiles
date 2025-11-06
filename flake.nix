@@ -90,11 +90,20 @@
       nixosModules = import ./modules/nixos;
       hmModules = import ./modules/home-manager;
 
+      modules = import ./modules;
+
       nixosConfigurations = let username = "dusty";
       in {
         # primary/gaming desktop
         "jezrien" = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/jezrien ];
+          modules = [
+            outputs.baseModules
+            outputs.nixosModules
+
+            ./roles
+
+            ./hosts/jezrien
+          ];
           specialArgs = {
             inherit inputs outputs;
             hostname = "jezrien";
@@ -106,7 +115,12 @@
       darwinConfigurations = {
         # home macbook pro
         "taln" = nix-darwin.lib.darwinSystem {
-          modules = [ ./hosts/taln/configuration.nix ];
+          modules = [
+            outputs.baseModules
+            outputs.darwinModules
+
+            ./hosts/taln/configuration.nix
+          ];
           specialArgs = {
             inherit inputs outputs;
             hostname = "taln";

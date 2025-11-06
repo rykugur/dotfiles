@@ -3,11 +3,6 @@
     ./hardware-configuration.nix
 
     inputs.home-manager.nixosModules.home-manager
-
-    outputs.baseModules
-    outputs.nixosModules
-
-    ../../roles
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
@@ -138,6 +133,7 @@
     };
 
     btrfs.enable = true;
+    # niri.enable = true;
     razer.enable = true;
     starcitizen.enable = true;
     stylix.enable = true;
