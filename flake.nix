@@ -27,7 +27,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ### hyprland stuff
+    ### de/wm  stuff
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-contrib = {
       url = "github:hyprwm/contrib";
@@ -42,13 +42,13 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    niri.url = "github:sodiboo/niri-flake";
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    ### niri
-    niri.url = "github:sodiboo/niri-flake";
+    dank-material-shell.url = "github:AvengeMedia/DankMaterialShell";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -62,7 +62,6 @@
     ### random stuff
     atuin.url = "github:atuinsh/atuin";
     luarocks-nix.url = "github:nix-community/luarocks-nix";
-    winboat.url = "github:TibixDev/winboat";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zjstatus.url = "github:dj95/zjstatus";
   };

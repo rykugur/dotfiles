@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.rhx.winboat;
 in {
   options.rhx.winboat.enable = lib.mkEnableOption "Enable winboat nixOS module";
@@ -6,7 +6,6 @@ in {
   config = lib.mkIf cfg.enable {
     rhx.docker.enable = true;
 
-    environment.systemPackages =
-      [ inputs.winboat.packages.${pkgs.system}.winboat pkgs.freerdp ];
+    environment.systemPackages = [ pkgs.winboat pkgs.freerdp ];
   };
 }
