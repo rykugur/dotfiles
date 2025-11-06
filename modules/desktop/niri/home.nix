@@ -163,18 +163,3 @@
     };
   };
 }
-# selectedBar = nixosConfig.rhx.desktop.bar;
-# barLaunchCmd = lib.concatLists (lib.map (b:
-#   if b == "caelestia" then [
-#     "qs"
-#     "-c"
-#     "caelestia"
-#   ] else if b == "dank-material-shell" then [
-#     "dms"
-#     "run"
-#   ] else if b == "noctalia" then [
-#     "qs"
-#     "-c"
-#     "noctalia-shell"
-#   ] else
-#     [ ]) selectedBar);
