@@ -27,6 +27,7 @@
     file-roller
     # jellyfin-media-player - it or a depdendency uses insecure qtwebengine
     # so just using a chrome PWA for now
+    minder
     mousai
     nemo
     nitch
