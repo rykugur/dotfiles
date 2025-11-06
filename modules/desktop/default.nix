@@ -1,1 +1,9 @@
-{ ... }: { imports = [ ./niri ]; }
+{ ... }: {
+  imports = [
+    # de/wm
+    ./niri
+
+    # bars
+    ./noctalia
+  ];
+}

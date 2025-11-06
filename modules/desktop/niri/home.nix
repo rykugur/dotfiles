@@ -71,7 +71,7 @@
           };
 
           "Mod+E" = {
-            action = spawn [ "nautilus" "--new-window" ];
+            action = lib.mkDefault (spawn [ "nautilus" "--new-window" ]);
             repeat = false;
           };
           "Mod+F" = {
@@ -85,7 +85,7 @@
           #   repeat = false;
           # };
           "Mod+Q" = {
-            action = quit;
+            action = lib.mkDefault quit;
             repeat = false;
           };
           "Mod+V" = {
@@ -93,7 +93,7 @@
             repeat = false;
           };
 
-          "Mod+Shift+E".action = quit;
+          "Mod+Shift+E".action = lib.mkDefault quit;
         } // {
           "Mod+h".action = focus-column-left-or-last;
           "Mod+j".action = focus-window-down-or-top;

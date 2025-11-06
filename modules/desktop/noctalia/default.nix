@@ -1,0 +1,15 @@
+{ config, inputs, lib, username, ... }:
+let cfg = config.rhx.noctalia;
+in {
+  imports = [ inputs.noctalia.nixosModules.default ];
+
+  options.rhx.noctalia = {
+    enable = lib.mkEnableOption "Enable noctalia custom quickshell module.";
+  };
+
+  config = lib.mkIf cfg.enable {
+    programs.niri.enable = true;
+
+    home-manager.users.${username}.imports = [ ./home.nix ];
+  };
+}
