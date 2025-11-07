@@ -4,6 +4,7 @@
     ./niri
 
     # bars
+    ./dankMaterialShell
     ./noctalia
   ];
 }

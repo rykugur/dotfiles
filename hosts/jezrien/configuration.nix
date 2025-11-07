@@ -135,7 +135,7 @@
     btrfs.enable = true;
     niri = {
       enable = true;
-      bar = "noctalia";
+      bar = "dankMaterialShell";
       monitors = {
         "DP-1" = {
           mode = {

@@ -47,7 +47,7 @@
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dank-material-shell.url = "github:AvengeMedia/DankMaterialShell";
+    dankMaterialShell.url = "github:AvengeMedia/DankMaterialShell";
     noctalia.url = "github:noctalia-dev/noctalia-shell";
 
     ### gaming ish

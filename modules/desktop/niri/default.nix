@@ -14,7 +14,7 @@ in {
 
     bar = lib.mkOption {
       type =
-        lib.types.enum [ "caelestia" "dank-material-shell" "noctalia" "none" ];
+        lib.types.enum [ "caelestia" "dankMaterialShell" "noctalia" "none" ];
       default = "none";
     };
   };
@@ -23,6 +23,7 @@ in {
   in lib.mkIf cfg.enable {
     programs.niri.enable = true;
 
+    rhx.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
     rhx.noctalia.enable = (isBarEnabled "noctalia");
 
     home-manager.users.${username}.imports = [ ./home.nix ];

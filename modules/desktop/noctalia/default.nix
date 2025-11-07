@@ -8,8 +8,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    programs.niri.enable = true;
-
     home-manager.users.${username}.imports = [ ./home.nix ];
   };
 }
