@@ -69,7 +69,7 @@ in {
           "Mod+Space".action =
             spawn [ "noctalia-shell" "ipc" "call" "launcher" "toggle" ];
         };
-        spawn-at-startup = [{ argv = [ "qs" "-c" "noctalia-shell" ]; }];
+        spawn-at-startup = [{ argv = [ "noctalia-shell" ]; }];
       };
   };
 }

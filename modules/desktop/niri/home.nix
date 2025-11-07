@@ -85,7 +85,7 @@
           #   repeat = false;
           # };
           "Mod+Q" = {
-            action = lib.mkDefault quit;
+            action = lib.mkDefault close-window;
             repeat = false;
           };
           "Mod+V" = {

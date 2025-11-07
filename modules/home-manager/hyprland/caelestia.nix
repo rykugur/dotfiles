@@ -22,6 +22,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.caelestia = {
       enable = true;
+      systemd.enable = false;
 
       package =
         inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.with-cli.override {
