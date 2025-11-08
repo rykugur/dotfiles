@@ -183,18 +183,18 @@
         "type": "github"
       }
     },
-    "dank-material-shell": {
+    "dankMaterialShell": {
       "inputs": {
         "dgop": "dgop",
         "dms-cli": "dms-cli",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1762394954,
-        "narHash": "sha256-x3/H5To2Cy+pVdUFKg2gumS4IxAxWvOzNz/6kPyDadY=",
+        "lastModified": 1762482216,
+        "narHash": "sha256-YBFJAL2satQocAI2Wteeuax9oORmqB4Qi2tJSQhFj0Q=",
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
-        "rev": "87d0aed4ade409a146a7cbd210adf1bf2b377872",
+        "rev": "f2ec3ae75537049ae64eeea434bb074821a215af",
         "type": "github"
       },
       "original": {
@@ -206,7 +206,7 @@
     "dgop": {
       "inputs": {
         "nixpkgs": [
-          "dank-material-shell",
+          "dankMaterialShell",
           "nixpkgs"
         ]
       },
@@ -248,7 +248,7 @@
       "inputs": {
         "gomod2nix": "gomod2nix",
         "nixpkgs": [
-          "dank-material-shell",
+          "dankMaterialShell",
           "nixpkgs"
         ]
       },
@@ -579,7 +579,7 @@
       "inputs": {
         "flake-utils": "flake-utils_2",
         "nixpkgs": [
-          "dank-material-shell",
+          "dankMaterialShell",
           "dms-cli",
           "nixpkgs"
         ]
@@ -1752,7 +1752,7 @@
       "inputs": {
         "atuin": "atuin",
         "caelestia-shell": "caelestia-shell",
-        "dank-material-shell": "dank-material-shell",
+        "dankMaterialShell": "dankMaterialShell",
         "disko": "disko",
         "flake-parts": "flake-parts",
         "helix": "helix",

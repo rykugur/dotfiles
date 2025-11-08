@@ -36,6 +36,10 @@ in {
     '';
     home.file.".local/bin/custom-url-handler".executable = true;
 
+    stylix.targets = {
+      zen-browser.profileNames = [ "qvhlwos4.Default Profile" ];
+    };
+
     xdg = {
       enable = true;
 

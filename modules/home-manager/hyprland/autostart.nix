@@ -12,6 +12,7 @@
       "playerctld daemon"
       "wl-paste --watch cliphist store"
       "corectrl --minimize-systray"
-    ];
+    ] ++ lib.optionals (config.rhx.hyprland.caelestia.enable)
+      [ "caelestia-shell" ];
   };
 }

@@ -59,16 +59,31 @@ in {
 
     programs.niri.settings =
       lib.mkIf (rhxCfg.niri.enable && rhxCfg.niri.bar == "noctalia") {
-        binds = with config.lib.niri.actions; {
-          "Mod+Shift+E".action =
-            spawn [ "noctalia-shell" "ipc" "call" "sessionMenu" "toggle" ];
-          "Mod+Shift+V".action =
-            spawn [ "noctalia-shell" "ipc" "call" "launcher" "clipboard" ];
-          "Mod+R".action =
-            spawn [ "noctalia-shell" "ipc" "call" "launcher" "toggle" ];
-          "Mod+Space".action =
-            spawn [ "noctalia-shell" "ipc" "call" "launcher" "toggle" ];
-        };
+        binds = with config.lib.niri.actions;
+          let
+            spawnAction = actions:
+              spawn ([ "noctalia-shell" "ipc" "call" ] ++ actions);
+            launcherAction = spawnAction [ "launcher" "toggle" ];
+          in {
+            "Mod+Shift+e".action = spawnAction [ "sessionMenu" "toggle" ];
+            "Mod+Shift+v".action = spawnAction [ "launcher" "clipboard" ];
+            "Mod+r".action = launcherAction;
+            "Mod+Space".action = launcherAction;
+          } // {
+            XF86AudioLowerVolume.action =
+              spawnAction [ "volume" "decrease" "5" ];
+            XF86AudioRaiseVolume.action =
+              spawnAction [ "volume" "increase" "5" ];
+            XF86AudioMute.action = spawnAction [ "volume" "muteOutput" ];
+            XF86AudioPlay.action = spawnAction [ "media" "playPause" ];
+            XF86AudioPause.action = spawnAction [ "media" "playPause" ];
+            XF86AudioNext.action = spawnAction [ "media" "next" ];
+            XF86AudioPrev.action = spawnAction [ "media" "previous" ];
+            XF86MonBrightnessDown.action =
+              spawnAction [ "brightness" "decrease" "5" ];
+            XF86MonBrightnessUp.action =
+              spawnAction [ "brightness" "increase" "5" ];
+          };
         spawn-at-startup = [{ argv = [ "noctalia-shell" ]; }];
       };
   };

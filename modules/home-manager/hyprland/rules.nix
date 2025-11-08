@@ -3,7 +3,8 @@
     windowrulev2 = [
       "float, class:(1Password)"
       "float, class:(com.github.iwalton3.jellyfin-media-player)"
-      "float, class:(Google-chrome) title:(Jellyfin)"
+      "float, class:(Jellyfin)"
+      "float, class:^chrome.*, title:(Jellyfin)"
       "float, class:(com.obsproject.Studio)"
       "float, title:(Select what to share)" # OBS screen/window selector popup
       "float, class:(galculator)"
