@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ ... }: {
   imports = [ ../../home ./home-packages.nix ];
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
@@ -13,6 +13,7 @@
   rhx = {
     btop.enable = true;
     keebs.enable = true;
+    ghostty.hideWindowDecoration = true;
     starsector = {
       enable = true;
       mods.enable = true;

@@ -18,7 +18,14 @@
       xwayland-satellite
     ];
 
-    programs.niri.settings = {
+    programs.niri.settings = let
+      p25 = { proportion = 1.0 / 4.0; };
+      p33 = { proportion = 1.0 / 3.0; };
+      p50 = { proportion = 1.0 / 2.0; };
+      p66 = { proportion = 2.0 / 3.0; };
+      p75 = { proportion = 3.0 / 4.0; };
+      p100 = { proportion = 1.0; };
+    in {
       environment = {
         # DISPLAY = null;
 
@@ -42,10 +49,10 @@
 
       outputs = nixosConfig.rhx.niri.monitors;
 
-      # layout = {
-      #   preset-column-widths = [ ];
-      #   default-column-width = { };
-      # };
+      layout = {
+        preset-column-widths = [ p25 p33 p50 p66 p75 p100 ];
+        default-column-width = p66;
+      };
 
       spawn-at-startup = [
         { argv = [ "1password" ]; }
@@ -98,7 +105,11 @@
             action = toggle-column-tabbed-display;
             repeat = false;
           };
+
           "Mod+Shift+e".action = lib.mkDefault quit;
+
+          "Mod+r".action = lib.mkDefault switch-preset-column-width;
+          "Mod+Shift+r".action = lib.mkDefault switch-preset-column-width-back;
 
           # TODO: `niri msg pick-window`
         } // {
@@ -109,8 +120,8 @@
           "Mod+k".action = focus-window-or-workspace-up;
           "Mod+l".action = focus-column-right-or-first;
 
-          "Mod+WheelScrollDown".action = focus-column-left-or-last;
-          "Mod+WheelScrollUp".action = focus-column-right-or-first;
+          "Mod+WheelScrollUp".action = focus-column-left-or-last;
+          "Mod+WheelScrollDown".action = focus-column-right-or-first;
 
           "Mod+Shift+h".action = move-column-left-or-to-monitor-left;
           "Mod+Shift+j".action = move-window-down-or-to-workspace-down;
@@ -170,6 +181,25 @@
           }];
           open-floating = true;
         }
+        {
+          matches = [{ app-id = "com.mitchellh.ghostty"; }];
+          default-column-width = p33;
+        }
+        {
+          matches = [{
+            app-id = "steam";
+            title = "Friends List";
+          }];
+          default-column-width = p33;
+        }
+        {
+          matches = [{
+            app-id = "gamescope";
+            title = "ARC Raiders";
+          }];
+          variable-refresh-rate = false;
+        }
+        ((mkFloatingAppRule "EVE Launcher") // { default-column-width = p33; })
       ] ++ (mkFloatingAppRules [
         "com.github.iwalton3.jellyfin-media-player"
         "com.obsproject.Studio"
@@ -192,7 +222,6 @@
         "yad"
         "zenity"
         "net.lutris.Lutris"
-        "EVE Launcher"
       ]);
     };
   };

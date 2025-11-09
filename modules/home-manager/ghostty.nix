@@ -13,6 +13,8 @@ in {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
     hideWindowDecoration =
       lib.mkEnableOption "Whether to hide window-decoration or not.";
+    usePredefinedSize =
+      lib.mkEnableOption "Whether to set a default term size.";
   };
 
   config = lib.mkIf cfg.enable {
@@ -36,8 +38,8 @@ in {
 
         window-decoration =
           "${if cfg.hideWindowDecoration then "none" else "auto"}";
-        window-height = 50;
-        window-width = 125;
+        window-height = lib.mkIf cfg.usePredefinedSize 50;
+        window-width = lib.mkIf cfg.usePredefinedSize 125;
 
         app-notifications = false;
 

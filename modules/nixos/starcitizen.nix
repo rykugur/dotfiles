@@ -18,6 +18,7 @@ in {
 
     nix-citizen.starCitizen = {
       enable = true;
+
       # Additional commands before the game starts
       preCommands = ''
         export PULSE_LATENCY_MSEC=40
@@ -27,10 +28,10 @@ in {
 
       # package = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.star-citizen-umu;
 
-      patchXwayland = true;
+      # patchXwayland = true;
 
-      umu.enable = true;
-      disableEAC = false;
+      # umu.enable = true;
+      # disableEAC = false;
     };
 
     home-manager.users.${username} = { rhx.starcitizen.enable = true; };

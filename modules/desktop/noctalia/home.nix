@@ -67,7 +67,6 @@ in {
           in {
             "Mod+Shift+e".action = spawnAction [ "sessionMenu" "toggle" ];
             "Mod+Shift+v".action = spawnAction [ "launcher" "clipboard" ];
-            "Mod+r".action = launcherAction;
             "Mod+Space".action = launcherAction;
           } // {
             XF86AudioLowerVolume.action =
