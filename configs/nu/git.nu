@@ -37,6 +37,7 @@ $env.abbreviations = $env.abbreviations | merge {
   gco: "git checkout"
   gco.: "git checkout ."
   gcob: "git checkout -b"
+  gcof: "git checkout (git branch | fzf | str trim)"
   gcp: "git cherry-pick"
   gcy: "git commit -m (curl -s https://whatthecommit.com/index.txt)"
   gd: "git diff"
