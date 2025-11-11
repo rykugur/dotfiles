@@ -136,6 +136,7 @@
     niri = {
       enable = true;
       bar = "dankMaterialShell";
+      screenshotBackend = "swappy";
       monitors = {
         "DP-1" = {
           mode = {

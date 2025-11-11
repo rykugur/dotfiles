@@ -3,7 +3,6 @@
     home.packages = with pkgs; [
       albert
       slurp
-      swappy
       wayland-utils
       wev
       wl-clipboard
@@ -26,6 +25,8 @@
       p75 = { proportion = 3.0 / 4.0; };
       p100 = { proportion = 1.0; };
     in {
+      # debug = { skip-cursor-only-updates-during-vrr = [ ]; };
+
       environment = {
         # DISPLAY = null;
 
@@ -128,7 +129,10 @@
           "Mod+Shift+k".action = move-window-up-or-to-workspace-up;
           "Mod+Shift+l".action = move-column-right-or-to-monitor-right;
 
-          "Mod+Tab".action = toggle-overview;
+          "Mod+Tab" = {
+            action = toggle-overview;
+            cooldown-ms = 250;
+          };
 
           # "Mod+Tab".action = focus-window-down-or-column-right;
           # "Mod+Shift+Tab".action = focus-window-up-or-column-left;
@@ -151,18 +155,19 @@
         };
 
       window-rules = let
-        mkFloatingAppRule = appId: {
-          matches = [{ app-id = appId; }];
+        mkFloatingAppRule = appInfo: {
+          matches = [{
+            app-id = appInfo.appId or null;
+            title = appInfo.title or null;
+          }];
           open-floating = true;
         };
-        mkFloatingAppRules = appIds:
-          lib.map (appId: mkFloatingAppRule appId) appIds;
+        mkFloatingAppRules = appInfos:
+          lib.map (appInfo: mkFloatingAppRule appInfo) appInfos;
       in [
-        {
-          matches = [{ app-id = "1password"; }];
+        ((mkFloatingAppRule { appId = "1password"; }) // {
           block-out-from = "screen-capture";
-          open-floating = true;
-        }
+        })
         {
           geometry-corner-radius = let r = 8.0;
           in {
@@ -175,16 +180,10 @@
           draw-border-with-background = false;
         }
         {
-          matches = [{
-            app-id = "^chrome.*$";
-            title = "Jellyfin";
-          }];
-          open-floating = true;
-        }
-        {
           matches = [{ app-id = "com.mitchellh.ghostty"; }];
           default-column-width = p33;
         }
+      ] ++ [
         {
           matches = [{
             app-id = "steam";
@@ -197,31 +196,33 @@
             app-id = "gamescope";
             title = "ARC Raiders";
           }];
-          variable-refresh-rate = false;
+          variable-refresh-rate = true;
         }
-        ((mkFloatingAppRule "EVE Launcher") // { default-column-width = p33; })
+        ((mkFloatingAppRule { appId = "EVE Launcher"; }) // {
+          default-column-width = p33;
+        })
+        # {
+        #   matches = [{
+        #     app-id = "steam_app_8500";
+        #     title = "^EVE -.*$";
+        #   }];
+        #   variable-refresh-rate = true;
+        # }
       ] ++ (mkFloatingAppRules [
-        "com.github.iwalton3.jellyfin-media-player"
-        "com.obsproject.Studio"
-        "galculator"
-        "neovide"
-        "nemo"
-        "obsidian"
-        "opentrack"
-        "org.gnome.baobab"
-        "org.gnome.Nautilus"
-        "org.telegram.desktop"
-        "nemo"
-        "thunar"
-        "org.pulseaudio.pavucontrol"
-        "pavucontrol"
-        "ristretto"
-        "Spotify"
-        "virt-manager"
-        "vlc"
-        "yad"
-        "zenity"
-        "net.lutris.Lutris"
+        { appId = "galculator"; }
+        { appId = "neovide"; }
+        { appId = "nemo"; }
+        { appId = "obsidian"; }
+        { appId = "opentrack"; }
+        { appId = "org.gnome.Nautilus"; }
+        { appId = "nemo"; }
+        { appId = "thunar"; }
+        { appId = "org.pulseaudio.pavucontrol"; }
+        { appId = "pavucontrol"; }
+        { appId = "ristretto"; }
+        { appId = "vlc"; }
+        { appId = "yad"; }
+        { appId = "zenity"; }
       ]);
     };
   };

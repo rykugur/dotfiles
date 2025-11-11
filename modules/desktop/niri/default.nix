@@ -17,6 +17,11 @@ in {
         lib.types.enum [ "caelestia" "dankMaterialShell" "noctalia" "none" ];
       default = "none";
     };
+
+    screenshotBackend = lib.mkOption {
+      type = lib.types.enum [ "swappy" "satty" "none" ];
+      default = "none";
+    };
   };
 
   config = let isBarEnabled = bar: cfg.bar == bar;

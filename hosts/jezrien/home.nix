@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [ ../../home ./home-packages.nix ];
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
@@ -9,6 +9,8 @@
       sopsFile = ../../hosts/jezrien/secrets.yaml;
     };
   };
+
+  home.packages = [ pkgs.beyond-all-reason ];
 
   rhx = {
     btop.enable = true;
