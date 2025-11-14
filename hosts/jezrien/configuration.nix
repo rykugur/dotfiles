@@ -168,7 +168,6 @@
     razer.enable = true;
     starcitizen.enable = true;
     stylix.enable = true;
-    winboat.enable = true;
   };
 
   home-manager = {

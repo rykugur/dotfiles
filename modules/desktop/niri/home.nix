@@ -115,9 +115,7 @@
           # TODO: `niri msg pick-window`
         } // {
           "Mod+h".action = focus-column-left-or-last;
-          # "Mod+j".action = focus-window-down-or-top;
           "Mod+j".action = focus-window-or-workspace-down;
-          # "Mod+k".action = focus-window-up-or-bottom;
           "Mod+k".action = focus-window-or-workspace-up;
           "Mod+l".action = focus-column-right-or-first;
 
@@ -133,9 +131,6 @@
             action = toggle-overview;
             cooldown-ms = 250;
           };
-
-          # "Mod+Tab".action = focus-window-down-or-column-right;
-          # "Mod+Shift+Tab".action = focus-window-up-or-column-left;
         } // {
           XF86AudioLowerVolume.action =
             lib.mkDefault (spawn-sh "amixer sset Master 5%-");

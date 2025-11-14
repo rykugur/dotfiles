@@ -28,6 +28,15 @@ in {
       enableSystemSound = false;
 
       default.settings = {
+        currentThemeName = "cat-blue";
+        fontFamily = "CaskaydiaCove NFM";
+        monoFontFamily = "CaskaydiaMono NFM";
+
+        acMonitorTimeout = 1200;
+        acSuspendTime = 1800;
+        lockBeforeSuspend = true;
+
+        showWeather = true;
         useFahrenheit = true;
         weatherLocation = "Rosemount, MN";
         weatherCoordinates = "44.747998,-93.133574";
@@ -63,6 +72,7 @@ in {
             XF86MonBrightnessUp.action =
               spawnAction [ "brightness" "increment" "5" ];
           };
+
         spawn-at-startup = [{ argv = [ "dms" "run" ]; }];
       };
   };
