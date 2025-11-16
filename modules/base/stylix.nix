@@ -1,7 +1,10 @@
 { config, inputs, lib, pkgs, ... }:
 let cfg = config.rhx.stylix;
 in {
-  imports = [ inputs.stylix.nixosModules.stylix ];
+  imports =
+    lib.optionals pkgs.stdenv.isLinux [ inputs.stylix.nixosModules.stylix ]
+    ++ lib.optionals pkgs.stdenv.isDarwin
+    [ inputs.stylix.darwinModules.stylix ];
 
   options.rhx.stylix.enable = lib.mkEnableOption "Enable certain stylix";
 

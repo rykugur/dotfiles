@@ -111,7 +111,7 @@
           modules = [
             ./modules/darwin
 
-            ./modules/base/fonts.nix
+            ./modules/base
 
             ./hosts/taln/configuration.nix
           ];
@@ -119,6 +119,7 @@
             inherit inputs outputs;
             hostname = "taln";
             username = "dusty";
+            pkgs = pkgsFor.aarch64-darwin;
           };
         };
 
