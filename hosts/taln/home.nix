@@ -1,10 +1,27 @@
-{ pkgs, username, ... }: {
-  imports = [ ../../home ];
+{ pkgs, ... }: {
+  imports = [
+    ../../home
 
-  home = {
-    inherit username;
-    homeDirectory = "/Users/${username}";
-  };
+    # TODO: fix this later; shared modules across nixos/nix-darwin can be painful
+    ../../modules/home-manager/carapace.nix
+    ../../modules/home-manager/direnv.nix
+    ../../modules/home-manager/ghostty.nix
+    ../../modules/home-manager/git.nix
+    ../../modules/home-manager/helix.nix
+    ../../modules/home-manager/homelab.nix
+    ../../modules/home-manager/jujutsu.nix
+    ../../modules/home-manager/nushell.nix
+    ../../modules/home-manager/ssh.nix
+    ../../modules/home-manager/starship.nix
+    ../../modules/home-manager/yazi.nix
+    ../../modules/home-manager/zellij.nix
+    ../../modules/home-manager/zoxide.nix
+  ];
+
+  # home = {
+  #   inherit username;
+  #   homeDirectory = "/Users/${username}";
+  # };
 
   home.packages = with pkgs; [
     nh

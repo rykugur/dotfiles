@@ -1,9 +1,5 @@
 { config, inputs, outputs, pkgs, hostname, username, ... }: {
-  imports = [
-    outputs.hmModules
-
-    inputs.sops-nix.homeManagerModules.sops
-  ];
+  imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
   nixpkgs = {
     overlays = [ outputs.overlays.additions outputs.overlays.modifications ];

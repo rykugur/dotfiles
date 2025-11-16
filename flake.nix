@@ -84,21 +84,14 @@
 
       overlays = import ./overlays { inherit inputs; };
 
-      baseModules = import ./modules/base;
-      darwinModules = import ./modules/darwin;
-      nixosModules = import ./modules/nixos;
-      hmModules = import ./modules/home-manager;
-
-      modules = import ./modules;
-
       nixosConfigurations = let username = "dusty";
       in {
         # primary/gaming desktop
         "jezrien" = nixpkgs.lib.nixosSystem {
           modules = [
-            outputs.baseModules
-            outputs.nixosModules
-            outputs.modules
+            ./modules/base
+            ./modules/nixos
+            ./modules
 
             ./roles
 
@@ -116,8 +109,9 @@
         # home macbook pro
         "taln" = nix-darwin.lib.darwinSystem {
           modules = [
-            outputs.baseModules
-            outputs.darwinModules
+            ./modules/darwin
+
+            ./modules/base/fonts.nix
 
             ./hosts/taln/configuration.nix
           ];
