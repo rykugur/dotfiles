@@ -25,7 +25,6 @@ in {
         source ~/.dotfiles/configs/nu/env.nu
       '';
       extraConfig = ''
-        source ${nu-scripts}/themes/nu-themes/catppuccin-mocha.nu
         source ${nu-scripts}/custom-menus/zoxide-menu.nu
         source ~/.dotfiles/configs/nu/config.nu
       '';
