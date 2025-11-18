@@ -30,7 +30,7 @@
           let is_present = ($app_id in $protected_app_ids)
 
           if $is_present {
-              exit 0
+            exit 0
           } else {
             niri msg action close-window
           }
