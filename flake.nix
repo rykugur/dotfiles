@@ -96,6 +96,8 @@
             ./roles
 
             ./hosts/jezrien
+
+            inputs.stylix.nixosModules.stylix
           ];
           specialArgs = {
             inherit inputs outputs;
@@ -114,6 +116,8 @@
             ./modules/base
 
             ./hosts/taln/configuration.nix
+
+            inputs.stylix.darwinModules.stylix
           ];
           specialArgs = {
             inherit inputs outputs;

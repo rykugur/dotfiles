@@ -1,21 +1,41 @@
 { config, lib, pkgs, nixosConfig, ... }: {
   config = lib.mkIf nixosConfig.rhx.niri.enable {
-    home.packages = with pkgs; [
-      albert
-      slurp
-      wayland-utils
-      wev
-      wl-clipboard
-      wl-clipboard-x11
-      wlogout
-      wtype
+    home.packages = with pkgs;
+      [
+        albert
+        slurp
+        wayland-utils
+        wev
+        wl-clipboard
+        wl-clipboard-x11
+        wlogout
+        wtype
 
-      xdg-desktop-portal-gnome
-      xdg-desktop-portal-gtk
-      gnome-keyring
+        xdg-desktop-portal-gnome
+        xdg-desktop-portal-gtk
+        gnome-keyring
 
-      xwayland-satellite
-    ];
+        xwayland-satellite
+      ] ++ [
+        (pkgs.writeScriptBin "conditional-kill.nu" ''
+          #!/usr/bin/env nu
+
+          def is_in_list [value, list: list] {
+            $value in $list
+          }
+
+          let protected_app_ids = ["steam_app_8500"]
+          let app_id = (niri msg --json focused-window | from json | get app_id)
+
+          let is_present = ($app_id in $protected_app_ids)
+
+          if $is_present {
+              exit 0
+          } else {
+            niri msg action close-window
+          }
+        '')
+      ];
 
     programs.niri.settings = let
       p25 = { proportion = 1.0 / 4.0; };
@@ -85,17 +105,14 @@
             repeat = false;
           };
           "Mod+f" = {
-            # action = toggle-windowed-fullscreen;
             action = fullscreen-window;
             repeat = false;
           };
           "Mod+o".action = show-hotkey-overlay;
-          # "Mod+Shift+F" = {
-          #   action = ;
-          #   repeat = false;
-          # };
           "Mod+q" = {
-            action = lib.mkDefault close-window;
+            action = lib.mkDefault (spawn [
+              "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill.nu"
+            ]);
             repeat = false;
           };
           "Mod+v" = {

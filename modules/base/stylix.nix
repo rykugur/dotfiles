@@ -1,12 +1,7 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.rhx.stylix;
 in {
-  imports =
-    lib.optionals pkgs.stdenv.isLinux [ inputs.stylix.nixosModules.stylix ]
-    ++ lib.optionals pkgs.stdenv.isDarwin
-    [ inputs.stylix.darwinModules.stylix ];
-
-  options.rhx.stylix.enable = lib.mkEnableOption "Enable certain stylix";
+  options.rhx.stylix.enable = lib.mkEnableOption "Enable stylix base module.";
 
   config = lib.mkIf cfg.enable {
     stylix = {
@@ -38,6 +33,6 @@ in {
       };
     };
 
-    stylix.image = ../../configs/wallpapers/wallpaper.png;
+    # stylix.image = ../../configs/wallpapers/wallpaper.png;
   };
 }
