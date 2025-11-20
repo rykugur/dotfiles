@@ -27,7 +27,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ### de/wm  stuff
+    ### de/wm stuff
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-contrib = {
       url = "github:hyprwm/contrib";
@@ -60,6 +60,7 @@
 
     ### random stuff
     atuin.url = "github:atuinsh/atuin";
+    ryze312-stackpkgs.url = "github:ryze312/stackpkgs"; # for audiorelay
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zjstatus.url = "github:dj95/zjstatus";

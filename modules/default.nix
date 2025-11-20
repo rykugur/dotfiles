@@ -1,1 +1,1 @@
-{ ... }: { imports = [ ./desktop ]; }
+{ ... }: { imports = [ ./desktop ./gaming ]; }

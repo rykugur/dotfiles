@@ -132,6 +132,7 @@
       # virtualization.enable = true;
     };
 
+    # audiorelay.enable = true;
     btrfs.enable = true;
     niri = {
       enable = true;
