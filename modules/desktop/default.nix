@@ -1,6 +1,7 @@
 { ... }: {
   imports = [
     # de/wm
+    ./hyprland
     ./niri
 
     # bars

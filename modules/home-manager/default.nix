@@ -1,7 +1,5 @@
 {
   imports = [
-    ./hyprland
-
     ./aerospace.nix
     ./albert.nix
     ./atuin.nix

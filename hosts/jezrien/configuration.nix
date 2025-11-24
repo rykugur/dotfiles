@@ -134,10 +134,23 @@
 
     # audiorelay.enable = true;
     btrfs.enable = true;
+    dankMaterialShell.screenshotBackend = "swappy";
+    hyprland = {
+      enable = true;
+      bar = "dankMaterialShell";
+      monitors =
+        [ "DP-1,3440x1440@175,0x1440,1" "DP-2,3440x1440@144,0x0,1,vrr,0" ];
+      workspaces = [
+        "1,monitor:DP-2"
+        "2,monitor:DP-2"
+        "$gamingWorkspace,monitor:DP-1"
+        "$steamWorkspace,monitor:DP-1"
+        "5,monitor:DP-1"
+      ];
+    };
     niri = {
       enable = true;
       bar = "dankMaterialShell";
-      screenshotBackend = "swappy";
       monitors = {
         "DP-1" = {
           mode = {

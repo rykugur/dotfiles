@@ -7,7 +7,6 @@ in {
     ./docker.nix
     ./gamemode.nix
     ./gnome.nix
-    ./hyprland.nix
     ./kde.nix
     ./obs-studio.nix
     ./pipewire.nix

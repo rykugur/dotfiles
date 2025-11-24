@@ -1,7 +1,7 @@
 { config, inputs, lib, username, ... }:
 let
   cfg = config.rhx.niri;
-  barNames = (import ../bar-names.nix).bars;
+  barNames = (import ../shared.nix).bars;
 in {
   imports = [ inputs.niri.nixosModules.niri ];
 
@@ -29,6 +29,7 @@ in {
   in lib.mkIf cfg.enable {
     programs.niri.enable = true;
 
+    # rhx.caelestia.enable = (isBarEnabled "caelestia");
     rhx.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
     rhx.noctalia.enable = (isBarEnabled "noctalia");
 

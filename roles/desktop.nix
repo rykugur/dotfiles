@@ -17,11 +17,6 @@ in {
       fonts.enable = true;
       pipewire.enable = true;
       ssh.enable = true;
-
-      # DE stuff
-      hyprland.enable = true;
-      # kde.enable = true;
-      # gnome.enable = true;
     };
 
     # home-manager config

@@ -1,11 +1,14 @@
+# TODO: remove niri-config-specific references
 { config, inputs, lib, nixosConfig, pkgs, ... }:
-let rhxCfg = nixosConfig.rhx;
+let
+  dankCfg = nixosConfig.rhx.dankMaterialShell;
+  rhxCfg = nixosConfig.rhx;
 in {
   imports = [ inputs.dankMaterialShell.homeModules.dankMaterialShell.default ]
     ++ lib.optionals (rhxCfg.niri.enable)
     [ inputs.dankMaterialShell.homeModules.dankMaterialShell.niri ];
 
-  config = let screenshotEditor = rhxCfg.niri.screenshotBackend;
+  config = let screenshotEditor = dankCfg.screenshotBackend;
   in lib.mkIf rhxCfg.dankMaterialShell.enable {
 
     home.packages = lib.optionals (screenshotEditor != "none")
