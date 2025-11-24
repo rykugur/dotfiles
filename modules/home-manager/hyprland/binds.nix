@@ -70,8 +70,8 @@ in {
       "$mainMod, 0, togglespecialworkspace, special"
       "$mainMod SHIFT, 0, movetoworkspace, special"
 
-      "$mainMod, mouse_down, workspace, e+1"
-      "$mainMod, mouse_up, workspace, e-1"
+      "$mainMod, mouse_down, workspace, e-1"
+      "$mainMod, mouse_up, workspace, e+1"
 
       "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-wlcopy.nu"
       "$mainMod, Print, ${screenshotCommand}"

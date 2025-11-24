@@ -19,8 +19,8 @@
     "$messenger" = lib.mkDefault "signal-desktop";
     "$webapp" = lib.mkDefault "$browser --app";
 
-    "$discordWorkspace" = lib.mkDefault 4;
-    "$steamWorkspace" = lib.mkDefault 4;
-    "$gamingWorkspace" = lib.mkDefault 3;
+    "$discordWorkspace" = lib.mkDefault 3;
+    "$steamWorkspace" = lib.mkDefault 3;
+    "$gamingWorkspace" = lib.mkDefault 4;
   };
 }
