@@ -1,4 +1,5 @@
 # TODO: fix lock/suspend/etc shortcuts
+# TODO: move this to desktop module
 { config, inputs, lib, pkgs, ... }:
 let cfg = config.rhx.hyprland.caelestia;
 in {

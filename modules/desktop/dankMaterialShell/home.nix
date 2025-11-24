@@ -50,13 +50,17 @@ in {
         };
 
         binds = with config.lib.niri.actions;
-          let spawnAction = actions: spawn ([ "dms" "ipc" "call" ] ++ actions);
-          in { } // {
+          let
+            spawnAction = actions: spawn ([ "dms" "ipc" "call" ] ++ actions);
+            launcherAction = spawnAction [ "spotlight" "toggle" ];
+          in {
             "Mod+Print".action = spawnAction [ "niri" "screenshot" ];
             "Mod+Shift+e".action = spawnAction [ "powermenu" "toggle" ];
             "Mod+Shift+v".action = spawnAction [ "clipboard" "toggle" ];
-            "Mod+Space".action = spawnAction [ "spotlight" "toggle" ];
             "Mod+0".action = spawnAction [ "notepad" "toggle" ];
+
+            "Mod+r".action = launcherAction;
+            "Mod+Space".action = launcherAction;
           } // {
             XF86AudioLowerVolume.action =
               spawnAction [ "audio" "decrement" "5" ];

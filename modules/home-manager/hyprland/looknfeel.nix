@@ -18,7 +18,9 @@
         "border, 1, 1, liner"
         "borderangle, 1, 30, liner, loop"
         "fade, 1, 10, default"
-        "workspaces, 1, 5, wind"
+        # "workspaces, 1, 5, wind"
+        "workspacesIn, 1, 5, wind, slidevert 100%"
+        "workspacesOut, 1, 5, wind, slidevert -100%"
       ];
     };
 

@@ -89,12 +89,14 @@
       ];
 
       binds = with config.lib.niri.actions;
-        {
+        let launcherAction = spawn [ "albert" "toggle" ];
+        in {
           "Mod+Return" = {
             action = spawn [ "ghostty" "--gtk-single-instance=true" ];
             repeat = false;
           };
-          "Mod+Space".action = lib.mkDefault (spawn [ "albert" "toggle" ]);
+          "Mod+r".action = lib.mkDefault launcherAction;
+          "Mod+Space".action = lib.mkDefault launcherAction;
           "Mod+Print" = {
             action =
               lib.mkDefault (spawn-sh ''grim -g "$(slurp)" - | wl-copy'');
@@ -126,8 +128,8 @@
 
           "Mod+Shift+e".action = lib.mkDefault quit;
 
-          "Mod+r".action = lib.mkDefault switch-preset-column-width;
-          "Mod+Shift+r".action = lib.mkDefault switch-preset-column-width-back;
+          "Mod+p".action = lib.mkDefault switch-preset-column-width;
+          "Mod+Shift+p".action = lib.mkDefault switch-preset-column-width-back;
 
           # TODO: `niri msg pick-window`
         } // {
@@ -136,8 +138,8 @@
           "Mod+k".action = focus-window-or-workspace-up;
           "Mod+l".action = focus-column-right-or-first;
 
-          "Mod+WheelScrollUp".action = focus-column-left-or-last;
-          "Mod+WheelScrollDown".action = focus-column-right-or-first;
+          "Mod+WheelScrollUp".action = focus-column-left;
+          "Mod+WheelScrollDown".action = focus-column-right;
 
           "Mod+Shift+h".action = move-column-left-or-to-monitor-left;
           "Mod+Shift+j".action = move-window-down-or-to-workspace-down;

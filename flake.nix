@@ -38,11 +38,13 @@
       inputs.hyprland.follows = "hyprland";
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
+    mangowc.url = "github:DreamMaoMao/mango";
+    niri.url = "github:sodiboo/niri-flake";
+    # bars/shells
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri.url = "github:sodiboo/niri-flake";
     caelestia-shell = {
       url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";

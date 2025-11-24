@@ -1,5 +1,7 @@
 { config, inputs, lib, username, ... }:
-let cfg = config.rhx.niri;
+let
+  cfg = config.rhx.niri;
+  barNames = (import ../bar-names.nix).bars;
 in {
   imports = [ inputs.niri.nixosModules.niri ];
 
@@ -13,8 +15,7 @@ in {
     };
 
     bar = lib.mkOption {
-      type =
-        lib.types.enum [ "caelestia" "dankMaterialShell" "noctalia" "none" ];
+      type = lib.types.enum barNames;
       default = "none";
     };
 
