@@ -166,6 +166,8 @@
           XF86MonBrightnessUp.action = lib.mkDefault (spawn-sh "xbacklight +5");
           XF86MonBrightnessDown.action =
             lib.mkDefault (spawn-sh "xbacklight -5");
+          XF86Tools.action =
+            lib.mkDefault (spawn-sh "amixer sset Capture toggle");
         };
 
       window-rules = let
@@ -215,13 +217,20 @@
         ((mkFloatingAppRule { appId = "EVE Launcher"; }) // {
           default-column-width = p33;
         })
-        # {
-        #   matches = [{
-        #     app-id = "steam_app_8500";
-        #     title = "^EVE -.*$";
-        #   }];
-        #   variable-refresh-rate = true;
-        # }
+        {
+          matches = [{
+            app-id = "steam_app_8500";
+            title = "^EVE -.*$";
+          }];
+          variable-refresh-rate = true;
+        }
+        {
+          matches = [{
+            app-id = "starcitizen.exe";
+            title = "^Star Citizen.*$";
+          }];
+          variable-refresh-rate = true;
+        }
       ] ++ (mkFloatingAppRules [
         { appId = "galculator"; }
         { appId = "neovide"; }

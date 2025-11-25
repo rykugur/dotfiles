@@ -12,7 +12,6 @@ in {
     ./pipewire.nix
     ./razer.nix
     ./ssh.nix
-    ./starcitizen.nix
     ./steam.nix
     ./vfio.nix
     ./vr.nix

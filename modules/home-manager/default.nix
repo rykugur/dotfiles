@@ -29,7 +29,6 @@
     ./nvim.nix
     ./ranger.nix
     ./ssh.nix
-    ./starcitizen.nix
     ./starsector.nix
     ./starship.nix
     ./swaylock.nix

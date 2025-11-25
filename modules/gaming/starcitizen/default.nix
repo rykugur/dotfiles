@@ -1,10 +1,10 @@
-{ config, inputs, lib, pkgs, username, ... }:
+{ config, inputs, lib, username, ... }:
 let cfg = config.rhx.starcitizen;
 in {
   imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
 
   options.rhx.starcitizen.enable =
-    lib.mkEnableOption "Enable starcitizen nixOS module";
+    lib.mkEnableOption "Enable starcitizen module";
 
   config = lib.mkIf cfg.enable {
     services.udev = {
@@ -34,6 +34,6 @@ in {
       # disableEAC = false;
     };
 
-    home-manager.users.${username} = { rhx.starcitizen.enable = true; };
+    home-manager.users.${username}.imports = [ ./home.nix ];
   };
 }

@@ -65,6 +65,7 @@ in {
             XF86AudioRaiseVolume.action =
               spawnAction [ "audio" "increment" "5" ];
             XF86AudioMute.action = spawnAction [ "audio" "mute" ];
+            XF86Tools.action = spawnAction [ "audio" "micmute" ];
             XF86AudioPlay.action = spawnAction [ "mpris" "playPause" ];
             XF86AudioPause.action = spawnAction [ "mpris" "playPause" ];
             XF86AudioNext.action = spawnAction [ "mpris" "next" ];
