@@ -35,6 +35,24 @@
             niri msg action close-window
           }
         '')
+        (pkgs.writeScriptBin "eve-toggle-niri.nu" ''
+          #!/usr/bin/env nu
+
+          let windows = niri msg --json windows | from json
+
+          let eveWindows = $windows | where $it.title =~ "^EVE -.*$"
+          let eveWindowIds = $eveWindows | get id
+
+          let activeWindow = niri msg --json focused-window | from json
+          let eveIsActive = $activeWindow.id in $eveWindowIds
+
+          if $eveIsActive {
+            let nextEveWindow = $eveWindows | where $it.id != $activeWindow.id | first
+            niri msg action focus-window --id $nextEveWindow.id
+          } else {
+            niri msg action focus-window --id ($eveWindows | first | get id)
+          }
+        '')
       ];
 
     programs.niri.settings = let
@@ -108,6 +126,12 @@
           };
           "Mod+f" = {
             action = fullscreen-window;
+            repeat = false;
+          };
+          "Mod+g" = {
+            action = lib.mkDefault (spawn [
+              "${config.home.homeDirectory}/.nix-profile/bin/eve-toggle-niri.nu"
+            ]);
             repeat = false;
           };
           "Mod+o".action = show-hotkey-overlay;
