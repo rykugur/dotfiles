@@ -21,7 +21,8 @@ in {
 
       # Additional commands before the game starts
       preCommands = ''
-        export PULSE_LATENCY_MSEC=40
+        export PULSE_LATENCY_MSEC=60
+        export PW_LATENCY_MSEC=60
         export DXVK_HUD=compiler
         export MANGO_HUD=1
       '';
