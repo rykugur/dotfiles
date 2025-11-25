@@ -84,7 +84,7 @@ in {
 
     wayland.windowManager.hyprland = let
       useHy3 = hyprCfg.layout == "hy3";
-      useHyprscrolling = hyprCfg.layout == "hyprscrolling";
+      useHyprscrolling = hyprCfg.layout == "scrolling";
     in {
       enable = true;
 
@@ -98,7 +98,8 @@ in {
       settings = {
         monitor = hyprCfg.monitors;
 
-        workspace = hyprCfg.workspaces;
+        workspace = lib.optionals (hyprCfg.useDynamicWorkspaces != true)
+          hyprCfg.workspaces;
 
         misc = {
           disable_hyprland_logo = true;
@@ -123,10 +124,6 @@ in {
         "$passwordManager" = lib.mkDefault "1password";
         "$messenger" = lib.mkDefault "signal-desktop";
         "$webapp" = lib.mkDefault "$browser --app";
-
-        "$discordWorkspace" = lib.mkDefault 3;
-        "$steamWorkspace" = lib.mkDefault 3;
-        "$gamingWorkspace" = lib.mkDefault 4;
 
         general = {
           gaps_in = 5;
@@ -286,7 +283,7 @@ in {
           ", XF86AudioPrev, exec, playerctl previous"
           ", XF86MonBrightnessUp, exec, xbacklight +5"
           ", XF86MonBrightnessDown, exec, xbacklight -5"
-        ] ++ lib.optionals (hyprCfg.workspaces != null) workspaceBinds;
+        ] ++ workspaceBinds;
 
         binde = lib.optionals (hyprCfg.bar == "none") [
           ", XF86AudioRaiseVolume, exec, amixer sset Master 5%+"
@@ -335,13 +332,8 @@ in {
           "float, class:(steam), title:(Friends List)"
           "stayfocused, title:^()$,class:^(steam)$"
           "minsize 1 1, title:^()$,class:^(steam)$"
-          # "workspace $gamingWorkspace silent, class:(dota2)"
-          # "workspace $gamingWorkspace silent, class:^(RimWorldLinux)$"
-          # "workspace $steamWorkspace silent, class:^(steam_app_8500)$,title:^(EVE Launcher)$,initialClass:^(steam_app_8500)$,initialTitle:^(EVE Launcher)$"
           "fullscreenstate:2 -1, initialTitle:^(EVE)$"
-          # "workspace $gamingWorkspace silent, class:(Project Zomboid)"
           "fullscreen, class:(Project Zomboid)"
-          # "workspace $gamingWorkspace silent, class:(X4)"
         ];
       };
     };

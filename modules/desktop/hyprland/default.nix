@@ -17,15 +17,20 @@ in {
       description = "Monitors to define.";
     };
 
+    useDynamicWorkspaces = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "If true, workspaces will not be pre-defined.";
+    };
+
     workspaces = lib.mkOption {
-      type = lib.types.nullOr (lib.types.listOf lib.types.str);
-      default = null;
+      type = lib.types.listOf lib.types.str;
+      default = [ "1" "2" "3" ];
       description = "Workspaces to define.";
     };
 
     layout = lib.mkOption {
-      type =
-        lib.types.nullOr (lib.types.enum [ "master" "hy3" "hyprscrolling" ]);
+      type = lib.types.nullOr (lib.types.enum [ "master" "hy3" "scrolling" ]);
       default = null;
       description = "Which layout to use.";
     };
