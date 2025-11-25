@@ -1,14 +1,9 @@
-{ config, inputs, lib, pkgs, ... }:
+{ inputs, lib, nixosConfig, pkgs, ... }:
 let
-  cfg = config.rhx.starcitizen;
   gameglass =
     inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.gameglass;
 in {
-  options.rhx.starcitizen = {
-    enable = lib.mkEnableOption "Enable starcitizen home-manager module.";
-  };
-
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf nixosConfig.rhx.starcitizen.enable {
     home.packages = with pkgs; [ opentrack gameglass ];
 
     xdg.desktopEntries.gameglass = {
