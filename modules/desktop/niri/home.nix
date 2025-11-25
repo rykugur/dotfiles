@@ -17,7 +17,7 @@
 
         xwayland-satellite
       ] ++ [
-        (pkgs.writeScriptBin "conditional-kill.nu" ''
+        (pkgs.writeScriptBin "conditional-kill-niri.nu" ''
           #!/usr/bin/env nu
 
           def is_in_list [value, list: list] {
@@ -113,7 +113,7 @@
           "Mod+o".action = show-hotkey-overlay;
           "Mod+q" = {
             action = lib.mkDefault (spawn [
-              "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill.nu"
+              "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill-niri.nu"
             ]);
             repeat = false;
           };

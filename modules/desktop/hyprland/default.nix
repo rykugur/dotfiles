@@ -18,16 +18,30 @@ in {
     };
 
     workspaces = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ "1" "2" "3" ];
+      type = lib.types.nullOr (lib.types.listOf lib.types.str);
+      default = null;
       description = "Workspaces to define.";
     };
 
-    hy3.enable = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable hy3 plugin for i3 like tiling.";
+    layout = lib.mkOption {
+      type =
+        lib.types.nullOr (lib.types.enum [ "master" "hy3" "hyprscrolling" ]);
+      default = null;
+      description = "Which layout to use.";
     };
+
+    # hy3.enable = lib.mkOption {
+    #   type = lib.types.bool;
+    #   default = false;
+    #   description = "Enable hy3 plugin for i3 like tiling.";
+    # };
+
+    # hyprscrolling.enable = lib.mkOption {
+    #   type = lib.types.bool;
+    #   default = false;
+    #   description =
+    #     "Enable hyprscrolling plugin (for niri/PaperWM-like scrolling workspaces).";
+    # };
 
     hypridle.enable = lib.mkOption {
       type = lib.types.bool;

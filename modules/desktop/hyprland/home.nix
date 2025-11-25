@@ -1,4 +1,4 @@
-{ lib, pkgs, nixosConfig, ... }:
+{ config, lib, pkgs, nixosConfig, ... }:
 let hyprCfg = nixosConfig.rhx.hyprland;
 in {
   config = lib.mkIf nixosConfig.rhx.hyprland.enable {
@@ -21,7 +21,36 @@ in {
       # wofi
       # wofi-emoji
       wtype
+      (pkgs.writeScriptBin "conditional-kill-hypr.nu" ''
+        #!/usr/bin/env nu
+
+        # because I'm tired of accidentally killing EVE Online
+
+        def is_in_list [value, list: list] {
+          $value in $list
+        }
+
+        let protected_app_classes = ["steam_app_8500"]
+        let active_class = (hyprctl activewindow | parse -r 'class: (?<class>.+)' | get class | first)
+        let is_present = (is_in_list $active_class $protected_app_classes)
+
+        if $is_present {
+            # If the active window is my_app_using_F3, do nothing
+            exit 0
+        } else {
+            # Otherwise, close the active window
+            hyprctl dispatch killactive
+        }
+      '')
     ];
+
+    # TODO: figure out how to do this with stylix
+    home.pointerCursor = {
+      name = "phinger-cursors-dark";
+      package = pkgs.phinger-cursors;
+      size = 32;
+      gtk.enable = true;
+    };
 
     services = {
       hypridle = lib.mkIf hyprCfg.hypridle.enable {
@@ -53,13 +82,18 @@ in {
       hyprlock = lib.mkIf hyprCfg.hyprlock.enable { enable = true; };
     };
 
-    wayland.windowManager.hyprland = {
+    wayland.windowManager.hyprland = let
+      useHy3 = hyprCfg.layout == "hy3";
+      useHyprscrolling = hyprCfg.layout == "hyprscrolling";
+    in {
       enable = true;
 
       importantPrefixes =
         [ "$" "name" "output" "monitor" "workspace" "bezier" ];
 
-      plugins = lib.optionals hyprCfg.hy3.enable [ pkgs.hyprlandPlugins.hy3 ];
+      plugins = lib.optionals useHy3 [ pkgs.hyprlandPlugins.hy3 ]
+        ++ lib.optionals useHyprscrolling
+        [ pkgs.hyprlandPlugins.hyprscrolling ];
 
       settings = {
         monitor = hyprCfg.monitors;
@@ -101,12 +135,12 @@ in {
           # "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
           # "col.inactive_border" = "rgba(595959aa)";
 
-          layout = lib.mkDefault "hy3";
+          layout = lib.mkDefault hyprCfg.layout;
 
           allow_tearing = false;
         };
 
-        plugin = lib.optionalAttrs hyprCfg.hy3.enable {
+        plugin = lib.optionalAttrs useHy3 {
           hy3 = {
             no_gaps_when_only = 0;
             autotile = {
@@ -114,6 +148,11 @@ in {
               trigger_width = 1220;
               trigger_height = 500;
             };
+          };
+        } // lib.optionalAttrs useHyprscrolling {
+          hyprScrolling = {
+            column_width = 0.667;
+            explicit_column_widths = "0.25,0.33,0.5,0.66,0.75";
           };
         };
 
@@ -199,11 +238,9 @@ in {
         binds = { workspace_back_and_forth = true; };
 
         bind = let
-          moveFocusCommand =
-            if hyprCfg.hy3.enable then "hy3:movefocus" else "movefocus";
-          moveWindowCommand =
-            if hyprCfg.hy3.enable then "hy3:movewindow" else "movewindow";
-          workspaces = hyprCfg.workspaces;
+          moveFocusCommand = if useHy3 then "hy3:movefocus" else "movefocus";
+          moveWindowCommand = if useHy3 then "hy3:movewindow" else "movewindow";
+          workspaces = hyprCfg.workspaces or [ ];
           workspaceBinds = lib.concatMap (i:
             let index = toString (i + 1);
             in [
@@ -213,13 +250,13 @@ in {
         in [
           "$mainMod, Return, exec, $terminal"
           "$mainMod, E, exec, $fileManager"
-          "$mainMod, Q, exec, ~/.dotfiles/configs/hypr/scripts/conditional-killactive.nu"
-          "$mainMod SHIFT, Q, killactive,"
+          "$mainMod, Q, exec, ${config.home.homeDirectory}/.nix-profile/bin/conditional-kill-hypr.nu"
+          "$mainMod SHIFT, Q, killactive"
 
           "$mainMod, F, fullscreen"
           "$mainMod, V, togglefloating"
 
-          "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-wlcopy.nu"
+          # "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-wlcopy.nu"
           "$mainMod, g, exec, ~/.dotfiles/configs/nu/scripts/toggle-eve.nu"
         ] ++ [
           "$mainMod, h, ${moveFocusCommand}, l"
@@ -249,7 +286,7 @@ in {
           ", XF86AudioPrev, exec, playerctl previous"
           ", XF86MonBrightnessUp, exec, xbacklight +5"
           ", XF86MonBrightnessDown, exec, xbacklight -5"
-        ] ++ workspaceBinds;
+        ] ++ lib.optionals (hyprCfg.workspaces != null) workspaceBinds;
 
         binde = lib.optionals (hyprCfg.bar == "none") [
           ", XF86AudioRaiseVolume, exec, amixer sset Master 5%+"
@@ -291,19 +328,20 @@ in {
           "size 1920 1080, class:(net.lutris.Lutris)"
           "float, class:^org.telegram.desktop$, title:^Media viewer$"
           "float, class:net.davidotek.pupgui2"
+        ] ++ lib.optionals (hyprCfg.workspaces != null) [
           "workspace 4 silent, class:(discord)"
           "workspace 4 silent, class:^(steam)$"
           "workspace 4 silent, title:(Friends List)"
           "float, class:(steam), title:(Friends List)"
           "stayfocused, title:^()$,class:^(steam)$"
           "minsize 1 1, title:^()$,class:^(steam)$"
-          "workspace $gamingWorkspace silent, class:(dota2)"
-          "workspace $gamingWorkspace silent, class:^(RimWorldLinux)$"
-          "workspace $steamWorkspace silent, class:^(steam_app_8500)$,title:^(EVE Launcher)$,initialClass:^(steam_app_8500)$,initialTitle:^(EVE Launcher)$"
+          # "workspace $gamingWorkspace silent, class:(dota2)"
+          # "workspace $gamingWorkspace silent, class:^(RimWorldLinux)$"
+          # "workspace $steamWorkspace silent, class:^(steam_app_8500)$,title:^(EVE Launcher)$,initialClass:^(steam_app_8500)$,initialTitle:^(EVE Launcher)$"
           "fullscreenstate:2 -1, initialTitle:^(EVE)$"
-          "workspace $gamingWorkspace silent, class:(Project Zomboid)"
+          # "workspace $gamingWorkspace silent, class:(Project Zomboid)"
           "fullscreen, class:(Project Zomboid)"
-          "workspace $gamingWorkspace silent, class:(X4)"
+          # "workspace $gamingWorkspace silent, class:(X4)"
         ];
       };
     };

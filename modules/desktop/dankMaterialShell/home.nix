@@ -94,7 +94,8 @@ in {
           "$mainMod SHIFT, E, exec, ${dmsIpc "powermenu toggle"}"
           "$mainMod, R, exec, ${launcher}"
           "$mainMod, space, exec, ${launcher}"
-          "$mainMod, Print, exec, ${dmsIpc "niri screenshot"}"
+          # "$mainMod, Print, exec, ${dmsIpc "niri screenshot"}"
+          "$mainMod, 0, exec, ${dmsIpc "notepad toggle"}"
 
           ", XF86AudioMute, exec, ${audioIpc "mute"}"
           ", XF86AudioPlay, exec, ${audioIpc "playPause"}"
