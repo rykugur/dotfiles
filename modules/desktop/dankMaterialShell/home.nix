@@ -82,5 +82,29 @@ in {
 
         spawn-at-startup = [{ argv = [ "dms" "run" ]; }];
       };
+
+    wayland.windowManager.hyprland.settings = lib.mkIf
+      (rhxCfg.hyprland.enable && rhxCfg.hyprland.bar == "dankMaterialShell") {
+        bind = let
+          dmsIpc = action: "dms ipc call ${action}";
+          audioIpc = action: "dms ipc call audio ${action}";
+          mprisIpc = action: "dms ipc call mpris ${action}";
+          launcher = dmsIpc "spotlight toggle";
+        in [
+          "$mainMod SHIFT, E, exec, ${dmsIpc "powermenu toggle"}"
+          "$mainMod, R, exec, ${launcher}"
+          "$mainMod, space, exec, ${launcher}"
+          "$mainMod, Print, exec, ${dmsIpc "niri screenshot"}"
+
+          ", XF86AudioMute, exec, ${audioIpc "mute"}"
+          ", XF86AudioPlay, exec, ${audioIpc "playPause"}"
+          ", XF86AudioPause, exec, ${audioIpc "playPause"}"
+          ", XF86AudioNext, exec, ${mprisIpc "next"}"
+          ", XF86AudioPrev, exec, ${mprisIpc "previous"}"
+          ", XF86MonBrightnessUp, exec, ${dmsIpc "brightness increment 5"}"
+          ", XF86MonBrightnessDown, exec, ${dmsIpc "brightness decrement 5"}"
+        ];
+        exec-once = [ "dms run" ];
+      };
   };
 }

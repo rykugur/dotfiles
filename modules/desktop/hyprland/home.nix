@@ -2,7 +2,6 @@
 let hyprCfg = nixosConfig.rhx.hyprland;
 in {
   config = lib.mkIf nixosConfig.rhx.hyprland.enable {
-
     rhx = { nautilus.enable = true; };
 
     home.packages = with pkgs; [
@@ -23,13 +22,6 @@ in {
       # wofi-emoji
       wtype
     ];
-
-    # home.pointerCursor = {
-    #   name = "phinger-cursors-dark";
-    #   package = pkgs.phinger-cursors;
-    #   size = 32;
-    #   gtk.enable = true;
-    # };
 
     services = {
       hypridle = lib.mkIf hyprCfg.hypridle.enable {
@@ -128,12 +120,13 @@ in {
         exec-once = [
           "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
           "1password"
-          "albert"
           "discord"
           "steam"
+          "corectrl --minimize-systray"
+        ] ++ lib.optionals (hyprCfg.bar == "none") [
+          "albert"
           "playerctld daemon"
           "wl-paste --watch cliphist store"
-          "corectrl --minimize-systray"
         ]
         # TODO: move this to caelestia module
           ++ lib.optionals (hyprCfg.bar == "caelestia") [ "caelestia-shell" ];
@@ -210,9 +203,15 @@ in {
             if hyprCfg.hy3.enable then "hy3:movefocus" else "movefocus";
           moveWindowCommand =
             if hyprCfg.hy3.enable then "hy3:movewindow" else "movewindow";
+          workspaces = hyprCfg.workspaces;
+          workspaceBinds = lib.concatMap (i:
+            let index = toString (i + 1);
+            in [
+              "$mainMod, ${index}, workspace, ${index}"
+              "$mainMod SHIFT, ${index}, movetoworkspace, ${index}"
+            ]) (lib.lists.range 0 ((lib.lists.length workspaces) - 1));
         in [
           "$mainMod, Return, exec, $terminal"
-          "$mainMod SHIFT, Return, exec, [float] $terminal"
           "$mainMod, E, exec, $fileManager"
           "$mainMod, Q, exec, ~/.dotfiles/configs/hypr/scripts/conditional-killactive.nu"
           "$mainMod SHIFT, Q, killactive,"
@@ -237,20 +236,20 @@ in {
           "$mainMod SHIFT, 0, movetoworkspace, special"
           "$mainMod, mouse_down, workspace, e-1"
           "$mainMod, mouse_up, workspace, e+1"
-        ] ++ [ ] ++ lib.optionals (hyprCfg.bar == "none") [
+        ] ++ lib.optionals (hyprCfg.bar == "none") [
           "$mainMod SHIFT, E, exec, wlogout"
           "$mainMod, R, exec, albert toggle"
           "$mainMod, space, exec, albert toggle"
-          ''$mainMod, Pritn, exec, grim -g "$(slurp)" - | wl-copy''
+          ''$mainMod, Print, exec, grim -g "$(slurp)" - | wl-copy''
 
           ", XF86AudioMute, exec, amixer sset Master toggle"
           ", XF86AudioPlay, exec, playerctl play-pause"
           ", XF86AudioPause, exec, playerctl play-pause"
           ", XF86AudioNext, exec, playerctl next"
           ", XF86AudioPrev, exec, playerctl previous"
-          ", XF86MonBrightnessUp, exec, exec, xbacklight +5"
-          ", XF86MonBrightnessDown, exec, exec, xbacklight -5"
-        ];
+          ", XF86MonBrightnessUp, exec, xbacklight +5"
+          ", XF86MonBrightnessDown, exec, xbacklight -5"
+        ] ++ workspaceBinds;
 
         binde = lib.optionals (hyprCfg.bar == "none") [
           ", XF86AudioRaiseVolume, exec, amixer sset Master 5%+"
