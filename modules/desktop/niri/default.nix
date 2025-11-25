@@ -3,7 +3,6 @@ let
   cfg = config.rhx.niri;
   shared = import ../shared.nix;
   barNames = shared.bars;
-  screenshotBackends = shared.screenshotBackends;
 in {
   imports = [ inputs.niri.nixosModules.niri ];
 
@@ -18,11 +17,6 @@ in {
 
     bar = lib.mkOption {
       type = lib.types.enum barNames;
-      default = "none";
-    };
-
-    screenshotBackend = lib.mkOption {
-      type = lib.types.enum screenshotBackends;
       default = "none";
     };
   };

@@ -11,13 +11,8 @@ in {
   config = let screenshotEditor = dankCfg.screenshotBackend;
   in lib.mkIf rhxCfg.dankMaterialShell.enable {
 
-    home.packages = lib.optionals (screenshotEditor != "none")
-      (if screenshotEditor == "swappy" then
-        [ pkgs.swappy ]
-      else if screenshotEditor == "satty" then
-        [ pkgs.satty ]
-      else
-        [ ]);
+    home.packages = lib.optionals (screenshotEditor == "swappy") [ pkgs.swappy ]
+      ++ lib.optionals (screenshotEditor == "satty") [ pkgs.satty ];
 
     programs.dankMaterialShell = {
       enable = true;
@@ -94,7 +89,6 @@ in {
           "$mainMod SHIFT, E, exec, ${dmsIpc "powermenu toggle"}"
           "$mainMod, R, exec, ${launcher}"
           "$mainMod, space, exec, ${launcher}"
-          # "$mainMod, Print, exec, ${dmsIpc "niri screenshot"}"
           "$mainMod, 0, exec, ${dmsIpc "notepad toggle"}"
 
           ", XF86AudioMute, exec, ${audioIpc "mute"}"
