@@ -20,10 +20,6 @@
         (pkgs.writeScriptBin "conditional-kill-niri.nu" ''
           #!/usr/bin/env nu
 
-          def is_in_list [value, list: list] {
-            $value in $list
-          }
-
           let protected_app_ids = ["steam_app_8500"]
           let app_id = (niri msg --json focused-window | from json | get app_id)
 
