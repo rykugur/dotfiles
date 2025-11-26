@@ -40,7 +40,6 @@ in {
         mangohud
         mo2installer
         moonlight-qt
-        pyfa
         unixtools.xxd
         vkd3d
         xdelta

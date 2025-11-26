@@ -182,8 +182,10 @@
       };
     };
     razer.enable = true;
-    starcitizen.enable = true;
     stylix.enable = true;
+
+    eve-online.enable = true;
+    starcitizen.enable = true;
   };
 
   home-manager = {

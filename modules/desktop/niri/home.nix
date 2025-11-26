@@ -219,7 +219,14 @@
           matches = [{ app-id = "com.mitchellh.ghostty"; }];
           default-column-width = p33;
         }
-      ] ++ [
+        {
+          matches = [{ app-id = "discord"; }];
+          default-column-width = p50;
+
+        }
+      ] ++
+      # game-specific rules
+      [
         {
           matches = [{
             app-id = "steam";

@@ -1,1 +1,8 @@
-{ ... }: { imports = [ ./audiorelay ./starcitizen ]; }
+{ ... }: {
+  imports = [
+    ./audiorelay
+
+    ./eve-online
+    ./starcitizen
+  ];
+}

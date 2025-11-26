@@ -27,12 +27,8 @@ in {
         export MANGO_HUD=1
       '';
 
-      # package = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.star-citizen-umu;
-
-      # patchXwayland = true;
-
+      patchXwayland = true;
       # umu.enable = true;
-      # disableEAC = false;
     };
 
     home-manager.users.${username}.imports = [ ./home.nix ];
