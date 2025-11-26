@@ -1,6 +1,6 @@
 alias hf = helmfile
 
-alias kubectl = kubecolor
+# alias kubectl = kubecolor
 alias k = kubectl
 
 alias ka = kubectl apply
