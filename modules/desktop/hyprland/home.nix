@@ -332,7 +332,7 @@ in {
           "float, class:(steam), title:(Friends List)"
           "stayfocused, title:^()$,class:^(steam)$"
           "minsize 1 1, title:^()$,class:^(steam)$"
-          "fullscreenstate:2 -1, initialTitle:^(EVE)$"
+          # "fullscreenstate:2 -1, initialTitle:^(EVE)$"
           "fullscreen, class:(Project Zomboid)"
         ];
       };

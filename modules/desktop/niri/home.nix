@@ -254,7 +254,7 @@
         {
           matches = [{
             app-id = "starcitizen.exe";
-            title = "^Star Citizen.*$";
+            # title = "^Star Citizen.*$";
           }];
           variable-refresh-rate = true;
         }

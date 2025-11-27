@@ -13,19 +13,20 @@ in {
         # Set the "uaccess" tag for raw HID access for Virpil Devices in wine
         KERNEL=="hidraw*", ATTRS{idVendor}=="3344", ATTRS{idProduct}=="*", MODE="0660", TAG+="uaccess"
       '';
-
     };
 
     nix-citizen.starCitizen = {
       enable = true;
 
       # Additional commands before the game starts
-      preCommands = ''
-        export PULSE_LATENCY_MSEC=60
-        export PW_LATENCY_MSEC=60
-        export DXVK_HUD=compiler
-        export MANGO_HUD=1
-      '';
+      # preCommands = ''
+      # export PULSE_LATENCY_MSEC=30
+      # export PW_LATENCY_MSEC=30
+      # export WINEESYNC=1
+      # export WINEFSYNC=1
+      # export DXVK_HUD=compiler
+      # export MANGO_HUD=1
+      # '';
 
       patchXwayland = true;
       # umu.enable = true;
