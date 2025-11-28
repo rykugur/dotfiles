@@ -4,7 +4,7 @@ let
     inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.gameglass;
 in {
   config = lib.mkIf nixosConfig.rhx.starcitizen.enable {
-    home.packages = with pkgs; [ opentrack gameglass ];
+    home.packages = with pkgs; [ opentrack-StarCitizen gameglass ];
 
     xdg.desktopEntries.gameglass = {
       name = "GameGlass";
