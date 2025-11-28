@@ -1210,7 +1210,6 @@
       },
       "original": {
         "owner": "LovingMelody",
-        "ref": "update",
         "repo": "nix-citizen",
         "type": "github"
       }

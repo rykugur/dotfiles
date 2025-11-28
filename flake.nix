@@ -55,7 +55,7 @@
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-gaming.url = "github:fufexan/nix-gaming";
-    nix-citizen.url = "github:LovingMelody/nix-citizen/update";
+    nix-citizen.url = "github:LovingMelody/nix-citizen";
 
     ### helix
     helix.url = "github:helix-editor/helix";
