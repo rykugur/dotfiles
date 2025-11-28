@@ -234,30 +234,30 @@
           }];
           default-column-width = p33;
         }
-        {
-          matches = [{
-            app-id = "gamescope";
-            title = "ARC Raiders";
-          }];
-          variable-refresh-rate = true;
-        }
+        # {
+        #   matches = [{
+        #     app-id = "gamescope";
+        #     title = "ARC Raiders";
+        #   }];
+        #   variable-refresh-rate = true;
+        # }
         ((mkFloatingAppRule { appId = "EVE Launcher"; }) // {
           default-column-width = p33;
         })
-        {
-          matches = [{
-            app-id = "steam_app_8500";
-            title = "^EVE -.*$";
-          }];
-          variable-refresh-rate = true;
-        }
-        {
-          matches = [{
-            app-id = "starcitizen.exe";
-            # title = "^Star Citizen.*$";
-          }];
-          variable-refresh-rate = true;
-        }
+        # {
+        #   matches = [{
+        #     app-id = "steam_app_8500";
+        #     title = "^EVE -.*$";
+        #   }];
+        #   variable-refresh-rate = true;
+        # }
+        # {
+        #   matches = [{
+        #     app-id = "starcitizen.exe";
+        #     # title = "^Star Citizen.*$";
+        #   }];
+        #   variable-refresh-rate = true;
+        # }
       ] ++ (mkFloatingAppRules [
         { appId = "galculator"; }
         { appId = "neovide"; }

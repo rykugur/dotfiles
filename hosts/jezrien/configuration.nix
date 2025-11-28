@@ -32,17 +32,7 @@
     polkit.enable = true;
   };
 
-  networking = {
-    hostName = hostname;
-    # networkmanager = {
-    #   enable = true;
-    # dns = "none";
-    # insertNameservers = [ "10.3.8.250" ];
-    # };
-
-    # useDHCP = false;
-    # dhcpcd.enable = false;
-  };
+  networking = { hostName = hostname; };
 
   environment = {
     systemPackages = with pkgs; [
@@ -121,6 +111,11 @@
     };
   };
 
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "performance";
+  };
+
   ### custom module stuff
   rhx = {
     keyboardVendor = "zsa";
@@ -177,9 +172,13 @@
             x = 0;
             y = 0;
           };
-          variable-refresh-rate = "on-demand";
         };
       };
+    };
+
+    pipewire = {
+      enable = true;
+      quantum = 256;
     };
     razer.enable = true;
     stylix.enable = true;

@@ -15,7 +15,6 @@ in {
 
       _1password.enable = true;
       fonts.enable = true;
-      pipewire.enable = true;
       ssh.enable = true;
     };
 
