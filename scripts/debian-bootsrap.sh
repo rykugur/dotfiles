@@ -36,15 +36,14 @@ log "Updating package index..."
 apt update
 
 log "Installing SSH and extra packages..."
-apt install -y openssh-server $EXTRA_PACKAGES
+apt install -y ssh $EXTRA_PACKAGES
 
 log "Enabling and starting SSH..."
 systemctl enable ssh
 systemctl start ssh
 
 log "Creating user $MY_USERNAME with pre-defined password or password hash..."
-useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME"
-echo "$MY_USERNAME:$MY_PASSWORD" | chpasswd
+useradd -m -c "$MY_FULLNAME" -s /bin/bash -p "$MY_PASSWORD" "$MY_USERNAME"
 
 # Add user to sudo group (works on Debian/Ubuntu)
 usermod -aG sudo "$MY_USERNAME"
