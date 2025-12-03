@@ -15,18 +15,25 @@ in {
       '';
     };
 
+    nix.settings = {
+      substituters = [ "https://nix-citizen.cachix.org" ];
+      trusted-public-keys = [
+        "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
+      ];
+    };
+
     nix-citizen.starCitizen = {
       enable = true;
 
       # Additional commands before the game starts
-      # preCommands = ''
-      # export PULSE_LATENCY_MSEC=30
-      # export PW_LATENCY_MSEC=30
-      # export WINEESYNC=1
-      # export WINEFSYNC=1
-      # export DXVK_HUD=compiler
-      # export MANGO_HUD=1
-      # '';
+      preCommands = ''
+        # export PULSE_LATENCY_MSEC=30
+        # export PW_LATENCY_MSEC=30
+        # export WINEESYNC=1
+        # export WINEFSYNC=1
+        export DXVK_HUD=compiler
+        export MANGO_HUD=1
+      '';
 
       patchXwayland = true;
       # umu.enable = true;

@@ -1,15 +1,27 @@
-{ config, inputs, lib, pkgs, username, ... }:
+{ config, lib, pkgs, username, ... }:
 let cfg = config.rhx.pipewire;
 in {
-  imports = [ inputs.nix-gaming.nixosModules.pipewireLowLatency ];
+  # imports = [ inputs.nix-gaming.nixosModules.pipewireLowLatency ];
 
-  options.rhx.pipewire.enable =
-    lib.mkEnableOption "Enable pipewire nixOS module";
+  options.rhx.pipewire = {
+    enable = lib.mkEnableOption "Enable pipewire nixOS module";
+
+    rate = lib.mkOption {
+      type = lib.types.number;
+      default = 48000;
+    };
+
+    quantum = lib.mkOption {
+      type = lib.types.number;
+      default = 32;
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
       pkgs.pulseaudio
       pkgs.alsa-utils # for amixer
+      pkgs.faudio
     ];
 
     services = {
@@ -22,11 +34,44 @@ in {
         };
         pulse.enable = true;
 
-        lowLatency = {
-          enable = true;
-          quantum = 2048;
-          rate = 48000;
+        extraConfig = let
+          rate = builtins.toString config.rhx.pipewire.rate;
+          quantum = builtins.toString config.rhx.pipewire.quantum;
+        in {
+          pipewire."92-low-latency" = {
+            "context.properties" = {
+              "default.clock.rate" = rate;
+              "default.clock.quantum" = quantum;
+              "default.clock.min-quantum" = quantum;
+              "default.clock.max-quantum" = quantum;
+            };
+          };
+          pipewire-pulse."92-low-latency" =
+            let quantumOverRate = "${quantum}/${rate}";
+            in {
+              "context.properties" = [{
+                name = "libpipewire-module-protocol-pulse";
+                args = { };
+              }];
+              "pulse.properties" = {
+                "pulse.min.req" = quantumOverRate;
+                "pulse.default.req" = quantumOverRate;
+                "pulse.max.req" = quantumOverRate;
+                "pulse.min.quantum" = quantumOverRate;
+                "pulse.max.quantum" = quantumOverRate;
+              };
+              "stream.properties" = {
+                "node.latency" = quantumOverRate;
+                "resample.quality" = 1;
+              };
+            };
         };
+
+        # lowLatency = {
+        #   enable = true;
+        #   quantum = 2048;
+        #   rate = 48000;
+        # };
       };
     };
 
