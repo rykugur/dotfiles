@@ -46,7 +46,6 @@
     rbenv
     stylua
     tldr
-    yarn
 
     nixd
     nixfmt-classic
