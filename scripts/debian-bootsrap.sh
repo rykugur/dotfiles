@@ -3,11 +3,8 @@
 # === CONFIGURATION - OVERRIDE WITH ENV VARS ===
 MY_USERNAME="${MY_USERNAME:-dusty}"         # Default: "user"; override with $MY_USERNAME
 MY_FULLNAME="${MY_FULLNAME:-Dusty}"         # Optional, for gecos field
-MY_PASSWORD=''                             # Hashed password (mkpasswd -m sha-512); leave empty for interactive prompt
-
-HELIX_REPO="helix-editor/helix"
-HELIX_API_URL="https://api.github.com/repos/$REPO/releases/latest"
-HELIX_RELEASE_DATA=$(curl -s "$API_URL")
+# Use a hashed password (mkpasswd -m sha-512)
+MY_PASSWORD="${MY_PASSWORD:-changeme}"      
 
 # Additional packages you always want
 EXTRA_PACKAGES="sudo curl wget htop git"
@@ -39,16 +36,9 @@ log "Enabling and starting SSH..."
 systemctl enable ssh
 systemctl start ssh
 
-# Generate hashed password if not provided
-if [[ -z "$MY_PASSWORD" ]]; then
-    log "No password hash provided - you'll be prompted to set password for $MY_USERNAME"
-    adduser --gecos "$MY_FULLNAME" --disabled-password "$MY_USERNAME"
-    passwd "$MY_USERNAME"
-else
-    log "Creating user $MY_USERNAME with pre-defined password hash..."
-    useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME"
-    echo "$MY_USERNAME:$MY_PASSWORD" | chpasswd -e
-fi
+log "Creating user $MY_USERNAME with pre-defined password or password hash..."
+useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME"
+echo "$MY_USERNAME:$MY_PASSWORD" | chpasswd -e
 
 # Add user to sudo group (works on Debian/Ubuntu)
 usermod -aG sudo "$MY_USERNAME"
@@ -63,33 +53,7 @@ sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/'
 systemctl restart ssh
 
 log "Installing helix..."
-
-# Extract the download URL for the .deb asset
-DEB_URL=$(echo "$HELIX_RELEASE_DATA" | grep -o 'https://github.com[^"]*\.deb' | head -n 1)
-
-# Check if a .deb asset was found
-if [ -z "$DEB_URL" ]; then
-    echo "Error: No .deb asset found in the latest release"
-    exit 1
-fi
-
-# Extract the file name from the URL
-FILE_NAME=$(basename "$DEB_URL")
-
-# Download the .deb file
-echo "Downloading $FILE_NAME..."
-curl -L -o "$FILE_NAME" "$DEB_URL"
-
-# Check if download was successful
-if [ $? -eq 0 ]; then
-    echo "Successfully downloaded $FILE_NAME"
-    dpkg -i $FILE_NAME
-    rm $FILE_NAME
-else
-    echo "Error: Failed to download $FILE_NAME"
-    exit 1
-    rm $FILE_NAME
-fi
+curl -fsSL https://raw.githubusercontent.com/rykugur/dotfiles/refs/heads/master/scripts/get-helix-debian.sh | sh
 
 log "Bootstrap complete!"
 echo
