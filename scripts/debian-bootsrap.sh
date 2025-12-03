@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# Colors for pretty output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+log() { echo -e "${GREEN}[*] $1${NC}"; }
+warn() { echo -e "${YELLOW}[!] $1${NC}"; }
+error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
+
 # === CONFIGURATION - OVERRIDE WITH ENV VARS ===
 MY_USERNAME="${MY_USERNAME:-dusty}"         # Default: "user"; override with $MY_USERNAME
 MY_FULLNAME="${MY_FULLNAME:-Dusty}"         # Optional, for gecos field
@@ -16,16 +26,6 @@ fi
 EXTRA_PACKAGES="sudo curl wget htop git"
 
 # ===================================================================
-
-# Colors for pretty output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-log() { echo -e "${GREEN}[*] $1${NC}"; }
-warn() { echo -e "${YELLOW}[!] $1${NC}"; }
-error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
 
 # Must run as root
 if [[ $EUID -ne 0 ]]; then
