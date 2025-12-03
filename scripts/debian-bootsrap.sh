@@ -44,7 +44,7 @@ systemctl start ssh
 
 log "Creating user $MY_USERNAME with pre-defined password or password hash..."
 useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME"
-usermod -p "$MY_PASSWORD" "$MY_USERNAME"
+echo "$MY_USERNAME:$MY_PASSWORD" | chpasswd
 
 # Add user to sudo group (works on Debian/Ubuntu)
 usermod -aG sudo "$MY_USERNAME"
