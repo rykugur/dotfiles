@@ -10,7 +10,11 @@
     };
   };
 
-  home.packages = [ pkgs.beyond-all-reason ];
+  home.packages = [
+    pkgs.beyond-all-reason
+
+    pkgs.kalker
+  ];
 
   rhx = {
     btop.enable = true;

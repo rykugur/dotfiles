@@ -15,9 +15,21 @@ in {
       description = "Monitors to define.";
     };
 
+    touchInput = lib.mkOption {
+      type = lib.types.nullOr (lib.types.str);
+      default = null;
+      description = ''Name of the touch input monitor. Example: "HDMI-A-1."'';
+    };
+
     bar = lib.mkOption {
       type = lib.types.enum barNames;
       default = "none";
+    };
+
+    # TODO: use this in home.nix
+    proportions = lib.mkOption {
+      type = lib.types.listOf lib.types.float;
+      default = [ 0.33 0.66 1.0 ];
     };
   };
 

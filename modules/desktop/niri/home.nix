@@ -1,5 +1,7 @@
-{ config, lib, pkgs, nixosConfig, ... }: {
-  config = lib.mkIf nixosConfig.rhx.niri.enable {
+{ config, lib, pkgs, nixosConfig, ... }:
+let niriCfg = nixosConfig.rhx.niri;
+in {
+  config = lib.mkIf niriCfg.enable {
     home.packages = with pkgs;
       [
         albert
@@ -77,12 +79,15 @@
           repeat-rate = 60;
           numlock = true;
         };
+        touch = lib.mkIf (niriCfg.touchInput != null) {
+          map-to-output = niriCfg.touchInput;
+        };
         # focus-follows-mouse = {
         #   enable = true;
         # };
       };
 
-      outputs = nixosConfig.rhx.niri.monitors;
+      outputs = niriCfg.monitors;
 
       layout = {
         preset-column-widths = [ p25 p33 p50 p66 p75 p100 ];

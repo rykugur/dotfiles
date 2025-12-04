@@ -174,6 +174,7 @@
           };
         };
       };
+      touchInput = "HDMI-A-1";
     };
 
     pipewire = {
