@@ -19,42 +19,10 @@ in {
 
         xwayland-satellite
       ] ++ [
-        (pkgs.writeScriptBin "conditional-kill-niri.nu" ''
-          #!/usr/bin/env nu
-
-          let protected_app_ids = ["steam_app_8500"]
-          let app_id = (niri msg --json focused-window | from json | get app_id)
-
-          let is_present = ($app_id in $protected_app_ids)
-
-          if $is_present {
-            exit 0
-          } else {
-            niri msg action close-window
-          }
-        '')
-        (pkgs.writeScriptBin "eve-toggle-niri.nu" ''
-          #!/usr/bin/env nu
-
-          let windows = niri msg --json windows | from json
-
-          let eveWindows = $windows | where $it.title =~ "^EVE -.*$"
-          let eveWindowIds = $eveWindows | get id
-          let eveWindowNames = $eveWindows | get title
-
-          let activeWindow = niri msg --json focused-window | from json
-          let eveIsActive = $activeWindow.id in $eveWindowIds
-
-          if $eveIsActive {
-            let nextEveWindow = $eveWindows | where $it.id != $activeWindow.id | first
-            niri msg action focus-window --id $nextEveWindow.id
-          } else {
-            # always prioritize primary character when EVE is not in focus
-            let specialTitle = "EVE - Ryk"
-            let specialWindow  = $eveWindows | where title == $specialTitle | first
-            niri msg action focus-window --id $specialWindow.id
-          }
-        '')
+        (pkgs.writeScriptBin "conditional-kill.nu"
+          (builtins.readFile ./scripts/conditional-kill.nu))
+        (pkgs.writeScriptBin "eve-toggle.nu"
+          (builtins.readFile ./scripts/toggle-eve.nu))
       ];
 
     programs.niri.settings = let
@@ -145,14 +113,14 @@ in {
           };
           "Mod+g" = {
             action = lib.mkDefault (spawn [
-              "${config.home.homeDirectory}/.nix-profile/bin/eve-toggle-niri.nu"
+              "${config.home.homeDirectory}/.nix-profile/bin/eve-toggle.nu"
             ]);
             repeat = false;
           };
           "Mod+o".action = show-hotkey-overlay;
           "Mod+q" = {
             action = lib.mkDefault (spawn [
-              "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill-niri.nu"
+              "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill.nu"
             ]);
             repeat = false;
           };
