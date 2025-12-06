@@ -40,6 +40,7 @@ in {
 
           let eveWindows = $windows | where $it.title =~ "^EVE -.*$"
           let eveWindowIds = $eveWindows | get id
+          let eveWindowNames = $eveWindows | get title
 
           let activeWindow = niri msg --json focused-window | from json
           let eveIsActive = $activeWindow.id in $eveWindowIds
@@ -48,7 +49,10 @@ in {
             let nextEveWindow = $eveWindows | where $it.id != $activeWindow.id | first
             niri msg action focus-window --id $nextEveWindow.id
           } else {
-            niri msg action focus-window --id ($eveWindows | first | get id)
+            # always prioritize primary character when EVE is not in focus
+            let specialTitle = "EVE - Ryk"
+            let specialWindow  = $eveWindows | where title == $specialTitle | first
+            niri msg action focus-window --id $specialWindow.id
           }
         '')
       ];
@@ -79,17 +83,27 @@ in {
           repeat-rate = 60;
           numlock = true;
         };
-        touch = lib.mkIf (niriCfg.touchInput != null) {
-          map-to-output = niriCfg.touchInput;
-        };
-        # focus-follows-mouse = {
+        # TODO: waiting for flake owner to implement this
+        # touch = let
+        #   matrices = {
+        #     "0" = [ 1.0 0.0 0.0 0.0 1.0 0.0 ];
+        #     "90" = [ 0.0 1.0 0.0 (-1.0) 0.0 1.0 ];
+        #     "180" = [ (-1.0) 0.0 1.0 0.0 (-1.0) 1.0 ];
+        #     "270" = [ 0.0 (-1.0) 1.0 1.0 0.0 0.0 ];
+        #   };
+        # in lib.mkIf (niriCfg.touch.input != null) {
         #   enable = true;
+        #   map-to-output = niriCfg.touch.input;
+        #   calibration-matrix = lib.mkIf (niriCfg.touch.rotation != null)
+        #     matrices.${niriCfg.touch.rotation};
         # };
       };
 
       outputs = niriCfg.monitors;
 
       layout = {
+        # TODO: update these to use niriCfg.defaultColumnWidth and
+        # niriCfg.proportions
         preset-column-widths = [ p25 p33 p50 p66 p75 p100 ];
         default-column-width = p66;
       };

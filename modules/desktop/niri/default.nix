@@ -15,15 +15,39 @@ in {
       description = "Monitors to define.";
     };
 
-    touchInput = lib.mkOption {
-      type = lib.types.nullOr (lib.types.str);
-      default = null;
-      description = ''Name of the touch input monitor. Example: "HDMI-A-1."'';
+    touch = lib.mkOption {
+      type = lib.types.nullOr (lib.types.submodule {
+        options = {
+
+          input = lib.mkOption {
+            type = lib.types.nullOr (lib.types.str);
+            default = null;
+            description =
+              ''Name of the touch input monitor. Example: "HDMI-A-1."'';
+          };
+
+          rotation = lib.mkOption {
+            type = lib.types.nullOr (lib.types.enum [ "0" "90" "180" "270" ]);
+            default = null;
+            description =
+              "Touch rotation direction; generates libinput calibration-matrix accordingly.";
+            example = "90";
+          };
+        };
+      });
     };
+
+    touchRotation = lib.mkOption { };
 
     bar = lib.mkOption {
       type = lib.types.enum barNames;
       default = "none";
+    };
+
+    # TODO: use this in home.nix
+    defaultColumnWidth = lib.mkOption {
+      type = lib.types.float;
+      default = 0.66;
     };
 
     # TODO: use this in home.nix
