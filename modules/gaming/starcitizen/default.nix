@@ -25,8 +25,6 @@ in {
     programs.rsi-launcher = {
       enable = true;
 
-      # location = "$HOME/Games/star-citizen";
-
       # Additional commands before the game starts
       preCommands = ''
         export DXVK_HUD=compiler
