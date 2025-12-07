@@ -83,6 +83,8 @@ in {
           nil = { command = "${pkgs.nil}/bin/nil"; };
           nu = { command = "${pkgs.nushell}/bin/nu"; };
           omnisharp = { command = lib.getExe pkgs.omnisharp-roslyn; };
+          ## rust
+          rust-analyzer = { command = lib.getExe pkgs.rust-analyzer; };
           # for snippets
           scls = {
             command =
