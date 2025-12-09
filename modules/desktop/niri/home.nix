@@ -50,6 +50,10 @@ in {
           repeat-delay = 200;
           repeat-rate = 60;
           numlock = true;
+          xkb = {
+            layout = "us";
+            options = "fkeys:basic_13-24";
+          };
         };
         # TODO: waiting for flake owner to implement this
         # touch = let
