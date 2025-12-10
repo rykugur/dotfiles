@@ -22,7 +22,6 @@ in {
     home-manager.users.${username} = {
       rhx = {
         browser.enable = true;
-        easyeffects.enable = true;
         homelab.enable = true;
         ssh.enable = true;
       };

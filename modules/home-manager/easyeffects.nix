@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 let cfg = config.rhx.easyeffects;
 in {
   options.rhx.easyeffects = {
@@ -6,10 +6,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    services.easyeffects = {
-      enable = true;
-      package = pkgs.easyeffects;
-    };
+    services.easyeffects = { enable = true; };
 
     home.file = {
       ".config/easyeffects/input/input.json".source =
