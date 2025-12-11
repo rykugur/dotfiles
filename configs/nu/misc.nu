@@ -102,7 +102,7 @@ $env.abbreviations = $env.abbreviations | merge {
   gri: "grep -i"
   grin: "grep -ni"
   grine: "grep -niRE"
-  pwdc: "pwd | trim.newlines | cmd.copy"
+  pwdc: "pwd | str trim | cmd.copy"
   ssh.forcePass: "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no"
   taill: "tail -Fn 999"
   pn: "pnpm"
