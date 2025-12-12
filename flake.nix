@@ -108,6 +108,16 @@
             inherit username;
           };
         };
+
+        # nix LXC for quick testing
+        nixy = nixpkgs.lib.nixosSystem {
+          modules = [ ];
+          specialArgs = {
+            inherit inputs outputs;
+            hostname = "nixy";
+            inherit username;
+          };
+        };
       };
 
       darwinConfigurations = {
