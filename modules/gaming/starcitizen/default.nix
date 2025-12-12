@@ -27,6 +27,7 @@ in {
 
       # Additional commands before the game starts
       preCommands = ''
+        export DISPLAY=""
         export DXVK_HUD=compiler
         export MANGO_HUD=1
       '';

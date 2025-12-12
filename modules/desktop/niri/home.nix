@@ -232,16 +232,14 @@ in {
         #   }];
         #   variable-refresh-rate = true;
         # }
-        ((mkFloatingAppRule { appId = "EVE Launcher"; }) // {
+        {
+          matches = [{
+            appId = "steam_app_8500";
+            title = "EVE Launcher";
+          }];
           default-column-width = p33;
-        })
-        # {
-        #   matches = [{
-        #     app-id = "steam_app_8500";
-        #     title = "^EVE -.*$";
-        #   }];
-        #   variable-refresh-rate = true;
-        # }
+          # variable-refresh-rate = true;
+        }
         # {
         #   matches = [{
         #     app-id = "starcitizen.exe";
