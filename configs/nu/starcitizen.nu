@@ -1,5 +1,6 @@
 def "starcitizen getWinePath" [] {
-  nix eval --raw $"($env.DOTFILES_DIR)#nixosConfigurations.(hostname).pkgs.wine-astral.outPath"
+  # nix eval --raw $"($env.DOTFILES_DIR)#nixosConfigurations.(hostname).pkgs.wine-astral.outPath"
+  print $"Replaced with symlink - see ($env.HOME)/.wine-astral"
 }
 
 def "starcitizen controllerSettings" [] {
