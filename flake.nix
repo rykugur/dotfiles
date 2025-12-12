@@ -129,16 +129,6 @@
             pkgs = pkgsFor.aarch64-darwin;
           };
         };
-
-        # work macbook
-        "HJ0704F9VK" = nix-darwin.lib.darwinSystem {
-          modules = [ ./hosts/work-macbook/configuration.nix ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "";
-            username = "dustin.jerome";
-          };
-        };
       };
     };
 
