@@ -234,7 +234,7 @@ in {
         # }
         {
           matches = [{
-            appId = "steam_app_8500";
+            app-id = "steam_app_8500";
             title = "EVE Launcher";
           }];
           default-column-width = p33;

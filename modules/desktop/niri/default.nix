@@ -37,8 +37,6 @@ in {
       });
     };
 
-    touchRotation = lib.mkOption { };
-
     bar = lib.mkOption {
       type = lib.types.enum barNames;
       default = "none";

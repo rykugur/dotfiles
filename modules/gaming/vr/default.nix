@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let cfg = config.rhx.vr;
 in {
-  options.rhx.vr.enable = lib.mkEnableOption "Enable VR nixOS module";
+  options.rhx.vr.enable = lib.mkEnableOption "Enable VR module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ pkgs.wlx-overlay-s ];
@@ -17,5 +17,7 @@ in {
         openFirewall = true;
       };
     };
+
+    # home-manager.users.${username}.imports = [ ./home.nix ];
   };
 }
