@@ -40,7 +40,6 @@ log "Enabling and starting SSH..."
 systemctl enable ssh
 systemctl start ssh
 
-log "Creating user $MY_USERNAME with pre-defined password or password hash..."
 useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME"
 echo "${MY_USERNAME}:${MY_PASSWORD}" | chpasswd
 
