@@ -66,6 +66,9 @@ in {
           #   command =
           #     "${pkgs.ansible-language-server}/bin/ansible-language-server";
           # };
+          bash-language-server = {
+            command = lib.getExe pkgs.bash-language-server;
+          };
           golangci-lint-lsp = {
             command =
               "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
@@ -197,6 +200,10 @@ in {
         };
 
         language = [
+          {
+            name = "bash";
+            formatter = { command = lib.getExe pkgs.shfmt; };
+          }
           {
             name = "css";
             language-servers =

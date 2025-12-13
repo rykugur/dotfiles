@@ -8,7 +8,10 @@ NC='\033[0m' # No Color
 
 log() { echo -e "${GREEN}[*] $1${NC}"; }
 warn() { echo -e "${YELLOW}[!] $1${NC}"; }
-error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
+error() {
+	echo -e "${RED}[✗] $1${NC}"
+	exit 1
+}
 
 # === CONFIGURATION - OVERRIDE WITH ENV VARS ===
 _HOSTNAME="${HOSTNAME:-nixy}"
@@ -23,25 +26,34 @@ STORAGE="local-lvm"
 
 # Must run as root
 if [[ $EUID -ne 0 ]]; then
-   error "This script must be run as root"
+	error "This script must be run as root"
 fi
 
 log "Bootstrapping nixOS LXC..."
-
 log "  HOSTNAME=${_HOSTNAME}"
 log "  CTID=${_CTID}"
 log "  MEMORY=${_MEMORY}"
 log "  SWAP=${_SWAP}"
 
 log "Creating LXC..."
-
-
 log "Running pre-start commands..."
 log "  Increasing rootfs..."
 pct resize "$_CTID" +2G
 
 log "Starting the CT..."
 pct start "$_CTID"
+echo "Container started."
+
+# Wait for boot and network (robust retry)
+log "Waiting for container to boot and become responsive..."
+for i in {1..30}; do
+  if pct exec "$_CTID" -- true 2>/dev/null; then
+    echo "Container is responsive."
+    break
+  fi
+  sleep 5
+done
+
 log "  Deleting root password..."
 pct exec "$CT_ID" -- bash -c 'source /etc/set-environment && passwd --delete root'
 log "  Executing nixos-rebuild..."
