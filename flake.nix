@@ -111,7 +111,7 @@
 
         # nix LXC for quick testing
         nixy = nixpkgs.lib.nixosSystem {
-          modules = [ ];
+          modules = [ ./hosts/nixy/configuration.nix ];
           specialArgs = {
             inherit inputs outputs;
             hostname = "nixy";
