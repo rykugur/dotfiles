@@ -23,7 +23,7 @@ if [[ "$MY_PASSWORD" == "$DEFAULT_PASSWORD_HASH_CHANGEME" ]]; then
 fi
 
 # Additional packages you always want
-EXTRA_PACKAGES="sudo curl wget htop git"
+EXTRA_PACKAGES="sudo curl wget htop git exa"
 
 # ===================================================================
 
@@ -43,7 +43,8 @@ systemctl enable ssh
 systemctl start ssh
 
 log "Creating user $MY_USERNAME with pre-defined password or password hash..."
-useradd -m -c "$MY_FULLNAME" -s /bin/bash -p "$MY_PASSWORD" "$MY_USERNAME"
+useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME"
+echo "${MY_USERNAME}:${MY_PASSWORD}" | chpasswd
 
 # Add user to sudo group (works on Debian/Ubuntu)
 usermod -aG sudo "$MY_USERNAME"
@@ -57,8 +58,25 @@ sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/'
 # Note: PasswordAuthentication remains "yes" (default) since no keys are set up here
 systemctl restart ssh
 
+log "Installing starship..."
+curl -sS https://starship.rs/install.sh | sh
+
 log "Installing helix..."
 curl -fsSL https://raw.githubusercontent.com/rykugur/dotfiles/refs/heads/master/scripts/get-helix-debian.sh | bash -s --
+
+log "Setting some aliases..."
+cat >> /root/.bashrc <<'EOF'
+alias dc='docker-compose'  # Note: fails on docker > 2.x
+alias ls='exa -l'
+alias ll='ls -la'
+eval "$(starship init bash)
+EOF
+
+cat >> "/home/${MY_USERNAME}/.bashrc" <<'EOF'
+alias ls='exa -l'
+alias ll='ls -la'
+eval "$(starship init bash)
+EOF
 
 log "Bootstrap complete!"
 echo
