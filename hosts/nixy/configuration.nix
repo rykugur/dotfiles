@@ -1,4 +1,4 @@
-{ modulesPath, ... }: {
+{ lib, modulesPath, ... }: {
   imports = [ (modulesPath + "/virtualisation/proxmox-lxc.nix") ];
 
   nix.settings = { sandbox = false; };
@@ -21,6 +21,8 @@
       PermitEmptyPasswords = "yes";
     };
   };
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   system.stateVersion = "25.05";
 }
