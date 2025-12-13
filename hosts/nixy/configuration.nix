@@ -1,5 +1,9 @@
-{ lib, modulesPath, ... }: {
-  imports = [ (modulesPath + "/virtualisation/proxmox-lxc.nix") ];
+{ hostname, inputs, lib, outputs, modulesPath, username, ... }: {
+  imports = [
+    (modulesPath + "/virtualisation/proxmox-lxc.nix")
+
+    ../../modules/nixos/ssh.nix
+  ];
 
   nix.settings = { sandbox = false; };
 
@@ -12,14 +16,21 @@
 
   services.fstrim.enable = false; # Let Proxmox host handle fstrim
 
-  services.openssh = {
-    enable = true;
-    openFirewall = true;
-    settings = {
-      PermitRootLogin = "yes";
-      PasswordAuthentication = true;
-      PermitEmptyPasswords = "yes";
+  users.users = {
+    ${username} = {
+      isNormalUser = true;
+      initialPassword = "pass123"; # change after first login with `passwd`
+      home = "/home/${username}";
+      extraGroups = [ "wheel" ];
     };
+  };
+
+  rhx.ssh.enable = true;
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs outputs hostname username; };
+    users = { ${username} = import ./home.nix; };
+    backupFileExtension = "bak";
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
