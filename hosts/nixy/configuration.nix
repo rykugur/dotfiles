@@ -2,6 +2,8 @@
   imports = [
     (modulesPath + "/virtualisation/proxmox-lxc.nix")
 
+    inputs.home-manager.nixosModules.home-manager
+
     ../../modules/nixos/ssh.nix
   ];
 
