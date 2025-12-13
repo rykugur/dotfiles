@@ -13,17 +13,15 @@ error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
 # === CONFIGURATION - OVERRIDE WITH ENV VARS ===
 MY_USERNAME="${MY_USERNAME:-dusty}"         # Default: "user"; override with $MY_USERNAME
 MY_FULLNAME="${MY_FULLNAME:-Dusty}"         # Optional, for gecos field
-DEFAULT_PASSWORD_HASH_CHANGEME="$6$WOlycVNE7cD.zOCu$FC3ztNhdvyNae.bPni6zDcOM/3ZmpwMVQIim1us5stdK6TIv5rrklAn3yp95DJvcSEM95adjhNmAl8IrmHBXA."
-# Use a hashed password (mkpasswd -m sha-512)
-MY_PASSWORD="${MY_PASSWORD:-$DEFAULT_PASSWORD_HASH_CHANGEME}"
+MY_PASSWORD="${MY_PASSWORD:-changeme}"
 
 # Check if default is being used and warn
-if [[ "$MY_PASSWORD" == "$DEFAULT_PASSWORD_HASH_CHANGEME" ]]; then
+if [[ "$MY_PASSWORD" == "changeme" ]]; then
   warn "Using default password - consider changing it immediately."
 fi
 
 # Additional packages you always want
-EXTRA_PACKAGES="sudo curl wget htop git exa"
+EXTRA_PACKAGES="sudo curl wget htop git eza"
 
 # ===================================================================
 
