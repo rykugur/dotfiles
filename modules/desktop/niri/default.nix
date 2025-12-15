@@ -18,7 +18,6 @@ in {
     touch = lib.mkOption {
       type = lib.types.nullOr (lib.types.submodule {
         options = {
-
           input = lib.mkOption {
             type = lib.types.nullOr (lib.types.str);
             default = null;
@@ -40,6 +39,11 @@ in {
     bar = lib.mkOption {
       type = lib.types.enum barNames;
       default = "none";
+    };
+
+    additionalRules = lib.mkOption {
+      type = lib.types.nullOr (lib.types.listOf lib.types.attrs);
+      default = null;
     };
 
     # TODO: use this in home.nix
