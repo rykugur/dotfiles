@@ -2,6 +2,7 @@
   rhx.niri = {
     enable = true;
     bar = "dankMaterialShell";
+
     monitors = {
       "DP-1" = {
         mode = {
@@ -28,10 +29,10 @@
         };
       };
     };
+
     touch = {
       input = "HDMI-A-1";
       rotation = "90";
     };
-
   };
 }
