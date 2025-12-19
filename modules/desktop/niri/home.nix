@@ -245,7 +245,7 @@ in {
             title = "Clair Obscur: Expedition 33";
           }];
           open-fullscreen = true;
-          variable-refresh-rate = true;
+          # variable-refresh-rate = true;
         }
         # {
         #   matches = [{

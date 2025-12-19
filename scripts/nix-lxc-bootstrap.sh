@@ -58,7 +58,11 @@ log "  Deleting root password..."
 pct exec "$CT_ID" -- bash -c 'source /etc/set-environment && passwd --delete root'
 log "  Executing nixos-rebuild..."
 # TODO: pick one vvv
-# pct exec "$CT_ID" -- nixos-rebuild switch --flake "github:rykugur/dotfiles#${_HOSTNAME}"
+efm='--extra-experimental-features'
+basecmd="nix ${efm} nix-command ${efm} flakes"
+gitcmd="${basecmd} run nixpkgs#git -- "
+# run nixpkgs#git'
+pct exec "$CT_ID" -- bash -c ''nixos-rebuild switch --flake "github:rykugur/dotfiles#${_HOSTNAME}"''
 # pct exec "$CT_ID" -- bash -c "
 #   git clone https://github.com/rykugur/dotfiles.git /tmp/dotfiles &&
 #   cd /tmp/dotfiles &&
