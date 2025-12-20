@@ -79,13 +79,13 @@ log "Setting some aliases..."
 cat >> /root/.bashrc <<EOF
 alias dc='docker-compose'  # Note: fails on docker > 2.x
 alias ls='$LS_CMD -l'
-alias ll='ls -la'
+alias ll='$LS_CMD -la'
 eval "\$(starship init bash)"
 EOF
 
 cat >> "/home/${MY_USERNAME}/.bashrc" <<EOF
 alias ls='$LS_CMD -l'
-alias ll='ls -la'
+alias ll='$LS_CMD -la'
 eval "\$(starship init bash)"
 EOF
 
