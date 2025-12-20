@@ -6,7 +6,6 @@ $env.abbreviations = $env.abbreviations | merge {
   kd : "kubectl describe"
   kdel : "kubectl delete"
   kdes : "kubectl describe"
-  keit : "kubectl exec -it"
   kg : "kubectl get"
   kgn : "kubectl get nodes"
   kgp : "kubectl get pods"
@@ -19,6 +18,9 @@ $env.abbreviations = $env.abbreviations | merge {
   ktx : "kubectx"
   kns : "kubens"
 }
+
+alias keit = kubectl exec -it
+alias "keit shlink" = kubectl --namespace shlink exec -it deployments/shlink -- bin/cli
 
 alias hf = helmfile
 alias fgk = flux get kustomization
@@ -34,3 +36,4 @@ def "kaf sops" [filePath: string] {
 
   sops -d $filePath | kubectl apply -f -
 }
+
