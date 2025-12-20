@@ -24,9 +24,6 @@ if [[ "$MY_PASSWORD" == "changeme" ]]; then
   warn "Using default password - consider changing it immediately."
 fi
 
-# Additional packages you always want
-EXTRA_PACKAGES="sudo curl wget htop git"
-
 # ===================================================================
 
 # Must run as root
@@ -38,7 +35,7 @@ log "Updating package index..."
 apt update || error "Failed to update package list"
 
 log "Installing OpenSSH server and extra packages..."
-apt install -y openssh-server "$EXTRA_PACKAGES" || error "Failed to install packages"
+apt install -y openssh-server sudo curl wget htop git || error "Failed to install packages"
 
 log "Enabling and starting SSH..."
 systemctl enable ssh || error "Failed to enable SSH"
