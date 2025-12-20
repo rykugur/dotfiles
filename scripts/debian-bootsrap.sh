@@ -11,13 +11,13 @@ warn() { echo -e "${YELLOW}[!] $1${NC}"; }
 error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
 
 # === CONFIGURATION - OVERRIDE WITH ENV VARS ===
-MY_USERNAME="${MY_USERNAME:-dusty}"         # Default: "user"; override with $MY_USERNAME
-MY_FULLNAME="${MY_FULLNAME:-Dusty}"         # Optional, for gecos field
+MY_USERNAME="${MY_USERNAME:-dusty}"
+MY_FULLNAME="${MY_FULLNAME:-Dusty}"
 MY_PASSWORD="${MY_PASSWORD:-changeme}"
 
 # Check if default is being used and warn
 if [[ "$MY_PASSWORD" == "changeme" ]]; then
-  warn "Using default password - consider changing it immediately."
+  warn "Using default password - consider changing it ASAP."
 fi
 
 # Additional packages you always want
@@ -64,7 +64,7 @@ curl -fsSL https://raw.githubusercontent.com/rykugur/dotfiles/refs/heads/master/
 log "Setting some aliases..."
 cat >> /root/.bashrc <<'EOF'
 alias dc='docker-compose'  # Note: fails on docker > 2.x
-alias ls='exa -l'
+alias ls='eza -l'
 alias ll='ls -la'
 eval "$(starship init bash)
 EOF
