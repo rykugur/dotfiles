@@ -38,7 +38,7 @@ log "Updating package index..."
 apt update || error "Failed to update package list"
 
 log "Installing OpenSSH server and extra packages..."
-apt install -y openssh-server $EXTRA_PACKAGES || error "Failed to install packages"
+apt install -y openssh-server "$EXTRA_PACKAGES" || error "Failed to install packages"
 
 log "Enabling and starting SSH..."
 systemctl enable ssh || error "Failed to enable SSH"
