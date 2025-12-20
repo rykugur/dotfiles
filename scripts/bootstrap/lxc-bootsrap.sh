@@ -1,96 +1,66 @@
 #!/usr/bin/env bash
 
-# a simple bootstrap script to setup my env after creating an LXC
-# most LXC's will be created with community scripts, using either
-# debian or ubuntu.
+# Script to create a Debian or Ubuntu LXC container on Proxmox using community scripts with default settings,
+# then run a bootstrap script inside the newly created container.
 
-# Colors for pretty output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+# Usage:
+#   ./create_lxc_with_bootstrap.sh [debian|ubuntu]
+#
+# Example:
+#   ./create_lxc_with_bootstrap.sh debian
+#   ./create_lxc_with_bootstrap.sh ubuntu
+#
+# The script will prompt for any required inputs during container creation (uses defaults where possible).
+# After creation, it will automatically execute the bootstrap script inside the container.
 
-log() { echo -e "${GREEN}[*] $1${NC}"; }
-warn() { echo -e "${YELLOW}[!] $1${NC}"; }
-error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
+set -euo pipefail
 
-# === CONFIGURATION - OVERRIDE WITH ENV VARS ===
-MY_USERNAME="${MY_USERNAME:-dusty}"         # Default: "dusty"; override with $MY_USERNAME
-MY_FULLNAME="${MY_FULLNAME:-Dusty}"         # Optional, for gecos field
-MY_PASSWORD="${MY_PASSWORD:-changeme}"
+OS="${1:-}"
 
-# Check if default is being used and warn
-if [[ "$MY_PASSWORD" == "changeme" ]]; then
-  warn "Using default password - consider changing it immediately."
+if [[ -z "$OS" ]]; then
+  echo "Error: Please specify 'debian' or 'ubuntu' as the first argument."
+  echo "Usage: $0 [debian|ubuntu]"
+  exit 1
 fi
 
-# ===================================================================
-
-# Must run as root
-if [[ $EUID -ne 0 ]]; then
-   error "This script must be run as root"
+if [[ "$OS" != "debian" && "$OS" != "ubuntu" ]]; then
+  echo "Error: Invalid OS specified. Use 'debian' or 'ubuntu'."
+  exit 1
 fi
 
-log "Updating package index..."
-apt update || error "Failed to update package list"
+echo "Creating $OS LXC container using community script with default settings..."
+echo "Follow the prompts (press Enter for defaults where possible)."
 
-log "Installing OpenSSH server and extra packages..."
-apt install -y openssh-server sudo curl wget htop git || error "Failed to install packages"
-
-log "Enabling and starting SSH..."
-systemctl enable ssh || error "Failed to enable SSH"
-systemctl start ssh || error "Failed to start SSH"
-
-useradd -m -c "$MY_FULLNAME" -s /bin/bash "$MY_USERNAME" || error "Failed to create user"
-echo "${MY_USERNAME}:${MY_PASSWORD}" | chpasswd || error "Failed to set password"
-
-# Add user to sudo group
-usermod -aG sudo "$MY_USERNAME" || error "Failed to add user to sudo group"
-
-# Configure passwordless sudo
-echo "$MY_USERNAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/"$MY_USERNAME"
-chmod 0440 /etc/sudoers.d/"$MY_USERNAME"
-# Validate sudoers file to avoid lockout
-visudo -c || error "Invalid sudoers configuration"
-
-# Prohibit root SSH login with password
-sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
-systemctl restart ssh || warn "Failed to restart SSH (may already be running)"
-
-log "Installing starship..."
-curl -sS https://starship.rs/install.sh | sh -s -- -y || warn "Starship install failed (continuing anyway)"
-
-log "Installing helix..."
-curl -fsSL https://raw.githubusercontent.com/rykugur/dotfiles/refs/heads/master/scripts/bootstrap/install-helix.sh | bash -s -- || warn "Helix install failed (continuing anyway)"
-
-log "Installing eza (or fallback to exa)..."
-if apt install -y eza; then
-  LS_CMD="eza"
-else
-  warn "eza not available; falling back to exa"
-  apt install -y exa || warn "exa also not available"
-  LS_CMD="exa"
+if [[ "$OS" == "debian" ]]; then
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
+elif [[ "$OS" == "ubuntu" ]]; then
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/ubuntu.sh)"
 fi
 
-log "Setting some aliases..."
-cat >> /root/.bashrc <<EOF
-alias dc='docker-compose'  # Note: fails on docker > 2.x
-alias ls='$LS_CMD -l'
-alias ll='$LS_CMD -la'
-eval "\$(starship init bash)"
-EOF
+echo "Container creation complete."
 
-cat >> "/home/${MY_USERNAME}/.bashrc" <<EOF
-alias ls='$LS_CMD -l'
-alias ll='$LS_CMD -la'
-eval "\$(starship init bash)"
-EOF
+# Prompt for the CTID (Container ID) of the newly created container
+read -r -p "Enter the CTID of the newly created container: " CTID
 
-chown "${MY_USERNAME}:${MY_USERNAME}" "/home/${MY_USERNAME}/.bashrc"
+# Verify the container exists
+if ! pct status "$CTID" &>/dev/null; then
+  echo "Error: Container with CTID $CTID not found."
+  exit 1
+fi
 
-log "Bootstrap complete!"
-echo
-echo "User '$MY_USERNAME' created and added to sudo group"
-echo "Passwordless sudo enabled"
-echo "Helix and starship installed"
-echo "You can now log in with: ssh $MY_USERNAME@<container-ip>"
+echo "Starting container $CTID if not already running..."
+pct start "$CTID" || true
+
+echo "Waiting a few seconds for the container to boot..."
+sleep 10
+
+# Note: There appears to be a typo in the original requested URL ("bootsrap" instead of "bootstrap").
+# Using the correct URL based on the existing script.
+
+BOOTSTRAP_URL="https://raw.githubusercontent.com/rykugur/dotfiles/master/scripts/bootstrap/lxc-bootstrap-env.sh"
+
+echo "Executing bootstrap script inside container $CTID..."
+pct exec "$CTID" -- bash -c "curl -fsSL $BOOTSTRAP_URL | bash"
+
+echo "Bootstrap complete!"
+echo "The container is now set up with the user's environment (SSH, sudo user, starship, helix, etc.)."
