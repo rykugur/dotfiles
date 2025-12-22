@@ -24,7 +24,7 @@ alias hf = helmfile
 alias fgk = flux get kustomization
 alias mk = minikube
 
-def "kaf sops" [filePath: string] {
+def "sops kaf" [filePath: string] {
   use std/log
   
   if (not ($filePath | path exists)) {
