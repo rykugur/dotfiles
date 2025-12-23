@@ -4,9 +4,9 @@ let
   dankCfg = nixosConfig.rhx.dankMaterialShell;
   rhxCfg = nixosConfig.rhx;
 in {
-  imports = [ inputs.dankMaterialShell.homeModules.dankMaterialShell.default ]
+  imports = [ inputs.dankMaterialShell.homeModules.dank-material-shell ]
     ++ lib.optionals (rhxCfg.niri.enable)
-    [ inputs.dankMaterialShell.homeModules.dankMaterialShell.niri ];
+    [ inputs.dankMaterialShell.homeModules.niri ];
 
   config = let screenshotEditor = dankCfg.screenshotBackend;
   in lib.mkIf rhxCfg.dankMaterialShell.enable {
@@ -18,12 +18,9 @@ in {
       enable = true;
 
       enableAudioWavelength = true;
-      enableBrightnessControl = false;
       enableCalendarEvents = false;
-      enableClipboard = true;
       enableDynamicTheming = false;
       enableSystemMonitoring = true;
-      enableSystemSound = false;
 
       default.settings = {
         currentThemeName = "cat-blue";

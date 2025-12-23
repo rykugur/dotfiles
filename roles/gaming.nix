@@ -29,9 +29,6 @@ in {
         protonup-qt
         winetricks
 
-        # specific games
-        vintagestory
-
         # misc
         bottles
         dxvk
