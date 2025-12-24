@@ -14,7 +14,7 @@ in {
     home.packages = lib.optionals (screenshotEditor == "swappy") [ pkgs.swappy ]
       ++ lib.optionals (screenshotEditor == "satty") [ pkgs.satty ];
 
-    programs.dankMaterialShell = {
+    programs.dank-material-shell = {
       enable = true;
 
       enableAudioWavelength = true;
