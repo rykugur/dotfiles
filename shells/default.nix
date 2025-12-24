@@ -9,4 +9,6 @@
       fnm use
     '';
   };
+
+  react = pkgs.mkShell { buildInputs = with pkgs; [ bun nodejs ]; };
 }
