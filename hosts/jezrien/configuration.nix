@@ -141,7 +141,9 @@
     razer.enable = true;
     stylix.enable = true;
 
+    # TODO: scope these new modules to a gaming domain
     eve-online.enable = true;
+    nexus-mods.enable = true;
     starcitizen.enable = true;
   };
 

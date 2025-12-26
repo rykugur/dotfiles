@@ -59,6 +59,10 @@ def nrf [--remote (-r)] {
   nix repl --expr $"builtins.getFlake \"($url)\""
 }
 
+def nrun [pkg: string] {
+  nix run $"nixpkgs#($pkg)"
+}
+
 $env.abbreviations = $env.abbreviations | merge {
   nb: "nix build"
   ndb: "nix-build"
