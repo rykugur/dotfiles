@@ -1,5 +1,5 @@
 { lib, nixosConfig, pkgs, ... }: {
-  config = lib.mkIf nixosConfig.rhx.nexus-mods.enable {
+  config = lib.mkIf nixosConfig.rhx.gaming.nexus-mods.enable {
     home.packages = with pkgs; [ nexusmods-app ];
 
     xdg = {

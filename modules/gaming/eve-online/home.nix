@@ -1,5 +1,5 @@
 { lib, nixosConfig, pkgs, ... }: {
-  config = lib.mkIf nixosConfig.rhx.eve-online.enable {
+  config = lib.mkIf nixosConfig.rhx.gaming.eve-online.enable {
     home.packages = with pkgs; [ pyfa ];
   };
 }

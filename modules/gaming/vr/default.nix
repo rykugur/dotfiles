@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.vr;
+let cfg = config.rhx.gaming.vr;
 in {
-  options.rhx.vr.enable = lib.mkEnableOption "Enable VR module";
+  options.rhx.gaming.vr.enable = lib.mkEnableOption "Enable VR module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ pkgs.wlx-overlay-s ];
