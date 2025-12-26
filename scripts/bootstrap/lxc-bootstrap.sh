@@ -32,6 +32,8 @@ if [[ "$OS" == "debian" ]]; then
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
 elif [[ "$OS" == "ubuntu" ]]; then
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/ubuntu.sh)"
+elif [[ "$OS" == "docker" ]]; then
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/vm/docker-vm.sh)"
 fi
 
 echo "Container creation complete."
