@@ -18,6 +18,7 @@ error() { echo -e "${RED}[✗] $1${NC}"; exit 1; }
 MY_USERNAME="${MY_USERNAME:-dusty}"         # Default: "dusty"; override with $MY_USERNAME
 MY_FULLNAME="${MY_FULLNAME:-Dusty}"         # Optional, for gecos field
 MY_PASSWORD="${MY_PASSWORD:-changeme}"
+PASSWORDLESS_SUDO="${PASSWORDLESS_SUDO:-false}"
 
 # Check if default is being used and warn
 if [[ "$MY_PASSWORD" == "changeme" ]]; then
@@ -47,11 +48,13 @@ echo "${MY_USERNAME}:${MY_PASSWORD}" | chpasswd || error "Failed to set password
 # Add user to sudo group
 usermod -aG sudo "$MY_USERNAME" || error "Failed to add user to sudo group"
 
-# Configure passwordless sudo
-echo "$MY_USERNAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/"$MY_USERNAME"
-chmod 0440 /etc/sudoers.d/"$MY_USERNAME"
-# Validate sudoers file to avoid lockout
-visudo -c || error "Invalid sudoers configuration"
+# Maybe configure passwordless sudo
+if [[ $PASSWORDLESS_SUDO = "true" ]]; then
+  echo "$MY_USERNAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/"$MY_USERNAME"
+  chmod 0440 /etc/sudoers.d/"$MY_USERNAME"
+  # Validate sudoers file to avoid lockout
+  visudo -c || error "Invalid sudoers configuration"
+fi
 
 # Prohibit root SSH login with password
 sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
