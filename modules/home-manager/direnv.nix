@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.direnv;
+let cfg = config.ryk.direnv;
 in {
-  options.rhx.direnv = {
+  options.ryk.direnv = {
     enable = lib.mkEnableOption "Enable direnv home-manager module.";
   };
 

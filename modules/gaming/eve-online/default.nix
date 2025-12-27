@@ -1,8 +1,8 @@
 { config, lib, username, ... }:
-let cfg = config.rhx.gaming.eve-online;
+let cfg = config.ryk.gaming.eve-online;
 in {
 
-  options.rhx.gaming.eve-online.enable =
+  options.ryk.gaming.eve-online.enable =
     lib.mkEnableOption "Enable EVE Online module";
 
   config = lib.mkIf cfg.enable {

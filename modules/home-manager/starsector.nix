@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.starsector;
+  cfg = config.ryk.starsector;
   lazylib = pkgs.fetchzip {
     url =
       "https://github.com/MagicLibStarsector/MagicLib/releases/latest/download/MagicLib.zip";
@@ -22,7 +22,7 @@ let
     sha256 = "sha256-g1qlppfSUaA5CgrxyedJyBSZmfqr0Nq7tgNnBJ53v7A=";
   };
 in {
-  options.rhx.starsector = {
+  options.ryk.starsector = {
     enable = lib.mkEnableOption "Enable starsector home-manager module.";
     mods.enable = lib.mkEnableOption "Enable starsector mods.";
   };

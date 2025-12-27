@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.bat;
+let cfg = config.ryk.bat;
 in {
-  options.rhx.bat = {
+  options.ryk.bat = {
     enable = lib.mkEnableOption "Enable bat home-manager module.";
   };
 

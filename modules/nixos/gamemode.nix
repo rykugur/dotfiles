@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.gamemode;
+let cfg = config.ryk.gamemode;
 in {
-  options.rhx.gamemode.enable =
+  options.ryk.gamemode.enable =
     lib.mkEnableOption "Enable gamemode nixOS module";
 
   config = lib.mkIf cfg.enable {

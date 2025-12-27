@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.walker;
+let cfg = config.ryk.walker;
 in {
-  options.rhx.walker = {
+  options.ryk.walker = {
     enable = lib.mkEnableOption "Enable walker home-manager module.";
   };
 

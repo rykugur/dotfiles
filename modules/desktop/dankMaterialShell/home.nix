@@ -1,15 +1,15 @@
 # TODO: remove niri-config-specific references
 { config, inputs, lib, nixosConfig, pkgs, ... }:
 let
-  dankCfg = nixosConfig.rhx.dankMaterialShell;
-  rhxCfg = nixosConfig.rhx;
+  dankCfg = nixosConfig.ryk.dankMaterialShell;
+  rykCfg = nixosConfig.ryk;
 in {
   imports = [ inputs.dankMaterialShell.homeModules.dank-material-shell ]
-    ++ lib.optionals (rhxCfg.niri.enable)
+    ++ lib.optionals (rykCfg.niri.enable)
     [ inputs.dankMaterialShell.homeModules.niri ];
 
   config = let screenshotEditor = dankCfg.screenshotBackend;
-  in lib.mkIf rhxCfg.dankMaterialShell.enable {
+  in lib.mkIf rykCfg.dankMaterialShell.enable {
 
     home.packages = lib.optionals (screenshotEditor == "swappy") [ pkgs.swappy ]
       ++ lib.optionals (screenshotEditor == "satty") [ pkgs.satty ];
@@ -39,7 +39,7 @@ in {
     };
 
     programs.niri.settings =
-      lib.mkIf (rhxCfg.niri.enable && rhxCfg.niri.bar == "dankMaterialShell") {
+      lib.mkIf (rykCfg.niri.enable && rykCfg.niri.bar == "dankMaterialShell") {
         environment = lib.mkIf (screenshotEditor != "none") {
           DMS_SCREENSHOT_EDITOR = screenshotEditor;
         };
@@ -77,7 +77,7 @@ in {
       };
 
     wayland.windowManager.hyprland.settings = lib.mkIf
-      (rhxCfg.hyprland.enable && rhxCfg.hyprland.bar == "dankMaterialShell") {
+      (rykCfg.hyprland.enable && rykCfg.hyprland.bar == "dankMaterialShell") {
         bind = let
           dmsIpc = action: "dms ipc call ${action}";
           audioIpc = action: "dms ipc call audio ${action}";

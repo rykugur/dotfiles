@@ -5,7 +5,7 @@ let
   wineAstralPkg =
     inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.wine-astral;
 in {
-  config = lib.mkIf nixosConfig.rhx.gaming.starcitizen.enable {
+  config = lib.mkIf nixosConfig.ryk.gaming.starcitizen.enable {
     home.packages = with pkgs; [ opentrack-StarCitizen gameglass ];
 
     # lazy-mode - for opentrack

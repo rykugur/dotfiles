@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.fish;
+let cfg = config.ryk.fish;
 in {
-  options.rhx.fish = {
+  options.ryk.fish = {
     enable = lib.mkEnableOption "Enable fish home-manager module.";
   };
 

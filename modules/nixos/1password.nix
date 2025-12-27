@@ -1,7 +1,7 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.rhx._1password;
+let cfg = config.ryk._1password;
 in {
-  options.rhx._1password.enable =
+  options.ryk._1password.enable =
     lib.mkEnableOption "Enable 1password nixOS module";
 
   config = lib.mkIf cfg.enable {

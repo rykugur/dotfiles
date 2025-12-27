@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.swaylock;
+let cfg = config.ryk.swaylock;
 in {
-  options.rhx.swaylock = {
+  options.ryk.swaylock = {
     enable = lib.mkEnableOption "Enable swaylock home-manager module.";
   };
 

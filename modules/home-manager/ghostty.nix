@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.ghostty;
+  cfg = config.ryk.ghostty;
   font = "CaskaydiaCove NFM";
   # catppuccin-ghostty = pkgs.fetchFromGitHub {
   #   owner = "catppuccin";
@@ -9,7 +9,7 @@ let
   #   sha256 = "sha256-4seUhPr6nv0ld9XMrQS4Ko9QnC1ZOEiRjENSfgHIvR0=";
   # };
 in {
-  options.rhx.ghostty = {
+  options.ryk.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
     hideWindowDecoration =
       lib.mkEnableOption "Whether to hide window-decoration or not.";

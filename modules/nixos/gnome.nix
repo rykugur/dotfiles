@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.gnome;
+let cfg = config.ryk.gnome;
 in {
-  options.rhx.gnome.enable = lib.mkEnableOption "Enable gnome nixOS module";
+  options.ryk.gnome.enable = lib.mkEnableOption "Enable gnome nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [

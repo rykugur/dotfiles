@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.carapace;
+let cfg = config.ryk.carapace;
 in {
-  options.rhx.carapace = {
+  options.ryk.carapace = {
     enable = lib.mkEnableOption "Enable carapace home-manager module.";
   };
 

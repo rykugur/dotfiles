@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.keebs;
+  cfg = config.ryk.keebs;
   madnoodle-micro-pad = pkgs.fetchurl {
     url =
       "https://github.com/The-Mad-Noodle/Mad-Noodle-Via-Support/releases/download/v.2.0/noodlepad_micro.json";
@@ -12,7 +12,7 @@ let
     sha256 = "sha256-YS+QToYqFOQGUwn7Im/hSa+woNb0EHgvgavdEDpnDRU=";
   };
 in {
-  options.rhx.keebs = {
+  options.ryk.keebs = {
     enable = lib.mkEnableOption "Enable keebs home-manager module.";
   };
 

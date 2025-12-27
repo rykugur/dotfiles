@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.obs-studio;
+let cfg = config.ryk.obs-studio;
 in {
-  options.rhx.obs-studio.enable =
+  options.ryk.obs-studio.enable =
     lib.mkEnableOption "Enable obs-studio nixOS module";
 
   config = lib.mkIf cfg.enable {

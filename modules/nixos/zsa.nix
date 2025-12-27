@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.zsa;
+let cfg = config.ryk.zsa;
 in {
-  options.rhx.zsa.enable = lib.mkEnableOption "Enable zsa nixOS module";
+  options.ryk.zsa.enable = lib.mkEnableOption "Enable zsa nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ pkgs.keymapp ];

@@ -1,7 +1,7 @@
 { ... }: {
   imports = [ ../../modules/home-manager/helix.nix ];
 
-  rhx.helix.enable = true;
+  ryk.helix.enable = true;
 
   ### leave me alone
   programs.home-manager.enable = true;

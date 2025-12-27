@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.nautilus;
+let cfg = config.ryk.nautilus;
 in {
-  options.rhx.nautilus = {
+  options.ryk.nautilus = {
     enable = lib.mkEnableOption "Enable nautilus home-manager module.";
   };
 

@@ -1,7 +1,7 @@
 { config, inputs, lib, pkgs, ... }:
-let cfg = config.rhx.helix;
+let cfg = config.ryk.helix;
 in {
-  options.rhx.helix = {
+  options.ryk.helix = {
     enable = lib.mkEnableOption "Enable helix home-manager module.";
   };
 

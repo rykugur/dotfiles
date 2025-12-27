@@ -1,8 +1,8 @@
 { config, lib, username, ... }:
-let cfg = config.rhx.gaming.nexus-mods;
+let cfg = config.ryk.gaming.nexus-mods;
 in {
 
-  options.rhx.gaming.nexus-mods.enable =
+  options.ryk.gaming.nexus-mods.enable =
     lib.mkEnableOption "Enable Nexus Mods module";
 
   config = lib.mkIf cfg.enable {

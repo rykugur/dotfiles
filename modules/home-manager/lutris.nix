@@ -1,7 +1,7 @@
 { config, osConfig, lib, pkgs, ... }:
-let cfg = config.rhx.lutris;
+let cfg = config.ryk.lutris;
 in {
-  options.rhx.lutris = {
+  options.ryk.lutris = {
     enable = lib.mkEnableOption "Enable lutris home-manager module.";
   };
 

@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.easyeffects;
+let cfg = config.ryk.easyeffects;
 in {
-  options.rhx.easyeffects = {
+  options.ryk.easyeffects = {
     enable = lib.mkEnableOption "Enable easyeffects home-manager module.";
   };
 

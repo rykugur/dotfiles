@@ -120,7 +120,7 @@
   };
 
   ### custom module stuff
-  rhx = {
+  ryk = {
     keyboardVendor = "zsa";
 
     roles = {

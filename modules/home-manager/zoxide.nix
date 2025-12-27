@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.zoxide;
+let cfg = config.ryk.zoxide;
 in {
-  options.rhx.zoxide = {
+  options.ryk.zoxide = {
     enable = lib.mkEnableOption "Enable zoxide home-manager module.";
   };
 

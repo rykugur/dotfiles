@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.kde;
+let cfg = config.ryk.kde;
 in {
-  options.rhx.kde.enable = lib.mkEnableOption "Enable kde nixOS module";
+  options.ryk.kde.enable = lib.mkEnableOption "Enable kde nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [

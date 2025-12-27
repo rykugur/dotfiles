@@ -1,5 +1,5 @@
 { ... }: {
-  rhx.niri = {
+  ryk.niri = {
     enable = true;
     bar = "dankMaterialShell";
 

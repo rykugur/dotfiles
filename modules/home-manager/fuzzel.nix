@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.fuzzel;
+let cfg = config.ryk.fuzzel;
 in {
-  options.rhx.fuzzel = {
+  options.ryk.fuzzel = {
     enable = lib.mkEnableOption "Enable fuzzel home-manager module.";
   };
 

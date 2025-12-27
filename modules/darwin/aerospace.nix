@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.aerospace;
+let cfg = config.ryk.aerospace;
 in {
-  options.rhx.aerospace.enable =
+  options.ryk.aerospace.enable =
     lib.mkEnableOption "Enable aerospace darwin module";
 
   config = lib.mkIf cfg.enable {

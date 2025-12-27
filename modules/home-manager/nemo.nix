@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.nemo;
+let cfg = config.ryk.nemo;
 in {
-  options.rhx.nemo = {
+  options.ryk.nemo = {
     enable = lib.mkEnableOption "Enable nemo home-manager module.";
   };
 

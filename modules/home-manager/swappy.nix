@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.swappy;
+let cfg = config.ryk.swappy;
 in {
-  options.rhx.swappy = {
+  options.ryk.swappy = {
     enable = lib.mkEnableOption "Enable swappy home-manager module.";
   };
 

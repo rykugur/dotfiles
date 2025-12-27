@@ -1,5 +1,5 @@
 { ... }: {
-  rhx.hyprland = {
+  ryk.hyprland = {
     enable = true;
     bar = "dankMaterialShell";
     layout = "scrolling";

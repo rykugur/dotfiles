@@ -1,9 +1,9 @@
 { config, lib, username, ... }:
 let
-  cfg = config.rhx.dankMaterialShell;
+  cfg = config.ryk.dankMaterialShell;
   screenshotBackends = (import ../shared.nix).screenshotBackends;
 in {
-  options.rhx.dankMaterialShell = {
+  options.ryk.dankMaterialShell = {
     enable =
       lib.mkEnableOption "Enable dankMaterialShell custom quickshell module.";
 

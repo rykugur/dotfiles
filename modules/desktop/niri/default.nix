@@ -1,12 +1,12 @@
 { config, inputs, lib, username, ... }:
 let
-  cfg = config.rhx.niri;
+  cfg = config.ryk.niri;
   shared = import ../shared.nix;
   barNames = shared.bars;
 in {
   imports = [ inputs.niri.nixosModules.niri ];
 
-  options.rhx.niri = {
+  options.ryk.niri = {
     enable = lib.mkEnableOption "Enable niri window manager.";
 
     monitors = lib.mkOption {
@@ -63,9 +63,9 @@ in {
   in lib.mkIf cfg.enable {
     programs.niri.enable = true;
 
-    # rhx.caelestia.enable = (isBarEnabled "caelestia");
-    rhx.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
-    rhx.noctalia.enable = (isBarEnabled "noctalia");
+    # ryk.caelestia.enable = (isBarEnabled "caelestia");
+    ryk.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
+    ryk.noctalia.enable = (isBarEnabled "noctalia");
 
     home-manager.users.${username}.imports = [ ./home.nix ];
   };

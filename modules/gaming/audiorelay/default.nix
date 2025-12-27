@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.rhx.gaming.audiorelay;
+let cfg = config.ryk.gaming.audiorelay;
 in {
-  options.rhx.gaming.audiorelay = {
+  options.ryk.gaming.audiorelay = {
     enable = lib.mkEnableOption "Enable audiorelay module.";
   };
 

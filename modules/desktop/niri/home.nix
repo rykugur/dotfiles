@@ -1,5 +1,5 @@
 { config, lib, pkgs, nixosConfig, ... }:
-let niriCfg = nixosConfig.rhx.niri;
+let niriCfg = nixosConfig.ryk.niri;
 in {
   config = lib.mkIf niriCfg.enable {
     home.packages = with pkgs;

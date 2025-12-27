@@ -27,7 +27,7 @@
     };
   };
 
-  rhx.ssh.enable = true;
+  ryk.ssh.enable = true;
 
   home-manager = {
     extraSpecialArgs = { inherit inputs outputs hostname username; };

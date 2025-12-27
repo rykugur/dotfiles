@@ -1,9 +1,9 @@
 { config, inputs, lib, pkgs, username, ... }:
 let
-  cfg = config.rhx.hyprland;
+  cfg = config.ryk.hyprland;
   barNames = (import ../shared.nix).bars;
 in {
-  options.rhx.hyprland = {
+  options.ryk.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland module.";
 
     bar = lib.mkOption {
@@ -72,9 +72,9 @@ in {
 
     xdg.portal = { enable = true; };
 
-    # rhx.caelestia.enable = (isBarEnabled "caelestia");
-    rhx.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
-    rhx.noctalia.enable = (isBarEnabled "noctalia");
+    # ryk.caelestia.enable = (isBarEnabled "caelestia");
+    ryk.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
+    ryk.noctalia.enable = (isBarEnabled "noctalia");
 
     home-manager.users.${username}.imports = [ ./home.nix ];
   };

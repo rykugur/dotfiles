@@ -1,9 +1,9 @@
 { config, inputs, lib, nixosConfig, ... }:
-let rhxCfg = nixosConfig.rhx;
+let rykCfg = nixosConfig.ryk;
 in {
   imports = [ inputs.noctalia.homeModules.default ];
 
-  config = lib.mkIf rhxCfg.noctalia.enable {
+  config = lib.mkIf rykCfg.noctalia.enable {
     programs.noctalia-shell = {
       enable = true;
 
@@ -58,7 +58,7 @@ in {
     };
 
     programs.niri.settings =
-      lib.mkIf (rhxCfg.niri.enable && rhxCfg.niri.bar == "noctalia") {
+      lib.mkIf (rykCfg.niri.enable && rykCfg.niri.bar == "noctalia") {
         binds = with config.lib.niri.actions;
           let
             spawnAction = actions:

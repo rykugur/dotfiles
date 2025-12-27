@@ -1,15 +1,15 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.rhx.roles.dev;
+let cfg = config.ryk.roles.dev;
 in {
-  options.rhx.roles.dev.enable = lib.mkEnableOption "Enable dev role";
+  options.ryk.roles.dev.enable = lib.mkEnableOption "Enable dev role";
 
   config = lib.mkIf cfg.enable {
     # enable nixOS modules for desktop role
-    # rhx = {};
+    # ryk = {};
 
     # home-manager config
     home-manager.users.${username} = {
-      rhx = {
+      ryk = {
         atuin.enable = true;
         git = {
           enable = true;

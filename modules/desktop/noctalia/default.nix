@@ -1,9 +1,9 @@
 { config, inputs, lib, username, ... }:
-let cfg = config.rhx.noctalia;
+let cfg = config.ryk.noctalia;
 in {
   imports = [ inputs.noctalia.nixosModules.default ];
 
-  options.rhx.noctalia = {
+  options.ryk.noctalia = {
     enable = lib.mkEnableOption "Enable noctalia custom quickshell module.";
   };
 

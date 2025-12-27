@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.flameshot;
+let cfg = config.ryk.flameshot;
 in {
-  options.rhx.flameshot = {
+  options.ryk.flameshot = {
     enable = lib.mkEnableOption "Enable flameshot home-manager module.";
   };
 

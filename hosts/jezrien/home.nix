@@ -16,7 +16,7 @@
     pkgs.kalker
   ];
 
-  rhx = {
+  ryk = {
     btop.enable = true;
     keebs.enable = true;
     ghostty.hideWindowDecoration = true;

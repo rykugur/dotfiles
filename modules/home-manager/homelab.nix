@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.homelab;
+let cfg = config.ryk.homelab;
 in {
-  options.rhx.homelab = {
+  options.ryk.homelab = {
     enable = lib.mkEnableOption "Enable homelab home-manager module.";
   };
 

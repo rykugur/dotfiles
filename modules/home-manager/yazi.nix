@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.yazi;
+let cfg = config.ryk.yazi;
 in {
-  options.rhx.yazi = {
+  options.ryk.yazi = {
     enable = lib.mkEnableOption "Enable yazi home-manager module.";
   };
 

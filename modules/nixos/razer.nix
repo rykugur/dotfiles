@@ -1,7 +1,7 @@
 { config, lib, username, pkgs, ... }:
-let cfg = config.rhx.razer;
+let cfg = config.ryk.razer;
 in {
-  options.rhx.razer.enable = lib.mkEnableOption "Enable razer nixOS module";
+  options.ryk.razer.enable = lib.mkEnableOption "Enable razer nixOS module";
 
   config = lib.mkIf cfg.enable {
     hardware.openrazer = {

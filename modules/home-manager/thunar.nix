@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.thunar;
+let cfg = config.ryk.thunar;
 in {
-  options.rhx.thunar = {
+  options.ryk.thunar = {
     enable = lib.mkEnableOption "Enable thunar home-manager module.";
   };
 

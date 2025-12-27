@@ -1,9 +1,9 @@
 { config, inputs, lib, username, ... }:
-let cfg = config.rhx.gaming.starcitizen;
+let cfg = config.ryk.gaming.starcitizen;
 in {
   imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
 
-  options.rhx.gaming.starcitizen.enable =
+  options.ryk.gaming.starcitizen.enable =
     lib.mkEnableOption "Enable starcitizen module";
 
   config = lib.mkIf cfg.enable {

@@ -1,11 +1,11 @@
 { config, lib, pkgs, username, ... }:
 let
-  cfg = config.rhx.vfio;
+  cfg = config.ryk.vfio;
   vfioIds = cfg.vfioIds;
   vfioIdsFmt = with builtins;
     if (length vfioIds > 0) then concatStringsSep "," vfioIds else "";
 in {
-  options.rhx.vfio = {
+  options.ryk.vfio = {
     enable = lib.mkEnableOption "Enable vfio nixOS module";
     vfioIds = lib.mkOption {
       type = lib.types.listOf lib.types.str;
