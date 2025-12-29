@@ -141,6 +141,8 @@
     razer.enable = true;
     stylix.enable = true;
 
+    dev.enable = true;
+
     gaming = {
       eve-online.enable = true;
       nexus-mods.enable = true;

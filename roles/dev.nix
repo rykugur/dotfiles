@@ -24,7 +24,6 @@ in {
         prettierd
         stylua
         vscode
-        yaak
         bruno
         insomnia
       ];
