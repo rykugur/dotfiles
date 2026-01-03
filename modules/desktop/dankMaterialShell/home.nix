@@ -49,7 +49,7 @@ in {
             spawnAction = actions: spawn ([ "dms" "ipc" "call" ] ++ actions);
             launcherAction = spawnAction [ "spotlight" "toggle" ];
           in {
-            "Mod+Print".action = spawnAction [ "niri" "screenshot" ];
+            "Mod+Print".action = spawn [ "dms" "screenshot" "--no-file" ];
             "Mod+Shift+e".action = spawnAction [ "powermenu" "toggle" ];
             "Mod+Shift+v".action = spawnAction [ "clipboard" "toggle" ];
             "Mod+0".action = spawnAction [ "notepad" "toggle" ];
