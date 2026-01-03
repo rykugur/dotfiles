@@ -20,7 +20,14 @@ $env.abbreviations = $env.abbreviations | merge {
 }
 
 alias keit = kubectl exec -it
-alias "keit shlink" = kubectl --namespace shlink exec -it deployments/shlink -- bin/cli
+
+def "shlink create" [slug: string url: string] {
+  kubectl --namespace shlink exec -it deployments/shlink -- bin/cli short-url:create --custom-slug $slug $url
+}
+
+def "shlink list" [] {
+  kubectl --namespace shlink exec -it deployments/shlink -- bin/cli short-url:list
+}
 
 alias hf = helmfile
 alias fgk = flux get kustomization
