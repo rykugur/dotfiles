@@ -12,6 +12,7 @@ in {
         inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.default;
       settings = {
         editor = {
+          # auto-pairs = false;
           bufferline = "multiple";
           clipboard-provider =
             "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
@@ -106,6 +107,7 @@ in {
           vscode-eslint-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server";
+            args = [ "--stdio" ];
             config = {
               format = false;
               quiet = false;
