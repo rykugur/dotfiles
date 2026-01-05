@@ -26,6 +26,7 @@
           hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
         };
       });
+
       vscode-langservers-extracted =
         prev.vscode-langservers-extracted.overrideAttrs (oldAttrs: rec {
           version = "4.8.0";
