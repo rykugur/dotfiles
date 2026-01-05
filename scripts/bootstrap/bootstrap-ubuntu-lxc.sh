@@ -41,7 +41,7 @@ add-apt-repository -y ppa:maveonair/helix-editor
 apt update
 
 log "Installing OpenSSH server and extra packages..."
-apt install -y openssh-server sudo curl wget htop git eza starship helix || error "Failed to install packages"
+apt install -y openssh-server sudo curl wget htop git eza helix || error "Failed to install packages"
 
 log "Enabling and starting SSH..."
 systemctl enable ssh || error "Failed to enable SSH"
