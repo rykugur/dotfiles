@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.kitty;
+  cfg = config.ryk.kitty;
   # font = "ZedMono Nerd Font Mono";
   font = "CaskaydiaCove NFM";
 in {
-  options.rhx.kitty = {
+  options.ryk.kitty = {
     enable = lib.mkEnableOption "Enable kitty home-manager module.";
   };
 

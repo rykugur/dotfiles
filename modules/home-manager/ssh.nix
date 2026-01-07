@@ -1,7 +1,7 @@
 { config, inputs, lib, pkgs, hostname, ... }:
-let cfg = config.rhx.ssh;
+let cfg = config.ryk.ssh;
 in {
-  options.rhx.ssh = {
+  options.ryk.ssh = {
     enable = lib.mkEnableOption "Enable ssh home-manager module.";
   };
 

@@ -1,7 +1,7 @@
 { config, inputs, lib, pkgs, ... }:
-let cfg = config.rhx.atuin;
+let cfg = config.ryk.atuin;
 in {
-  options.rhx.atuin = {
+  options.ryk.atuin = {
     enable = lib.mkEnableOption "Enable atuin home-manager module.";
   };
 

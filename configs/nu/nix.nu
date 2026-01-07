@@ -24,14 +24,8 @@ def "rbld boot" [] {
   }
 }
 
-def nd [] {
-  const targets = ["lua", "kubes"]
-  let selection = ($targets | str join "\n" | fzf)
-  if ($selection | is-not-empty) {
-    nix develop $"($env.DOTFILES_DIR)#($selection)" -c $env.SHELL
-  } else {
-    log info "No target selected."
-  }
+def nd [shell: string] {
+  nix develop $"($env.DOTFILES_DIR)#($shell)"
 }
 
 def "nix get-hash" [url: string rev: string] {
@@ -63,6 +57,10 @@ def nrf [--remote (-r)] {
   }
 
   nix repl --expr $"builtins.getFlake \"($url)\""
+}
+
+def nrun [pkg: string] {
+  nix run $"nixpkgs#($pkg)"
 }
 
 $env.abbreviations = $env.abbreviations | merge {

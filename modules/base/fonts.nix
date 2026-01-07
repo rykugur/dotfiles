@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.fonts;
+let cfg = config.ryk.fonts;
 in {
-  options.rhx.fonts.enable = lib.mkEnableOption "Enable certain fonts";
+  options.ryk.fonts.enable = lib.mkEnableOption "Enable certain fonts";
 
   config = lib.mkIf cfg.enable {
     fonts.packages = with pkgs; [

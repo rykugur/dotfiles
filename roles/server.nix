@@ -1,15 +1,15 @@
 { config, lib, username, ... }:
-let cfg = config.rhx.roles.server;
+let cfg = config.ryk.roles.server;
 in {
-  options.rhx.roles.server.enable = lib.mkEnableOption "Enable server role";
+  options.ryk.roles.server.enable = lib.mkEnableOption "Enable server role";
 
   config = lib.mkIf cfg.enable {
     # enable nixOS modules for desktop role
-    # rhx = {};
+    # ryk = {};
 
     # home-manager config
     home-manager.users.${username} = {
-      # rhx = {};
+      # ryk = {};
     };
   };
 }

@@ -1,11 +1,11 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.rhx.roles.terminal;
+let cfg = config.ryk.roles.terminal;
 in {
-  options.rhx.roles.terminal.enable = lib.mkEnableOption "Enable terminal role";
+  options.ryk.roles.terminal.enable = lib.mkEnableOption "Enable terminal role";
 
   config = lib.mkIf cfg.enable {
     # enable nixOS modules for desktop role
-    # rhx = { };
+    # ryk = { };
 
     # home-manager config
     home-manager.users.${username} = {
@@ -38,7 +38,7 @@ in {
 
       ];
 
-      rhx = {
+      ryk = {
         ghostty.enable = true;
         kitty.enable = true;
 

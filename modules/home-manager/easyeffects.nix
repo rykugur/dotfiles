@@ -1,15 +1,12 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.rhx.easyeffects;
+{ config, lib, ... }:
+let cfg = config.ryk.easyeffects;
 in {
-  options.rhx.easyeffects = {
+  options.ryk.easyeffects = {
     enable = lib.mkEnableOption "Enable easyeffects home-manager module.";
   };
 
   config = lib.mkIf cfg.enable {
-    services.easyeffects = {
-      enable = true;
-      package = pkgs.easyeffects;
-    };
+    services.easyeffects = { enable = true; };
 
     home.file = {
       ".config/easyeffects/input/input.json".source =

@@ -1,7 +1,7 @@
 { config, lib, username, pkgs, ... }:
-let cfg = config.rhx.distrobox;
+let cfg = config.ryk.distrobox;
 in {
-  options.rhx.distrobox.enable =
+  options.ryk.distrobox.enable =
     lib.mkEnableOption "Enable distrobox nixOS module";
 
   config = lib.mkIf cfg.enable {

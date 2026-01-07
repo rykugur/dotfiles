@@ -1,8 +1,8 @@
 { config, lib, pkgs, nixosConfig, ... }:
-let hyprCfg = nixosConfig.rhx.hyprland;
+let hyprCfg = nixosConfig.ryk.hyprland;
 in {
-  config = lib.mkIf nixosConfig.rhx.hyprland.enable {
-    rhx = { nautilus.enable = true; };
+  config = lib.mkIf nixosConfig.ryk.hyprland.enable {
+    ryk = { nautilus.enable = true; };
 
     home.packages = with pkgs; [
       hyprprop

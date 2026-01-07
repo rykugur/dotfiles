@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.btrfs;
+let cfg = config.ryk.btrfs;
 in {
-  options.rhx.btrfs.enable = lib.mkEnableOption "Enable btrfs nixOS module";
+  options.ryk.btrfs.enable = lib.mkEnableOption "Enable btrfs nixOS module";
 
   config = lib.mkIf cfg.enable {
     services = {

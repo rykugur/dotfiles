@@ -23,6 +23,7 @@
     baobab
     bottom
     fastfetch
+    fd
     file
     file-roller
     # jellyfin-media-player - it or a depdendency uses insecure qtwebengine

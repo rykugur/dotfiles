@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.gnome;
+let cfg = config.ryk.gnome;
 in {
-  options.rhx.gnome = {
+  options.ryk.gnome = {
     enable = lib.mkEnableOption "Enable gnome home-manager module.";
   };
 

@@ -7,6 +7,23 @@
     shellHook = ''
       eval "$(fnm env)"
       fnm use
+      exec nu
+    '';
+  };
+
+  react = pkgs.mkShell {
+    buildInputs = with pkgs; [ bun nodejs ];
+
+    shellHook = ''
+      exec nu
+    '';
+  };
+
+  rust = pkgs.mkShell {
+    buildInputs = with pkgs; [ rustc cargo cargo-generate ];
+
+    shellHook = ''
+      exec nu
     '';
   };
 }

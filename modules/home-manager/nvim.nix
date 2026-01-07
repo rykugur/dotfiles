@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.nvim;
+let cfg = config.ryk.nvim;
 in {
-  options.rhx.nvim = {
+  options.ryk.nvim = {
     enable = lib.mkEnableOption "Enable nvim home-manager module.";
   };
 

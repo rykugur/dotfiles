@@ -1,5 +1,5 @@
 { config, lib, ... }:
-let cfg = config.rhx;
+let cfg = config.ryk;
 in {
   imports = [
     ./1password.nix
@@ -14,7 +14,6 @@ in {
     ./ssh.nix
     ./steam.nix
     ./vfio.nix
-    ./vr.nix
     ./winboat.nix
 
     # keebs
@@ -26,7 +25,7 @@ in {
     ./virtman.nix
   ];
 
-  options.rhx.keyboardVendor = lib.mkOption {
+  options.ryk.keyboardVendor = lib.mkOption {
     type = lib.types.enum [ "wooting" "zsa" "none" ];
     default = "none";
     description = ''
@@ -38,7 +37,7 @@ in {
   };
 
   config = {
-    rhx.wooting.enable = lib.mkIf (cfg.keyboardVendor == "wooting") true;
-    rhx.zsa.enable = lib.mkIf (cfg.keyboardVendor == "zsa") true;
+    ryk.wooting.enable = lib.mkIf (cfg.keyboardVendor == "wooting") true;
+    ryk.zsa.enable = lib.mkIf (cfg.keyboardVendor == "zsa") true;
   };
 }

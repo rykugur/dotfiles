@@ -1,9 +1,9 @@
 { config, inputs, lib, username, ... }:
-let cfg = config.rhx.starcitizen;
+let cfg = config.ryk.gaming.starcitizen;
 in {
   imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
 
-  options.rhx.starcitizen.enable =
+  options.ryk.gaming.starcitizen.enable =
     lib.mkEnableOption "Enable starcitizen module";
 
   config = lib.mkIf cfg.enable {
@@ -27,6 +27,7 @@ in {
 
       # Additional commands before the game starts
       preCommands = ''
+        export DISPLAY=""
         export DXVK_HUD=compiler
         export MANGO_HUD=1
       '';

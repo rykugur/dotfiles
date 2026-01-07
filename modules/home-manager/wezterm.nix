@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.wezterm;
+let cfg = config.ryk.wezterm;
 in {
-  options.rhx.wezterm = {
+  options.ryk.wezterm = {
     enable = lib.mkEnableOption "Enable wezterm home-manager module.";
   };
 

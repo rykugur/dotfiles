@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.starship;
+let cfg = config.ryk.starship;
 in {
-  options.rhx.starship = {
+  options.ryk.starship = {
     enable = lib.mkEnableOption "Enable starship home-manager module.";
   };
 

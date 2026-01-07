@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.git;
+let cfg = config.ryk.git;
 in {
-  options.rhx.git = {
+  options.ryk.git = {
     enable = lib.mkEnableOption "Enable git home-manager module.";
     gitconfig.enable = lib.mkEnableOption "Use hm-managed gitconfig";
   };

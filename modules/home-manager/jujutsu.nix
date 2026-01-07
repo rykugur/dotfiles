@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.jujutsu;
+let cfg = config.ryk.jujutsu;
 in {
-  options.rhx.jujutsu = {
+  options.ryk.jujutsu = {
     enable = lib.mkEnableOption "Enable jujutsu home-manager module.";
   };
 

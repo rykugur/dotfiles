@@ -38,7 +38,7 @@
     tldr
   ];
 
-  rhx = {
+  ryk = {
     # TODO: these are in roles/terminal but that is failing on nix-darwin
     # will remove these once I figure that out
     direnv.enable = true;

@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.btop;
+let cfg = config.ryk.btop;
 in {
-  options.rhx.btop = {
+  options.ryk.btop = {
     enable = lib.mkEnableOption "Enable btop home-manager module.";
     # TODO: would be cool to genericize this
   };

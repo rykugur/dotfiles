@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
-let cfg = config.rhx.pipewire;
+let cfg = config.ryk.pipewire;
 in {
   # imports = [ inputs.nix-gaming.nixosModules.pipewireLowLatency ];
 
-  options.rhx.pipewire = {
+  options.ryk.pipewire = {
     enable = lib.mkEnableOption "Enable pipewire nixOS module";
 
     rate = lib.mkOption {
@@ -35,8 +35,8 @@ in {
         pulse.enable = true;
 
         extraConfig = let
-          rate = builtins.toString config.rhx.pipewire.rate;
-          quantum = builtins.toString config.rhx.pipewire.quantum;
+          rate = builtins.toString config.ryk.pipewire.rate;
+          quantum = builtins.toString config.ryk.pipewire.quantum;
         in {
           pipewire."92-low-latency" = {
             "context.properties" = {

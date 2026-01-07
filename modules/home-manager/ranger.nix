@@ -1,7 +1,7 @@
 { config, lib, ... }:
-let cfg = config.rhx.ranger;
+let cfg = config.ryk.ranger;
 in {
-  options.rhx.ranger = {
+  options.ryk.ranger = {
     enable = lib.mkEnableOption "Enable ranger home-manager module.";
   };
 

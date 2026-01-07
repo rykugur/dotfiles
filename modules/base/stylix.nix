@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.stylix;
+let cfg = config.ryk.stylix;
 in {
-  options.rhx.stylix.enable = lib.mkEnableOption "Enable stylix base module.";
+  options.ryk.stylix.enable = lib.mkEnableOption "Enable stylix base module.";
 
   config = lib.mkIf cfg.enable {
     stylix = {

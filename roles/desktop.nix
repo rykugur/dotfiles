@@ -1,11 +1,11 @@
 { config, lib, username, ... }:
-let cfg = config.rhx.roles.desktop;
+let cfg = config.ryk.roles.desktop;
 in {
-  options.rhx.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
+  options.ryk.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
 
   config = lib.mkIf cfg.enable {
     # enable nixOS modules for desktop role
-    rhx = {
+    ryk = {
       roles = {
         # force enable dev role - all of my desktops are dev machines too
         dev.enable = true;
@@ -20,9 +20,8 @@ in {
 
     # home-manager config
     home-manager.users.${username} = {
-      rhx = {
+      ryk = {
         browser.enable = true;
-        easyeffects.enable = true;
         homelab.enable = true;
         ssh.enable = true;
       };

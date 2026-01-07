@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.nushell;
+  cfg = config.ryk.nushell;
   nu-scripts = pkgs.fetchFromGitHub {
     owner = "nushell";
     repo = "nu_scripts";
@@ -8,7 +8,7 @@ let
     sha256 = "sha256-b2AeWiHRz1LbiGR1gOJHBV3H56QP7h8oSTzg+X4Shk8=";
   };
 in {
-  options.rhx.nushell = {
+  options.ryk.nushell = {
     enable = lib.mkEnableOption "Enable nushell home-manager module.";
   };
 

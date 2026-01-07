@@ -108,6 +108,16 @@
             inherit username;
           };
         };
+
+        # nix LXC for quick testing
+        nixy = nixpkgs.lib.nixosSystem {
+          modules = [ ./hosts/nixy/configuration.nix ];
+          specialArgs = {
+            inherit inputs outputs;
+            hostname = "nixy";
+            inherit username;
+          };
+        };
       };
 
       darwinConfigurations = {
@@ -127,16 +137,6 @@
             hostname = "taln";
             username = "dusty";
             pkgs = pkgsFor.aarch64-darwin;
-          };
-        };
-
-        # work macbook
-        "HJ0704F9VK" = nix-darwin.lib.darwinSystem {
-          modules = [ ./hosts/work-macbook/configuration.nix ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "";
-            username = "dustin.jerome";
           };
         };
       };

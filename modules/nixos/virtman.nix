@@ -1,7 +1,7 @@
 { config, lib, username, pkgs, ... }:
-let cfg = config.rhx.virtman;
+let cfg = config.ryk.virtman;
 in {
-  options.rhx.virtman.enable = lib.mkEnableOption "Enable virtman nixOS module";
+  options.ryk.virtman.enable = lib.mkEnableOption "Enable virtman nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ virtiofsd ];

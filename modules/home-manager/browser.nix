@@ -1,12 +1,12 @@
 { config, inputs, lib, pkgs, ... }:
 let
-  cfg = config.rhx.browser;
+  cfg = config.ryk.browser;
   zenPkg =
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
   imports = [ inputs.zen-browser.homeModules.default ];
 
-  options.rhx.browser = {
+  options.ryk.browser = {
     enable = lib.mkEnableOption "Enable browser home-manager module.";
   };
 

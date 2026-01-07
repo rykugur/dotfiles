@@ -1,5 +1,5 @@
 { config, lib, pkgs, nixosConfig, ... }:
-let niriCfg = nixosConfig.rhx.niri;
+let niriCfg = nixosConfig.ryk.niri;
 in {
   config = lib.mkIf niriCfg.enable {
     home.packages = with pkgs;
@@ -182,17 +182,17 @@ in {
         };
 
       window-rules = let
-        mkFloatingAppRule = appInfo: {
-          matches = [{
-            app-id = appInfo.appId or null;
+        mkFloatingAppRule = appInfos: {
+          matches = (map (appInfo: {
+            app-id = appInfo.app-id or null;
             title = appInfo.title or null;
-          }];
+          }) appInfos);
           open-floating = true;
         };
         mkFloatingAppRules = appInfos:
-          lib.map (appInfo: mkFloatingAppRule appInfo) appInfos;
+          lib.map (appInfo: mkFloatingAppRule [ appInfo ]) appInfos;
       in [
-        ((mkFloatingAppRule { appId = "1password"; }) // {
+        ((mkFloatingAppRule [{ app-id = "1password"; }]) // {
           block-out-from = "screen-capture";
         })
         {
@@ -213,7 +213,6 @@ in {
         {
           matches = [{ app-id = "discord"; }];
           default-column-width = p50;
-
         }
       ] ++
       # game-specific rules
@@ -232,16 +231,22 @@ in {
         #   }];
         #   variable-refresh-rate = true;
         # }
-        ((mkFloatingAppRule { appId = "EVE Launcher"; }) // {
+        {
+          matches = [{
+            app-id = "steam_app_8500";
+            title = "EVE Launcher";
+          }];
           default-column-width = p33;
-        })
-        # {
-        #   matches = [{
-        #     app-id = "steam_app_8500";
-        #     title = "^EVE -.*$";
-        #   }];
-        #   variable-refresh-rate = true;
-        # }
+          # variable-refresh-rate = true;
+        }
+        {
+          matches = [{
+            app-id = "steam_app_1903340";
+            title = "Clair Obscur: Expedition 33";
+          }];
+          open-fullscreen = true;
+          # variable-refresh-rate = true;
+        }
         # {
         #   matches = [{
         #     app-id = "starcitizen.exe";
@@ -250,20 +255,20 @@ in {
         #   variable-refresh-rate = true;
         # }
       ] ++ (mkFloatingAppRules [
-        { appId = "galculator"; }
-        { appId = "neovide"; }
-        { appId = "nemo"; }
-        { appId = "obsidian"; }
-        { appId = "opentrack"; }
-        { appId = "org.gnome.Nautilus"; }
-        { appId = "nemo"; }
-        { appId = "thunar"; }
-        { appId = "org.pulseaudio.pavucontrol"; }
-        { appId = "pavucontrol"; }
-        { appId = "ristretto"; }
-        { appId = "vlc"; }
-        { appId = "yad"; }
-        { appId = "zenity"; }
+        { app-id = "galculator"; }
+        { app-id = "neovide"; }
+        { app-id = "nemo"; }
+        { app-id = "obsidian"; }
+        { app-id = "opentrack"; }
+        { app-id = "org.gnome.Nautilus"; }
+        { app-id = "nemo"; }
+        { app-id = "thunar"; }
+        { app-id = "org.pulseaudio.pavucontrol"; }
+        { app-id = "pavucontrol"; }
+        { app-id = "ristretto"; }
+        { app-id = "vlc"; }
+        { app-id = "yad"; }
+        { app-id = "zenity"; }
       ]);
     };
   };

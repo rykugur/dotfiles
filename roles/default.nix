@@ -7,7 +7,6 @@
     ./server.nix
     ./terminal.nix
     ./virtualization.nix
-    ./vr.nix
   ];
 
   config = {

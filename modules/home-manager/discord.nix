@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.discord;
+let cfg = config.ryk.discord;
 in {
-  options.rhx.discord = {
+  options.ryk.discord = {
     enable = lib.mkEnableOption "Enable discord home-manager module.";
   };
 

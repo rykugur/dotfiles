@@ -1,6 +1,7 @@
 def gas [] {
   git status --short | lines | split column " " status file --collapse-empty | where status == MM or status == AM | each { |modified| git add $modified.file } | ignore
 }
+
 def gcu [] {
   git status --short
   | lines
@@ -9,6 +10,9 @@ def gcu [] {
   | each { |modified| rm -rf $modified.file }
   | ignore
 }
+
+alias gits = cd $"($env.HOME)/gits"
+
 alias gbn = git branch | cut -d' ' -f2
 alias glg = git log --graph --pretty=format:'%Cgreen[%h]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
 alias gll = git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
@@ -46,7 +50,6 @@ $env.abbreviations = $env.abbreviations | merge {
   gfp: "git fetch -p"
   gg: "git grep --color auto -n"
   ggi: "git grep --color auto -ni"
-  gits: "cd $HOME/gits"
   gl: "git log"
   glo: "git log --oneline"
   glss: "git ls-files --stage"

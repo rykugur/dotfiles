@@ -24,8 +24,3 @@ creation_rules:
       - age:
           - *dusty
           - *homelab
-  - path_regex: work-macbook/secrets.yaml$
-    key_groups:
-      - age:
-          - *dusty
-          - *work-macbook

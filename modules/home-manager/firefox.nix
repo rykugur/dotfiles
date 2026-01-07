@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.firefox;
+  cfg = config.ryk.firefox;
   ArcWTF = pkgs.stdenv.mkDerivation rec {
     name = "arcWTF";
     version = "1.2-firefox";
@@ -23,7 +23,7 @@ let
     '';
   };
 in {
-  options.rhx.firefox = {
+  options.ryk.firefox = {
     enable = lib.mkEnableOption "Enable firefox home-manager module.";
   };
 

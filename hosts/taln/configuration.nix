@@ -66,7 +66,7 @@
     };
   };
 
-  rhx = {
+  ryk = {
     # aerospace.enable = true;
     # fonts.enable = true;
     stylix.enable = true;

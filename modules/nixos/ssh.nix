@@ -1,7 +1,7 @@
 { config, lib, username, ... }:
-let cfg = config.rhx.ssh;
+let cfg = config.ryk.ssh;
 in {
-  options.rhx.ssh.enable = lib.mkEnableOption "Enable ssh nixOS module";
+  options.ryk.ssh.enable = lib.mkEnableOption "Enable ssh nixOS module";
 
   config = lib.mkIf cfg.enable {
     services.openssh = {

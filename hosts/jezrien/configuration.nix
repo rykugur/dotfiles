@@ -3,6 +3,9 @@
     ./hardware-configuration.nix
 
     inputs.home-manager.nixosModules.home-manager
+
+    ./hyprland-config.nix
+    ./niri-config.nix
   ] ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
@@ -107,7 +110,7 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/${username}";
-      extraGroups = [ "wheel" "plugdev" "networkmanager" "corectrl" ];
+      extraGroups = [ "input" "wheel" "plugdev" "networkmanager" "corectrl" ];
     };
   };
 
@@ -117,7 +120,7 @@
   };
 
   ### custom module stuff
-  rhx = {
+  ryk = {
     keyboardVendor = "zsa";
 
     roles = {
@@ -130,55 +133,6 @@
     # audiorelay.enable = true;
     btrfs.enable = true;
     dankMaterialShell.screenshotBackend = "swappy";
-    hyprland = {
-      enable = true;
-      bar = "dankMaterialShell";
-      layout = "scrolling";
-      monitors =
-        [ "DP-1,3440x1440@175,0x1440,1" "DP-2,3440x1440@144,0x0,1,vrr,0" ];
-
-      workspaces = [
-        "1,monitor:DP-2"
-        "2,monitor:DP-2"
-        "3,monitor:DP-1"
-        "4,monitor:DP-1"
-        "5,monitor:DP-1"
-      ];
-    };
-    niri = {
-      enable = true;
-      bar = "dankMaterialShell";
-      monitors = {
-        "DP-1" = {
-          mode = {
-            width = 3440;
-            height = 1440;
-            refresh = 174.963;
-          };
-          position = {
-            x = 0;
-            y = 1440;
-          };
-          variable-refresh-rate = "on-demand";
-          focus-at-startup = true;
-        };
-        "DP-2" = {
-          mode = {
-            width = 3440;
-            height = 1440;
-            refresh = 144.0;
-          };
-          position = {
-            x = 0;
-            y = 0;
-          };
-        };
-      };
-      touch = {
-        input = "HDMI-A-1";
-        rotation = "90";
-      };
-    };
 
     pipewire = {
       enable = true;
@@ -187,8 +141,13 @@
     razer.enable = true;
     stylix.enable = true;
 
-    eve-online.enable = true;
-    starcitizen.enable = true;
+    dev.enable = true;
+
+    gaming = {
+      eve-online.enable = true;
+      nexus-mods.enable = true;
+      starcitizen.enable = true;
+    };
   };
 
   home-manager = {

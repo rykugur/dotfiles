@@ -1,9 +1,9 @@
 { config, inputs, lib, username, ... }:
-let cfg = config.rhx.mangowc;
+let cfg = config.ryk.mangowc;
 in {
   imports = [ inputs.mangowc.nixosModules.mango ];
 
-  options.rhx.niri = {
+  options.ryk.niri = {
     enable = lib.mkEnableOption "Enable mangowc window manager.";
 
     monitors = lib.mkOption {
@@ -17,9 +17,9 @@ in {
   in lib.mkIf cfg.enable {
     programs.mango.enable = true;
 
-    rhx.caelestia.enable = (isBarEnabled "calestia");
-    rhx.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
-    rhx.noctalia.enable = (isBarEnabled "noctalia");
+    ryk.caelestia.enable = (isBarEnabled "calestia");
+    ryk.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
+    ryk.noctalia.enable = (isBarEnabled "noctalia");
 
     home-manager.users.${username}.imports = [ ./home.nix ];
   };

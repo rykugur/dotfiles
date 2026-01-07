@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.tmux;
+let cfg = config.ryk.tmux;
 in {
-  options.rhx.tmux = {
+  options.ryk.tmux = {
     enable = lib.mkEnableOption "Enable tmux home-manager module.";
   };
 

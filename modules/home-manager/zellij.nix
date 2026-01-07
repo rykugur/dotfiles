@@ -1,6 +1,6 @@
 { config, inputs, lib, pkgs, ... }:
 let
-  cfg = config.rhx.zellij;
+  cfg = config.ryk.zellij;
   zellij-autolock = pkgs.fetchurl {
     url =
       "https://github.com/fresh2dev/zellij-autolock/releases/download/0.2.1/zellij-autolock.wasm";
@@ -9,7 +9,7 @@ let
   zjstatus-pkg =
     inputs.zjstatus.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
-  options.rhx.zellij = {
+  options.ryk.zellij = {
     enable = lib.mkEnableOption "Enable zellij home-manager module.";
   };
 

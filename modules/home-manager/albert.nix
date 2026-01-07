@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.rhx.albert;
+  cfg = config.ryk.albert;
   dracula-albert-theme = pkgs.fetchFromGitHub {
     owner = "dracula";
     repo = "albert";
@@ -15,7 +15,7 @@ let
     '';
   });
 in {
-  options.rhx.albert = {
+  options.ryk.albert = {
     enable = lib.mkEnableOption "Enable albert home-manager module.";
   };
 

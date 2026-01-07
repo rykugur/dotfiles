@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.winboat;
+let cfg = config.ryk.winboat;
 in {
-  options.rhx.winboat.enable = lib.mkEnableOption "Enable winboat nixOS module";
+  options.ryk.winboat.enable = lib.mkEnableOption "Enable winboat nixOS module";
 
   config = lib.mkIf cfg.enable {
-    rhx.docker.enable = true;
+    ryk.docker.enable = true;
 
     environment.systemPackages = [ pkgs.winboat pkgs.freerdp ];
   };

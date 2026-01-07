@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.wooting;
+let cfg = config.ryk.wooting;
 in {
-  options.rhx.wooting.enable = lib.mkEnableOption "Enable wooting nixOS module";
+  options.ryk.wooting.enable = lib.mkEnableOption "Enable wooting nixOS module";
 
   config = lib.mkIf cfg.enable {
     services = {

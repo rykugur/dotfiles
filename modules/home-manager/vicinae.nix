@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  cfg = config.rhx.vicinae;
+  cfg = config.ryk.vicinae;
 
   vicinaePkg = pkgs.stdenv.mkDerivation rec {
     pname = "vicinae";
@@ -63,7 +63,7 @@ let
     };
   };
 in {
-  options.rhx.vicinae = {
+  options.ryk.vicinae = {
     enable = lib.mkEnableOption "Enable vicinae home-manager module.";
     autoStart =
       lib.mkEnableOption "Whether to autostart vicinae server or not.";

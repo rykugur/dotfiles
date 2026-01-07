@@ -1,7 +1,7 @@
 { config, inputs, lib, pkgs, ... }:
-let cfg = config.rhx.helix;
+let cfg = config.ryk.helix;
 in {
-  options.rhx.helix = {
+  options.ryk.helix = {
     enable = lib.mkEnableOption "Enable helix home-manager module.";
   };
 
@@ -12,6 +12,7 @@ in {
         inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.default;
       settings = {
         editor = {
+          # auto-pairs = false;
           bufferline = "multiple";
           clipboard-provider =
             "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
@@ -69,6 +70,9 @@ in {
           #   command =
           #     "${pkgs.ansible-language-server}/bin/ansible-language-server";
           # };
+          bash-language-server = {
+            command = lib.getExe pkgs.bash-language-server;
+          };
           golangci-lint-lsp = {
             command =
               "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
@@ -106,6 +110,7 @@ in {
           vscode-eslint-language-server = {
             command =
               "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server";
+            args = [ "--stdio" ];
             config = {
               format = false;
               quiet = false;
@@ -200,6 +205,10 @@ in {
         };
 
         language = [
+          {
+            name = "bash";
+            formatter = { command = lib.getExe pkgs.shfmt; };
+          }
           {
             name = "css";
             language-servers =

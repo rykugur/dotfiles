@@ -3,9 +3,9 @@
     "prefix": "module",
     "body": [
       "{ config, lib, ... }:",
-      "let cfg = config.rhx.${1:my-module};",
+      "let cfg = config.ryk.${1:my-module};",
       "in {",
-      " options.rhx.${2:my-module}.enable =",
+      " options.ryk.${2:my-module}.enable =",
       "   lib.mkEnableOption \"Enable ${3:my module}\";",
       "",
       "  config = lib.mkIf cfg.enable {",
@@ -18,7 +18,7 @@
   "mkEnableOption": {
     "prefix": "mkEnableOption",
     "body": [
-      "options.rhx.${1:my-module}.enable = lib.mkEnableOption \"Enable ${2:my module}\";$0"
+      "options.ryk.${1:my-module}.enable = lib.mkEnableOption \"Enable ${2:my module}\";$0"
     ],
     "description": "ez mkEnableOption"
   },

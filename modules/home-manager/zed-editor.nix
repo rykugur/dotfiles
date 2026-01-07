@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
-let cfg = config.rhx.zed-editor;
+let cfg = config.ryk.zed-editor;
 in {
-  options.rhx.zed-editor = {
+  options.ryk.zed-editor = {
     enable = lib.mkEnableOption "Enable zed-editor home-manager module.";
   };
 
