@@ -40,6 +40,9 @@ in {
               q = ":quit-all";
               Q = ":quit-all!";
             };
+            space = {
+              i = ":toggle lsp.display-inlay-hints";
+            };
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
