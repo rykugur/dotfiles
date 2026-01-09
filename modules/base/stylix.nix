@@ -10,6 +10,13 @@ in {
       base16Scheme =
         "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
 
+      cursor = {
+        enable = true;
+        package = pkgs.phinger-cursors;
+        name = "phinger-cursors-dark";
+        size = 32;
+      };
+
       fonts = {
         serif = {
           package = pkgs.dejavu_fonts;
