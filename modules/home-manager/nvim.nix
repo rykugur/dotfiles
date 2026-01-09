@@ -9,7 +9,7 @@ in {
     programs.neovim = { enable = true; };
 
     home = {
-      packages = with pkgs; [ fd lazygit neovide nixfmt-classic ripgrep ];
+      packages = with pkgs; [ fd lazygit neovide nixfmt ripgrep ];
 
       file = {
         ".config/nvim" = {

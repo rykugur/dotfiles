@@ -16,12 +16,8 @@ in {
       extensions = [ "nix" "catppuccin" "catppuccin-icons" "helm" ];
       userSettings = {
         helix_mode = true;
-        extraPackages = [
-          pkgs.dotnet-sdk_8
-          pkgs.omnisharp-roslyn
-          pkgs.icu
-          pkgs.nixfmt-classic
-        ];
+        extraPackages =
+          [ pkgs.dotnet-sdk_8 pkgs.omnisharp-roslyn pkgs.icu pkgs.nixfmt ];
 
         # ui_font_size = lib.mkForce 12;
         # buffer_font_size = lib.mkForce 14;

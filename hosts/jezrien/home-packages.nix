@@ -48,7 +48,7 @@
     radeontop
 
     feh
-    xfce.ristretto
+    ristretto
 
     libtool
 

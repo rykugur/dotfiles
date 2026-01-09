@@ -41,9 +41,7 @@ in {
               q = ":quit-all";
               Q = ":quit-all!";
             };
-            space = {
-              i = ":toggle lsp.display-inlay-hints";
-            };
+            space = { i = ":toggle lsp.display-inlay-hints"; };
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
@@ -275,7 +273,7 @@ in {
           {
             name = "nix";
             auto-format = true;
-            formatter = { command = "${pkgs.nixfmt-classic}/bin/nixfmt"; };
+            formatter = { command = "${pkgs.nixfmt}/bin/nixfmt"; };
           }
           {
             name = "typescript";
