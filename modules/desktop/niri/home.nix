@@ -271,5 +271,15 @@ in {
         { app-id = "zenity"; }
       ]);
     };
+
+    xdg = {
+      enable = true;
+
+      mimeApps = {
+        enable = true;
+
+        defaultApplications = { "image/png" = [ "feh.desktop" ]; };
+      };
+    };
   };
 }

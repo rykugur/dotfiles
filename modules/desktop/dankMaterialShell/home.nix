@@ -22,7 +22,7 @@ in {
       enableDynamicTheming = false;
       enableSystemMonitoring = true;
 
-      default.settings = {
+      settings = {
         currentThemeName = "cat-blue";
         fontFamily = "CaskaydiaCove NFM";
         monoFontFamily = "CaskaydiaMono NFM";
@@ -50,6 +50,7 @@ in {
             launcherAction = spawnAction [ "spotlight" "toggle" ];
           in {
             "Mod+Print".action = spawn [ "dms" "screenshot" "--no-file" ];
+            "Mod+Shift+Print".action = spawn [ "dms" "screenshot" "--no-file" ];
             "Mod+Shift+e".action = spawnAction [ "powermenu" "toggle" ];
             "Mod+Shift+v".action = spawnAction [ "clipboard" "toggle" ];
             "Mod+0".action = spawnAction [ "notepad" "toggle" ];
