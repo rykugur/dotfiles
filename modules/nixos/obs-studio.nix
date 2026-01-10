@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.ryk.obs-studio;
-in {
-  options.ryk.obs-studio.enable =
-    lib.mkEnableOption "Enable obs-studio nixOS module";
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.ryk.obs-studio;
+in
+{
+  options.ryk.obs-studio.enable = lib.mkEnableOption "Enable obs-studio nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ libva-utils ];
@@ -14,6 +20,8 @@ in {
         input-overlay
         wlrobs
         obs-backgroundremoval
+        obs-composite-blur
+        obs-move-transition
         obs-pipewire-audio-capture
         obs-vaapi
         obs-gstreamer
