@@ -12,7 +12,7 @@
 
     inputs.home-manager.nixosModules.home-manager
 
-    ./hyprland-config.nix
+    # ./hyprland-config.nix
     ./niri-config.nix
   ]
   ++ (with inputs.nixos-hardware.nixosModules; [
