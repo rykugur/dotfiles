@@ -45,8 +45,9 @@ in
           fontFamily = "CaskaydiaCove NFM";
           monoFontFamily = "CaskaydiaMono NFM";
 
-          acMonitorTimeout = 1200;
-          acSuspendTime = 1800;
+          acMonitorTimeout = 900; # 15 min
+          acLockTimeout = 1800; # 30 min
+          acSuspendTime = 3600; # 60 min
           lockBeforeSuspend = true;
 
           showWeather = true;
