@@ -44,13 +44,13 @@ in {
       '')
     ];
 
-    # TODO: figure out how to do this with stylix
-    home.pointerCursor = {
-      name = "phinger-cursors-dark";
-      package = pkgs.phinger-cursors;
-      size = 32;
-      gtk.enable = true;
-    };
+    # # TODO: figure out how to do this with stylix
+    # home.pointerCursor = {
+    #   name = "phinger-cursors-dark";
+    #   package = pkgs.phinger-cursors;
+    #   size = 32;
+    #   gtk.enable = true;
+    # };
 
     services = {
       hypridle = lib.mkIf hyprCfg.hypridle.enable {
