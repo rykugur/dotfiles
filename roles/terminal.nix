@@ -1,6 +1,14 @@
-{ config, lib, pkgs, username, ... }:
-let cfg = config.ryk.roles.terminal;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
+let
+  cfg = config.ryk.roles.terminal;
+in
+{
   options.ryk.roles.terminal.enable = lib.mkEnableOption "Enable terminal role";
 
   config = lib.mkIf cfg.enable {
@@ -12,7 +20,6 @@ in {
       home.packages = with pkgs; [
         cmatrix
         dnsutils
-        duf
         dysk
         fzf
         jq
@@ -22,7 +29,6 @@ in {
         ldns
         lsof
         lm_sensors
-        ncdu
         nmap
         pciutils
         p7zip
@@ -36,6 +42,9 @@ in {
         xz
         zip
 
+        duf
+        dust
+        gdu
       ];
 
       ryk = {
