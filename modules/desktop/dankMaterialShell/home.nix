@@ -47,7 +47,7 @@ in
 
           acMonitorTimeout = 900; # 15 min
           acLockTimeout = 1800; # 30 min
-          acSuspendTime = 3600; # 60 min
+          acSuspendTimeout = 3600; # 60 min
           lockBeforeSuspend = true;
 
           showWeather = true;
