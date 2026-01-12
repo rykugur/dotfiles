@@ -37,11 +37,12 @@ fi
 log "Updating package index..."
 apt update || error "Failed to update package list"
 
+log "Installing OpenSSH server and extra packages..."
+apt install -y openssh-server sudo curl wget htop git eza software-properties-common || error "Failed to install packages"
+
 add-apt-repository -y ppa:maveonair/helix-editor
 apt update
-
-log "Installing OpenSSH server and extra packages..."
-apt install -y openssh-server sudo curl wget htop git eza helix || error "Failed to install packages"
+apt install -y helix
 
 log "Enabling and starting SSH..."
 systemctl enable ssh || error "Failed to enable SSH"
