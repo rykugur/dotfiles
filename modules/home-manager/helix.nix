@@ -14,6 +14,8 @@ in {
         editor = {
           # auto-pairs = false;
           bufferline = "multiple";
+          cursorcolumn = true;
+          cursorline = true;
           clipboard-provider =
             "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
           cursor-shape = {
