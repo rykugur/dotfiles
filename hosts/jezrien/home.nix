@@ -1,7 +1,14 @@
-{ pkgs, ... }: {
-  imports = [ ../../home ../../modules/home-manager ./home-packages.nix ];
+{ pkgs, ... }:
+{
+  imports = [
+    ../../home
+    ../../modules/home-manager
+    ./home-packages.nix
+  ];
 
-  nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+  ];
 
   sops.secrets = {
     homelab_ssh_private_key = {
