@@ -30,6 +30,9 @@ in
       ]
       ++ [
         (pkgs.writeScriptBin "conditional-kill.nu" (builtins.readFile ./scripts/conditional-kill.nu))
+        (pkgs.writeScriptBin "conditional-fullscreen.nu" (
+          builtins.readFile ./scripts/conditional-fullscreen.nu
+        ))
         (pkgs.writeScriptBin "eve-toggle.nu" (builtins.readFile ./scripts/toggle-eve.nu))
       ];
 
@@ -172,7 +175,9 @@ in
               repeat = false;
             };
             "Mod+f" = {
-              action = fullscreen-window;
+              action = lib.mkDefault (spawn [
+                "${config.home.homeDirectory}/.nix-profile/bin/conditional-fullscreen.nu"
+              ]);
               repeat = false;
             };
             "Mod+g" = {
