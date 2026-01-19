@@ -1,4 +1,11 @@
-{ pkgs, lib, fetchurl, stdenv, makeDesktopItem, makeWrapper }:
+{
+  pkgs,
+  lib,
+  fetchurl,
+  stdenv,
+  makeDesktopItem,
+  makeWrapper,
+}:
 
 let
   version = "5.14.2";
@@ -8,7 +15,10 @@ let
     exec = "rift";
     comment = "EVE Online Intel Fusion Tool";
     desktopName = "RIFT Intel Tool";
-    categories = [ "Game" "Utility" ];
+    categories = [
+      "Game"
+      "Utility"
+    ];
     icon = "rift"; # We'll copy an icon below if available
     startupNotify = true;
   };
@@ -26,13 +36,13 @@ let
     pkgs.freetype
   ];
 
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
   pname = "rift-intel-tool";
   inherit version;
 
   src = fetchurl {
-    url =
-      "https://riftforeve.online/download/rift-${version}-linux-amd64.tar.gz";
+    url = "https://riftforeve.online/download/rift-${version}-linux-amd64.tar.gz";
     sha256 = "sha256-WnsulQ3Drl6tYvOK8MkPDgM4aEIctWyEe1xQ3CfGL0g=";
   };
 
@@ -47,16 +57,19 @@ in stdenv.mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    mkdir $out
-    cp -r rift-${version}/lib $out
-    cp -r rift-${version}/share $out
+    mkdir -p $out
+    cp -r rift-${version}/lib    $out/
+    cp -r rift-${version}/share  $out/
 
-    # Wrapper for the launcher
     mkdir -p $out/bin
-    makeWrapper rift-${version}/bin/rift $out/bin/rift \
+
+    makeWrapper "$out/lib/rift-${version}/bin/rift" "$out/bin/rift" \
       --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath x11Libs}
 
-    # Desktop entry
+    # Optional: if the app needs to find its own resources
+    # --chdir "$out/lib/rift-${version}" \
+    # --set-default RIFT_HOME "$out/lib/rift-${version}"
+
     mkdir -p $out/share/applications
     cp ${desktopItem}/share/applications/* $out/share/applications/
 
@@ -64,8 +77,7 @@ in stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description =
-      "RIFT Intel Fusion Tool – All your EVE Online intel in one place";
+    description = "RIFT Intel Fusion Tool – All your EVE Online intel in one place";
     homepage = "https://riftforeve.online/";
     license = licenses.unfree;
     platforms = platforms.linux;
