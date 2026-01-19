@@ -1,9 +1,14 @@
-{ config, inputs, lib, pkgs, username, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 let
   cfg = config.ryk.roles.gaming;
-  mo2installer =
-    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.mo2installer;
-in {
+in
+{
   options.ryk.roles.gaming.enable = lib.mkEnableOption "Enable gaming role";
 
   config = lib.mkIf cfg.enable {
@@ -34,7 +39,6 @@ in {
         gamescope
         heroic
         mangohud
-        mo2installer
         moonlight-qt
         unixtools.xxd
         vkd3d
