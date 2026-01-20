@@ -1,10 +1,11 @@
 { config, lib, ... }:
-let cfg = config.ryk;
-in {
+let
+  cfg = config.ryk;
+in
+{
   imports = [
     ./1password.nix
     ./btrfs.nix
-    ./docker.nix
     ./gamemode.nix
     ./gnome.nix
     ./kde.nix
@@ -14,7 +15,6 @@ in {
     ./ssh.nix
     ./steam.nix
     ./vfio.nix
-    ./winboat.nix
 
     # keebs
     ./wooting.nix
@@ -26,7 +26,11 @@ in {
   ];
 
   options.ryk.keyboardVendor = lib.mkOption {
-    type = lib.types.enum [ "wooting" "zsa" "none" ];
+    type = lib.types.enum [
+      "wooting"
+      "zsa"
+      "none"
+    ];
     default = "none";
     description = ''
       Which keyboard vendor to enable udev rules for. Choose one of:

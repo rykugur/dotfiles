@@ -186,6 +186,10 @@
     misc = {
       appimage.enable = true;
     };
+
+    virtualization = {
+      winboat.enable = true;
+    };
   };
 
   home-manager = {

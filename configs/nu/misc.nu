@@ -86,6 +86,10 @@ def "proxmox install helix" [host: string] {
   ssh $host $"curl -L https://shlink.ryk.sh/helix-deb | sh"
 }
 
+def --env "mo2installer" [] {
+  cd ~/gits/modorganizer2-linux-installer/
+}
+
 $env.abbreviations = $env.abbreviations | merge {
   ### dev
   adb.reverse: "adb reverse tcp:8081 tcp:8081; adb reverse tcp:8080 tcp:8080"
