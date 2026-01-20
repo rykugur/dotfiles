@@ -1,4 +1,12 @@
-{ config, lib, inputs, outputs, pkgs, ... }: {
+{
+  config,
+  lib,
+  inputs,
+  outputs,
+  pkgs,
+  ...
+}:
+{
   imports = [
     ./3dp.nix
     ./desktop.nix
@@ -6,7 +14,6 @@
     ./gaming.nix
     ./server.nix
     ./terminal.nix
-    ./virtualization.nix
   ];
 
   config = {
@@ -26,7 +33,11 @@
       LC_TELEPHONE = "en_US.UTF-8";
       LC_TIME = "en_GB.UTF-8"; # for 24 hour format
     };
-    environment.systemPackages = with pkgs; [ git neovim nix-search-cli ];
+    environment.systemPackages = with pkgs; [
+      git
+      neovim
+      nix-search-cli
+    ];
 
     # Necessary for using flakes on this system.
     environment = {
@@ -49,8 +60,9 @@
 
       nixPath = [ "/etc/nix/path" ];
 
-      registry = (lib.mapAttrs (_: flake: { inherit flake; }))
-        ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+      registry = (lib.mapAttrs (_: flake: { inherit flake; })) (
+        (lib.filterAttrs (_: lib.isType "flake")) inputs
+      );
 
       settings = {
         experimental-features = "nix-command flakes pipe-operators";
