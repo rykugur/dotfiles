@@ -44,3 +44,18 @@ def "sops kaf" [filePath: string] {
   sops -d $filePath | kubectl apply -f -
 }
 
+def "k8s base64" [token?: string] {
+  use std/log
+
+  let finalToken = $token
+  
+  if ($finalToken | is-empty) {
+    let finalToken = $in
+  }
+
+  if ($finalToken | is-empty) {
+    log error "No token provided. Either pass as an arg or via stdin."
+  }
+
+  $finalToken | base64 -w 0
+}

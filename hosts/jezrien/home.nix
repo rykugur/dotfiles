@@ -8,6 +8,7 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "electron-25.9.0"
+    "nexusmods-app-unfree-0.21.1"
   ];
 
   sops.secrets = {
