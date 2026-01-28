@@ -43,7 +43,13 @@ in {
               q = ":quit-all";
               Q = ":quit-all!";
             };
-            space = { i = ":toggle lsp.display-inlay-hints"; };
+            space = {
+              i = ":toggle lsp.display-inlay-hints";
+              t = {
+                h = ":toggle cursorline";
+                v = ":toggle cursorcolumn";
+              };
+            };
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
