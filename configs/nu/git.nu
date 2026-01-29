@@ -2,12 +2,8 @@ def gas [] {
   git status --short | lines | split column " " status file --collapse-empty | where status == MM or status == AM | each { |modified| git add $modified.file } | ignore
 }
 
-def "git checkout" [branch?: string] {
-  if ($branch | is-not-empty) {
-    ^git checkout $branch
-  } else {
-    ^git checkout (git branch | fzf | str replace '*' '' | str trim)
-  }
+def "gcz" [branch?: string] {
+  ^git checkout (git branch | fzf | str replace '*' '' | str trim)
 }
 
 def gcu [] {
