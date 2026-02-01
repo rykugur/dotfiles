@@ -1,6 +1,14 @@
-{ config, inputs, lib, pkgs, ... }:
-let cfg = config.ryk.helix;
-in {
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.ryk.helix;
+in
+{
   options.ryk.helix = {
     enable = lib.mkEnableOption "Enable helix home-manager module.";
   };
@@ -8,25 +16,28 @@ in {
   config = lib.mkIf cfg.enable {
     programs.helix = {
       enable = true;
-      package =
-        inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.default;
       settings = {
         editor = {
-          # auto-pairs = false;
           bufferline = "multiple";
-          cursorcolumn = true;
+          cursorcolumn = false;
           cursorline = true;
-          clipboard-provider =
-            "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
+          clipboard-provider = "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
           cursor-shape = {
             insert = "bar";
             normal = "block";
             select = "underline";
           };
           end-of-line-diagnostics = "hint";
-          file-picker = { hidden = false; };
-          indent-guides = { render = true; };
-          inline-diagnostics = { cursor-line = "error"; };
+          file-picker = {
+            hidden = false;
+          };
+          indent-guides = {
+            render = true;
+          };
+          inline-diagnostics = {
+            cursor-line = "error";
+          };
           lsp = {
             auto-signature-help = false;
             display-inlay-hints = true;
@@ -44,9 +55,9 @@ in {
               Q = ":quit-all!";
             };
             space = {
-              i = ":toggle lsp.display-inlay-hints";
               t = {
                 h = ":toggle cursorline";
+                i = ":toggle lsp.display-inlay-hints";
                 v = ":toggle cursorcolumn";
               };
             };
@@ -80,42 +91,57 @@ in {
             command = lib.getExe pkgs.bash-language-server;
           };
           golangci-lint-lsp = {
-            command =
-              "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
+            command = "${pkgs.golangci-lint-langserver}/bin/golangci-lint-langserver";
           };
-          gopls = { command = "${pkgs.gopls}/bin/gopls"; };
+          gopls = {
+            command = "${pkgs.gopls}/bin/gopls";
+          };
           lua-language-server = {
             command = "${pkgs.lua-language-server}/bin/lua-language-server";
           };
-          helm_ls = { command = "${pkgs.helm-ls}/bin/helm_ls"; };
-          marksman = with pkgs; { command = "${marksman}/bin/marksman"; };
+          helm_ls = {
+            command = "${pkgs.helm-ls}/bin/helm_ls";
+          };
+          marksman = with pkgs; {
+            command = "${marksman}/bin/marksman";
+          };
           markdown-oxide = with pkgs; {
             command = "${markdown-oxide}/bin/markdown-oxide";
           };
-          nixd = { command = "${pkgs.nixd}/bin/nixd"; };
-          nil = { command = "${pkgs.nil}/bin/nil"; };
-          nu = { command = "${pkgs.nushell}/bin/nu"; };
-          omnisharp = { command = lib.getExe pkgs.omnisharp-roslyn; };
+          nixd = {
+            command = "${pkgs.nixd}/bin/nixd";
+          };
+          nil = {
+            command = "${pkgs.nil}/bin/nil";
+          };
+          nu = {
+            command = "${pkgs.nushell}/bin/nu";
+          };
+          omnisharp = {
+            command = lib.getExe pkgs.omnisharp-roslyn;
+          };
           ## rust
-          rust-analyzer = { command = lib.getExe pkgs.rust-analyzer; };
+          rust-analyzer = {
+            command = lib.getExe pkgs.rust-analyzer;
+          };
           # for snippets
           scls = {
-            command =
-              "${pkgs.simple-completion-language-server}/bin/simple-completion-language-server";
+            command = "${pkgs.simple-completion-language-server}/bin/simple-completion-language-server";
           };
           tailwindcss-ls = {
-            command =
-              "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
+            command = "${pkgs.tailwindcss-language-server}/bin/tailwindcss-language-server";
           };
-          taplo = { command = "${pkgs.taplo}/bin/taplo"; };
-          typescript-language-server = { command = "${pkgs.vtsls}/bin/vtsls"; };
+          taplo = {
+            command = "${pkgs.taplo}/bin/taplo";
+          };
+          typescript-language-server = {
+            command = "${pkgs.vtsls}/bin/vtsls";
+          };
           vscode-css-language-server = {
-            command =
-              "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
+            command = "${pkgs.vscode-langservers-extracted}/bin/vscode-css-language-server";
           };
           vscode-eslint-language-server = {
-            command =
-              "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server";
+            command = "${pkgs.vscode-langservers-extracted}/bin/vscode-eslint-language-server";
             args = [ "--stdio" ];
             config = {
               format = false;
@@ -128,54 +154,51 @@ in {
                   enable = true;
                   location = "separateLine";
                 };
-                showDocumentation = { enable = true; };
+                showDocumentation = {
+                  enable = true;
+                };
               };
-              experimental = { useFlatConfig = true; };
-              problems = { shortenToSingleLine = false; };
+              experimental = {
+                useFlatConfig = true;
+              };
+              problems = {
+                shortenToSingleLine = false;
+              };
             };
           };
           vscode-html-language-server = {
-            command =
-              "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
+            command = "${pkgs.vscode-langservers-extracted}/bin/vscode-html-language-server";
           };
           vscode-json-language-server = {
-            command =
-              "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server";
+            command = "${pkgs.vscode-langservers-extracted}/bin/vscode-json-language-server";
             config = {
               schemas = [
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/deployment.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/deployment.json";
                   fileMatch = [ "*deployment*.json" ];
                 }
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/service.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/service.json";
                   fileMatch = [ "*service*.json" ];
                 }
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/configmap.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/configmap.json";
                   fileMatch = [ "*configmap*.json" ];
                 }
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/secret.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/secret.json";
                   fileMatch = [ "*secret*.json" ];
                 }
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/pod.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/pod.json";
                   fileMatch = [ "*pod*.json" ];
                 }
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/namespace.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/namespace.json";
                   fileMatch = [ "*namespace*.json" ];
                 }
                 {
-                  uri =
-                    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/ingress.json";
+                  uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/ingress.json";
                   fileMatch = [ "*ingress*.json" ];
                 }
               ];
@@ -189,8 +212,12 @@ in {
                 completion = true;
                 hover = true;
                 validate = false;
-                schemaStore = { enable = true; };
-                format = { enable = false; };
+                schemaStore = {
+                  enable = true;
+                };
+                format = {
+                  enable = false;
+                };
                 schemas = {
                   kubernetes = [
                     "*deployment*.yaml"
@@ -201,8 +228,7 @@ in {
                     "*namespace*.yaml"
                     "*ingress*.yaml"
                   ];
-                  "http://json.schemastore.org/kustomization" =
-                    "kustomization.{yml,yaml}";
+                  "http://json.schemastore.org/kustomization" = "kustomization.{yml,yaml}";
                   "http://json.schemastore.org/chart" = "Chart.{yml,yaml}";
                 };
               };
@@ -213,12 +239,16 @@ in {
         language = [
           {
             name = "bash";
-            formatter = { command = lib.getExe pkgs.shfmt; };
+            formatter = {
+              command = lib.getExe pkgs.shfmt;
+            };
           }
           {
             name = "css";
-            language-servers =
-              [ "vscode-css-language-server" "tailwindcss-ls" ];
+            language-servers = [
+              "vscode-css-language-server"
+              "tailwindcss-ls"
+            ];
           }
           {
             name = "helm";
@@ -226,8 +256,10 @@ in {
           }
           {
             name = "html";
-            language-servers =
-              [ "vscode-html-language-server" "tailwindcss-ls" ];
+            language-servers = [
+              "vscode-html-language-server"
+              "tailwindcss-ls"
+            ];
           }
           {
             name = "javascript";
@@ -239,7 +271,10 @@ in {
             ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "typescript" ];
+              args = [
+                "--parser"
+                "typescript"
+              ];
             };
           }
           {
@@ -247,7 +282,10 @@ in {
             auto-format = true;
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "json" ];
+              args = [
+                "--parser"
+                "json"
+              ];
             };
           }
           {
@@ -261,13 +299,18 @@ in {
             ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "typescript" ];
+              args = [
+                "--parser"
+                "typescript"
+              ];
             };
           }
           {
             name = "lua";
             auto-format = true;
-            formatter = { command = "${pkgs.luaformatter}/bin/lua-format"; };
+            formatter = {
+              command = "${pkgs.luaformatter}/bin/lua-format";
+            };
           }
           {
             name = "markdown";
@@ -275,13 +318,20 @@ in {
             rulers = [ 80 ];
             formatter = {
               command = lib.getExe pkgs.deno;
-              args = [ "fmt" "-" "--ext" "md" ];
+              args = [
+                "fmt"
+                "-"
+                "--ext"
+                "md"
+              ];
             };
           }
           {
             name = "nix";
             auto-format = true;
-            formatter = { command = "${pkgs.nixfmt}/bin/nixfmt"; };
+            formatter = {
+              command = "${pkgs.nixfmt}/bin/nixfmt";
+            };
           }
           {
             name = "typescript";
@@ -293,7 +343,10 @@ in {
             ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "typescript" ];
+              args = [
+                "--parser"
+                "typescript"
+              ];
             };
           }
           {
@@ -307,7 +360,10 @@ in {
             ];
             formatter = {
               command = "${pkgs.nodePackages.prettier}/bin/prettier";
-              args = [ "--parser" "typescript" ];
+              args = [
+                "--parser"
+                "typescript"
+              ];
             };
           }
           {
@@ -319,7 +375,10 @@ in {
             };
             formatter = {
               command = lib.getExe pkgs.prettier;
-              args = [ "--parser" "yaml" ];
+              args = [
+                "--parser"
+                "yaml"
+              ];
             };
           }
         ];

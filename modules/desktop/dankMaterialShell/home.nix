@@ -41,7 +41,19 @@ in
         enableSystemMonitoring = true;
 
         settings = {
-          currentThemeName = "cat-blue";
+          # SettingsSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js
+          # SessionSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
+          # currentThemeName = "cat-blue";
+          currentThemeName = "custom";
+          currentThemeCategory = "registry";
+          customThemeFile = "/home/dusty/.config/DankMaterialShell/themes/catppuccin/theme.json";
+          registryThemeVariants = {
+            catppuccin = {
+              flavor = "mocha";
+              accent = "blue";
+            };
+          };
+          dynamicThemeing = false;
           fontFamily = "CaskaydiaCove NFM";
           monoFontFamily = "CaskaydiaMono NFM";
 
