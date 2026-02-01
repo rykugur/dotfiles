@@ -68,92 +68,102 @@
     zjstatus.url = "github:dj95/zjstatus";
   };
 
-  outputs = { self, nixpkgs, nix-darwin, home-manager, ... }@inputs:
-    let
-      inherit (self) outputs;
+  outputs =
+    inputs@{
+      flake-parts,
+      nixpkgs,
+      self,
+      ...
+    }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
 
-      lib = nixpkgs.lib // home-manager.lib;
-
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
-      forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-      pkgsFor = lib.genAttrs systems (system:
-        import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        });
-    in {
-      devShells =
-        forEachSystem (pkgs: import ./shells { inherit inputs pkgs; });
-
-      overlays = import ./overlays { inherit inputs; };
-
-      nixosConfigurations = let username = "dusty";
-      in {
-        # primary/gaming desktop
-        "jezrien" = nixpkgs.lib.nixosSystem {
-          modules = [
-            ./modules/base
-            ./modules/nixos
-            ./modules
-
-            ./roles
-
-            ./hosts/jezrien
-
-            inputs.stylix.nixosModules.stylix
-          ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "jezrien";
-            inherit username;
-          };
+      perSystem =
+        { inputs, pkgs, ... }:
+        {
+          devShells = import ./shells { inherit inputs pkgs; };
         };
 
-        # nix LXC for quick testing
-        nixy = nixpkgs.lib.nixosSystem {
-          modules = [ ./hosts/nixy/configuration.nix ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "nixy";
-            inherit username;
+      flake = {
+        overlays = import ./overlays { inherit inputs; };
+
+        nixosConfigurations =
+          let
+            username = "dusty";
+          in
+          {
+            "jezrien" = nixpkgs.lib.nixosSystem {
+              modules = [
+                ./modules/base
+                ./modules/nixos
+                ./modules
+
+                ./roles
+
+                ./hosts/jezrien
+
+                inputs.stylix.nixosModules.stylix
+              ];
+              specialArgs = {
+                inherit inputs;
+                outputs = self.outputs;
+                hostname = "jezrien";
+                inherit username;
+              };
+            };
+
+            # nix LXC for quick testing
+            nixy = nixpkgs.lib.nixosSystem {
+              modules = [ ./hosts/nixy/configuration.nix ];
+              specialArgs = {
+                inherit inputs;
+                outputs = self.outputs;
+                hostname = "nixy";
+                inherit username;
+              };
+            };
+          };
+
+        darwinConfigurations = {
+          # 14" macbook pro
+          "taln" = inputs.nix-darwin.lib.darwinSystem {
+            modules = [
+              ./modules/darwin
+
+              ./modules/base
+
+              ./hosts/taln/configuration.nix
+
+              inputs.stylix.darwinModules.stylix
+            ];
+            specialArgs = {
+              inherit inputs;
+              outputs = self.outputs;
+              hostname = "taln";
+              username = "dusty";
+              # pkgs = pkgsFor.aarch64-darwin;
+            };
           };
         };
       };
 
-      darwinConfigurations = {
-        # home macbook pro
-        "taln" = nix-darwin.lib.darwinSystem {
-          modules = [
-            ./modules/darwin
-
-            ./modules/base
-
-            ./hosts/taln/configuration.nix
-
-            inputs.stylix.darwinModules.stylix
-          ];
-          specialArgs = {
-            inherit inputs outputs;
-            hostname = "taln";
-            username = "dusty";
-            pkgs = pkgsFor.aarch64-darwin;
-          };
-        };
+      nixConfig = {
+        extra-substituters = [
+          "https://hyprland.cachix.org"
+          "https://nix-gaming.cachix.org"
+          "https://nix-citizen.cachix.org"
+          "https://helix.cachix.org"
+        ];
+        extra-trusted-public-keys = [
+          "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+          "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+          "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
+          "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
+        ];
       };
     };
-
-  nixConfig = {
-    extra-substituters = [
-      "https://hyprland.cachix.org"
-      "https://nix-gaming.cachix.org"
-      "https://nix-citizen.cachix.org"
-      "https://helix.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-      "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
-      "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
-    ];
-  };
 }
