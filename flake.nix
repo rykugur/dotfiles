@@ -76,6 +76,10 @@
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      # imports = [
+      #   inputs.flake-parts.flakeModules.easyOverlay
+      # ];
+
       systems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -110,7 +114,7 @@
               ];
               specialArgs = {
                 inherit inputs;
-                outputs = self.outputs;
+                outputs = self;
                 hostname = "jezrien";
                 inherit username;
               };
@@ -121,7 +125,7 @@
               modules = [ ./hosts/nixy/configuration.nix ];
               specialArgs = {
                 inherit inputs;
-                outputs = self.outputs;
+                outputs = self;
                 hostname = "nixy";
                 inherit username;
               };
@@ -142,7 +146,7 @@
             ];
             specialArgs = {
               inherit inputs;
-              outputs = self.outputs;
+              outputs = self;
               hostname = "taln";
               username = "dusty";
               # pkgs = pkgsFor.aarch64-darwin;
