@@ -7,6 +7,7 @@
     # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -68,94 +69,6 @@
     zjstatus.url = "github:dj95/zjstatus";
   };
 
-  outputs =
-    inputs@{
-      flake-parts,
-      nixpkgs,
-      self,
-      ...
-    }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      # imports = [
-      #   inputs.flake-parts.flakeModules.easyOverlay
-      # ];
-
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ];
-
-      perSystem =
-        { inputs, pkgs, ... }:
-        {
-          devShells = import ./shells { inherit inputs pkgs; };
-        };
-
-      flake = {
-        overlays = import ./overlays { inherit inputs; };
-
-        nixosConfigurations =
-          let
-            username = "dusty";
-          in
-          {
-            "jezrien" = nixpkgs.lib.nixosSystem {
-              modules = [
-                ./modules/base
-                ./modules/nixos
-                ./modules
-
-                ./roles
-
-                ./hosts/jezrien
-
-                inputs.stylix.nixosModules.stylix
-              ];
-              specialArgs = {
-                inherit inputs;
-                outputs = self;
-                hostname = "jezrien";
-                inherit username;
-              };
-            };
-
-            # nix LXC for quick testing
-            nixy = nixpkgs.lib.nixosSystem {
-              modules = [ ./hosts/nixy/configuration.nix ];
-              specialArgs = {
-                inherit inputs;
-                outputs = self;
-                hostname = "nixy";
-                inherit username;
-              };
-            };
-          };
-
-        darwinConfigurations = {
-          # 14" macbook pro
-          "taln" = inputs.nix-darwin.lib.darwinSystem {
-            modules = [
-              ./modules/darwin
-
-              ./modules/base
-
-              ./hosts/taln/configuration.nix
-
-              inputs.stylix.darwinModules.stylix
-            ];
-            specialArgs = {
-              inherit inputs;
-              outputs = self;
-              hostname = "taln";
-              username = "dusty";
-              # pkgs = pkgsFor.aarch64-darwin;
-            };
-          };
-        };
-      };
-    };
-
   nixConfig = {
     extra-substituters = [
       "https://hyprland.cachix.org"
@@ -170,4 +83,92 @@
       "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
     ];
   };
+
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ (inputs.import-tree ./modules) ];
+    };
+  # (inputs.import-tree ./modules);
 }
+
+# (inputs.import-tree ./modules);
+# imports = [
+#   inputs.flake-parts.flakeModules.easyOverlay
+# ];
+
+#   systems = [
+#     "x86_64-linux"
+#     "aarch64-linux"
+#     "aarch64-darwin"
+#   ];
+
+#   perSystem =
+#     { inputs, pkgs, ... }:
+#     {
+#       devShells = import ./shells { inherit inputs pkgs; };
+#     };
+
+#   flake = {
+#     overlays = import ./overlays { inherit inputs; };
+
+#     nixosConfigurations =
+#       let
+#         username = "dusty";
+#       in
+#       {
+#         "jezrien" = nixpkgs.lib.nixosSystem {
+#           modules = [
+#             ./old-modules/base
+#             ./old-modules/nixos
+#             ./old-modules
+
+#             ./roles
+
+#             ./hosts/jezrien
+
+#             inputs.stylix.nixosModules.stylix
+#           ];
+#           specialArgs = {
+#             inherit inputs;
+#             outputs = self;
+#             hostname = "jezrien";
+#             inherit username;
+#           };
+#         };
+
+#         # nix LXC for quick testing
+#         nixy = nixpkgs.lib.nixosSystem {
+#           modules = [ ./hosts/nixy/configuration.nix ];
+#           specialArgs = {
+#             inherit inputs;
+#             outputs = self;
+#             hostname = "nixy";
+#             inherit username;
+#           };
+#         };
+#       };
+
+#     darwinConfigurations = {
+#       # 14" macbook pro
+#       "taln" = inputs.nix-darwin.lib.darwinSystem {
+#         modules = [
+#           ./old-modules/darwin
+
+#           ./old-modules/base
+
+#           ./hosts/taln/configuration.nix
+
+#           inputs.stylix.darwinModules.stylix
+#         ];
+#         specialArgs = {
+#           inherit inputs;
+#           outputs = self;
+#           hostname = "taln";
+#           username = "dusty";
+#           # pkgs = pkgsFor.aarch64-darwin;
+#         };
+#       };
+#     };
+#   };
+# };
