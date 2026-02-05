@@ -5,46 +5,35 @@
 }:
 {
   flake = {
-    nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
-      modules = [
-        self.nixosModules.jezrien-config
-      ];
-    };
+    nixosModules = {
+      jezrien-config =
+        { ... }:
+        {
+          imports = [
+            # TODO: refactor these into modules
+            ./_configuration.nix
 
-    nixosModules.jezrien-config = {
-      imports = [
-        ./_hardware-configuration.nix
-        ./_configuration.nix
+            self.nixosModules.home-manager-common
 
-        inputs.home-manager.nixosModules.home-manager
-        inputs.stylix.nixosModules.stylix
-      ]
-      ++ (with inputs.nixos-hardware.nixosModules; [
-        common-pc
-        common-pc-ssd
-        common-cpu-amd
-        common-gpu-amd
-      ]);
+            inputs.stylix.nixosModules.stylix
+          ];
 
-      ### custom module stuff
-
-      home-manager = {
-        useGlobalPkgs = true;
-        useUserPackages = true;
-        backupFileExtension = "bak";
-        # extraSpecialArgs = { inherit inputs self; };
-        users.dusty = {
-          imports = [ self.homeModules.dusty ];
-
-          # TODO: rest of jezrien/home.nix config
-
-          programs.home-manager.enable = true;
-          # Nicely reload system units when changing configs
-          systemd.user.startServices = "sd-switch";
-          # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
-          home.stateVersion = "23.11";
+          ### custom module stuff
         };
-      };
+
+      jezrien-hardware =
+        { ... }:
+        {
+          imports = [
+            ./_hardware-configuration.nix
+          ]
+          ++ (with inputs.nixos-hardware.nixosModules; [
+            common-pc
+            common-pc-ssd
+            common-cpu-amd
+            common-gpu-amd
+          ]);
+        };
     };
   };
 }

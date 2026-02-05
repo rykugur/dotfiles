@@ -1,11 +1,10 @@
 {
+  config,
   pkgs,
   ...
 }:
 let
-  # TODO: make these values a configurable option
-  username = "dusty";
-  hostname = "jezrien";
+  cfg = config.meta.ryk;
 in
 {
 
@@ -27,7 +26,7 @@ in
 
   security = {
     pam = {
-      services.${username}.enableGnomeKeyring = true;
+      services.${cfg.username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
         settings = {
@@ -39,7 +38,7 @@ in
   };
 
   networking = {
-    hostName = hostname;
+    hostName = cfg.hostname;
   };
 
   hardware = {
@@ -121,10 +120,10 @@ in
   };
 
   users.users = {
-    ${username} = {
+    ${cfg.username} = {
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
-      home = "/home/${username}";
+      home = "/home/${cfg.username}";
       extraGroups = [
         "input"
         "wheel"
@@ -139,4 +138,7 @@ in
     enable = true;
     cpuFreqGovernor = "performance";
   };
+
+  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+  system.stateVersion = "23.11";
 }
