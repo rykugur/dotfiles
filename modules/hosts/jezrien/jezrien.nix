@@ -21,6 +21,7 @@
             self.nixosModules.home-manager
 
             self.nixosModules.helix
+            self.nixosModules.ssh
           ];
 
           home-manager.users.${metaCfg.username} = {
@@ -28,6 +29,17 @@
               self.homeModules.sops
               ./_home-packages.nix
             ];
+
+            # ryk = {
+            #   btop.enable = true;
+            #   keebs.enable = true;
+            #   ghostty.hideWindowDecoration = true;
+            #   starsector = {
+            #     enable = true;
+            #     mods.enable = true;
+            #   };
+            #   swappy.enable = true;
+            # };
           };
 
           ### custom module stuff

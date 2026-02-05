@@ -16,10 +16,10 @@
     xorg.xrandr
     xorg.xbacklight
 
-    nwg-look
-    catppuccin-gtk
-    catppuccin-cursors
-    catppuccin-papirus-folders
+    # nwg-look
+    # catppuccin-gtk
+    # catppuccin-cursors
+    # catppuccin-papirus-folders
 
     baobab
     bottom
@@ -29,6 +29,7 @@
     file-roller
     # jellyfin-media-player - it or a depdendency uses insecure qtwebengine
     # so just using a chrome PWA for now
+    kalker
     minder
     mousai
     nemo
