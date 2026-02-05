@@ -13,9 +13,11 @@
             # TODO: refactor these into modules
             ./_configuration.nix
 
+            inputs.stylix.nixosModules.stylix
+
             self.nixosModules.home-manager-common
 
-            inputs.stylix.nixosModules.stylix
+            self.nixosModules.helix
           ];
 
           ### custom module stuff

@@ -7,8 +7,6 @@ let
   cfg = config.meta.ryk;
 in
 {
-
-  # TODO: rest of jezrien/configuration.nix
   nix.settings = {
     trusted-users = [
       "root"

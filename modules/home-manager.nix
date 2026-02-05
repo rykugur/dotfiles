@@ -24,7 +24,7 @@
             self.homeModules.common
           ];
 
-          # TODO: rest of jezrien/home.nix config
+          # TODO: other common/default home config here
 
           # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
           home.stateVersion = "23.11";
