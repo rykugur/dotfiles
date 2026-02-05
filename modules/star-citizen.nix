@@ -1,0 +1,75 @@
+{ inputs, self, ... }:
+{
+  flake.nixosModules.star-citizen =
+    { config, ... }:
+    let
+      username = config.meta.ryk.username;
+    in
+    {
+      imports = [
+        inputs.nix-citizen.nixosModules.StarCitizen
+        # TODO: enable opentrack, maybe VR modules? Or make a star-citizen feature to do that?
+      ];
+
+      services.udev = {
+        enable = true;
+        extraRules = ''
+          # Set the "uaccess" tag for raw HID access for Virpil Devices in wine
+          KERNEL=="hidraw*", ATTRS{idVendor}=="3344", ATTRS{idProduct}=="*", MODE="0660", TAG+="uaccess"
+        '';
+      };
+
+      nix.settings = {
+        substituters = [ "https://nix-citizen.cachix.org" ];
+        trusted-public-keys = [
+          "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
+        ];
+      };
+
+      programs.rsi-launcher = {
+        enable = true;
+
+        # Additional commands before the game starts
+        preCommands = ''
+          export DISPLAY=""
+          export DXVK_HUD=compiler
+          export MANGO_HUD=1
+        '';
+
+        patchXwayland = true;
+        # umu.enable = true;
+      };
+
+      home-manager.users.${username}.imports = [ self.homeModules.star-citizen ];
+    };
+
+  flake.homeModules.star-citizen =
+    { pkgs, ... }:
+
+    let
+      gameglass = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.gameglass;
+      wineAstralPkg = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.wine-astral;
+    in
+    {
+      home.packages = [
+        pkgs.opentrack-StarCitizen
+        pkgs.gameglass
+      ];
+
+      # lazy-mode - for opentrack
+      # TODO: this probably belongs in a feature/meta module
+      home.file.".wine-astral".source = wineAstralPkg;
+
+      xdg.desktopEntries.gameglass = {
+        name = "GameGlass";
+        icon = "gameglass";
+        exec = "${gameglass}/bin/gameglass";
+        terminal = false;
+        type = "Application";
+        categories = [
+          "Game"
+          "Utility"
+        ];
+      };
+    };
+}
