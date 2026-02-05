@@ -7,7 +7,10 @@
   flake = {
     nixosModules = {
       jezrien-config =
-        { ... }:
+        { config, ... }:
+        let
+          metaCfg = config.meta.ryk;
+        in
         {
           imports = [
             # TODO: refactor these into modules
@@ -15,10 +18,17 @@
 
             inputs.stylix.nixosModules.stylix
 
-            self.nixosModules.home-manager-common
+            self.nixosModules.home-manager
 
             self.nixosModules.helix
           ];
+
+          home-manager.users.${metaCfg.username} = {
+            imports = [
+              self.homeModules.sops
+              ./_home-packages.nix
+            ];
+          };
 
           ### custom module stuff
         };

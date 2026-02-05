@@ -1,5 +1,6 @@
 # random dumping-ground; some day I'll clean this up
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     ################################# nix #################################
     nix-prefetch-scripts
