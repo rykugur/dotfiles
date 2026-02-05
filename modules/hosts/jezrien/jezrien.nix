@@ -20,6 +20,7 @@
 
             self.nixosModules.home-manager
 
+            self.nixosModules._3dp
             self.nixosModules.helix
             self.nixosModules.ssh
           ];
