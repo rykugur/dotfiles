@@ -13,7 +13,7 @@
         in
         {
           imports = [
-            # TODO: refactor these into modules
+            self.nixosModules.jezrien-hardware
             ./_configuration.nix
 
             inputs.stylix.nixosModules.stylix
@@ -27,6 +27,11 @@
             self.nixosModules.helix
             self.nixosModules.ssh
           ];
+
+          meta.ryk = {
+            username = "dusty";
+            hostname = "jezrien";
+          };
 
           home-manager.users.${metaCfg.username} = {
             imports = [
@@ -55,9 +60,7 @@
 
 # modules to convert:
 #
-# darwin/
-# aerospace.nix
-#
+
 # desktop/
 # dankMaterialShell/...
 # hyprland/...
@@ -67,13 +70,7 @@
 # shared.nix
 #
 # home-manager/
-# aerospace.nix
-# albert.nix
-# atuin.nix
-# bat.nix
 # browser.nix
-# btop.nix
-# carapace.nix
 # default.nix
 # direnv.nix
 # discord.nix

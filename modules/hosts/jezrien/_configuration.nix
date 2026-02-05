@@ -4,7 +4,7 @@
   ...
 }:
 let
-  cfg = config.meta.ryk;
+  metaCfg = config.meta.ryk;
 in
 {
   nix.settings = {
@@ -24,7 +24,7 @@ in
 
   security = {
     pam = {
-      services.${cfg.username}.enableGnomeKeyring = true;
+      services.${metaCfg.username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
         settings = {
@@ -36,7 +36,7 @@ in
   };
 
   networking = {
-    hostName = cfg.hostname;
+    hostName = metaCfg.hostname;
   };
 
   hardware = {
@@ -67,8 +67,7 @@ in
     nh = {
       enable = true;
       clean.enable = true;
-      clean.extraArgs = "--keep-since 7d --keep 5";
-      # flake = "/home/${username}/.dotfiles/flake.nix";
+      clean.extraArgs = "--keep-since 21d --keep 5";
     };
 
     nix-ld = {
@@ -118,10 +117,10 @@ in
   };
 
   users.users = {
-    ${cfg.username} = {
+    ${metaCfg.username} = {
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
-      home = "/home/${cfg.username}";
+      home = "/home/${metaCfg.username}";
       extraGroups = [
         "input"
         "wheel"
