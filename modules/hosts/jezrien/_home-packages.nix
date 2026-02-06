@@ -27,6 +27,7 @@
     fd
     file
     file-roller
+    google-chrome
     # jellyfin-media-player - it or a depdendency uses insecure qtwebengine
     # so just using a chrome PWA for now
     kalker

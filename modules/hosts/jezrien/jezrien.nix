@@ -22,6 +22,7 @@
 
             self.nixosModules.fonts
             self.nixosModules.stylix
+            self.nixosModules.audiorelay
 
             self.nixosModules._3dp
             self.nixosModules.helix
@@ -70,21 +71,7 @@
 # shared.nix
 #
 # home-manager/
-# browser.nix
-# default.nix
-# direnv.nix
-# discord.nix
-# easyeffects.nix
-# firefox.nix
-# fish.nix
-# flameshot.nix
-# fuzzel.nix
-# ghostty.nix
-# git.nix
 # gnome.nix
-# homelab.nix
-# jujutsu.nix
-# keebs.nix
 # kitty.nix
 # lutris.nix
 # nautilus.nix
