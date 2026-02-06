@@ -1,0 +1,55 @@
+{ ... }:
+{
+  flake.nixosModules._1password =
+    { config, pkgs, ... }:
+    let
+      metaCfg = config.meta.ryk;
+    in
+    {
+      environment = {
+        systemPackages = with pkgs; [
+          gnome-keyring
+          libsecret
+        ];
+        etc = {
+          "1password/custom_allowed_browsers" = {
+            text = ''
+              chrome
+              vivald-bin
+              # because they keep fucking changing it...
+              .zen-beta-wrapped
+              .zen-beta-wrapp
+              .zen-beta
+              zen-beta
+              zen
+            '';
+            mode = "0755";
+          };
+        };
+      };
+
+      programs._1password.enable = true;
+      programs._1password-gui = {
+        enable = true;
+        polkitPolicyOwners = [ "${metaCfg.username}" ];
+      };
+
+      # can we find a better solution?
+      services.gnome.gnome-keyring.enable = true;
+      systemd = {
+        user.services.polkit-gnome-authentication-agent-1 = {
+          description = "polkit-gnome-authentication-agent-1";
+          wantedBy = [ "graphical-session.target" ];
+          wants = [ "graphical-session.target" ];
+          after = [ "graphical-session.target" ];
+          serviceConfig = {
+            Type = "simple";
+            ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+            Restart = "on-failure";
+            RestartSec = 1;
+            TimeoutStopSec = 10;
+          };
+        };
+      };
+    };
+}
