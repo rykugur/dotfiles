@@ -1,0 +1,220 @@
+{ self, ... }:
+let
+  moduleName = "dank-material-shell";
+in
+{
+  flake.nixosModules.${moduleName} =
+    { config, lib, ... }:
+    {
+      options.ryk.${moduleName} = {
+        screenshotBackend = lib.mkOption {
+          type = lib.types.enum [
+            "swappy"
+            "satty"
+            "none"
+          ];
+          default = "none";
+        };
+      };
+
+      home-manager.users.${config.meta.ryk.username}.imports = [
+        self.homeModules.${moduleName}
+      ];
+    };
+
+  flake.homeModules.${moduleName} =
+    {
+      config,
+      lib,
+      osConfig,
+      pkgs,
+      ...
+    }:
+
+    let
+      dankCfg = osConfig.ryk.dank-material-shell;
+      hyprlandCfg = osConfig.ryk.hyprland or { };
+      niriCfg = osConfig.ryk.niri or { };
+      screenshotEditor = dankCfg.screenshotBackend;
+    in
+    {
+      home.packages =
+        lib.optionals (screenshotEditor == "swappy") [ pkgs.swappy ]
+        ++ lib.optionals (screenshotEditor == "satty") [ pkgs.satty ];
+
+      programs.dank-material-shell = {
+        enable = true;
+
+        # this can be removed after niri-flake is updated to support the includes directive
+        niri = {
+          includes.enable = false;
+        };
+
+        enableAudioWavelength = true;
+        enableCalendarEvents = false;
+        enableDynamicTheming = false;
+        enableSystemMonitoring = true;
+
+        settings = {
+          # SettingsSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js
+          # SessionSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
+          # currentThemeName = "cat-blue";
+          currentThemeName = "custom";
+          currentThemeCategory = "registry";
+          customThemeFile = "/home/dusty/.config/DankMaterialShell/themes/catppuccin/theme.json";
+          registryThemeVariants = {
+            catppuccin = {
+              flavor = "mocha";
+              accent = "blue";
+            };
+          };
+          dynamicThemeing = false;
+          fontFamily = "CaskaydiaCove NFM";
+          monoFontFamily = "CaskaydiaMono NFM";
+
+          acMonitorTimeout = 900; # 15 min
+          acLockTimeout = 1800; # 30 min
+          acSuspendTimeout = 3600; # 60 min
+          lockBeforeSuspend = true;
+
+          showWeather = true;
+          useFahrenheit = true;
+          weatherLocation = "Rosemount, MN";
+          weatherCoordinates = "44.747998,-93.133574";
+        };
+      };
+
+      programs.niri.settings =
+        lib.mkIf (config.programs.niri.enable && niriCfg.bar == "dankMaterialShell")
+          {
+            environment = lib.mkIf (screenshotEditor != "none") {
+              DMS_SCREENSHOT_EDITOR = screenshotEditor;
+            };
+
+            binds =
+              with config.lib.niri.actions;
+              let
+                spawnAction =
+                  actions:
+                  spawn (
+                    [
+                      "dms"
+                      "ipc"
+                      "call"
+                    ]
+                    ++ actions
+                  );
+                launcherAction = spawnAction [
+                  "spotlight"
+                  "toggle"
+                ];
+              in
+              {
+                "Mod+Print".action = spawn [
+                  "dms"
+                  "screenshot"
+                  "--no-file"
+                ];
+                # "Mod+Shift+Print".action = spawn [ "dms" "screenshot" "--no-file" ];
+                "Mod+Shift+e".action = spawnAction [
+                  "powermenu"
+                  "toggle"
+                ];
+                "Mod+Shift+v".action = spawnAction [
+                  "clipboard"
+                  "toggle"
+                ];
+                "Mod+0".action = spawnAction [
+                  "notepad"
+                  "toggle"
+                ];
+
+                "Mod+r".action = launcherAction;
+                "Mod+Space".action = launcherAction;
+              }
+              // {
+                XF86AudioLowerVolume.action = spawnAction [
+                  "audio"
+                  "decrement"
+                  "5"
+                ];
+                XF86AudioRaiseVolume.action = spawnAction [
+                  "audio"
+                  "increment"
+                  "5"
+                ];
+                XF86AudioMute.action = spawnAction [
+                  "audio"
+                  "mute"
+                ];
+                XF86Tools.action = spawnAction [
+                  "audio"
+                  "micmute"
+                ];
+                XF86AudioPlay.action = spawnAction [
+                  "mpris"
+                  "playPause"
+                ];
+                XF86AudioPause.action = spawnAction [
+                  "mpris"
+                  "playPause"
+                ];
+                XF86AudioNext.action = spawnAction [
+                  "mpris"
+                  "next"
+                ];
+                XF86AudioPrev.action = spawnAction [
+                  "mpris"
+                  "previous"
+                ];
+                XF86MonBrightnessDown.action = spawnAction [
+                  "brightness"
+                  "decrement"
+                  "5"
+                ];
+                XF86MonBrightnessUp.action = spawnAction [
+                  "brightness"
+                  "increment"
+                  "5"
+                ];
+              };
+
+            spawn-at-startup = [
+              {
+                argv = [
+                  "dms"
+                  "run"
+                ];
+              }
+            ];
+          };
+
+      # wayland.windowManager.hyprland.settings =
+      #   lib.mkIf (rykCfg.hyprland.enable && rykCfg.hyprland.bar == "dankMaterialShell")
+      #     {
+      #       bind =
+      #         let
+      #           dmsIpc = action: "dms ipc call ${action}";
+      #           audioIpc = action: "dms ipc call audio ${action}";
+      #           mprisIpc = action: "dms ipc call mpris ${action}";
+      #           launcher = dmsIpc "spotlight toggle";
+      #         in
+      #         [
+      #           "$mainMod SHIFT, E, exec, ${dmsIpc "powermenu toggle"}"
+      #           "$mainMod, R, exec, ${launcher}"
+      #           "$mainMod, space, exec, ${launcher}"
+      #           "$mainMod, 0, exec, ${dmsIpc "notepad toggle"}"
+
+      #           ", XF86AudioMute, exec, ${audioIpc "mute"}"
+      #           ", XF86AudioPlay, exec, ${audioIpc "playPause"}"
+      #           ", XF86AudioPause, exec, ${audioIpc "playPause"}"
+      #           ", XF86AudioNext, exec, ${mprisIpc "next"}"
+      #           ", XF86AudioPrev, exec, ${mprisIpc "previous"}"
+      #           ", XF86MonBrightnessUp, exec, ${dmsIpc "brightness increment 5"}"
+      #           ", XF86MonBrightnessDown, exec, ${dmsIpc "brightness decrement 5"}"
+      #         ];
+      #       exec-once = [ "dms run" ];
+      #     };
+
+    };
+}

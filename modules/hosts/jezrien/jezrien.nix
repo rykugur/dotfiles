@@ -24,6 +24,9 @@
             self.nixosModules.stylix
             self.nixosModules.audiorelay
 
+            self.nixosModules.niri
+            # self.nixosModules.dank-material-shell
+
             self.nixosModules._3dp
             self.nixosModules.helix
             self.nixosModules.ssh
@@ -38,6 +41,8 @@
             imports = [
               self.homeModules.sops
               ./_home-packages.nix
+
+              self.homeModules.jezrien-home-config
             ];
           };
         };
@@ -56,6 +61,8 @@
           ]);
         };
     };
+
+    homeModules.jezrien-home-config = { ... }: { };
   };
 }
 
