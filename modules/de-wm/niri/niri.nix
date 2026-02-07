@@ -7,74 +7,7 @@
     {
       imports = [
         inputs.niri.nixosModules.niri
-
-        self.nixosModules.nautilus
       ];
-
-      # options.ryk.niri = {
-      #   enable = lib.mkEnableOption "Enable niri window manager.";
-
-      #   monitors = lib.mkOption {
-      #     type = lib.types.attrs;
-      #     default = { };
-      #     description = "Monitors to define.";
-      #   };
-
-      #   touch = lib.mkOption {
-      #     type = lib.types.nullOr (
-      #       lib.types.submodule {
-      #         options = {
-      #           input = lib.mkOption {
-      #             type = lib.types.nullOr (lib.types.str);
-      #             default = null;
-      #             description = ''Name of the touch input monitor. Example: "HDMI-A-1."'';
-      #           };
-
-      #           rotation = lib.mkOption {
-      #             type = lib.types.nullOr (
-      #               lib.types.enum [
-      #                 "0"
-      #                 "90"
-      #                 "180"
-      #                 "270"
-      #               ]
-      #             );
-      #             default = null;
-      #             description = "Touch rotation direction; generates libinput calibration-matrix accordingly.";
-      #             example = "90";
-      #           };
-      #         };
-      #       }
-      #     );
-      #     default = { };
-      #   };
-
-      #   bar = lib.mkOption {
-      #     type = lib.types.enum barNames;
-      #     default = "none";
-      #   };
-
-      #   additionalRules = lib.mkOption {
-      #     type = lib.types.nullOr (lib.types.listOf lib.types.attrs);
-      #     default = null;
-      #   };
-
-      #   # TODO: use this in home.nix
-      #   defaultColumnWidth = lib.mkOption {
-      #     type = lib.types.float;
-      #     default = 0.66;
-      #   };
-
-      #   # TODO: use this in home.nix
-      #   proportions = lib.mkOption {
-      #     type = lib.types.listOf lib.types.float;
-      #     default = [
-      #       0.33
-      #       0.66
-      #       1.0
-      #     ];
-      #   };
-      # };
 
       home-manager.users.${config.meta.ryk.username}.imports = [ self.homeModules.niri ];
     };
@@ -83,17 +16,19 @@
     {
       config,
       lib,
-      osConfig,
       pkgs,
       ...
     }:
     let
-      niriCfg = osConfig.ryk.niri;
+      niriCfg = config.ryk.niri;
     in
     {
       imports = [
-        # ./_niri-options.nix
+        ./_niri-options.nix
+
+        self.homeModules.nautilus
       ];
+
       home.packages =
         with pkgs;
         [
@@ -119,6 +54,9 @@
           ))
           (pkgs.writeScriptBin "eve-toggle.nu" (builtins.readFile ./scripts/toggle-eve.nu))
         ];
+
+      # TODO: remove me when the upstream HM module supports enable
+      ryk.niri.enable = true;
 
       programs.niri = {
         # enable = true;

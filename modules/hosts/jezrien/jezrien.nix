@@ -25,7 +25,7 @@
             self.nixosModules.audiorelay
 
             self.nixosModules.niri
-            # self.nixosModules.dank-material-shell
+            self.nixosModules.dank-material-shell
 
             self.nixosModules._3dp
             self.nixosModules.helix
@@ -62,7 +62,14 @@
         };
     };
 
-    homeModules.jezrien-home-config = { ... }: { };
+    homeModules.jezrien-home-config =
+      { ... }:
+      {
+        imports = [
+          ./_niri-cfg.nix
+        ];
+        # TODO: finish me
+      };
   };
 }
 
