@@ -1,0 +1,150 @@
+{ self, ... }:
+let
+  moduleName = "noctalia";
+in
+{
+  flake.nixosModules.${moduleName} =
+    { config, ... }:
+    {
+      home-manager.users.${config.meta.ryk.username}.imports = [
+        self.homeModules.${moduleName}
+      ];
+    };
+
+  flake.homeModules.${moduleName} =
+    { config, lib, ... }:
+    let
+      niriCfg = config.ryk.niri or { };
+    in
+    {
+      programs.noctalia-shell = {
+        enable = true;
+
+        # TODO: customize these; they were copied from the docs
+        settings = {
+          # configure noctalia here; defaults will
+          # be deep merged with these attributes.
+          bar = {
+            density = "compact";
+            position = "right";
+            showCapsule = false;
+            widgets = {
+              left = [
+                {
+                  id = "SidePanelToggle";
+                  useDistroLogo = true;
+                }
+                { id = "WiFi"; }
+                { id = "Bluetooth"; }
+              ];
+              center = [
+                {
+                  hideUnoccupied = false;
+                  id = "Workspace";
+                  labelMode = "none";
+                }
+              ];
+              right = [
+                {
+                  alwaysShowPercentage = false;
+                  id = "Battery";
+                  warningThreshold = 30;
+                }
+                {
+                  formatHorizontal = "HH:mm";
+                  formatVertical = "HH mm";
+                  id = "Clock";
+                  useMonospacedFont = true;
+                  usePrimaryColor = true;
+                }
+              ];
+            };
+          };
+          colorSchemes.predefinedScheme = "Monochrome";
+          general = {
+            avatarImage = "/home/drfoobar/.face";
+            radiusRatio = 0.2;
+          };
+          location = {
+            monthBeforeDay = true;
+            name = "Marseille, France";
+          };
+        };
+      };
+
+      programs.niri.settings = lib.mkIf (niriCfg.enable && niriCfg.bar == "noctalia") {
+        binds =
+          with config.lib.niri.actions;
+          let
+            spawnAction =
+              actions:
+              spawn (
+                [
+                  "noctalia-shell"
+                  "ipc"
+                  "call"
+                ]
+                ++ actions
+              );
+            launcherAction = spawnAction [
+              "launcher"
+              "toggle"
+            ];
+          in
+          {
+            "Mod+Shift+e".action = spawnAction [
+              "sessionMenu"
+              "toggle"
+            ];
+            "Mod+Shift+v".action = spawnAction [
+              "launcher"
+              "clipboard"
+            ];
+            "Mod+Space".action = launcherAction;
+          }
+          // {
+            XF86AudioLowerVolume.action = spawnAction [
+              "volume"
+              "decrease"
+              "5"
+            ];
+            XF86AudioRaiseVolume.action = spawnAction [
+              "volume"
+              "increase"
+              "5"
+            ];
+            XF86AudioMute.action = spawnAction [
+              "volume"
+              "muteOutput"
+            ];
+            XF86AudioPlay.action = spawnAction [
+              "media"
+              "playPause"
+            ];
+            XF86AudioPause.action = spawnAction [
+              "media"
+              "playPause"
+            ];
+            XF86AudioNext.action = spawnAction [
+              "media"
+              "next"
+            ];
+            XF86AudioPrev.action = spawnAction [
+              "media"
+              "previous"
+            ];
+            XF86MonBrightnessDown.action = spawnAction [
+              "brightness"
+              "decrease"
+              "5"
+            ];
+            XF86MonBrightnessUp.action = spawnAction [
+              "brightness"
+              "increase"
+              "5"
+            ];
+          };
+        spawn-at-startup = [ { argv = [ "noctalia-shell" ]; } ];
+      };
+    };
+}
