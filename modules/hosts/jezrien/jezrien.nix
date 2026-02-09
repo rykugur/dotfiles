@@ -66,6 +66,7 @@
       { ... }:
       {
         imports = [
+          # ./_hyprland-cfg.nix
           ./_niri-cfg.nix
         ];
         # TODO: finish me
