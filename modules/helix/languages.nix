@@ -45,6 +45,16 @@
           ## rust
           rust-analyzer = {
             command = lib.getExe pkgs.rust-analyzer;
+            config = {
+              inlayHints = {
+                bindingModeHints.enable = false;
+                closingBraceHints.minLines = 10;
+                closureReturnTypeHints.enable = "with_block";
+                discriminantHints.enable = "fieldless";
+                lifetimeElisionHints.enable = "skip_trivial";
+                typeHints.hideClosureInitialization = false;
+              };
+            };
           };
           # for snippets
           scls = {
