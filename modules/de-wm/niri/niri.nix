@@ -1,7 +1,5 @@
 { inputs, self, ... }:
 {
-  # imports = [ ./_niri-options.nix ];
-
   flake.nixosModules.niri =
     { config, ... }:
     {
