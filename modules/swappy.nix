@@ -13,7 +13,7 @@
 
       home.file = {
         ".config/swappy" = {
-          source = ../configs/swappy;
+          source = self + "/configs/swappy";
           recursive = true;
         };
       };

@@ -3,26 +3,30 @@
   flake.nixosModules.ghostty =
     { config, lib, ... }:
     {
-      options.ryk.ghostty = {
-        hideWindowDecoration = lib.mkEnableOption "Whether to hide window-decoration or not.";
-        usePredefinedSize = lib.mkEnableOption "Whether to set a default term size.";
-      };
-
       home-manager.users.${config.meta.ryk.username}.imports = [ self.homeModules.ghostty ];
     };
 
   flake.homeModules.ghostty =
     {
+      config,
       lib,
-      osConfig,
       pkgs,
       ...
     }:
     let
-      cfg = osConfig.ryk.ghostty;
+      cfg = config.ryk.ghostty;
       font = "CaskaydiaCove NFM";
     in
     {
+      imports = [
+        {
+          options.ryk.ghostty = {
+            hideWindowDecoration = lib.mkEnableOption "Whether to hide window-decoration or not.";
+            usePredefinedSize = lib.mkEnableOption "Whether to set a default term size.";
+          };
+        }
+      ];
+
       programs.ghostty = {
         enable = true;
         package = if pkgs.stdenv.isDarwin then null else pkgs.ghostty;

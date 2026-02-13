@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ inputs, self, withSystem, ... }:
 {
   flake.nixosModules.star-citizen =
     { config, ... }:
@@ -45,25 +45,30 @@
 
   flake.homeModules.star-citizen =
     { pkgs, ... }:
-
     let
-      gameglass = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.gameglass;
-      wineAstralPkg = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.wine-astral;
+      scPkgs = withSystem pkgs.stdenv.hostPlatform.system (
+        { config, inputs', ... }:
+        {
+          opentrackSC = config.packages.opentrack-StarCitizen;
+          gameglass = inputs'.nix-citizen.packages.gameglass;
+          wineAstral = inputs'.nix-citizen.packages.wine-astral;
+        }
+      );
     in
     {
       home.packages = [
-        pkgs.opentrack-StarCitizen
-        pkgs.gameglass
+        scPkgs.opentrackSC
+        scPkgs.gameglass
       ];
 
       # lazy-mode - for opentrack
       # TODO: this probably belongs in a feature/meta module
-      home.file.".wine-astral".source = wineAstralPkg;
+      home.file.".wine-astral".source = scPkgs.wineAstral;
 
       xdg.desktopEntries.gameglass = {
         name = "GameGlass";
         icon = "gameglass";
-        exec = "${gameglass}/bin/gameglass";
+        exec = "${scPkgs.gameglass}/bin/gameglass";
         terminal = false;
         type = "Application";
         categories = [

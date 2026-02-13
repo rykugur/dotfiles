@@ -10,8 +10,14 @@
     { pkgs, ... }:
     let
       zenPkg = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      # zenPkg = inputs'.zen-browser.packages.default; # inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
     in
     {
+      imports = [
+        inputs.zen-browser.homeModules.default
+        # inputs'.zen-browser.homeModules.default
+      ];
+
       programs.zen-browser = {
         enable = true;
         package = zenPkg;

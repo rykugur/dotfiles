@@ -1,12 +1,32 @@
 { ... }:
 {
-  flake.nixosModules.discord =
-    { config, pkgs, ... }:
+  flake.nixosModules.pipewire =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       metaCfg = config.meta.ryk;
     in
     {
       # imports = [ inputs.nix-gaming.nixosModules.pipewireLowLatency ];
+      imports = [
+        {
+          options.ryk.pipewire = {
+            rate = lib.mkOption {
+              type = lib.types.number;
+              default = 48000;
+            };
+
+            quantum = lib.mkOption {
+              type = lib.types.number;
+              default = 32;
+            };
+          };
+        }
+      ];
 
       environment.systemPackages = [
         pkgs.pulseaudio

@@ -1,9 +1,11 @@
-{ ... }:
+{ self, ... }:
 {
   perSystem =
     { pkgs, ... }:
     {
       packages = {
+        opentrack-StarCitizen = pkgs.callPackage (self + "/pkgs/opentrack-StarCitizen.nix") { };
+
         jackify = pkgs.appimageTools.wrapType2 rec {
           pname = "jackify";
           version = "v0.2.1.1";

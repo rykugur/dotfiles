@@ -1,9 +1,11 @@
-{ ... }:
+{ self, ... }:
 {
   flake.nixosModules.winboat =
     { pkgs, ... }:
     {
-      ryk.virtualization.docker.enable = true;
+      imports = [
+        self.nixosModules.docker
+      ];
 
       environment.systemPackages = [
         pkgs.winboat

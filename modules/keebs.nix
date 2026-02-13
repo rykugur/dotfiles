@@ -33,7 +33,7 @@
             source = "${madnoodle-udon13-v2}";
           };
           ".via-config-files/doio-kb16-01.json" = {
-            source = ../../configs/misc/kb16-01.json;
+            source = self + "/configs/misc/kb16-01.json";
           };
         };
       };
