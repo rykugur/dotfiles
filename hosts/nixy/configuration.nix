@@ -4,7 +4,7 @@
 
     inputs.home-manager.nixosModules.home-manager
 
-    ../../modules/nixos/ssh.nix
+    ../../legacy-modules/nixos/ssh.nix
   ];
 
   nix.settings = { sandbox = false; };

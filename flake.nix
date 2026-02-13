@@ -66,6 +66,8 @@
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zjstatus.url = "github:dj95/zjstatus";
+
+    import-tree.url = "github:vic/import-tree";
   };
 
   outputs =
@@ -76,9 +78,10 @@
       ...
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      # imports = [
-      #   inputs.flake-parts.flakeModules.easyOverlay
-      # ];
+      imports = [
+        inputs.flake-parts.flakeModules.modules
+        (inputs.import-tree ./modules)
+      ];
 
       systems = [
         "x86_64-linux"
@@ -93,6 +96,8 @@
         };
 
       flake = {
+        modules = { };
+
         overlays = import ./overlays { inherit inputs; };
 
         nixosConfigurations =
@@ -102,9 +107,9 @@
           {
             "jezrien" = nixpkgs.lib.nixosSystem {
               modules = [
-                ./modules/base
-                ./modules/nixos
-                ./modules
+                ./legacy-modules/base
+                ./legacy-modules/nixos
+                ./legacy-modules
 
                 ./roles
 
@@ -136,9 +141,9 @@
           # 14" macbook pro
           "taln" = inputs.nix-darwin.lib.darwinSystem {
             modules = [
-              ./modules/darwin
+              ./legacy-modules/darwin
 
-              ./modules/base
+              ./legacy-modules/base
 
               ./hosts/taln/configuration.nix
 

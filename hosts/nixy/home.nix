@@ -1,5 +1,5 @@
 { ... }: {
-  imports = [ ../../modules/home-manager/helix.nix ];
+  imports = [ ../../legacy-modules/home-manager/helix.nix ];
 
   ryk.helix.enable = true;
 

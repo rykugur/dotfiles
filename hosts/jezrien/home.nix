@@ -2,7 +2,7 @@
 {
   imports = [
     ../../home
-    ../../modules/home-manager
+    ../../legacy-modules/home-manager
     ./home-packages.nix
   ];
 

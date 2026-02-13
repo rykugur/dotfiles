@@ -3,19 +3,19 @@
     ../../home
 
     # TODO: fix this later; shared modules across nixos/nix-darwin can be painful
-    ../../modules/home-manager/carapace.nix
-    ../../modules/home-manager/direnv.nix
-    ../../modules/home-manager/ghostty.nix
-    ../../modules/home-manager/git.nix
-    ../../modules/home-manager/helix.nix
-    ../../modules/home-manager/homelab.nix
-    ../../modules/home-manager/jujutsu.nix
-    ../../modules/home-manager/nushell.nix
-    ../../modules/home-manager/ssh.nix
-    ../../modules/home-manager/starship.nix
-    ../../modules/home-manager/yazi.nix
-    ../../modules/home-manager/zellij.nix
-    ../../modules/home-manager/zoxide.nix
+    ../../legacy-modules/home-manager/carapace.nix
+    ../../legacy-modules/home-manager/direnv.nix
+    ../../legacy-modules/home-manager/ghostty.nix
+    ../../legacy-modules/home-manager/git.nix
+    ../../legacy-modules/home-manager/helix.nix
+    ../../legacy-modules/home-manager/homelab.nix
+    ../../legacy-modules/home-manager/jujutsu.nix
+    ../../legacy-modules/home-manager/nushell.nix
+    ../../legacy-modules/home-manager/ssh.nix
+    ../../legacy-modules/home-manager/starship.nix
+    ../../legacy-modules/home-manager/yazi.nix
+    ../../legacy-modules/home-manager/zellij.nix
+    ../../legacy-modules/home-manager/zoxide.nix
   ];
 
   # home = {
