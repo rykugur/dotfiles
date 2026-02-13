@@ -12,12 +12,15 @@
         self.nixosModules.jezrien-config
 
         {
-          nixpkgs.config = {
-            allowUnfree = true;
-            permittedInsecurePackages = [
-              "electron-25.9.0"
-              "nexusmods-app-unfree-0.21.1"
-            ];
+          nixpkgs = {
+            overlays = [ self.overlays.default ];
+            config = {
+              allowUnfree = true;
+              permittedInsecurePackages = [
+                "electron-25.9.0"
+                "nexusmods-app-unfree-0.21.1"
+              ];
+            };
           };
         }
       ];
