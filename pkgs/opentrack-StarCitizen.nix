@@ -1,9 +1,15 @@
-{ stdenv, fetchFromGitHub, fetchurl, fetchzip, makeDesktopItem, pkgs, }:
+{
+  stdenv,
+  fetchFromGitHub,
+  fetchurl,
+  fetchzip,
+  makeDesktopItem,
+  pkgs,
+}:
 let
   # for neural-net face tracking
   onnxRuntime = fetchzip {
-    url =
-      "https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-1.21.0.tgz";
+    url = "https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-1.21.0.tgz";
     sha256 = "sha256-f2svIZMpx/id1zVJNwEUKegaRA7FyqElPujutRtJrYk=";
   };
 
@@ -13,7 +19,8 @@ let
     rev = "v2.5.1";
     sha256 = "sha256-bIKjZ7DvJVmDK386WgXaAFQrS0E1TNEUMhfQp7FNnvk=";
   };
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   name = "opentrack-StarCitizen";
 
   src = fetchFromGitHub {
@@ -23,10 +30,27 @@ in stdenv.mkDerivation {
     sha256 = "sha256-C0jLS55DcLJh/e5yM8kLG7fhhKvBNllv5HkfCWRIfc4=";
   };
 
-  nativeBuildInputs = with pkgs; [ cmake pkg-config ninja copyDesktopItems ];
-  buildInputs = with pkgs;
-    [ opencv4 procps eigen xorg.libXdmcp libevdev wineWowPackages.waylandFull ]
-    ++ (with pkgs.libsForQt5.qt5; [ qtbase qttools wrapQtAppsHook ]);
+  nativeBuildInputs = with pkgs; [
+    cmake
+    pkg-config
+    ninja
+    copyDesktopItems
+  ];
+  buildInputs =
+    with pkgs;
+    [
+      opencv4
+      procps
+      eigen
+      libXdmcp
+      libevdev
+      wineWow64Packages.minimal
+    ]
+    ++ (with pkgs.libsForQt5.qt5; [
+      qtbase
+      qttools
+      wrapQtAppsHook
+    ]);
 
   env.NIX_CFLAGS_COMPILE = "-Wall -Wextra -Wpedantic -ffast-math -O3";
   dontWrapQtApps = true;
@@ -44,8 +68,7 @@ in stdenv.mkDerivation {
       name = "opentrack-sc";
       exec = "opentrack";
       icon = fetchurl {
-        url =
-          "https://github.com/opentrack/opentrack/raw/opentrack-2023.3.0/gui/images/opentrack.png";
+        url = "https://github.com/opentrack/opentrack/raw/opentrack-2023.3.0/gui/images/opentrack.png";
         sha256 = "0d114zk78f7nnrk89mz4gqn7yk3k71riikdn29w6sx99h57f6kgn";
       };
       desktopName = name;

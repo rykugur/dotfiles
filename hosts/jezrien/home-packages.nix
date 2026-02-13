@@ -1,5 +1,6 @@
 # random dumping-ground; some day I'll clean this up
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     ################################# nix #################################
     nix-prefetch-scripts
@@ -12,8 +13,8 @@
     ################################# random #################################
     arandr
     cliphist
-    xorg.xrandr
-    xorg.xbacklight
+    xrandr
+    xbacklight
 
     nwg-look
     catppuccin-gtk
@@ -22,6 +23,7 @@
 
     baobab
     bottom
+    claude-code
     fastfetch
     fd
     file

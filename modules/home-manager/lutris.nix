@@ -1,6 +1,14 @@
-{ config, osConfig, lib, pkgs, ... }:
-let cfg = config.ryk.lutris;
-in {
+{
+  config,
+  osConfig,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.ryk.lutris;
+in
+{
   options.ryk.lutris = {
     enable = lib.mkEnableOption "Enable lutris home-manager module.";
   };
@@ -22,7 +30,7 @@ in {
 
       steamPackage = osConfig.programs.steam.package;
       protonPackages = [ pkgs.proton-ge-bin ];
-      winePackages = [ pkgs.wineWowPackages.stagingFull ];
+      winePackages = [ pkgs.wineWow64Packages.stagingFull ];
 
     };
 
