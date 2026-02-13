@@ -1,7 +1,6 @@
 {
   inputs,
   self,
-  withSystem,
   ...
 }:
 {
@@ -12,7 +11,15 @@
         self.nixosModules.meta
         self.nixosModules.jezrien-config
 
-        { nixpkgs.config.allowUnfree = true; }
+        {
+          nixpkgs.config = {
+            allowUnfree = true;
+            permittedInsecurePackages = [
+              "electron-25.9.0"
+              "nexusmods-app-unfree-0.21.1"
+            ];
+          };
+        }
       ];
     };
 
