@@ -23,6 +23,7 @@
 
     baobab
     bottom
+    bruno
     claude-code
     fastfetch
     fd
@@ -57,5 +58,56 @@
     libtool
 
     telegram-desktop
+
+    # from roles/gaming.nix
+    steamcmd
+    protonup-ng
+    protonup-qt
+    winetricks
+    # misc
+    bottles
+    dxvk
+    gamescope
+    heroic
+    mangohud
+    moonlight-qt
+    unixtools.xxd
+    vkd3d
+    xdelta
+
+    # from roles/dev.nix
+    just
+    prettierd
+    stylua
+    vscode
+    insomnia
+
+    # from roles/terminal.nix
+    cmatrix
+    dnsutils
+    dysk
+    fzf
+    jq
+    iftop
+    iotop
+    glow
+    ldns
+    lsof
+    lm_sensors
+    nmap
+    pciutils
+    p7zip
+    psmisc
+    silver-searcher
+    speedtest-cli
+    tree
+    unzip
+    usbutils
+    wget
+    xz
+    zip
+    duf
+    dust
+    gdu
   ];
 }

@@ -9,7 +9,7 @@ keys:
     - &work-macbook age1a2dsa5sk4xnl8m8vdahhl0h7v54n89nzp4jesuk0mn79ck4ukdjsjuyuax
 
 creation_rules:
-  - path_regex: jezrien/secrets.yaml$
+  - path_regex: modules/hosts/jezrien/secrets.yaml$
     key_groups:
       - age:
           - *dusty

@@ -7,6 +7,7 @@
   flake = {
     nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { inherit inputs self; };
       modules = [
         self.nixosModules.meta
         self.nixosModules.jezrien-config
@@ -35,6 +36,7 @@
         {
           imports = [
             self.nixosModules.jezrien-hardware
+            ./_nix-cfg.nix
             ./_configuration.nix
 
             inputs.stylix.nixosModules.stylix
@@ -73,6 +75,7 @@
             self.nixosModules.winboat
             self.nixosModules.yaak
             self.nixosModules.yazi
+            self.nixosModules.zed-editor
             self.nixosModules.zellij
             self.nixosModules.zen-browser
             self.nixosModules.zoxide

@@ -7,6 +7,8 @@
         inputs.niri.nixosModules.niri
       ];
 
+      programs.niri.enable = true;
+
       home-manager.users.${config.meta.ryk.username}.imports = [ self.homeModules.niri ];
     };
 

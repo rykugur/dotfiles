@@ -95,7 +95,7 @@
 
       home.file = {
         ".config/zed/snippets" = {
-          source = ../../configs/snippets;
+          source = self + "/configs/snippets";
           recursive = true;
         };
       };
