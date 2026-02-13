@@ -41,11 +41,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1769645107,
-        "narHash": "sha256-BUhrgWfISxTsy4nTMccH/rm1FbV1g5qMCGR31pZXd08=",
+        "lastModified": 1770940465,
+        "narHash": "sha256-LeZ0/t6hsC3e6rwKLifM9AyTkJ72IDThv45JgPS1fdw=",
         "owner": "atuinsh",
         "repo": "atuin",
-        "rev": "137db9130438e73681ec633623a98f034f4e19dc",
+        "rev": "40c09d554af1fbc4d44f616ae6ed28c26b478e08",
         "type": "github"
       },
       "original": {

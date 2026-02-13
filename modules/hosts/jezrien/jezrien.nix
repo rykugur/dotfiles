@@ -130,6 +130,7 @@
           ./_niri-cfg.nix
         ];
 
+        ryk.dank-material-shell.screenshotBackend = "swappy";
         ryk.ghostty.hideWindowDecoration = true;
       };
   };

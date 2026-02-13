@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ inputs, self, withSystem, ... }:
 {
   flake.nixosModules.zen-browser =
     { config, ... }:
@@ -9,13 +9,13 @@
   flake.homeModules.zen-browser =
     { pkgs, ... }:
     let
-      zenPkg = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      # zenPkg = inputs'.zen-browser.packages.default; # inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      zenPkg = withSystem pkgs.stdenv.hostPlatform.system (
+        { inputs', ... }: inputs'.zen-browser.packages.default
+      );
     in
     {
       imports = [
         inputs.zen-browser.homeModules.default
-        # inputs'.zen-browser.homeModules.default
       ];
 
       programs.zen-browser = {
