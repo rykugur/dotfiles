@@ -41,8 +41,6 @@
 
             self.nixosModules.home-manager
 
-            self.nixosModules.btrfs
-
             self.nixosModules.fonts
             self.nixosModules.stylix
 
@@ -56,6 +54,7 @@
             # self.nixosModules.audiorelay
             self.nixosModules.bat
             self.nixosModules.btop
+            self.nixosModules.btrfs
             self.nixosModules.carapace
             self.nixosModules.direnv
             self.nixosModules.ghostty
