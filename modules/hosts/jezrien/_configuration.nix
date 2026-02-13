@@ -101,6 +101,11 @@ in
     };
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
   environment = {
     systemPackages = with pkgs; [
       nfs-utils
