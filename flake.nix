@@ -100,31 +100,7 @@
 
         overlays = import ./overlays { inherit inputs; };
 
-        nixosConfigurations =
-          let
-            username = "dusty";
-          in
-          {
-            "jezrien" = nixpkgs.lib.nixosSystem {
-              modules = [
-                ./legacy-modules/base
-                ./legacy-modules/nixos
-                ./legacy-modules
-
-                ./roles
-
-                ./hosts/jezrien
-
-                inputs.stylix.nixosModules.stylix
-              ];
-              specialArgs = {
-                inherit inputs;
-                outputs = self;
-                hostname = "jezrien";
-                inherit username;
-              };
-            };
-
+        nixosConfigurations = {
             # nix LXC for quick testing
             nixy = nixpkgs.lib.nixosSystem {
               modules = [ ./hosts/nixy/configuration.nix ];
@@ -132,7 +108,7 @@
                 inherit inputs;
                 outputs = self;
                 hostname = "nixy";
-                inherit username;
+                username = "dusty";
               };
             };
           };

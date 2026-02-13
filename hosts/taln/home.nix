@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, outputs, ... }: {
   imports = [
     ../../home
 
@@ -10,12 +10,14 @@
     ../../legacy-modules/home-manager/helix.nix
     ../../legacy-modules/home-manager/homelab.nix
     ../../legacy-modules/home-manager/jujutsu.nix
-    ../../legacy-modules/home-manager/nushell.nix
     ../../legacy-modules/home-manager/ssh.nix
     ../../legacy-modules/home-manager/starship.nix
     ../../legacy-modules/home-manager/yazi.nix
     ../../legacy-modules/home-manager/zellij.nix
     ../../legacy-modules/home-manager/zoxide.nix
+
+    # Dendritic modules
+    outputs.modules.homeManager.nushell
   ];
 
   # home = {
@@ -57,7 +59,6 @@
     # atuin.enable = true;
     ghostty.enable = true;
     homelab.enable = true;
-    nushell.enable = true;
     ssh.enable = true;
     starship.enable = true;
     yazi.enable = true;

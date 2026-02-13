@@ -25,7 +25,6 @@
     ./lutris.nix
     ./nautilus.nix
     ./nemo.nix
-    ./nushell.nix
     ./nvim.nix
     ./ranger.nix
     ./ssh.nix
