@@ -1,10 +1,21 @@
 {
   inputs,
   self,
+  withSystem,
   ...
 }:
 {
   flake = {
+    nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        self.nixosModules.meta
+        self.nixosModules.jezrien-config
+
+        { nixpkgs.config.allowUnfree = true; }
+      ];
+    };
+
     nixosModules = {
       jezrien-config =
         { config, ... }:
@@ -22,7 +33,6 @@
 
             self.nixosModules.fonts
             self.nixosModules.stylix
-            self.nixosModules.audiorelay
 
             self.nixosModules.niri
             self.nixosModules.dank-material-shell
@@ -69,13 +79,6 @@
           # ./_hyprland-cfg.nix
           ./_niri-cfg.nix
         ];
-        # TODO: finish me
       };
   };
 }
-
-# modules to convert:
-#
-
-# desktop/
-# hyprland/...

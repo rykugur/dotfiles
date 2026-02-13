@@ -1,10 +1,9 @@
 { ... }:
 {
   perSystem =
-    { inputs', pkgs, ... }:
+    { pkgs, ... }:
     {
       packages = {
-        audiorelay = inputs'.ryze312-stackpkgs.packages.audiorelay;
         jackify = pkgs.appimageTools.wrapType2 rec {
           pname = "jackify";
           version = "v0.2.1.1";

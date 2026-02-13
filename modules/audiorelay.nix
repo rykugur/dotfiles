@@ -1,4 +1,8 @@
-{ self, withSystem, ... }:
+{
+  inputs',
+  self,
+  ...
+}:
 {
   flake.nixosModules.audiorelay =
     { config, ... }:
@@ -11,13 +15,8 @@
     };
 
   flake.homeModules.audiorelay =
-    { pkgs, ... }:
-    let
-      audiorelayPkg = withSystem pkgs.stdenv.hostPlatform.system (
-        { config, ... }: config.packages.audiorelay
-      );
-    in
+    { ... }:
     {
-      home.packages = [ audiorelayPkg ];
+      home.packages = [ inputs'.ryze312-stackpkgs.packages.audiorelay ];
     };
 }
