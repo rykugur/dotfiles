@@ -3,7 +3,7 @@
   flake.nixosModules.easyeffects =
     { config, ... }:
     {
-      home-managers.users.${config.meta.ryk.username}.imports = [ self.homeModules.easyeffects ];
+      home-manager.users.${config.meta.ryk.username}.imports = [ self.homeModules.easyeffects ];
     };
 
   flake.homeModules.easyeffects =

@@ -18,8 +18,6 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
-
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -39,7 +37,6 @@
       inputs.hyprland.follows = "hyprland";
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
-    mangowc.url = "github:DreamMaoMao/mango";
     niri.url = "github:sodiboo/niri-flake";
     # bars/shells
     quickshell = {
@@ -64,7 +61,6 @@
     ### random stuff
     atuin.url = "github:atuinsh/atuin";
     ryze312-stackpkgs.url = "github:ryze312/stackpkgs"; # for audiorelay
-    luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     zjstatus.url = "github:dj95/zjstatus";
   };
