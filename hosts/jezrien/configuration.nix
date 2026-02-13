@@ -1,4 +1,12 @@
-{ inputs, outputs, pkgs, hostname, username, ... }: {
+{
+  inputs,
+  outputs,
+  pkgs,
+  hostname,
+  username,
+  ...
+}:
+{
   imports = [
     ./hardware-configuration.nix
 
@@ -6,7 +14,8 @@
 
     # ./hyprland-config.nix
     ./niri-config.nix
-  ] ++ (with inputs.nixos-hardware.nixosModules; [
+  ]
+  ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
     common-pc-ssd
     common-cpu-amd
@@ -14,7 +23,12 @@
   ]);
 
   # TODO: find a better spot for this
-  nix.settings = { trusted-users = [ "root" "@wheel" ]; };
+  nix.settings = {
+    trusted-users = [
+      "root"
+      "@wheel"
+    ];
+  };
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
@@ -29,13 +43,17 @@
       services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
-        settings = { cue = true; };
+        settings = {
+          cue = true;
+        };
       };
     };
     polkit.enable = true;
   };
 
-  networking = { hostName = hostname; };
+  networking = {
+    hostName = hostname;
+  };
 
   environment = {
     systemPackages = with pkgs; [
@@ -56,8 +74,14 @@
     amdgpu.overdrive.enable = true;
 
     graphics = {
-      extraPackages = with pkgs; [ libva-vdpau-driver libvdpau-va-gl ];
-      extraPackages32 = with pkgs; [ libva-vdpau-driver libvdpau-va-gl ];
+      extraPackages = with pkgs; [
+        libva-vdpau-driver
+        libvdpau-va-gl
+      ];
+      extraPackages32 = with pkgs; [
+        libva-vdpau-driver
+        libvdpau-va-gl
+      ];
     };
 
     keyboard.qmk.enable = true;
@@ -66,7 +90,9 @@
   };
 
   programs = {
-    corectrl = { enable = true; };
+    corectrl = {
+      enable = true;
+    };
     dconf.enable = true;
 
     nh = {
@@ -76,7 +102,9 @@
       # flake = "/home/${username}/.dotfiles/flake.nix";
     };
 
-    nix-ld = { enable = true; };
+    nix-ld = {
+      enable = true;
+    };
   };
 
   services = {
@@ -110,7 +138,13 @@
       isNormalUser = true;
       initialPassword = "pass123"; # change after first login with `passwd`
       home = "/home/${username}";
-      extraGroups = [ "input" "wheel" "plugdev" "networkmanager" "corectrl" ];
+      extraGroups = [
+        "input"
+        "wheel"
+        "plugdev"
+        "networkmanager"
+        "corectrl"
+      ];
     };
   };
 
@@ -120,7 +154,7 @@
   };
 
   # temporary hack/workaround to get macos to build; this is all being refactored separately anyway
-  stylix.cursors = {
+  stylix.cursor = {
     package = pkgs.phinger-cursors;
     name = "phinger-cursors-dark";
     size = 32;
@@ -156,14 +190,27 @@
       starcitizen.enable = true;
     };
 
-    misc = { appimage.enable = true; };
+    misc = {
+      appimage.enable = true;
+    };
 
-    virtualization = { winboat.enable = true; };
+    virtualization = {
+      winboat.enable = true;
+    };
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs outputs hostname username; };
-    users = { ${username} = import ./home.nix; };
+    extraSpecialArgs = {
+      inherit
+        inputs
+        outputs
+        hostname
+        username
+        ;
+    };
+    users = {
+      ${username} = import ./home.nix;
+    };
     backupFileExtension = "bak";
   };
 
