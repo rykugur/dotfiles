@@ -1,15 +1,26 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.ryk.stylix;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.ryk.stylix;
+in
+{
   options.ryk.stylix.enable = lib.mkEnableOption "Enable stylix base module.";
 
   config = lib.mkIf cfg.enable {
     stylix = {
       enable = true;
 
-      base16Scheme =
-        "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
 
+      cursor = {
+        package = pkgs.catppuccin-cursors.mochaDark;
+        name = "catppuccin-mocha-dark-cursors";
+        size = 32;
+      };
       # cursor = {
       #   package = pkgs.phinger-cursors;
       #   name = "phinger-cursors-dark";

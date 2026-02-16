@@ -153,13 +153,6 @@
     cpuFreqGovernor = "performance";
   };
 
-  # temporary hack/workaround to get macos to build; this is all being refactored separately anyway
-  stylix.cursor = {
-    package = pkgs.phinger-cursors;
-    name = "phinger-cursors-dark";
-    size = 32;
-  };
-
   ### custom module stuff
   ryk = {
     keyboardVendor = "zsa";
