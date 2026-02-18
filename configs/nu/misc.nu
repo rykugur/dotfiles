@@ -64,6 +64,27 @@ def paste-multiline-nu [] {
   nu -c $cmd
 }
 
+def "edit-multiline" [] {
+  use std/log
+
+  let content = $in | default (cmd.paste)
+  if ($content | is-empty) {
+    log error "No content passed in nor in clipboard, returning."
+    return
+  }
+
+  let tmpFile = (mktemp -t edit-multiline-XXXXXX)
+
+  $content | save -f $tmpFile
+  hx $tmpFile
+
+  let newContent = cat $tmpFile
+  rm $tmpFile
+
+  # send to stdout
+  $newContent
+}
+
 def "ghostty fix terminfo" [host: string] {
   infocmp -x xterm-ghostty | ssh $host -- tic -x -
 }
