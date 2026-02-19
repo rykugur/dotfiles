@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -15,17 +16,6 @@ in
       enable = true;
 
       base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-
-      cursor = {
-        package = pkgs.catppuccin-cursors.mochaDark;
-        name = "catppuccin-mocha-dark-cursors";
-        size = 32;
-      };
-      # cursor = {
-      #   package = pkgs.phinger-cursors;
-      #   name = "phinger-cursors-dark";
-      #   size = 32;
-      # };
 
       fonts = {
         serif = {
@@ -47,6 +37,12 @@ in
           package = pkgs.noto-fonts-color-emoji;
           name = "Noto Color Emoji";
         };
+      };
+    } // lib.optionalAttrs (options.stylix ? cursor) {
+      cursor = {
+        package = pkgs.catppuccin-cursors.mochaDark;
+        name = "catppuccin-mocha-dark-cursors";
+        size = 32;
       };
     };
 
