@@ -1,4 +1,5 @@
-{ pkgs, outputs, ... }: {
+{ pkgs, outputs, ... }:
+{
   imports = [
     ../../home
 
@@ -31,7 +32,6 @@
 
     _1password-cli
     bat
-    docker
     fd
     fzf
     just

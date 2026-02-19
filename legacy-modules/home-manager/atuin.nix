@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let cfg = config.ryk.atuin;
 in {
   options.ryk.atuin = {
@@ -8,8 +8,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.atuin = {
       enable = true;
-      package =
-        inputs.atuin.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      package = pkgs.atuin;
 
       enableFishIntegration = config.programs.fish.enable;
       enableNushellIntegration = config.programs.nushell.enable;

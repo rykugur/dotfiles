@@ -61,7 +61,6 @@
     helix.url = "github:helix-editor/helix";
 
     ### random stuff
-    atuin.url = "github:atuinsh/atuin";
     ryze312-stackpkgs.url = "github:ryze312/stackpkgs"; # for audiorelay
     luarocks-nix.url = "github:nix-community/luarocks-nix";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
@@ -101,17 +100,17 @@
         overlays = import ./overlays { inherit inputs; };
 
         nixosConfigurations = {
-            # nix LXC for quick testing
-            nixy = nixpkgs.lib.nixosSystem {
-              modules = [ ./hosts/nixy/configuration.nix ];
-              specialArgs = {
-                inherit inputs;
-                outputs = self;
-                hostname = "nixy";
-                username = "dusty";
-              };
+          # nix LXC for quick testing
+          nixy = nixpkgs.lib.nixosSystem {
+            modules = [ ./hosts/nixy/configuration.nix ];
+            specialArgs = {
+              inherit inputs;
+              outputs = self;
+              hostname = "nixy";
+              username = "dusty";
             };
           };
+        };
 
         darwinConfigurations = {
           # 14" macbook pro
