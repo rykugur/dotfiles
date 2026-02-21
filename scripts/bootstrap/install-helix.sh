@@ -38,7 +38,7 @@ echo "Extracting $FILE_NAME..."
 tar -xf "$FILE_NAME"
 
 # The extract creates a directory like helix-25.07-x86_64-linux/
-EXTRACT_DIR=$(tar -tf "$FILE_NAME" | head -1 | cut -d/ -f1)
+EXTRACT_DIR="${ASSET%.tar.xz}"
 
 # Install binary and runtime
 install -m 755 "$EXTRACT_DIR/hx" /usr/local/bin/hx
