@@ -61,8 +61,8 @@ curl -sS https://starship.rs/install.sh | sh -s -- -y || warn "Starship install 
 log "Setting some aliases..."
 cat >> /root/.bashrc <<EOF
 alias dc='docker compose'
-alias ls='$LS_CMD -l'
-alias ll='$LS_CMD -la'
+alias ls='eza -l'
+alias ll='eza -la'
 eval "\$(starship init bash)"
 EOF
 
