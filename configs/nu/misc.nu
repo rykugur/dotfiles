@@ -56,7 +56,15 @@ def "cmd.paste" [] {
 }
 
 def replace-multiline [] {
-  $in | str replace --all --regex '\\[\r\n]+\s*' ''
+  use std/log
+
+  let content = $in | default (cmd.paste)
+  if ($content | is-empty) {
+    log error "No content passed in nor in clipboard, returning."
+    return
+  }
+
+  $content | str replace --all --regex '\\[\r\n]+\s*' ''
 }
 
 def paste-multiline-nu [] {

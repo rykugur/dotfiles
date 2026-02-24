@@ -33,7 +33,6 @@
     _1password-cli
     bat
     claude-code
-    docker
     fd
     fzf
     just

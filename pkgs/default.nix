@@ -15,5 +15,6 @@
   starsectorMods = pkgs.callPackage ./starsector { };
 
   ### misc
+  rackpeek = pkgs.callPackage ./rackpeek.nix { };
   tpm = pkgs.callPackage ./tpm.nix { };
 }
