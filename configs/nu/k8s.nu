@@ -29,6 +29,8 @@ def "shlink list" [] {
   kubectl --namespace shlink exec -it deployments/shlink -- bin/cli short-url:list
 }
 
+alias rpk = kubectl --namespace rackpeek exec -it deployments/rackpeek -- rpk
+
 alias hf = helmfile
 alias fgk = flux get kustomization
 alias mk = minikube
