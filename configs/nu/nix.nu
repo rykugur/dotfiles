@@ -63,6 +63,10 @@ def nrun [pkg: string] {
   nix run $"nixpkgs#($pkg)"
 }
 
+def mkenvrc [] {
+  "if nix registry list 2>/dev/null | grep -q '^system.*nixpkgs'; then\n\tuse flake . --override-input nixpkgs flake:nixpkgs\nelse\n\tuse flake .\nfi" | save .envrc
+}
+
 $env.abbreviations = $env.abbreviations | merge {
   nb: "nix build"
   ndb: "nix-build"
