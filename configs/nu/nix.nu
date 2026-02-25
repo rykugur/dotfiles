@@ -67,6 +67,10 @@ def mkenvrc [] {
   "if nix registry list 2>/dev/null | grep -q '^system.*nixpkgs'; then\n\tuse flake . --override-input nixpkgs flake:nixpkgs\nelse\n\tuse flake .\nfi" | save .envrc
 }
 
+def mkflake [] {
+  cp $"($env.DOTFILES_DIR)/configs/nu/flake-template.nix" ./flake.nix
+}
+
 $env.abbreviations = $env.abbreviations | merge {
   nb: "nix build"
   ndb: "nix-build"
