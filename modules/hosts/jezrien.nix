@@ -1,9 +1,16 @@
 # Jezrien — NixOS desktop (x86_64-linux)
-{ config, inputs, ... }:
+{
+  config,
+  inputs,
+  self,
+  ...
+}:
 let
+  # TODO: this can be removed once all modules are migrated
   username = "dusty";
   hmModules = config.flake.modules.homeManager;
-in {
+in
+{
   flake.nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
     modules = [
       ../../legacy-modules/base
@@ -16,6 +23,10 @@ in {
 
       inputs.stylix.nixosModules.stylix
 
+      self.modules.nixos.meta
+
+      self.modules.nixos.starcitizen
+
       # Dendritic homeManager modules
       {
         home-manager.users.${username}.imports = with hmModules; [
@@ -24,7 +35,11 @@ in {
       }
     ];
     specialArgs = {
-      inherit inputs username;
+      inherit
+        inputs
+        # TODO: this can be removed once all modules are migrated
+        username
+        ;
       outputs = inputs.self;
       hostname = "jezrien";
     };

@@ -10,6 +10,5 @@
 
     ### game-specific
     ./eve-online
-    ./starcitizen
   ];
 }
