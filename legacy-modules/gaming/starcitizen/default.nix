@@ -1,10 +1,17 @@
-{ config, inputs, lib, username, ... }:
-let cfg = config.ryk.gaming.starcitizen;
-in {
+{
+  config,
+  inputs,
+  lib,
+  username,
+  ...
+}:
+let
+  cfg = config.ryk.gaming.starcitizen;
+in
+{
   imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
 
-  options.ryk.gaming.starcitizen.enable =
-    lib.mkEnableOption "Enable starcitizen module";
+  options.ryk.gaming.starcitizen.enable = lib.mkEnableOption "Enable starcitizen module";
 
   config = lib.mkIf cfg.enable {
     services.udev = {
@@ -27,7 +34,7 @@ in {
 
       # Additional commands before the game starts
       preCommands = ''
-        export DISPLAY=""
+        export MESA_VK_WSI_PRESENT_MODE=mailbox
         export DXVK_HUD=compiler
         export MANGO_HUD=1
       '';

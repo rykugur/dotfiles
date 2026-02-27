@@ -37,6 +37,7 @@
     obsidian
     pavucontrol
     playerctl
+    rcon-cli
     seahorse
     spotify
     sshfs

@@ -2,7 +2,10 @@
 
 use std/log
 
-# ASSUMPTIONS/GOTCHAS
+# ez-mode script to switch from whatever I'm doing to an EVE client,
+# or between EVE clients (cycling through).
+
+### ASSUMPTIONS/GOTCHAS
 # - EVE clients are on separate workspaces (hyprland doesn't handle toggling focus and fullscreen very well).
 # - EVE clients can be on special workspaces, but we only support the default one right now
 # - EVE clients are sorted by focusHistoryID, toggle order will follow that.

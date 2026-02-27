@@ -1,5 +1,8 @@
 #!/usr/bin/env nu
 
+# ez-mode script to switch from whatever I'm doing to an EVE client,
+# or between EVE clients (cycling through).
+
 def focusWindow [id: number] {
   niri msg action focus-window --id $id
 }
