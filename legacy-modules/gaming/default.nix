@@ -7,8 +7,5 @@
     ### modding
     ./jackify
     ./nexus-mods
-
-    ### game-specific
-    ./eve-online
   ];
 }

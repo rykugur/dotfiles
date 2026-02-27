@@ -3,28 +3,15 @@
   lib,
   fetchurl,
   stdenv,
-  makeDesktopItem,
   makeWrapper,
+  autoPatchelfHook,
 }:
 
 let
-  version = "5.14.2";
+  version = "5.17.9";
 
-  desktopItem = makeDesktopItem {
-    name = "rift";
-    exec = "rift";
-    comment = "EVE Online Intel Fusion Tool";
-    desktopName = "RIFT Intel Tool";
-    categories = [
-      "Game"
-      "Utility"
-    ];
-    icon = "rift"; # We'll copy an icon below if available
-    startupNotify = true;
-  };
-
-  # List of libraries needed by the bundled JRE's AWT/Swing
-  x11Libs = [
+  # Libraries needed by the bundled JRE's AWT/Swing
+  runtimeLibs = [
     pkgs.libx11
     pkgs.libxext
     pkgs.libxi
@@ -34,21 +21,31 @@ let
     pkgs.libxrandr
     pkgs.fontconfig
     pkgs.freetype
+    pkgs.zlib
+    pkgs.alsa-lib
+    pkgs.libGL
+    pkgs.gtk3
+    pkgs.glib
+    pkgs.gdk-pixbuf
   ];
 
 in
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "rift-intel-tool";
   inherit version;
 
   src = fetchurl {
     url = "https://riftforeve.online/download/rift-${version}-linux-amd64.tar.gz";
-    sha256 = "sha256-WnsulQ3Drl6tYvOK8MkPDgM4aEIctWyEe1xQ3CfGL0g=";
+    sha256 = "sha256-zYYCfkaUe7DcdHjY/vOlKhsrlBwJYdVp+xU5l6OU124=";
   };
 
-  nativeBuildInputs = [ makeWrapper ];
+  nativeBuildInputs = [ makeWrapper autoPatchelfHook ];
 
-  buildInputs = [ pkgs.wmctrl ] ++ x11Libs;
+  buildInputs = [
+    pkgs.wmctrl
+    pkgs.wayland
+    stdenv.cc.cc.lib
+  ] ++ runtimeLibs;
 
   unpackPhase = ''
     tar -xzf $src
@@ -58,20 +55,14 @@ stdenv.mkDerivation rec {
     runHook preInstall
 
     mkdir -p $out
-    cp -r rift-${version}/lib    $out/
-    cp -r rift-${version}/share  $out/
+    cp -r rift-${version}/{bin,lib,share} $out/
 
-    mkdir -p $out/bin
+    substituteInPlace $out/share/applications/*.desktop \
+      --replace-fail /usr/lib/nohus/rift/bin/rift $out/bin/rift
 
-    makeWrapper "$out/lib/rift-${version}/bin/rift" "$out/bin/rift" \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath x11Libs}
-
-    # Optional: if the app needs to find its own resources
-    # --chdir "$out/lib/rift-${version}" \
-    # --set-default RIFT_HOME "$out/lib/rift-${version}"
-
-    mkdir -p $out/share/applications
-    cp ${desktopItem}/share/applications/* $out/share/applications/
+    wrapProgram $out/bin/rift \
+      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibs} \
+      --prefix PATH : ${lib.makeBinPath [ pkgs.xwininfo pkgs.xprop pkgs.wmctrl ]}
 
     runHook postInstall
   '';
@@ -80,7 +71,8 @@ stdenv.mkDerivation rec {
     description = "RIFT Intel Fusion Tool – All your EVE Online intel in one place";
     homepage = "https://riftforeve.online/";
     license = licenses.unfree;
-    platforms = platforms.linux;
+    platforms = [ "x86_64-linux" ];
+    mainProgram = "rift";
     maintainers = [ ];
   };
 }

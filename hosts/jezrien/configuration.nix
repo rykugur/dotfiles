@@ -177,7 +177,6 @@
     dev.enable = true;
 
     gaming = {
-      eve-online.enable = true;
       jackify.enable = true;
       nexus-mods.enable = true;
     };

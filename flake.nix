@@ -89,8 +89,15 @@
       ];
 
       perSystem =
-        { inputs, pkgs, ... }:
+        { inputs, system, ... }:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
         {
+          packages = import ./pkgs { inherit pkgs; };
           devShells = import ./shells { inherit inputs pkgs; };
         };
 

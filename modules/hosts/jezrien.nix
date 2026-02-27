@@ -25,6 +25,7 @@ in
 
       self.modules.nixos.meta
 
+      self.modules.nixos.eve-online
       self.modules.nixos.starcitizen
 
       # Dendritic homeManager modules
