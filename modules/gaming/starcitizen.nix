@@ -28,13 +28,17 @@
 
         # Additional commands before the game starts
         preCommands = ''
-          # export MESA_VK_WSI_PRESENT_MODE=mailbox
+          export MESA_VK_WSI_PRESENT_MODE=mailbox
           export DXVK_HUD=compiler
           export MANGO_HUD=1
           export MANGOHUD=1
+          export WINE_HIDE_NVIDIA_GPU=1
+          export PROTON_ENABLE_WAYLAND=1
+          export WINEDLLOVERRIDES="winewayland.drv=n,b"
         '';
 
         patchXwayland = true;
+        enforceWaylandDrv = true;
         # umu.enable = true;
       };
 
