@@ -1,3 +1,4 @@
+$env.GITS_DIR = $"($env.HOME)/gits"
 $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
 $env.NIXPKGS_ALLOW_UNFREE = 1
 $env.EDITOR = "hx"

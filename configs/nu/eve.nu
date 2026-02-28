@@ -14,7 +14,7 @@ let piTemplatesDir = (
     $"($env.HOME)/Documents/EVE/PlanetaryInteractionTemplates"
   }
 )
-let gitSettingsDir = $"($env.HOME)/gits/eve-settings"
+let gitSettingsDir = $"($env.HOME)/gits/games/eve/eve-settings"
 
 def --env "eve pfx" [] {
   use std/log
