@@ -1,7 +1,8 @@
 # dotfiles / nixOS config
 
 > [!WARNING]
-> THIS IS A(LWAYS A) WORK IN PROGRESS
+> THIS IS A(LWAYS A) WORK IN PROGRESS EXTRA WARNING: currently (slowly)
+> refactoring to Dendritic flakes pattern.
 
 My personal nixOS config + dotfiles.
 
