@@ -21,3 +21,7 @@ def "pz copy mod config" [host: string = "jezrien"] {
 
   log info "Done"
 }
+
+def --env "pz mods" [] {
+  cd ~/.local/share/Steam/steamapps/workshop/content/108600/3171167894/mods/
+}
