@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.ryk.ghostty;
   font = "CaskaydiaCove NFM";
@@ -8,13 +13,12 @@ let
   #   rev = "10b3c5f56f2aa519b0e12255346a97d71a8bfeaf";
   #   sha256 = "sha256-4seUhPr6nv0ld9XMrQS4Ko9QnC1ZOEiRjENSfgHIvR0=";
   # };
-in {
+in
+{
   options.ryk.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty home-manager module.";
-    hideWindowDecoration =
-      lib.mkEnableOption "Whether to hide window-decoration or not.";
-    usePredefinedSize =
-      lib.mkEnableOption "Whether to set a default term size.";
+    hideWindowDecoration = lib.mkEnableOption "Whether to hide window-decoration or not.";
+    usePredefinedSize = lib.mkEnableOption "Whether to set a default term size.";
   };
 
   config = lib.mkIf cfg.enable {
@@ -36,8 +40,7 @@ in {
 
         working-directory = "home";
 
-        window-decoration =
-          "${if cfg.hideWindowDecoration then "none" else "auto"}";
+        window-decoration = "${if cfg.hideWindowDecoration then "none" else "auto"}";
         window-height = lib.mkIf cfg.usePredefinedSize 50;
         window-width = lib.mkIf cfg.usePredefinedSize 125;
 
@@ -46,10 +49,8 @@ in {
         command = "${pkgs.nushell}/bin/nu --login";
 
         keybind = [
-          "alt+h=goto_split:left"
-          "alt+j=goto_split:down"
-          "alt+k=goto_split:up"
-          "alt+l=goto_split:right"
+          "alt+h=previous_tab"
+          "alt+l=next_tab"
         ];
       };
     };
