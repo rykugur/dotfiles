@@ -55,6 +55,11 @@ stdenv.mkDerivation {
   env.NIX_CFLAGS_COMPILE = "-Wall -Wextra -Wpedantic -ffast-math -O3";
   dontWrapQtApps = true;
 
+  postPatch = ''
+    substituteInPlace compat/process-list.hpp \
+      --replace-fail 'PIDS_VAL(rel_cmdline, strv,  stack, info)' 'PIDS_VAL(rel_cmdline, strv,  stack)'
+  '';
+
   cmakeFlags = [
     "-DSDK_WINE=ON -DSDK_VALVE_STEAMVR=${sdkSteamVr} -DONNXRuntime_DIR=${onnxRuntime}"
   ];
