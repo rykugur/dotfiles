@@ -30,10 +30,16 @@ in
       programs.dank-material-shell = {
         enable = true;
 
-        # this can be removed after niri-flake is updated to support the includes directive
         niri = {
+          enableKeybinds = false;
+          enableSpawn = false;
+
+          # shit breaks with this enabled.
+          # more info here: https://danklinux.com/docs/dankmaterialshell/nixos-flake#config-includes
           includes.enable = false;
         };
+
+        systemd.enable = false;
 
         enableAudioWavelength = true;
         enableCalendarEvents = false;

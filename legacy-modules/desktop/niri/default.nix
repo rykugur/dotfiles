@@ -1,4 +1,4 @@
-{ config, inputs, lib, username, ... }:
+{ config, inputs, lib, pkgs, username, ... }:
 let
   cfg = config.ryk.niri;
   shared = import ../shared.nix;
@@ -62,6 +62,7 @@ in {
   config = let isBarEnabled = bar: cfg.bar == bar;
   in lib.mkIf cfg.enable {
     programs.niri.enable = true;
+    programs.niri.package = pkgs.niri;
 
     # ryk.caelestia.enable = (isBarEnabled "caelestia");
     ryk.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
