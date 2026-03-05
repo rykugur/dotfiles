@@ -17,8 +17,6 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
-
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -38,8 +36,10 @@
       inputs.hyprland.follows = "hyprland";
     };
     hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
-    mangowc.url = "github:DreamMaoMao/mango";
-    niri.url = "github:sodiboo/niri-flake";
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # bars/shells
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
@@ -54,7 +54,10 @@
       inputs.quickshell.follows = "quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -62,13 +65,24 @@
     nix-citizen.url = "github:LovingMelody/nix-citizen";
 
     ### helix
-    helix.url = "github:helix-editor/helix";
+    helix = {
+      url = "github:helix-editor/helix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ### random stuff
-    ryze312-stackpkgs.url = "github:ryze312/stackpkgs"; # for audiorelay
-    luarocks-nix.url = "github:nix-community/luarocks-nix";
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    zjstatus.url = "github:dj95/zjstatus";
+    ryze312-stackpkgs = {
+      url = "github:ryze312/stackpkgs"; # for audiorelay
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zjstatus = {
+      url = "github:dj95/zjstatus";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     import-tree.url = "github:vic/import-tree";
   };

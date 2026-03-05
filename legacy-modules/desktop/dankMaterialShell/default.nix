@@ -1,11 +1,16 @@
-{ config, lib, username, ... }:
+{
+  config,
+  lib,
+  username,
+  ...
+}:
 let
   cfg = config.ryk.dankMaterialShell;
   screenshotBackends = (import ../shared.nix).screenshotBackends;
-in {
+in
+{
   options.ryk.dankMaterialShell = {
-    enable =
-      lib.mkEnableOption "Enable dankMaterialShell custom quickshell module.";
+    enable = lib.mkEnableOption "Enable dankMaterialShell custom quickshell module.";
 
     screenshotBackend = lib.mkOption {
       type = lib.types.enum screenshotBackends;
@@ -14,6 +19,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    services.fprintd = {
+      enable = true;
+    };
+
     home-manager.users.${username}.imports = [ ./home.nix ];
   };
 }
