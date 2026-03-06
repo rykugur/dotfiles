@@ -40,7 +40,7 @@
 
   security = {
     pam = {
-      services.${username}.enableGnomeKeyring = true;
+      # services.${username}.enableGnomeKeyring = true;
       u2f = {
         enable = true;
         settings = {
@@ -58,7 +58,6 @@
   environment = {
     systemPackages = with pkgs; [
       nfs-utils
-      polkit_gnome
       via
       vial
       vulkan-tools

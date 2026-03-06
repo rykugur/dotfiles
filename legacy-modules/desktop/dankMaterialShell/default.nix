@@ -19,9 +19,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.fprintd = {
-      enable = true;
-    };
+    systemd.user.services.niri-flake-polkit.enable = false;
 
     home-manager.users.${username}.imports = [ ./home.nix ];
   };

@@ -24,7 +24,6 @@ in
 
         xdg-desktop-portal-gnome
         xdg-desktop-portal-gtk
-        gnome-keyring
 
         xwayland-satellite
       ]

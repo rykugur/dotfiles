@@ -1,12 +1,23 @@
-{ config, lib, pkgs, username, ... }:
-let cfg = config.ryk._1password;
-in {
-  options.ryk._1password.enable =
-    lib.mkEnableOption "Enable 1password nixOS module";
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
+let
+  cfg = config.ryk._1password;
+in
+{
+  options.ryk._1password.enable = lib.mkEnableOption "Enable 1password nixOS module";
 
   config = lib.mkIf cfg.enable {
     environment = {
-      systemPackages = with pkgs; [ gnome-keyring libsecret ];
+      systemPackages = with pkgs; [
+        libsecret
+      ];
+
+      # TODO: these should be moved into their respecive modules
       etc = {
         "1password/custom_allowed_browsers" = {
           text = ''
@@ -30,24 +41,8 @@ in {
       polkitPolicyOwners = [ "${username}" ];
     };
 
-    # can we find a better solution?
+    # required when 1Password -> Settings -> Security ->
+    # "Unlock using system authentication service" is checked.
     services.gnome.gnome-keyring.enable = true;
-    systemd = {
-      user.services.polkit-gnome-authentication-agent-1 = {
-        description = "polkit-gnome-authentication-agent-1";
-        wantedBy = [ "graphical-session.target" ];
-        wants = [ "graphical-session.target" ];
-        after = [ "graphical-session.target" ];
-        serviceConfig = {
-          Type = "simple";
-          ExecStart =
-            "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-          Restart = "on-failure";
-          RestartSec = 1;
-          TimeoutStopSec = 10;
-        };
-      };
-    };
-
   };
 }
