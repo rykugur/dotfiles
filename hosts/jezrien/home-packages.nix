@@ -21,6 +21,7 @@
     catppuccin-cursors
     catppuccin-papirus-folders
 
+    affine
     baobab
     bottom
     claude-code
@@ -46,6 +47,9 @@
     vlc
     xdg-utils
     zenity
+
+    yt-dlg
+    yt-dlp
 
     amdgpu_top
     radeontop
