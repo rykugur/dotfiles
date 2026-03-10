@@ -71,6 +71,10 @@ def mkflake [] {
   cp $"($env.DOTFILES_DIR)/configs/nu/flake-template.nix" ./flake.nix
 }
 
+def "mkflake electrobun" [] {
+  cp $"($env.DOTFILES_DIR)/configs/nu/flake-template-electrobun.nix" ./flake.nix
+}
+
 $env.abbreviations = $env.abbreviations | merge {
   nb: "nix build"
   ndb: "nix-build"
