@@ -47,6 +47,7 @@
           cue = true;
         };
       };
+      services.polkit-1.u2fAuth = true;
     };
     polkit.enable = true;
   };

@@ -20,7 +20,6 @@ in
     programs.zen-browser = {
       enable = true;
       package = zenPkg;
-      suppressXdgMigrationWarning = true;
     };
 
     stylix.targets.zen-browser.enable = false; # this is borked, just manual for now

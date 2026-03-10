@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   username,
   ...
 }:
@@ -13,10 +12,6 @@ in
 
   config = lib.mkIf cfg.enable {
     environment = {
-      systemPackages = with pkgs; [
-        libsecret
-      ];
-
       # TODO: these should be moved into their respecive modules
       etc = {
         "1password/custom_allowed_browsers" = {
@@ -41,8 +36,5 @@ in
       polkitPolicyOwners = [ "${username}" ];
     };
 
-    # required when 1Password -> Settings -> Security ->
-    # "Unlock using system authentication service" is checked.
-    services.gnome.gnome-keyring.enable = true;
   };
 }
