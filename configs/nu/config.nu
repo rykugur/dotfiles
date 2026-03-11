@@ -31,4 +31,9 @@ $env.config.keybindings ++= [
   }
 ]
 
-$env.config.history.sync_on_enter = false
+$env.config.history = {
+  file_format: "sqlite",
+  sync_on_enter: true,
+  isolation: true,
+  max_size: 100000
+}
