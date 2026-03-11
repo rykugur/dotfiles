@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "jcodemunch": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["jcodemunch-mcp"],
+      "env": {}
+    }
+  }
+}
