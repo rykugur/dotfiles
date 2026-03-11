@@ -30,3 +30,5 @@ $env.config.keybindings ++= [
     event: {send: HistoryHintComplete}
   }
 ]
+
+$env.config.history.sync_on_enter = false
