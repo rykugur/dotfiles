@@ -72,6 +72,21 @@ def paste-multiline-nu [] {
   nu -c $cmd
 }
 
+def "curl multiline" [] {
+  use std/log
+
+  let content = (edit-multiline)
+  if ($content | is-empty) {
+    log error "No content passed in nor in clipboard, returning."
+    return
+  }
+
+  let finalContent = $content | replace-multiline | str replace --regex "curl\\s" ""
+  let cmd = $"curl ($finalContent)"
+
+  nu -c $cmd
+}
+
 def "edit-multiline" [] {
   use std/log
 
