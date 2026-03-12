@@ -126,6 +126,13 @@ def "1password get-ssh-pub-key" [] {
   $key
 }
 
+def "1password get-age-key" [] {
+  use 1password
+  let privateKey = 1password get-private-key
+
+  $privateKey | nix run nixpkgs#ssh-to-age -- -private-key
+}
+
 def "proxmox install helix" [host: string] {
   ssh $host $"curl -L https://shlink.ryk.sh/helix-deb | sh"
 }
