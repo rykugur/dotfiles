@@ -126,11 +126,18 @@ def "1password get-ssh-pub-key" [] {
   $key
 }
 
-def "1password get-age-key" [] {
+def "1password get-private-age-key" [] {
   use 1password
   let privateKey = 1password get-private-key
 
   $privateKey | nix run nixpkgs#ssh-to-age -- -private-key
+}
+
+def "1password get-public-age-key" [] {
+  use 1password
+  let publicKey = 1password get-public-key
+
+  $publicKey | nix run nixpkgs#ssh-to-age
 }
 
 def "proxmox install helix" [host: string] {
