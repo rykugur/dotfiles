@@ -72,6 +72,21 @@ def paste-multiline-nu [] {
   nu -c $cmd
 }
 
+def "curl multiline" [] {
+  use std/log
+
+  let content = (edit-multiline)
+  if ($content | is-empty) {
+    log error "No content passed in nor in clipboard, returning."
+    return
+  }
+
+  let finalContent = $content | replace-multiline | str replace --regex "curl\\s" ""
+  let cmd = $"curl ($finalContent)"
+
+  nu -c $cmd
+}
+
 def "edit-multiline" [] {
   use std/log
 
@@ -109,6 +124,20 @@ def "1password get-ssh-pub-key" [] {
   let key = 1password get-public-key
 
   $key
+}
+
+def "1password get-private-age-key" [] {
+  use 1password
+  let privateKey = 1password get-private-key
+
+  $privateKey | nix run nixpkgs#ssh-to-age -- -private-key
+}
+
+def "1password get-public-age-key" [] {
+  use 1password
+  let publicKey = 1password get-public-key
+
+  $publicKey | nix run nixpkgs#ssh-to-age
 }
 
 def "proxmox install helix" [host: string] {
