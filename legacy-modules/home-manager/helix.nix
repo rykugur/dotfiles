@@ -123,6 +123,14 @@ in
           omnisharp = {
             command = lib.getExe pkgs.omnisharp-roslyn;
           };
+          basedpyright = {
+            command = "${pkgs.basedpyright}/bin/basedpyright-langserver";
+            args = [ "--stdio" ];
+          };
+          ruff = {
+            command = lib.getExe pkgs.ruff;
+            args = [ "server" ];
+          };
           ## rust
           rust-analyzer = {
             command = lib.getExe pkgs.rust-analyzer;
@@ -337,6 +345,15 @@ in
                 "--ext"
                 "md"
               ];
+            };
+          }
+          {
+            name = "python";
+            auto-format = true;
+            language-servers = [ "basedpyright" "ruff" ];
+            formatter = {
+              command = lib.getExe pkgs.ruff;
+              args = [ "format" "--quiet" "-" ];
             };
           }
           {
