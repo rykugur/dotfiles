@@ -13,7 +13,6 @@
   jackify = pkgs.callPackage ./jackify.nix { };
   eve-wrench = pkgs.callPackage ./eve-wrench.nix { };
   rift-intel-tool = pkgs.callPackage ./rift-intel-tool.nix { };
-  starsectorMods = pkgs.callPackage ./starsector { };
 
   ### misc
   rackpeek = pkgs.callPackage ./rackpeek.nix { };

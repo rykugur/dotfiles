@@ -33,6 +33,7 @@
       mods.enable = true;
     };
     swappy.enable = true;
+    wezterm.enable = true;
   };
 
   ################## other stuff you shouldn't need to touch

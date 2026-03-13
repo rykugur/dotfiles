@@ -66,12 +66,6 @@
     };
   };
 
-  ryk = {
-    # aerospace.enable = true;
-    # fonts.enable = true;
-    stylix.enable = true;
-  };
-
   ### home-manager config
 
   home-manager = {

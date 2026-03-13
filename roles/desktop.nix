@@ -14,7 +14,6 @@ in {
       };
 
       _1password.enable = true;
-      fonts.enable = true;
       ssh.enable = true;
     };
 

@@ -137,27 +137,6 @@
           };
         };
 
-        darwinConfigurations = {
-          # 14" macbook pro
-          "taln" = inputs.nix-darwin.lib.darwinSystem {
-            modules = [
-              ./legacy-modules/darwin
-
-              ./legacy-modules/base
-
-              ./hosts/taln/configuration.nix
-
-              inputs.stylix.darwinModules.stylix
-            ];
-            specialArgs = {
-              inherit inputs;
-              outputs = self;
-              hostname = "taln";
-              username = "dusty";
-              # pkgs = pkgsFor.aarch64-darwin;
-            };
-          };
-        };
       };
     };
 

@@ -171,8 +171,6 @@
       quantum = 256;
     };
     razer.enable = true;
-    stylix.enable = true;
-
     dev.enable = true;
 
     gaming = {

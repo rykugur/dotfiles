@@ -13,7 +13,6 @@ in
 {
   flake.nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
     modules = [
-      ../../legacy-modules/base
       ../../legacy-modules/nixos
       ../../legacy-modules
 
@@ -24,6 +23,8 @@ in
       inputs.stylix.nixosModules.stylix
 
       self.modules.nixos.meta
+      self.modules.nixos.fonts
+      self.modules.nixos.stylix
 
       self.modules.nixos.eve-online
       self.modules.nixos.starcitizen
