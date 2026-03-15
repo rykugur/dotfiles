@@ -50,6 +50,7 @@ $env.abbreviations = $env.abbreviations | merge {
   gcy: "git commit -m (curl -s https://whatthecommit.com/index.txt)"
   gd: "git diff"
   gds: "git diff --staged"
+  gdstat: "git diff --stat"
   gf: "git fetch"
   gfp: "git fetch -p"
   gg: "git grep --color auto -n"
