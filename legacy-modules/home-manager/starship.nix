@@ -21,7 +21,6 @@ in {
         };
         kubernetes = {
           disabled = false;
-          detect_env_vars = [ "K8S" "HOMELAB" ];
         };
       };
     };
