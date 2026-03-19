@@ -1,4 +1,6 @@
 
+alias kubectl = kubecolor
+
 $env.abbreviations = $env.abbreviations | merge {
   k: "kubectl"
   ka : "kubectl apply"
