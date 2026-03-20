@@ -26,6 +26,7 @@ in
       self.modules.nixos.fonts
       self.modules.nixos.stylix
 
+      self.modules.nixos.pipewire
       self.modules.nixos.eve-online
       self.modules.nixos.starcitizen
 

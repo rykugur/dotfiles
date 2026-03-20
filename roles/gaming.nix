@@ -29,6 +29,7 @@ in
       home.packages = with pkgs; [
         steamcmd
 
+        protonplus
         protonup-ng
         protonup-qt
         winetricks

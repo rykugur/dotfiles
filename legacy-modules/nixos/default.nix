@@ -10,7 +10,6 @@ in
     ./gnome.nix
     ./kde.nix
     ./obs-studio.nix
-    ./pipewire.nix
     ./razer.nix
     ./ssh.nix
     ./steam.nix

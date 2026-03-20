@@ -167,8 +167,8 @@
     dankMaterialShell.screenshotBackend = "swappy";
 
     pipewire = {
-      enable = true;
       quantum = 256;
+      # noiseSuppression.enable = true;
     };
     razer.enable = true;
     dev.enable = true;
