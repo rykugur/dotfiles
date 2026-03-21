@@ -1,7 +1,8 @@
 $env.GITS_DIR = $"($env.HOME)/gits"
 $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
-$env.NIXPKGS_ALLOW_UNFREE = 1
+
 $env.EDITOR = "hx"
+$env.NIXPKGS_ALLOW_UNFREE = 1
 $env.STEAM_LIBRARY_DIR = "~/.local/share/steam"
 
 $env.NH_FLAKE = $env.DOTFILES_DIR
