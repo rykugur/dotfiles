@@ -33,6 +33,7 @@ in
       # Dendritic homeManager modules
       {
         home-manager.users.${username}.imports = with hmModules; [
+          ccstatusline
           nushell
         ];
       }

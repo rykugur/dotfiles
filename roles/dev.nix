@@ -1,6 +1,14 @@
-{ config, lib, pkgs, username, ... }:
-let cfg = config.ryk.roles.dev;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
+let
+  cfg = config.ryk.roles.dev;
+in
+{
   options.ryk.roles.dev.enable = lib.mkEnableOption "Enable dev role";
 
   config = lib.mkIf cfg.enable {
@@ -20,6 +28,7 @@ in {
       };
 
       home.packages = with pkgs; [
+        bun
         just
         prettierd
         stylua
