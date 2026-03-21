@@ -38,6 +38,7 @@ in
         tree
         unzip
         usbutils
+        warp-terminal
         wget
         xz
         zip

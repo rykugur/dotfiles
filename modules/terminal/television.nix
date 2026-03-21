@@ -1,0 +1,22 @@
+{ ... }:
+{
+  flake.modules.homeManager.television =
+    { config, lib, ... }:
+    {
+      programs.television = {
+        enable = true;
+
+        enableBashIntegration = config.programs.bash.enable;
+        enableFishIntegration = config.programs.fish.enable;
+        enableZshIntegration = config.programs.zsh.enable;
+      };
+
+      # no programs.television.enableNushellIntegration option :(
+      programs.nushell = lib.mkIf (config.programs.nushell.enable) {
+        extraConfig = ''
+          mkdir ($nu.data-dir | path join "vendor/autoload")
+          tv init nu | save -f ($nu.data-dir | path join "vendor/autoload/tv.nu")
+        '';
+      };
+    };
+}
