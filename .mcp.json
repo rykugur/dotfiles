@@ -3,7 +3,19 @@
     "jcodemunch": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["jcodemunch-mcp"],
+      "args": ["--python", "3.13", "jcodemunch-mcp"],
+      "env": {}
+    },
+    "context-mode": {
+      "type": "stdio",
+      "command": "bunx",
+      "args": ["context-mode"],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "bunx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking"],
       "env": {}
     }
   }
