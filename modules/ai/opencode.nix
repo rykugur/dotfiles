@@ -49,6 +49,7 @@
               ];
             };
           };
+          # TODO: this doesn't work, need to fix
           plugin = [
             "opencode-superpowers"
             "opencode-code-simplifier"
