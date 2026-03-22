@@ -35,6 +35,7 @@ in
         home-manager.users.${username}.imports = with hmModules; [
           ccstatusline
           nushell
+          opencode
           television
         ];
       }
