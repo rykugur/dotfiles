@@ -14,6 +14,7 @@ in {
       enableZshIntegration = config.programs.zsh.enable;
 
       settings = {
+        format = "$all$line_break$kubernetes$line_break$character";
         hostname = { ssh_symbol = ""; };
         nix_shell = {
           format = "[$name]($style)";
@@ -21,6 +22,7 @@ in {
         };
         kubernetes = {
           disabled = false;
+          format = "[$symbol$context( \\($namespace\\))]($style)";
         };
       };
     };

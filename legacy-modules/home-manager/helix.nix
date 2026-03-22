@@ -55,6 +55,13 @@ in
               Q = ":quit-all!";
             };
             space = {
+              f = [
+                ":sh rm -f /tmp/tv-file"
+                '':insert-output bash -c 'saved=$(stty -g </dev/tty); tv </dev/tty 2>/dev/tty >/tmp/tv-file; stty "$saved" </dev/tty' ''
+                "undo"
+                ":open %sh{cat /tmp/tv-file}"
+                ":redraw"
+              ];
               t = {
                 h = ":toggle cursorline";
                 i = ":toggle lsp.display-inlay-hints";
@@ -64,6 +71,14 @@ in
             "K" = "hover";
             "S-h" = "goto_previous_buffer";
             "S-l" = "goto_next_buffer";
+            "S-y" = ":echo test";
+            # "S-y" = [
+            #   ":sh rm -f /tmp/unique-file"
+            #   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file"
+            #   '':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty''
+            #   ":open %sh{cat /tmp/unique-file}"
+            #   ":redraw"
+            # ];
             "S-z" = [
               ":sh rm -f /tmp/unique-file"
               ":insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file"
@@ -350,10 +365,17 @@ in
           {
             name = "python";
             auto-format = true;
-            language-servers = [ "basedpyright" "ruff" ];
+            language-servers = [
+              "basedpyright"
+              "ruff"
+            ];
             formatter = {
               command = lib.getExe pkgs.ruff;
-              args = [ "format" "--quiet" "-" ];
+              args = [
+                "format"
+                "--quiet"
+                "-"
+              ];
             };
           }
           {
