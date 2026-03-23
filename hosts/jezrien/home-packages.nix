@@ -60,5 +60,7 @@
     libtool
 
     telegram-desktop
+
+    google-chrome
   ];
 }
