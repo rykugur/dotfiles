@@ -3,6 +3,7 @@
   lib,
   pkgs,
   username,
+  outputs,
   ...
 }:
 let
@@ -17,15 +18,12 @@ in
 
     # home-manager config
     home-manager.users.${username} = {
-      ryk = {
-        atuin.enable = true;
-        git = {
-          enable = true;
-          gitconfig.enable = true;
-        };
-        jujutsu.enable = true;
-        zed-editor.enable = true;
-      };
+      imports = with outputs.modules.homeManager; [
+        atuin
+        git
+        jujutsu
+        zed-editor
+      ];
 
       home.packages = with pkgs; [
         bun

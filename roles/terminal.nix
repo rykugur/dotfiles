@@ -3,6 +3,7 @@
   lib,
   pkgs,
   username,
+  outputs,
   ...
 }:
 let
@@ -48,20 +49,18 @@ in
         gdu
       ];
 
-      ryk = {
-        ghostty.enable = true;
-        kitty.enable = true;
-
-        bat.enable = true;
-        carapace.enable = true;
-        direnv.enable = true;
-        starship.enable = true;
-        yazi.enable = true;
-        zellij.enable = true;
-        zoxide.enable = true;
-
-        helix.enable = true;
-      };
+      imports = with outputs.modules.homeManager; [
+        ghostty
+        kitty
+        bat
+        carapace
+        direnv
+        starship
+        yazi
+        zellij
+        zoxide
+        helix
+      ];
     };
   };
 }

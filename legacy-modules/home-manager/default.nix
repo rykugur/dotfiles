@@ -4,7 +4,7 @@
     ./albert.nix
     ./atuin.nix
     ./bat.nix
-    ./browser.nix
+    # ./browser.nix # removed — now handled by dendritic zen-browser module
     ./btop.nix
     ./carapace.nix
     ./direnv.nix
