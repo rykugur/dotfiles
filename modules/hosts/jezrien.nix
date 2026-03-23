@@ -36,6 +36,7 @@ in
         home-manager.users.${username}.imports = with hmModules; [
           btop
           ccstatusline
+          claude-code
           keebs
           nushell
           opencode

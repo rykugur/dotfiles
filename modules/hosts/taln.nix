@@ -26,6 +26,7 @@ in
         home-manager.users.${username}.imports = with hmModules; [
           carapace
           ccstatusline
+          claude-code
           direnv
           ghostty
           git

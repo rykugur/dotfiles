@@ -24,7 +24,6 @@
     affine
     baobab
     bottom
-    claude-code
     fastfetch
     fd
     file
