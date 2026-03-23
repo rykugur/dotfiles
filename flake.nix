@@ -85,6 +85,7 @@
     };
 
     import-tree.url = "github:vic/import-tree";
+    nix-wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
   };
 
   outputs =
