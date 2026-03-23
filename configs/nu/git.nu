@@ -19,6 +19,23 @@ alias gits = cd $"($env.HOME)/gits"
 
 alias gll = git log --pretty=format:'%Cgreen[%H]%Creset %C(white)%d%Creset %Cblue%ad by %an%Creset: %s' --date=relative
 alias gbn = git branch | cut -d' ' -f2
+def gbz [pattern?: string] {
+  mut branches = git branch
+  if ($pattern | is-not-empty) {
+    $branches = ($branches | grep -i $pattern)
+  }
+  let chosenBranch = $branches | fzf
+  if ($chosenBranch | is-not-empty) {
+    $chosenBranch | str replace "*" "" | str trim
+  }
+}
+
+def gcoz [pattern?: string] {
+  let chosenBranch = gbz
+  if ($chosenBranch | is-not-empty ) {
+    git checkout $chosenBranch
+  }
+}
 
 alias "git head" = gll --oneline -1
 
