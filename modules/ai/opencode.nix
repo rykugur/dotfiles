@@ -42,13 +42,14 @@ let
           "@modelcontextprotocol/server-sequential-thinking"
         ];
       };
+      context7 = {
+        type = "local";
+        command = [
+          "${pkgs.bun}/bin/bunx"
+          "@upstash/context7-mcp"
+        ];
+      };
     };
-    # TODO: this doesn't work, need to fix
-    plugin = [
-      "opencode-superpowers"
-      "opencode-code-simplifier"
-      "opencode-context7"
-    ];
   };
 in
 {
@@ -59,6 +60,9 @@ in
         enable = true;
         settings = mkOpencodeSettings pkgs;
       };
+
+      # superpowers local plugin
+      home.file.".config/opencode/plugins/superpowers".source = "${inputs.superpowers}/.opencode/plugins";
     };
 
   perSystem =

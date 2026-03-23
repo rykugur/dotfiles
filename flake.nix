@@ -86,6 +86,20 @@
 
     import-tree.url = "github:vic/import-tree";
     nix-wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
+
+    ### plugins
+    superpowers = {
+      url = "github:obra/superpowers";
+      flake = false;
+    };
+    claude-plugins-official = {
+      url = "github:anthropics/claude-plugins-official";
+      flake = false;
+    };
+    context7 = {
+      url = "github:upstash/context7";
+      flake = false;
+    };
   };
 
   outputs =

@@ -147,6 +147,38 @@
         "type": "github"
       }
     },
+    "claude-plugins-official": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774053659,
+        "narHash": "sha256-tQ/+NwWtMjlIBAbq8lat8gCQayxf5J1qCjB9yoxfCIU=",
+        "owner": "anthropics",
+        "repo": "claude-plugins-official",
+        "rev": "61c0597779bd2d670dcd4fbbf37c66aa19eb2ce6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anthropics",
+        "repo": "claude-plugins-official",
+        "type": "github"
+      }
+    },
+    "context7": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774252831,
+        "narHash": "sha256-4ADO7EwCwHxGyL/rkpmO7d6PHMi3IGykbuQfGVn5dV4=",
+        "owner": "upstash",
+        "repo": "context7",
+        "rev": "5d7e893a5adf30f91183763ae8e65e9eaf8dd17e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "upstash",
+        "repo": "context7",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1765739568,
@@ -1594,6 +1626,8 @@
     "root": {
       "inputs": {
         "caelestia-shell": "caelestia-shell",
+        "claude-plugins-official": "claude-plugins-official",
+        "context7": "context7",
         "dankMaterialShell": "dankMaterialShell",
         "disko": "disko",
         "flake-parts": "flake-parts",
@@ -1616,6 +1650,7 @@
         "ryze312-stackpkgs": "ryze312-stackpkgs",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "superpowers": "superpowers",
         "zen-browser": "zen-browser",
         "zjstatus": "zjstatus"
       }
@@ -1733,6 +1768,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "stylix",
+        "type": "github"
+      }
+    },
+    "superpowers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773951977,
+        "narHash": "sha256-wmOArGgOahJK/mqzYJZW6qcUNaOB6yL57RQMe56S1uw=",
+        "owner": "obra",
+        "repo": "superpowers",
+        "rev": "8ea39819eed74fe2a0338e71789f06b30e953041",
+        "type": "github"
+      },
+      "original": {
+        "owner": "obra",
+        "repo": "superpowers",
         "type": "github"
       }
     },
