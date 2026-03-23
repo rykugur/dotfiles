@@ -40,9 +40,10 @@ def "nr." [] {
   nix repl --expr $"builtins.getFlake \"(pwd)\""
 }
 
-def "nrd" [] {
-  cd $env.DOTFILES_DIR
-  nr.
+def --env "nrd" [] {
+  let realDotsDir = ($env.DOTFILES_DIR | path expand)
+  print $"realDotsDir=($realDotsDir)"
+  nix repl --expr $"builtins.getFlake \"($realDotsDir)\""
 }
 
 def "nrn" [] {
