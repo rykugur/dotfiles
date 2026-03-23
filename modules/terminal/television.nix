@@ -1,7 +1,7 @@
 { ... }:
 {
   flake.modules.homeManager.television =
-    { config, lib, ... }:
+    { config, lib, pkgs, ... }:
     {
       programs.television = {
         enable = true;
@@ -21,7 +21,7 @@
       programs.nushell = lib.mkIf (config.programs.nushell.enable) {
         extraConfig = ''
           mkdir ($nu.data-dir | path join "vendor/autoload")
-          tv init nu | save -f ($nu.data-dir | path join "vendor/autoload/tv.nu")
+          ${lib.getExe pkgs.television} init nu | save -f ($nu.data-dir | path join "vendor/autoload/tv.nu")
         '';
       };
     };

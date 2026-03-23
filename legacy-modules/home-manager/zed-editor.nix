@@ -1,6 +1,13 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.ryk.zed-editor;
-in {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.ryk.zed-editor;
+in
+{
   options.ryk.zed-editor = {
     enable = lib.mkEnableOption "Enable zed-editor home-manager module.";
   };
@@ -11,13 +18,24 @@ in {
       enable = true;
       package = pkgs.zed-editor-fhs;
 
-      extraPackages = with pkgs; [ nil nixd ];
+      extraPackages = with pkgs; [
+        nil
+        nixd
+      ];
 
-      extensions = [ "nix" "catppuccin" "catppuccin-icons" "helm" ];
+      extensions = [
+        "nix"
+        "catppuccin"
+        "catppuccin-icons"
+        "helm"
+      ];
       userSettings = {
         helix_mode = true;
-        extraPackages =
-          [ pkgs.dotnet-sdk_8 pkgs.omnisharp-roslyn pkgs.icu pkgs.nixfmt ];
+        extraPackages = [
+          pkgs.dotnet-sdk_8
+          pkgs.icu
+          pkgs.nixfmt
+        ];
 
         # ui_font_size = lib.mkForce 12;
         # buffer_font_size = lib.mkForce 14;
@@ -45,19 +63,26 @@ in {
         auto_update = false;
 
         lsp = {
-          nix = { binary = { path_lookup = true; }; };
-          omnisharp = {
+          nix = {
             binary = {
-              path = lib.getExe pkgs.omnisharp-roslyn;
-              arguments = [ "-lsp" ];
+              path_lookup = true;
             };
           };
         };
         languages = {
-          CSharp = { formatter = "language_server"; };
+          CSharp = {
+            formatter = "language_server";
+          };
           Nix = {
-            formatter = { external = { command = "nixfmt"; }; };
-            language_servers = [ "nil" "!nixd" ];
+            formatter = {
+              external = {
+                command = "nixfmt";
+              };
+            };
+            language_servers = [
+              "nil"
+              "!nixd"
+            ];
           };
         };
       };

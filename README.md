@@ -23,5 +23,5 @@ Roles are abstractions around modules.
 
 ## TODO
 
-- [ ] Refactor to flake-parts?
 - [ ] Get rid of `roles`?
+- [ ] `claude` module mirroring what we did for `opencode`

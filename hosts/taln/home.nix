@@ -18,7 +18,10 @@
     ../../legacy-modules/home-manager/zoxide.nix
 
     # Dendritic modules
+    outputs.modules.homeManager.ccstatusline
     outputs.modules.homeManager.nushell
+    outputs.modules.homeManager.opencode
+    outputs.modules.homeManager.television
   ];
 
   # home = {

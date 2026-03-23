@@ -120,9 +120,6 @@ in
           just-lsp = {
             command = lib.getExe pkgs.just-lsp;
           };
-          marksman = with pkgs; {
-            command = "${marksman}/bin/marksman";
-          };
           markdown-oxide = with pkgs; {
             command = "${markdown-oxide}/bin/markdown-oxide";
           };
@@ -134,9 +131,6 @@ in
           };
           nu = {
             command = "${pkgs.nushell}/bin/nu";
-          };
-          omnisharp = {
-            command = lib.getExe pkgs.omnisharp-roslyn;
           };
           basedpyright = {
             command = "${pkgs.basedpyright}/bin/basedpyright-langserver";
