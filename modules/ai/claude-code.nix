@@ -46,8 +46,40 @@ let
       EOF
     ''}"
   ];
+
+  claudeCodeSettings = {
+    permissions = {
+      allow = [
+        "Bash(curl:*)"
+        "Bash(gh api:*)"
+        "Bash(helm template:*)"
+        "Bash(kubectl get:*)"
+        "Bash(kubectl logs:*)"
+        "Bash(nix search:*)"
+        "mcp__jcodemunch__index_repo"
+        "mcp__context-mode__ctx_fetch_and_index"
+        "mcp__context-mode__ctx_search"
+        "WebFetch(domain:github.com)"
+      ];
+    };
+  };
+
+  mkWrappedClaudeCode =
+    pkgs:
+    inputs.nix-wrapper-modules.wrappers.claude-code.wrap {
+      inherit pkgs;
+      pluginDirs = mkPluginDirs pkgs;
+      mcpConfig = mkClaudeCodeMcpConfig pkgs;
+      settings = claudeCodeSettings;
+    };
 in
 {
+  flake.modules.homeManager.claude-code =
+    { pkgs, ... }:
+    {
+      home.packages = [ (mkWrappedClaudeCode pkgs) ];
+    };
+
   perSystem =
     { system, ... }:
     let
@@ -57,26 +89,6 @@ in
       };
     in
     {
-      packages.claude-code = inputs.nix-wrapper-modules.wrappers.claude-code.wrap {
-        inherit pkgs;
-        pluginDirs = mkPluginDirs pkgs;
-        mcpConfig = mkClaudeCodeMcpConfig pkgs;
-        settings = {
-          permissions = {
-            allow = [
-              "Bash(helm template:*)"
-              "Bash(kubectl get:*)"
-              "Bash(curl:*)"
-              "Bash(kubectl logs:*)"
-              "Bash(gh api:*)"
-              "Bash(nix search:*)"
-              "WebFetch(domain:github.com)"
-              "mcp__jcodemunch__index_repo"
-              "mcp__context-mode__ctx_fetch_and_index"
-              "mcp__context-mode__ctx_search"
-            ];
-          };
-        };
-      };
+      packages.claude-code = mkWrappedClaudeCode pkgs;
     };
 }

@@ -21,6 +21,7 @@
     outputs.modules.homeManager.ccstatusline
     outputs.modules.homeManager.nushell
     outputs.modules.homeManager.opencode
+    outputs.modules.homeManager.claude-code
     outputs.modules.homeManager.television
   ];
 
@@ -35,7 +36,6 @@
 
     _1password-cli
     bat
-    claude-code
     fd
     fzf
     just

@@ -1,6 +1,7 @@
 { inputs, ... }:
 let
   mkOpencodeSettings = pkgs: {
+    plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
     permission = {
       "*" = "ask";
       edit = "allow";
@@ -60,9 +61,6 @@ in
         enable = true;
         settings = mkOpencodeSettings pkgs;
       };
-
-      # superpowers local plugin
-      home.file.".config/opencode/plugins/superpowers".source = "${inputs.superpowers}/.opencode/plugins";
     };
 
   perSystem =
