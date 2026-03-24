@@ -3,6 +3,7 @@
   lib,
   pkgs,
   username,
+  outputs,
   ...
 }:
 let
@@ -21,10 +22,10 @@ in
 
     # home-manager config
     home-manager.users.${username} = {
-      ryk = {
-        discord.enable = true;
-        lutris.enable = true;
-      };
+      imports = with outputs.modules.homeManager; [
+        discord
+        lutris
+      ];
 
       home.packages = with pkgs; [
         steamcmd

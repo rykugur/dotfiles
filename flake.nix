@@ -139,18 +139,7 @@
 
         overlays = import ./overlays { inherit inputs; };
 
-        nixosConfigurations = {
-          # nix LXC for quick testing
-          nixy = nixpkgs.lib.nixosSystem {
-            modules = [ ./hosts/nixy/configuration.nix ];
-            specialArgs = {
-              inherit inputs;
-              outputs = self;
-              hostname = "nixy";
-              username = "dusty";
-            };
-          };
-        };
+        nixosConfigurations = { };
 
       };
     };

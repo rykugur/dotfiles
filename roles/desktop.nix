@@ -1,6 +1,8 @@
-{ config, lib, username, ... }:
+{ config, lib, username, outputs, ... }:
 let cfg = config.ryk.roles.desktop;
 in {
+  imports = [ outputs.modules.nixos.ssh ];
+
   options.ryk.roles.desktop.enable = lib.mkEnableOption "Enable desktop role";
 
   config = lib.mkIf cfg.enable {
@@ -14,16 +16,16 @@ in {
       };
 
       _1password.enable = true;
-      ssh.enable = true;
+      # ssh.enable removed — handled by nixos.ssh import above
     };
 
     # home-manager config
     home-manager.users.${username} = {
-      ryk = {
-        browser.enable = true;
-        homelab.enable = true;
-        ssh.enable = true;
-      };
+      imports = with outputs.modules.homeManager; [
+        zen-browser
+        homelab
+        # ssh imported transitively via nixos.ssh
+      ];
     };
   };
 }

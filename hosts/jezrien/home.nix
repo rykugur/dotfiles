@@ -2,7 +2,6 @@
 {
   imports = [
     ../../home
-    ../../legacy-modules/home-manager
     ./home-packages.nix
   ];
 
@@ -24,17 +23,7 @@
     pkgs.kalker
   ];
 
-  ryk = {
-    btop.enable = true;
-    keebs.enable = true;
-    ghostty.hideWindowDecoration = true;
-    starsector = {
-      enable = true;
-      mods.enable = true;
-    };
-    swappy.enable = true;
-    wezterm.enable = true;
-  };
+  programs.ghostty.settings.window-decoration = "none";
 
   ################## other stuff you shouldn't need to touch
   programs.home-manager.enable = true;

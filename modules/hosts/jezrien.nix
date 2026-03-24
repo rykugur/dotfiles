@@ -33,11 +33,16 @@ in
       # Dendritic homeManager modules
       {
         home-manager.users.${username}.imports = with hmModules; [
+          btop
           ccstatusline
           claude-code
+          keebs
           nushell
           opencode
+          starsector
+          swappy
           television
+          wezterm
         ];
       }
     ];
