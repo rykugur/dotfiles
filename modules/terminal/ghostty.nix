@@ -10,7 +10,7 @@ let
 in
 {
   flake.modules.homeManager.ghostty =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
       programs.ghostty = {
         enable = true;
@@ -31,6 +31,8 @@ in
           working-directory = "home";
 
           window-decoration = "auto";
+          window-height = lib.mkDefault 50;
+          window-width = lib.mkDefault 125;
 
           app-notifications = false;
 
