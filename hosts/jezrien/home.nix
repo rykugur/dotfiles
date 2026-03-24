@@ -2,7 +2,7 @@
 {
   imports = [
     ../../home
-    # TODO: still needed for ryk.* option definitions used by legacy desktop modules (niri, etc.)
+    # still needed: legacy desktop modules (niri, etc.) set ryk.* options defined here
     ../../legacy-modules/home-manager
     ./home-packages.nix
   ];
