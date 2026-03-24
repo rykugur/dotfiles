@@ -26,7 +26,7 @@
     };
 
   flake.modules.homeManager.gnome =
-    { ... }:
+    { lib, ... }:
     {
       xdg = {
         enable = true;
@@ -45,7 +45,7 @@
             check-alive-timeout = "30000";
             experimental-features = [ "scale-monitor-framebuffer" ];
           };
-          "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
+          "org/gnome/desktop/interface" = { color-scheme = lib.mkDefault "prefer-dark"; };
           "org/gnome/desktop/wm/preferences" = {
             audible-bell = false;
             visual-bell = false;

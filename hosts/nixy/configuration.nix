@@ -4,8 +4,12 @@
 
     inputs.home-manager.nixosModules.home-manager
 
+    # TODO: can't use outputs.modules.nixos.ssh yet because the dendritic ssh
+    # module bundles HM sops/ssh which requires secrets.yaml (nixy has none)
     ../../legacy-modules/nixos/ssh.nix
   ];
+
+  ryk.ssh.enable = true;
 
   nix.settings = { sandbox = false; };
 
@@ -26,8 +30,6 @@
       extraGroups = [ "wheel" ];
     };
   };
-
-  ryk.ssh.enable = true;
 
   home-manager = {
     extraSpecialArgs = { inherit inputs outputs hostname username; };
