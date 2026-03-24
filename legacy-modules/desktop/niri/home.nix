@@ -35,10 +35,6 @@ in
         (pkgs.writeScriptBin "eve-toggle.nu" (builtins.readFile ./scripts/toggle-eve.nu))
       ];
 
-    ryk = {
-      nautilus.enable = true;
-    };
-
     programs.niri = {
       package = pkgs.niri;
 

@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, username, ... }:
+{ config, inputs, lib, outputs, pkgs, username, ... }:
 let
   cfg = config.ryk.niri;
   shared = import ../shared.nix;
@@ -68,6 +68,9 @@ in {
     ryk.dankMaterialShell.enable = (isBarEnabled "dankMaterialShell");
     ryk.noctalia.enable = (isBarEnabled "noctalia");
 
-    home-manager.users.${username}.imports = [ ./home.nix ];
+    home-manager.users.${username}.imports = [
+      ./home.nix
+      outputs.modules.homeManager.nautilus
+    ];
   };
 }
