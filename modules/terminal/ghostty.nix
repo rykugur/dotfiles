@@ -34,6 +34,7 @@ in
           window-height = lib.mkDefault 50;
           window-width = lib.mkDefault 125;
 
+          clipboard-paste-protection = false;
           app-notifications = false;
 
           command = "${pkgs.nushell}/bin/nu --login";
