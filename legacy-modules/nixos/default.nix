@@ -7,7 +7,6 @@ in
     ./1password.nix
     ./btrfs.nix
     ./gamemode.nix
-    ./gnome.nix
     ./kde.nix
     ./obs-studio.nix
     ./razer.nix
