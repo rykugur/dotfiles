@@ -19,5 +19,6 @@ appimageTools.wrapType2 rec {
   meta = {
     homepage = "https://github.com/Omni-guides/Jackify";
     description = "A modlist installation and configuration tool for Wabbajack modlists on Linux";
+    platforms = [ "x86_64-linux" ];
   };
 }

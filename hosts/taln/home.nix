@@ -10,7 +10,7 @@
 
     _1password-cli
     bat
-    claude-code
+    bun
     fd
     fzf
     just

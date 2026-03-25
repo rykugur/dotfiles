@@ -128,9 +128,15 @@
             inherit system;
             config.allowUnfree = true;
           };
+          allPackages = import ./pkgs { inherit pkgs; };
         in
         {
-          packages = import ./pkgs { inherit pkgs; };
+          # Filter out packages whose meta.platforms doesn't include the current
+          # system. Without this, `nix flake check` fails because it evaluates
+          # every package under each system and asserts platform compatibility.
+          packages = pkgs.lib.filterAttrs (
+            _: pkg: builtins.elem system (pkg.meta.platforms or [ system ])
+          ) allPackages;
           devShells = import ./shells { inherit inputs pkgs; };
         };
 

@@ -81,4 +81,6 @@ stdenv.mkDerivation {
       categories = [ "Utility" ];
     })
   ];
+
+  meta.platforms = [ "x86_64-linux" ];
 }
