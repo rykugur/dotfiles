@@ -3,6 +3,8 @@
   flake.modules.homeManager.television =
     { config, lib, pkgs, ... }:
     {
+      home.packages = [ pkgs.ripgrep ];
+
       programs.television = {
         enable = true;
 
@@ -24,5 +26,45 @@
           ${lib.getExe pkgs.television} init nu | save -f ($nu.data-dir | path join "vendor/autoload/tv.nu")
         '';
       };
+
+      programs.television.channels =
+        let
+          sourceCmd = lib.concatStringsSep "; " (
+            lib.optional config.programs.tmux.enable
+              "tmux list-sessions -F '[tmux] #{session_name}' 2>/dev/null"
+            ++ lib.optional config.programs.zellij.enable
+              "zellij list-sessions -s 2>/dev/null | sed \"s/^/[zellij] /\""
+          );
+          # television doesn't run commands through a shell, so wrap in bash -c
+          bashCmd = cmd: "bash -c '${cmd}'";
+          # builds: bash -c 'line="{}"; if [[ "$line" == \[tmux\]* ]]; then <tcmd> "${line#[tmux] }"; else <zcmd> "${line#[zellij] }"; fi'
+          branchCmd = tcmd: zcmd: bashCmd
+            "line=\"{}\"; if [[ \"$line\" == \\[tmux\\]* ]]; then ${tcmd} \"\${line#[tmux] }\"; else ${zcmd} \"\${line#[zellij] }\"; fi";
+        in {
+          terminal-sessions = lib.mkIf
+            (config.programs.tmux.enable || config.programs.zellij.enable)
+            {
+              metadata = {
+                name = "terminal-sessions";
+                description = "List and manage running tmux and zellij sessions";
+              };
+              source.command = bashCmd sourceCmd;
+              preview.command = branchCmd "tmux list-windows -t" "echo";
+              keybindings = {
+                enter = "actions:attach";
+                ctrl-d = "actions:kill";
+              };
+              actions.attach = {
+                description = "Attach to the selected session";
+                command = branchCmd "tmux attach -t" "zellij attach";
+                mode = "execute";
+              };
+              actions.kill = {
+                description = "Kill the selected session";
+                command = branchCmd "tmux kill-session -t" "zellij kill-session";
+                mode = "fork";
+              };
+            };
+        };
     };
 }
