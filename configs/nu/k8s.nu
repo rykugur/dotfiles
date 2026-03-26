@@ -21,6 +21,13 @@ $env.abbreviations = $env.abbreviations | merge {
   kns : "kubens"
 }
 
+def kubemerge [] {
+  ls ~/.kube/*.yaml
+    | get name
+    | str join ":"
+    | do { |kubeconfig| KUBECONFIG=$kubeconfig kubectl config view --flatten | save -f ~/.kube/config } $in
+}
+
 alias keit = kubectl exec -it
 
 def "shlink create" [--slug: string --url: string] {
