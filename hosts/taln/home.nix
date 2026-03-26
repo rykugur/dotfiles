@@ -9,13 +9,7 @@
     nix-prefetch-scripts
 
     _1password-cli
-    bat
-    bun
     fd
-    fzf
-    just
-    silver-searcher
-    stylua
     tldr
   ];
 

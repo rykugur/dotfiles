@@ -24,23 +24,17 @@ in
       # Dendritic homeManager modules
       {
         home-manager.users.${username}.imports = with hmModules; [
-          carapace
+          # group
+          developer
+
+          # individual modules (not in developer group)
           ccstatusline
           claude-code
-          direnv
-          ghostty
-          git
-          helix
           homelab
-          jujutsu
           nushell
           opencode
           ssh
-          starship
           television
-          yazi
-          zellij
-          zoxide
         ];
       }
     ];
