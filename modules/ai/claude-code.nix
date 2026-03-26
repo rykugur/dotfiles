@@ -1,5 +1,7 @@
 { inputs, ... }:
 let
+  inherit (import ./_shared.nix) allowedBashCommands;
+
   mkClaudeCodeMcpConfig = pkgs: {
     jcodemunch = {
       type = "stdio";
@@ -49,18 +51,14 @@ let
 
   claudeCodeSettings = {
     permissions = {
-      allow = [
-        "Bash(curl:*)"
-        "Bash(gh api:*)"
-        "Bash(helm template:*)"
-        "Bash(kubectl get:*)"
-        "Bash(kubectl logs:*)"
-        "Bash(nix search:*)"
-        "mcp__jcodemunch__*"
-        "mcp__context-mode__*"
-        "mcp__plugin_context7-plugin_context7__*"
-        "WebFetch(domain:github.com)"
-      ];
+      allow =
+        map (cmd: "Bash(${cmd}:*)") allowedBashCommands
+        ++ [
+          "mcp__jcodemunch__*"
+          "mcp__context-mode__*"
+          "mcp__plugin_context7-plugin_context7__*"
+          "WebFetch(domain:github.com)"
+        ];
     };
   };
 

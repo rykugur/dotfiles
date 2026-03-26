@@ -335,6 +335,7 @@
               name = "markdown";
               auto-format = true;
               rulers = [ 80 ];
+              soft-wrap.enable = true;
               formatter = {
                 command = lib.getExe pkgs.deno;
                 args = [

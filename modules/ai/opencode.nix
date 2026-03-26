@@ -1,5 +1,7 @@
 { inputs, ... }:
 let
+  inherit (import ./_shared.nix) allowedBashCommands;
+
   mkOpencodeSettings = pkgs: {
     plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
     permission = {
@@ -8,12 +10,12 @@ let
       read = "allow";
       glob = "allow";
       grep = "allow";
-      bash = {
-        "*" = "ask";
-        "git *" = "allow";
-        "ls *" = "allow";
-        "find *" = "allow";
-      };
+      webfetch = "allow";
+      websearch = "allow";
+      bash = builtins.listToAttrs (
+        [{ name = "*"; value = "ask"; }]
+        ++ map (cmd: { name = "${cmd} *"; value = "allow"; }) allowedBashCommands
+      );
     };
     mcp = {
       jcodemunch = {
