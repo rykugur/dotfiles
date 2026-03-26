@@ -22,6 +22,7 @@ in
         atuin
         git
         jujutsu
+        yaak
         zed-editor
       ];
 
