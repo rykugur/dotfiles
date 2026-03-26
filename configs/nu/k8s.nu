@@ -28,6 +28,13 @@ def kubemerge [] {
     | do { |kubeconfig| KUBECONFIG=$kubeconfig kubectl config view --flatten | save -f ~/.kube/config } $in
 }
 
+def talosmerge [] {
+  ls ~/.talos/*.yaml
+    | get name
+    | str join ":"
+    | do { |talosconfig| TALOSCONFIG=$talosconfig talosctl config view | save -f ~/.talos/config } $in
+}
+
 alias keit = kubectl exec -it
 
 def "shlink create" [--slug: string --url: string] {
