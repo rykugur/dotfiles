@@ -56,9 +56,9 @@ let
         "Bash(kubectl get:*)"
         "Bash(kubectl logs:*)"
         "Bash(nix search:*)"
-        "mcp__jcodemunch__index_repo"
-        "mcp__context-mode__ctx_fetch_and_index"
-        "mcp__context-mode__ctx_search"
+        "mcp__jcodemunch__*"
+        "mcp__context-mode__*"
+        "mcp__plugin_context7-plugin_context7__*"
         "WebFetch(domain:github.com)"
       ];
     };
