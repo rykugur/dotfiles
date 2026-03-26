@@ -156,11 +156,10 @@
   ryk = {
     keyboardVendor = "zsa";
 
-    roles = {
-      _3dp.enable = true;
-      desktop.enable = true; # also enables dev and terminal roles
-      gaming.enable = true;
-    };
+    _1password.enable = true;
+    gamemode.enable = true;
+    obs-studio.enable = true;
+    steam.enable = true;
 
     # audiorelay.enable = true;
     btrfs.enable = true;
