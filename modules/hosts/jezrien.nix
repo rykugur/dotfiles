@@ -16,7 +16,8 @@ in
       ../../legacy-modules/nixos
       ../../legacy-modules
 
-      ../../roles
+      self.modules.nixos.nix-defaults
+      self.modules.nixos.ssh
 
       ../../hosts/jezrien
 
@@ -27,15 +28,22 @@ in
       self.modules.nixos.stylix
 
       self.modules.nixos.pipewire
-      self.modules.nixos.eve-online
       self.modules.nixos.starcitizen
 
       # Dendritic homeManager modules
       {
         home-manager.users.${username}.imports = with hmModules; [
+          # groups
+          developer
+          gaming
+          _3dp
+
+          # individual modules
           btop
           ccstatusline
           claude-code
+          eve-online
+          homelab
           keebs
           nushell
           opencode
@@ -43,6 +51,7 @@ in
           swappy
           television
           wezterm
+          zen-browser
         ];
       }
     ];
