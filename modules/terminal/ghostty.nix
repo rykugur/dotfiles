@@ -42,6 +42,8 @@ in
           keybind = [
             "alt+h=previous_tab"
             "alt+l=next_tab"
+            "alt+shift+h=move_tab:-1"
+            "alt+shift+l=move_tab:1"
           ];
         };
       };
