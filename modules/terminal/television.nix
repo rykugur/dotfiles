@@ -37,9 +37,9 @@
           );
           # television doesn't run commands through a shell, so wrap in bash -c
           bashCmd = cmd: "bash -c '${cmd}'";
-          # builds: bash -c 'line="{}"; if [[ "$line" == \[tmux\]* ]]; then <tcmd> "${line#[tmux] }"; else <zcmd> "${line#[zellij] }"; fi'
+          # builds: bash -c 'line="{}"; if [[ "$line" == \[tmux\]* ]]; then <tcmd> "${line#\[tmux\] }"; else <zcmd> "${line#\[zellij\] }"; fi'
           branchCmd = tcmd: zcmd: bashCmd
-            "line=\"{}\"; if [[ \"$line\" == \\[tmux\\]* ]]; then ${tcmd} \"\${line#[tmux] }\"; else ${zcmd} \"\${line#[zellij] }\"; fi";
+            "line=\"{}\"; if [[ \"$line\" == \\[tmux\\]* ]]; then ${tcmd} \"\${line#\\[tmux\\] }\"; else ${zcmd} \"\${line#\\[zellij\\] }\"; fi";
         in {
           terminal-sessions = lib.mkIf
             (config.programs.tmux.enable || config.programs.zellij.enable)
