@@ -1,22 +1,26 @@
 let
-  # Update these when Anthropic releases new model versions
+  # Short aliases for opencode model IDs
+  # Full IDs (containing "/") pass through unchanged
   opencodeModelMap = {
+    # Anthropic (direct)
     sonnet = "anthropic/claude-sonnet-4-20250514";
     opus = "anthropic/claude-opus-4-20250514";
     haiku = "anthropic/claude-haiku-4-5-20251001";
+    # OpenCode Zen (included with Go subscription also)
+    big-pickle = "opencode/big-pickle";
+    minimax-free = "opencode/minimax-m2.5-free";
+    # OpenCode Go
+    minimax = "opencode-go/minimax-m2.5";
   };
 
-  resolveOpencodeModel = model:
-    if builtins.hasAttr model opencodeModelMap
-    then opencodeModelMap.${model}
-    else model; # full model IDs pass through
+  resolveOpencodeModel =
+    model: if builtins.hasAttr model opencodeModelMap then opencodeModelMap.${model} else model; # full model IDs pass through
 
-  toClaudeCodeAgent = agent:
+  toClaudeCodeAgent =
+    agent:
     let
       toolsLine =
-        if agent.mode == "reference"
-        then "\ntools: Read, Grep, Glob, WebFetch, WebSearch"
-        else "";
+        if agent.mode == "reference" then "\ntools: Read, Grep, Glob, WebFetch, WebSearch" else "";
     in
     ''
       ---
@@ -27,7 +31,8 @@ let
       ${agent.prompt}
     '';
 
-  toOpencodeAgent = agent:
+  toOpencodeAgent =
+    agent:
     let
       writeVal = if agent.mode == "reference" then "false" else "true";
     in
