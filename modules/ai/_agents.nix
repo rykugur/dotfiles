@@ -2,10 +2,10 @@ let
   # Short aliases for opencode model IDs
   # Full IDs (containing "/") pass through unchanged
   opencodeModelMap = {
-    # Anthropic (direct)
-    sonnet = "anthropic/claude-sonnet-4-20250514";
-    opus = "anthropic/claude-opus-4-20250514";
-    haiku = "anthropic/claude-haiku-4-5-20251001";
+    # Anthropic (via opencode)
+    sonnet = "opencode/claude-sonnet-4-6";
+    opus = "opencode/claude-opus-4-6";
+    haiku = "opencode/claude-haiku-4-5";
     # OpenCode Zen (included with Go subscription also)
     big-pickle = "opencode/big-pickle";
     minimax-free = "opencode/minimax-m2.5-free";
