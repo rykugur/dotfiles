@@ -1,6 +1,7 @@
 { inputs, ... }:
 let
   inherit (import ./_shared.nix) allowedBashCommands;
+  inherit (import ./_agents.nix) agents toOpencodeAgent;
 
   mkOpencodeSettings = pkgs: {
     plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
@@ -63,6 +64,11 @@ in
         enable = true;
         settings = mkOpencodeSettings pkgs;
       };
+
+      xdg.configFile = builtins.listToAttrs (map (agent: {
+        name = "opencode/agents/${agent.name}.md";
+        value.text = toOpencodeAgent agent;
+      }) agents);
     };
 
   perSystem =
