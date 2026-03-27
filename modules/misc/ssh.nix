@@ -33,7 +33,7 @@
 
       sops = {
         secrets.ssh_private_key = {
-          sopsFile = ../../hosts/${hostname}/secrets.yaml;
+          sopsFile = ../hosts/${hostname}/secrets.yaml;
           path = "${config.home.homeDirectory}/.ssh/id_ed25519";
           mode = "0400";
         };
