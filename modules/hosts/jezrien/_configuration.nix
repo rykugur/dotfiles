@@ -8,12 +8,10 @@
 }:
 {
   imports = [
-    ./hardware-configuration.nix
+    ./_hardware-configuration.nix
 
-    inputs.home-manager.nixosModules.home-manager
-
-    # ./hyprland-config.nix
-    ./niri-config.nix
+    # ./_hyprland-config.nix
+    ./_niri-config.nix
   ]
   ++ (with inputs.nixos-hardware.nixosModules; [
     common-pc
@@ -184,21 +182,6 @@
     virtualization = {
       winboat.enable = true;
     };
-  };
-
-  home-manager = {
-    extraSpecialArgs = {
-      inherit
-        inputs
-        outputs
-        hostname
-        username
-        ;
-    };
-    users = {
-      ${username} = import ./home.nix;
-    };
-    backupFileExtension = "bak";
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
