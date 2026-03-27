@@ -1,6 +1,11 @@
+$env.PZ_MODS_DIR = if (is-linux) {
+  $"($env.HOME)/.local/share/Steam/steamapps/workshop/content/108600"
+} else {
+  $"($env.HOME)/Library/Application Support/Steam/steamapps/workshop/content/108600"
+}
+
 def "pz copy mod config" [host: string = "jezrien"] {
   use std/log
-
   
   let hostname = (hostname)
   if ($hostname | str starts-with $host) {
@@ -23,5 +28,5 @@ def "pz copy mod config" [host: string = "jezrien"] {
 }
 
 def --env "pz mods" [] {
-  cd ~/.local/share/Steam/steamapps/workshop/content/108600
+  cd $env.PZ_MODS_DIR
 }

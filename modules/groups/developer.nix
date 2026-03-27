@@ -51,13 +51,15 @@
           speedtest-cli
           tree
           unzip
-          warp-terminal
           wget
           xz
           zip
           duf
           dust
           gdu
+        ]
+        ++ lib.optionals pkgs.stdenv.isLinux [
+          warp-terminal
         ]
         ++ lib.optionals pkgs.stdenv.isLinux [
           iftop

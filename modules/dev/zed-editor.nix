@@ -6,7 +6,7 @@
       # home.packages = [];
       programs.zed-editor = {
         enable = true;
-        package = pkgs.zed-editor-fhs;
+        package = if pkgs.stdenv.isLinux then pkgs.zed-editor-fhs else pkgs.zed-editor;
 
         extraPackages = with pkgs; [
           nil
