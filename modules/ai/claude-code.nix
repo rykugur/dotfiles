@@ -1,6 +1,7 @@
 { inputs, ... }:
 let
   inherit (import ./_shared.nix) allowedBashCommands;
+  inherit (import ./_agents.nix) agents toClaudeCodeAgent;
 
   mkClaudeCodeMcpConfig = pkgs: {
     jcodemunch = {
@@ -76,6 +77,10 @@ in
     { pkgs, ... }:
     {
       home.packages = [ (mkWrappedClaudeCode pkgs) ];
+      home.file = builtins.listToAttrs (map (agent: {
+        name = ".claude/agents/${agent.name}.md";
+        value.text = toClaudeCodeAgent agent;
+      }) agents);
     };
 
   perSystem =
