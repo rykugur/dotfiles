@@ -1,6 +1,5 @@
 { inputs, outputs, hostname, username, ... }: {
   ### system config
-  imports = [ inputs.home-manager.darwinModules.home-manager ];
 
   nixpkgs = {
     overlays = [ outputs.overlays.additions outputs.overlays.modifications ];
@@ -64,14 +63,6 @@
       cleanup = "uninstall";
       upgrade = true;
     };
-  };
-
-  ### home-manager config
-
-  home-manager = {
-    extraSpecialArgs = { inherit inputs outputs hostname username; };
-    users = { ${username} = import ./home.nix; };
-    backupFileExtension = "bak";
   };
 
   ### stuff to mostly ignore
