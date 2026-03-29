@@ -29,6 +29,8 @@
         [
           # dev
           bun
+          nodejs
+
           just
           prettierd
           stylua
