@@ -14,8 +14,16 @@ let
       webfetch = "allow";
       websearch = "allow";
       bash = builtins.listToAttrs (
-        [{ name = "*"; value = "ask"; }]
-        ++ map (cmd: { name = "${cmd} *"; value = "allow"; }) allowedBashCommands
+        [
+          {
+            name = "*";
+            value = "ask";
+          }
+        ]
+        ++ map (cmd: {
+          name = "${cmd} *";
+          value = "allow";
+        }) allowedBashCommands
       );
     };
     mcp = {
@@ -65,6 +73,8 @@ in
         settings = mkOpencodeSettings pkgs;
       };
 
+      # invoke with `OPENCODE_CONFIG=~/.config/opencode/opencode-yolo.json opencode`
+      # TODO: use xdg.configFile
       home.file.".config/opencode/opencode-yolo.json" = {
         text = builtins.toJSON {
           "$schema" = "https://opencode.ai/config.json";
@@ -76,10 +86,12 @@ in
         };
       };
 
-      xdg.configFile = builtins.listToAttrs (map (agent: {
-        name = "opencode/agents/${agent.name}.md";
-        value.text = toOpencodeAgent agent;
-      }) agents);
+      xdg.configFile = builtins.listToAttrs (
+        map (agent: {
+          name = "opencode/agents/${agent.name}.md";
+          value.text = toOpencodeAgent agent;
+        }) agents
+      );
     };
 
   perSystem =
