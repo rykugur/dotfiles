@@ -65,6 +65,17 @@ in
         settings = mkOpencodeSettings pkgs;
       };
 
+      home.file.".config/opencode/opencode-yolo.json" = {
+        text = builtins.toJSON {
+          "$schema" = "https://opencode.ai/config.json";
+          permission = {
+            "*" = {
+              "*" = "allow";
+            };
+          };
+        };
+      };
+
       xdg.configFile = builtins.listToAttrs (map (agent: {
         name = "opencode/agents/${agent.name}.md";
         value.text = toOpencodeAgent agent;
