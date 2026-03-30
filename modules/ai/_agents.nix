@@ -2,12 +2,12 @@ let
   # Short aliases for opencode model IDs
   # Full IDs (containing "/") pass through unchanged
   opencodeModelMap = {
-    # Anthropic (via opencode)
+    # OpenCode Zen
     sonnet = "opencode/claude-sonnet-4-6";
     opus = "opencode/claude-opus-4-6";
     haiku = "opencode/claude-haiku-4-5";
     big-pickle = "opencode/big-pickle";
-    minimax-free = "opencode/minimax-m2.5-free";
+    minimax-m25-free = "opencode/minimax-m2.5-free";
     mimo-v2-pro-free = "opencode/mimo-v2-pro-free";
     # OpenCode Go
     glm-5 = "opencode-go/glm-5";
@@ -38,12 +38,13 @@ let
     agent:
     let
       writeVal = if agent.mode == "reference" then "false" else "true";
+      modelVal = if agent.mode == "reference" then agent.model else resolveOpencodeModel agent.model;
     in
     ''
       ---
       description: ${agent.description}
       mode: subagent
-      model: ${resolveOpencodeModel agent.model}
+      model: ${modelVal}
       tools:
         write: ${writeVal}
       ---
@@ -55,7 +56,7 @@ let
     {
       name = "cosmere";
       description = "Cosmere universe specialist. Use when naming projects, generating quotes, answering questions about Brandon Sanderson's Cosmere universe, or when the user asks for thematic inspiration.";
-      model = "mimo-v2-pro-free";
+      model = opencodeModelMap.mimo-v2-pro-free;
       mode = "reference";
       prompt = ''
         You are an expert on Brandon Sanderson's Cosmere universe, with deep knowledge of all published works including Mistborn, The Stormlight Archive, Elantris, Warbreaker, and all connected novellas and short fiction.
@@ -76,7 +77,7 @@ let
     {
       name = "red-rising";
       description = "Red Rising specialist. Use when naming projects, generating quotes, answering questions about Pierce Brown's Red Rising saga, or when the user asks for thematic inspiration from the series.";
-      model = "mimo-v2-pro-free";
+      model = opencodeModelMap.mimo-v2-pro-free;
       mode = "reference";
       prompt = ''
         You are an expert on Pierce Brown's Red Rising saga, with deep knowledge of all published works in the series.
@@ -96,7 +97,7 @@ let
     {
       name = "wheel-of-time";
       description = "Wheel of Time specialist. Use when naming projects, generating quotes, answering questions about Robert Jordan's Wheel of Time series, or when the user asks for thematic inspiration.";
-      model = "mimo-v2-pro-free";
+      model = opencodeModelMap.mimo-v2-pro-free;
       mode = "reference";
       prompt = ''
         You are an expert on Robert Jordan's Wheel of Time series (completed by Brandon Sanderson), with deep knowledge of all 14 main novels, the prequel, and companion materials.
@@ -117,7 +118,7 @@ let
     {
       name = "cloud-native";
       description = "Cloud-native infrastructure specialist. Use for Kubernetes, Flux CD, Helm, Proxmox, networking, GitOps, container orchestration, and general infrastructure questions.";
-      model = "sonnet";
+      model = opencodeModelMap.sonnet;
       mode = "technical";
       prompt = ''
         You are a cloud-native infrastructure specialist with deep expertise in:
@@ -140,7 +141,7 @@ let
     {
       name = "nixos";
       description = "NixOS and Nix ecosystem specialist. Use for NixOS configuration, Nix language questions, flakes, home-manager, package derivations, and Nix troubleshooting.";
-      model = "sonnet";
+      model = opencodeModelMap.minimax-m25-free;
       mode = "technical";
       prompt = ''
         You are a NixOS and Nix ecosystem specialist with deep expertise in:
@@ -153,7 +154,7 @@ let
         - Nix tooling (nix develop, nix build, nix run, nix flake)
 
         When helping with Nix:
-        - Follow the module pattern (mkEnableOption, mkIf, mkDefault)
+        - Follow the dendritic flakes pattern with flake-parts (importing the module is sufficient to enable it; no mkEnableOption needed)
         - Prefer flake-based approaches
         - Use lib functions over reimplementing logic
         - Be precise about the difference between NixOS modules, home-manager modules, and plain Nix expressions
@@ -162,5 +163,10 @@ let
   ];
 in
 {
-  inherit agents toClaudeCodeAgent toOpencodeAgent;
+  inherit
+    agents
+    toClaudeCodeAgent
+    toOpencodeAgent
+    opencodeModelMap
+    ;
 }
