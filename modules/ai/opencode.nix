@@ -1,7 +1,31 @@
 { inputs, ... }:
 let
   inherit (import ./_shared.nix) allowedBashCommands;
-  inherit (import ./_agents.nix) agents toOpencodeAgent;
+  inherit (import ./_agents.nix) resolveAgents toOpencodeAgent;
+
+  opencodeModelMap = {
+    # OpenCode Zen
+    sonnet = "opencode/claude-sonnet-4-6";
+    opus = "opencode/claude-opus-4-6";
+    haiku = "opencode/claude-haiku-4-5";
+    big-pickle = "opencode/big-pickle";
+    minimax-m25-free = "opencode/minimax-m2.5-free";
+    mimo-v2-pro-free = "opencode/mimo-v2-pro-free";
+    # OpenCode Go
+    glm-5 = "opencode-go/glm-5";
+    kimi-k25 = "opencode-go/kimi-k2.5";
+    minimax25 = "opencode-go/minimax-m2.5";
+    minimax27 = "opencode-go/minimax-m2.7";
+  };
+
+  tierModels = {
+    reference = opencodeModelMap.mimo-v2-pro-free;
+    technical = opencodeModelMap.kimi-k25;
+  };
+
+  agentOverrides = { };
+
+  agents = resolveAgents { inherit tierModels agentOverrides; };
 
   mkOpencodeSettings = pkgs: {
     plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
@@ -19,6 +43,9 @@ let
       # for superpowers
       "brainstorming" = "allow";
       "todowrite" = "allow";
+      "requesting-code-review" = "allow";
+      "test-driven-development" = "allow";
+      "executing-plans" = "allow";
       bash = builtins.listToAttrs (
         [
           {

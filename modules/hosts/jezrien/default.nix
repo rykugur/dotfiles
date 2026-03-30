@@ -98,7 +98,7 @@ in
 
               nwg-look
               catppuccin-gtk
-              catppuccin-cursors
+              # catppuccin-cursors # builds from source, takes 30+ min; not cached on nixpkgs unstable
               catppuccin-papirus-folders
 
               affine

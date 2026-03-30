@@ -1,29 +1,9 @@
 let
-  # Short aliases for opencode model IDs
-  # Full IDs (containing "/") pass through unchanged
-  opencodeModelMap = {
-    # OpenCode Zen
-    sonnet = "opencode/claude-sonnet-4-6";
-    opus = "opencode/claude-opus-4-6";
-    haiku = "opencode/claude-haiku-4-5";
-    big-pickle = "opencode/big-pickle";
-    minimax-m25-free = "opencode/minimax-m2.5-free";
-    mimo-v2-pro-free = "opencode/mimo-v2-pro-free";
-    # OpenCode Go
-    glm-5 = "opencode-go/glm-5";
-    kimi-k25 = "opencode-go/kimi-k2.5";
-    minimax25 = "opencode-go/minimax-m2.5";
-    minimax27 = "opencode-go/minimax-m2.7";
-  };
-
-  resolveOpencodeModel =
-    model: if builtins.hasAttr model opencodeModelMap then opencodeModelMap.${model} else model; # full model IDs pass through
-
   toClaudeCodeAgent =
     agent:
     let
       toolsLine =
-        if agent.mode == "reference" then "\ntools: Read, Grep, Glob, WebFetch, WebSearch" else "";
+        if agent.tier == "reference" then "\ntools: Read, Grep, Glob, WebFetch, WebSearch" else "";
     in
     ''
       ---
@@ -37,14 +17,13 @@ let
   toOpencodeAgent =
     agent:
     let
-      writeVal = if agent.mode == "reference" then "false" else "true";
-      modelVal = if agent.mode == "reference" then agent.model else resolveOpencodeModel agent.model;
+      writeVal = if agent.tier == "reference" then "false" else "true";
     in
     ''
       ---
       description: ${agent.description}
       mode: subagent
-      model: ${modelVal}
+      model: ${agent.model}
       tools:
         write: ${writeVal}
       ---
@@ -52,12 +31,17 @@ let
       ${agent.prompt}
     '';
 
+  resolveAgents =
+    { tierModels, agentOverrides ? { } }:
+    map (a:
+      a // { model = tierModels.${a.tier}; } // (agentOverrides.${a.name} or {})
+    ) agents;
+
   agents = [
     {
       name = "cosmere";
       description = "Cosmere universe specialist. Use when naming projects, generating quotes, answering questions about Brandon Sanderson's Cosmere universe, or when the user asks for thematic inspiration.";
-      model = opencodeModelMap.mimo-v2-pro-free;
-      mode = "reference";
+      tier = "reference";
       prompt = ''
         You are an expert on Brandon Sanderson's Cosmere universe, with deep knowledge of all published works including Mistborn, The Stormlight Archive, Elantris, Warbreaker, and all connected novellas and short fiction.
 
@@ -77,8 +61,7 @@ let
     {
       name = "red-rising";
       description = "Red Rising specialist. Use when naming projects, generating quotes, answering questions about Pierce Brown's Red Rising saga, or when the user asks for thematic inspiration from the series.";
-      model = opencodeModelMap.mimo-v2-pro-free;
-      mode = "reference";
+      tier = "reference";
       prompt = ''
         You are an expert on Pierce Brown's Red Rising saga, with deep knowledge of all published works in the series.
 
@@ -97,8 +80,7 @@ let
     {
       name = "wheel-of-time";
       description = "Wheel of Time specialist. Use when naming projects, generating quotes, answering questions about Robert Jordan's Wheel of Time series, or when the user asks for thematic inspiration.";
-      model = opencodeModelMap.mimo-v2-pro-free;
-      mode = "reference";
+      tier = "reference";
       prompt = ''
         You are an expert on Robert Jordan's Wheel of Time series (completed by Brandon Sanderson), with deep knowledge of all 14 main novels, the prequel, and companion materials.
 
@@ -118,8 +100,7 @@ let
     {
       name = "cloud-native";
       description = "Cloud-native infrastructure specialist. Use for Kubernetes, Flux CD, Helm, Proxmox, networking, GitOps, container orchestration, and general infrastructure questions.";
-      model = opencodeModelMap.sonnet;
-      mode = "technical";
+      tier = "technical";
       prompt = ''
         You are a cloud-native infrastructure specialist with deep expertise in:
 
@@ -141,8 +122,7 @@ let
     {
       name = "nixos";
       description = "NixOS and Nix ecosystem specialist. Use for NixOS configuration, Nix language questions, flakes, home-manager, package derivations, and Nix troubleshooting.";
-      model = opencodeModelMap.minimax-m25-free;
-      mode = "technical";
+      tier = "technical";
       prompt = ''
         You are a NixOS and Nix ecosystem specialist with deep expertise in:
 
@@ -165,8 +145,8 @@ in
 {
   inherit
     agents
+    resolveAgents
     toClaudeCodeAgent
     toOpencodeAgent
-    opencodeModelMap
     ;
 }

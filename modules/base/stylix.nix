@@ -13,9 +13,15 @@ let
           emoji     = { package = pkgs.noto-fonts-color-emoji;     name = "Noto Color Emoji"; };
         };
       } // lib.optionalAttrs (options.stylix ? cursor) {
+        # catppuccin-cursors builds from source, takes 30+ min; not cached on nixpkgs unstable
+        # cursor = {
+        #   package = pkgs.catppuccin-cursors.mochaDark;
+        #   name = "catppuccin-mocha-dark-cursors";
+        #   size = 32;
+        # };
         cursor = {
-          package = pkgs.catppuccin-cursors.mochaDark;
-          name = "catppuccin-mocha-dark-cursors";
+          package = pkgs.bibata-cursors;
+          name = "Bibata-Modern-Classic";
           size = 32;
         };
       };

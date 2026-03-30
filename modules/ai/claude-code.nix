@@ -1,7 +1,16 @@
 { inputs, ... }:
 let
   inherit (import ./_shared.nix) allowedBashCommands;
-  inherit (import ./_agents.nix) agents toClaudeCodeAgent;
+  inherit (import ./_agents.nix) resolveAgents toClaudeCodeAgent;
+
+  tierModels = {
+    reference = "claude-haiku-4-5";
+    technical = "claude-sonnet-4-6";
+  };
+
+  agentOverrides = { };
+
+  agents = resolveAgents { inherit tierModels agentOverrides; };
 
   mkClaudeCodeMcpConfig = pkgs: {
     jcodemunch = {
