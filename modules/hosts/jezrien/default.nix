@@ -57,6 +57,7 @@ in
                 btop
                 ccstatusline
                 claude-code
+                espanso
                 eve-online
                 homelab
                 keebs

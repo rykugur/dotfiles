@@ -1,22 +1,20 @@
 { ... }:
 {
   flake.modules.homeManager.espanso =
-    { config, lib, ... }:
-    let
-      inherit (lib) types mkOption mkIf;
-    in
+    { ... }:
     {
-      options.espanso = {
-        snippets = mkOption {
-          type = types.listOf types.attrs;
-          default = [ ];
-          description = "List of Espanso snippet definitions";
-        };
-      };
+      services.espanso = {
+        enable = true;
 
-      config = mkIf config.services.espanso.enable {
-        services.espanso.configs.default = {
-          matches = config.espanso.snippets;
+        matches = {
+          default = {
+            matches = [
+              {
+                trigger = ":install-helix";
+                replace = "curl -fsSL s.ryk.sh/install-helix-deb | bash -s --";
+              }
+            ];
+          };
         };
       };
     };
