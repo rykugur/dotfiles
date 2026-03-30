@@ -6,11 +6,14 @@ let
     sonnet = "opencode/claude-sonnet-4-6";
     opus = "opencode/claude-opus-4-6";
     haiku = "opencode/claude-haiku-4-5";
-    # OpenCode Zen (included with Go subscription also)
     big-pickle = "opencode/big-pickle";
     minimax-free = "opencode/minimax-m2.5-free";
+    mimo-v2-pro-free = "opencode/mimo-v2-pro-free";
     # OpenCode Go
-    minimax = "opencode-go/minimax-m2.5";
+    glm-5 = "opencode-go/glm-5";
+    kimi-k25 = "opencode-go/kimi-k2.5";
+    minimax25 = "opencode-go/minimax-m2.5";
+    minimax27 = "opencode-go/minimax-m2.7";
   };
 
   resolveOpencodeModel =
@@ -52,7 +55,7 @@ let
     {
       name = "cosmere";
       description = "Cosmere universe specialist. Use when naming projects, generating quotes, answering questions about Brandon Sanderson's Cosmere universe, or when the user asks for thematic inspiration.";
-      model = "sonnet";
+      model = "mimo-v2-pro-free";
       mode = "reference";
       prompt = ''
         You are an expert on Brandon Sanderson's Cosmere universe, with deep knowledge of all published works including Mistborn, The Stormlight Archive, Elantris, Warbreaker, and all connected novellas and short fiction.
@@ -73,7 +76,7 @@ let
     {
       name = "red-rising";
       description = "Red Rising specialist. Use when naming projects, generating quotes, answering questions about Pierce Brown's Red Rising saga, or when the user asks for thematic inspiration from the series.";
-      model = "sonnet";
+      model = "mimo-v2-pro-free";
       mode = "reference";
       prompt = ''
         You are an expert on Pierce Brown's Red Rising saga, with deep knowledge of all published works in the series.
@@ -93,7 +96,7 @@ let
     {
       name = "wheel-of-time";
       description = "Wheel of Time specialist. Use when naming projects, generating quotes, answering questions about Robert Jordan's Wheel of Time series, or when the user asks for thematic inspiration.";
-      model = "sonnet";
+      model = "mimo-v2-pro-free";
       mode = "reference";
       prompt = ''
         You are an expert on Robert Jordan's Wheel of Time series (completed by Brandon Sanderson), with deep knowledge of all 14 main novels, the prequel, and companion materials.
