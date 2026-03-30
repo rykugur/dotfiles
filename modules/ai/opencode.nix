@@ -7,12 +7,18 @@ let
     plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
     permission = {
       "*" = "ask";
-      edit = "allow";
+      edit = "ask";
       read = "allow";
       glob = "allow";
       grep = "allow";
       webfetch = "allow";
       websearch = "allow";
+      "jcodemunch_*" = "allow";
+      "context7_*" = "allow";
+      "context-mode_ctx_*" = "allow";
+      # for superpowers
+      "brainstorming" = "allow";
+      "todowrite" = "allow";
       bash = builtins.listToAttrs (
         [
           {
@@ -73,10 +79,8 @@ in
         settings = mkOpencodeSettings pkgs;
       };
 
-      # invoke with `OPENCODE_CONFIG=~/.config/opencode/opencode-yolo.json opencode`
-      # TODO: use xdg.configFile
-      home.file.".config/opencode/opencode-yolo.json" = {
-        text = builtins.toJSON {
+      xdg.configFile = {
+        "opencode/opencode-yolo.json".text = builtins.toJSON {
           "$schema" = "https://opencode.ai/config.json";
           permission = {
             "*" = {
@@ -84,14 +88,20 @@ in
             };
           };
         };
-      };
-
-      xdg.configFile = builtins.listToAttrs (
+      }
+      // builtins.listToAttrs (
         map (agent: {
           name = "opencode/agents/${agent.name}.md";
           value.text = toOpencodeAgent agent;
         }) agents
       );
+
+      home.packages = [
+        (pkgs.writeShellScriptBin "opencode-yolo" ''
+          export OPENCODE_CONFIG="$HOME/.config/opencode/opencode-yolo.json"
+          exec ${pkgs.opencode}/bin/opencode "$@"
+        '')
+      ];
     };
 
   perSystem =
