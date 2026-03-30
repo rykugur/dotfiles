@@ -33,9 +33,12 @@ in
           };
           backupFileExtension = "bak";
 
-          users.${username} = { pkgs, ... }: {
-            imports =
-              [ ../../../home ]
+          users.${username} =
+            { pkgs, ... }:
+            {
+              imports = [
+                ../../../home
+              ]
               ++ (with hmModules; [
                 # group
                 developer
@@ -43,6 +46,7 @@ in
                 # individual modules (not in developer group)
                 ccstatusline
                 claude-code
+                espanso
                 homelab
                 nushell
                 opencode
@@ -50,18 +54,18 @@ in
                 television
               ]);
 
-            home.packages = with pkgs; [
-              nh
-              nix-prefetch-scripts
-              _1password-cli
-              fd
-              tldr
-            ];
+              home.packages = with pkgs; [
+                nh
+                nix-prefetch-scripts
+                _1password-cli
+                fd
+                tldr
+              ];
 
-            programs.home-manager.enable = true;
+              programs.home-manager.enable = true;
 
-            home.stateVersion = "23.11";
-          };
+              home.stateVersion = "23.11";
+            };
         };
       }
     ];
