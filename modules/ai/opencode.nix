@@ -82,7 +82,6 @@ in
       xdg.configFile = {
         "opencode/tui.json".text = builtins.toJSON {
           "$schema" = "https://opencode.ai/tui.json";
-          theme = "stylix";
           scroll_acceleration = true;
         };
         "opencode/opencode-yolo.json".text = builtins.toJSON {
