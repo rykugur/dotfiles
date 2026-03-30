@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then
+    SUDO="sudo"
+fi
+
 REPO="helix-editor/helix"
 API_URL="https://api.github.com/repos/${REPO}/releases/latest"
 
@@ -22,7 +27,7 @@ echo "  ${DEB_URL}"
 curl -fSL -o "$DEB_FILE" "$DEB_URL"
 
 echo "Installing ${DEB_FILE}..."
-sudo dpkg -i "$DEB_FILE"
+$SUDO dpkg -i "$DEB_FILE"
 
 echo "Cleaning up..."
 rm -f "$DEB_FILE"
