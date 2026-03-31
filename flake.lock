@@ -1648,6 +1648,8 @@
         "noctalia": "noctalia",
         "quickshell": "quickshell_2",
         "ryze312-stackpkgs": "ryze312-stackpkgs",
+        "skills-anthropic": "skills-anthropic",
+        "skills-vercel": "skills-vercel",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "superpowers": "superpowers",
@@ -1714,6 +1716,38 @@
       "original": {
         "owner": "ryze312",
         "repo": "stackpkgs",
+        "type": "github"
+      }
+    },
+    "skills-anthropic": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774451446,
+        "narHash": "sha256-w//9LB1OVG9jlllY+VDse7Js0dn5x6Ys2vPuQACKsTM=",
+        "owner": "anthropics",
+        "repo": "skills",
+        "rev": "98669c11ca63e9c81c11501e1437e5c47b556621",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anthropics",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
+    "skills-vercel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1774896667,
+        "narHash": "sha256-AD7mYTuRZ+Fg/vPAp+itDntZPDUe6bU2l804cSRPM0k=",
+        "owner": "vercel-labs",
+        "repo": "agent-skills",
+        "rev": "6f3fa3191d089d7810e332a562ad2a0ff5f7f239",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vercel-labs",
+        "repo": "agent-skills",
         "type": "github"
       }
     },

@@ -3,6 +3,11 @@ let
   inherit (import ./_shared.nix) allowedBashCommands;
   inherit (import ./_agents.nix) resolveAgents toClaudeCodeAgent;
 
+  skills = [
+    { name = "frontend-design"; src = "${inputs.skills-anthropic}/skills/frontend-design"; }
+    { name = "web-design-guidelines"; src = "${inputs.skills-vercel}/skills/web-design-guidelines"; }
+  ];
+
   tierModels = {
     reference = "claude-haiku-4-5";
     technical = "claude-sonnet-4-6";
@@ -86,10 +91,16 @@ in
     { pkgs, ... }:
     {
       home.packages = [ (mkWrappedClaudeCode pkgs) ];
-      home.file = builtins.listToAttrs (map (agent: {
-        name = ".claude/agents/${agent.name}.md";
-        value.text = toClaudeCodeAgent agent;
-      }) agents);
+      home.file = builtins.listToAttrs (
+        map (agent: {
+          name = ".claude/agents/${agent.name}.md";
+          value.text = toClaudeCodeAgent agent;
+        }) agents
+        ++ map (skill: {
+          name = ".claude/skills/${skill.name}/SKILL.md";
+          value.source = "${skill.src}/SKILL.md";
+        }) skills
+      );
     };
 
   perSystem =

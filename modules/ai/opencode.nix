@@ -3,6 +3,11 @@ let
   inherit (import ./_shared.nix) allowedBashCommands;
   inherit (import ./_agents.nix) resolveAgents toOpencodeAgent;
 
+  skills = [
+    { name = "frontend-design"; src = "${inputs.skills-anthropic}/skills/frontend-design"; }
+    { name = "web-design-guidelines"; src = "${inputs.skills-vercel}/skills/web-design-guidelines"; }
+  ];
+
   opencodeModelMap = {
     # OpenCode Zen
     sonnet = "opencode/claude-sonnet-4-6";
@@ -46,6 +51,9 @@ let
       "requesting-code-review" = "allow";
       "test-driven-development" = "allow";
       "executing-plans" = "allow";
+      external_directory = {
+        "~/.paperclip/*" = "allow";
+      };
       bash = builtins.listToAttrs (
         [
           {
@@ -125,6 +133,10 @@ in
           name = "opencode/agents/${agent.name}.md";
           value.text = toOpencodeAgent agent;
         }) agents
+        ++ map (skill: {
+          name = "opencode/skills/${skill.name}/SKILL.md";
+          value.source = "${skill.src}/SKILL.md";
+        }) skills
       );
 
       home.packages = [

@@ -100,6 +100,16 @@
       url = "github:upstash/context7";
       flake = false;
     };
+
+    ### agent skills
+    skills-anthropic = {
+      url = "github:anthropics/skills";
+      flake = false;
+    };
+    skills-vercel = {
+      url = "github:vercel-labs/agent-skills";
+      flake = false;
+    };
   };
 
   outputs =
