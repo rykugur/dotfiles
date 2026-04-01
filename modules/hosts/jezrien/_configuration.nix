@@ -184,7 +184,7 @@
     };
 
     virtualization = {
-      winboat.enable = true;
+      winboat.enable = false; # disabled: Go 1.26.1 mingw cross-compilation broken upstream
     };
   };
 
