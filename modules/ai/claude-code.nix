@@ -1,7 +1,18 @@
 { inputs, ... }:
 let
-  inherit (import ./_shared.nix) allowedBashCommands;
   inherit (import ./_agents.nix) resolveAgents toClaudeCodeAgent;
+
+  allowedBashCommands = [
+    "curl"
+    "gh api"
+    "helm template"
+    "kubectl get"
+    "kubectl logs"
+    "nix search"
+    "git"
+    "ls"
+    "find"
+  ];
 
   skills = [
     { name = "frontend-design"; src = "${inputs.skills-anthropic}/skills/frontend-design"; }

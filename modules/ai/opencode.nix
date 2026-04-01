@@ -1,6 +1,5 @@
 { inputs, ... }:
 let
-  inherit (import ./_shared.nix) allowedBashCommands;
   inherit (import ./_agents.nix) resolveAgents toOpencodeAgent;
 
   skills = [
@@ -35,37 +34,37 @@ let
   mkOpencodeSettings = pkgs: {
     plugin = [ "superpowers@git+https://github.com/obra/superpowers.git" ];
     permission = {
-      "*" = "ask";
-      edit = "ask";
-      read = "allow";
-      glob = "allow";
-      grep = "allow";
-      webfetch = "allow";
-      websearch = "allow";
+      "*" = "allow";
+      bash = {
+        "*" = "allow";
+        "rm *" = "deny";
+        "npm *" = "deny";
+        "kubectl get *" = "allow";
+        "kubectl logs *" = "allow";
+        "flux get *" = "allow";
+      };
+      read = {
+        "*" = "allow";
+        "*.env" = "deny";
+        "*.env.*" = "deny";
+        ".envrc" = "deny";
+        "*.sops.yaml" = "deny";
+        "*.tfvars" = "deny";
+        "*.env.example" = "allow";
+      };
+      external_directory = {
+        "~/.paperclip/*" = "allow";
+      };
+      # jcodemunch tools
       "jcodemunch_*" = "allow";
       "context7_*" = "allow";
       "context-mode_ctx_*" = "allow";
-      # for superpowers
+      # superpowers skills
       "brainstorming" = "allow";
       "todowrite" = "allow";
       "requesting-code-review" = "allow";
       "test-driven-development" = "allow";
       "executing-plans" = "allow";
-      external_directory = {
-        "~/.paperclip/*" = "allow";
-      };
-      bash = builtins.listToAttrs (
-        [
-          {
-            name = "*";
-            value = "ask";
-          }
-        ]
-        ++ map (cmd: {
-          name = "${cmd} *";
-          value = "allow";
-        }) allowedBashCommands
-      );
     };
     mcp = {
       jcodemunch = {
