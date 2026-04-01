@@ -47,7 +47,6 @@
                 f = [
                   ":sh rm -f /tmp/tv-file"
                   '':insert-output bash -c 'trap "" TSTP; saved=$(stty -g </dev/tty); tv </dev/tty 2>/dev/tty >/tmp/tv-file; stty "$saved" </dev/tty' ''
-                  "undo"
                   ":open %sh{cat /tmp/tv-file}"
                   ":redraw"
                 ];
