@@ -156,36 +156,8 @@
 
   ### custom module stuff
   ryk = {
-    keyboardVendor = "zsa";
-
-    _1password.enable = true;
-    gamemode.enable = true;
-    obs-studio.enable = true;
-    steam.enable = true;
-
-    # audiorelay.enable = true;
-    btrfs.enable = true;
     dankMaterialShell.screenshotBackend = "swappy";
-
-    pipewire = {
-      quantum = 256;
-      # noiseSuppression.enable = true;
-    };
-    razer.enable = true;
-    dev.enable = true;
-
-    gaming = {
-      jackify.enable = true;
-      nexus-mods.enable = true;
-    };
-
-    misc = {
-      appimage.enable = true;
-    };
-
-    virtualization = {
-      winboat.enable = false; # disabled: Go 1.26.1 mingw cross-compilation broken upstream
-    };
+    pipewire.quantum = 256;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

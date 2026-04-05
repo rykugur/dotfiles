@@ -13,9 +13,6 @@ in
 {
   flake.nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
     modules = [
-      ../../../legacy-modules/nixos
-      ../../../legacy-modules
-
       self.modules.nixos.nix-defaults
       self.modules.nixos.ssh
 
@@ -29,7 +26,16 @@ in
       self.modules.nixos.stylix
 
       self.modules.nixos.pipewire
-      # self.modules.nixos.starcitizen
+      self.modules.nixos.starcitizen
+
+      self.modules.nixos._1password
+      self.modules.nixos.btrfs
+      self.modules.nixos.zsa
+      self.modules.nixos.razer
+      self.modules.nixos.obs-studio
+      self.modules.nixos.gamemode
+      self.modules.nixos.steam
+      self.modules.nixos.appimage
 
       # home-manager config
       {
@@ -64,7 +70,9 @@ in
                 espanso
                 eve-online
                 homelab
+                jackify
                 keebs
+                nexus-mods
                 nushell
                 opencode
                 starsector
