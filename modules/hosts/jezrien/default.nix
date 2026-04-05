@@ -29,7 +29,7 @@ in
       self.modules.nixos.stylix
 
       self.modules.nixos.pipewire
-      self.modules.nixos.starcitizen
+      # self.modules.nixos.starcitizen
 
       # home-manager config
       {
@@ -44,9 +44,12 @@ in
           };
           backupFileExtension = "bak";
 
-          users.${username} = { pkgs, ... }: {
-            imports =
-              [ ../../../home ]
+          users.${username} =
+            { pkgs, ... }:
+            {
+              imports = [
+                ../../../home
+              ]
               ++ (with hmModules; [
                 # groups
                 developer
@@ -70,87 +73,86 @@ in
                 zen-browser
               ]);
 
-            nixpkgs.config.permittedInsecurePackages = [
-              "electron-25.9.0"
-              "nexusmods-app-unfree-0.21.1"
-            ];
+              nixpkgs.config.permittedInsecurePackages = [
+                "electron-25.9.0"
+                "nexusmods-app-unfree-0.21.1"
+              ];
 
-            sops.secrets = {
-              homelab_ssh_private_key = {
-                sopsFile = ./secrets.yaml;
+              sops.secrets = {
+                homelab_ssh_private_key = {
+                  sopsFile = ./secrets.yaml;
+                };
               };
+
+              home.packages = with pkgs; [
+                # nix
+                nix-prefetch-scripts
+                nixd
+                nix-index
+
+                # fonts
+                font-awesome
+
+                # desktop
+                arandr
+                cliphist
+                xrandr
+                xbacklight
+
+                # misc gaming
+                dolphin-emu
+
+                affine
+                baobab
+                bottom
+                fastfetch
+                fd
+                file
+                file-roller
+                kalker
+                minder
+                mousai
+                nemo
+                nitch
+                obsidian
+                pavucontrol
+                playerctl
+                rcon-cli
+                seahorse
+                spotify
+                sshfs
+                tigervnc
+                tldr
+                vlc
+                xdg-utils
+                zenity
+
+                yt-dlg
+                yt-dlp
+
+                amdgpu_top
+                radeontop
+
+                feh
+                ristretto
+
+                libtool
+
+                telegram-desktop
+
+                google-chrome
+
+              ];
+
+              gtk.gtk4.theme = null;
+
+              programs.ghostty.settings.window-decoration = "none";
+              programs.home-manager.enable = true;
+
+              systemd.user.startServices = "sd-switch";
+
+              home.stateVersion = "23.11";
             };
-
-            home.packages = with pkgs; [
-              # nix
-              nix-prefetch-scripts
-              nixd
-              nix-index
-
-              # fonts
-              font-awesome
-
-              # desktop
-              arandr
-              cliphist
-              xrandr
-              xbacklight
-
-              nwg-look
-              catppuccin-gtk
-              # catppuccin-cursors # builds from source, takes 30+ min; not cached on nixpkgs unstable
-              catppuccin-papirus-folders
-
-              affine
-              baobab
-              bottom
-              fastfetch
-              fd
-              file
-              file-roller
-              minder
-              mousai
-              nemo
-              nitch
-              obsidian
-              pavucontrol
-              playerctl
-              rcon-cli
-              seahorse
-              spotify
-              sshfs
-              tigervnc
-              tldr
-              vlc
-              xdg-utils
-              zenity
-
-              yt-dlg
-              yt-dlp
-
-              amdgpu_top
-              radeontop
-
-              feh
-              ristretto
-
-              libtool
-
-              telegram-desktop
-
-              google-chrome
-
-              beyond-all-reason
-              kalker
-            ];
-
-            programs.ghostty.settings.window-decoration = "none";
-            programs.home-manager.enable = true;
-
-            systemd.user.startServices = "sd-switch";
-
-            home.stateVersion = "23.11";
-          };
         };
       }
     ];

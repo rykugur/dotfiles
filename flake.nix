@@ -3,8 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
-    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
@@ -17,9 +16,6 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
-
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,27 +27,17 @@
       url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
+    hyprland-qtutils = {
+      url = "github:hyprwm/hyprland-qtutils";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland-qtutils.url = "github:hyprwm/hyprland-qtutils";
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # bars/shells
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dankMaterialShell = {
       url = "github:AvengeMedia/DankMaterialShell";
-      inputs.quickshell.follows = "quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
@@ -63,12 +49,10 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-citizen.url = "github:LovingMelody/nix-citizen";
+    nix-citizen.inputs.nix-gaming.follows = "nix-gaming";
 
     ### helix
-    helix = {
-      url = "github:helix-editor/helix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    helix.url = "github:helix-editor/helix";
 
     ### random stuff
     ryze312-stackpkgs = {
@@ -85,7 +69,10 @@
     };
 
     import-tree.url = "github:vic/import-tree";
-    nix-wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
+    nix-wrapper-modules = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ### plugins
     superpowers = {

@@ -15,8 +15,14 @@ let
   ];
 
   skills = [
-    { name = "frontend-design"; src = "${inputs.skills-anthropic}/skills/frontend-design"; }
-    { name = "web-design-guidelines"; src = "${inputs.skills-vercel}/skills/web-design-guidelines"; }
+    {
+      name = "frontend-design";
+      src = "${inputs.skills-anthropic}/skills/frontend-design";
+    }
+    {
+      name = "web-design-guidelines";
+      src = "${inputs.skills-vercel}/skills/web-design-guidelines";
+    }
   ];
 
   tierModels = {
@@ -77,14 +83,12 @@ let
 
   claudeCodeSettings = {
     permissions = {
-      allow =
-        map (cmd: "Bash(${cmd}:*)") allowedBashCommands
-        ++ [
-          "mcp__jcodemunch__*"
-          "mcp__context-mode__*"
-          "mcp__plugin_context7-plugin_context7__*"
-          "WebFetch(domain:github.com)"
-        ];
+      allow = map (cmd: "Bash(${cmd}:*)") allowedBashCommands ++ [
+        "mcp__jcodemunch__*"
+        "mcp__context-mode__*"
+        "mcp__plugin_context7-plugin_context7__*"
+        "WebFetch(domain:github.com)"
+      ];
     };
   };
 

@@ -10,9 +10,14 @@ let
 in
 {
   flake.modules.homeManager.ghostty =
-    { lib, pkgs, ... }:
+    { lib, config, pkgs, ... }:
+    let
+      cfg = config.programs.ghostty;
+    in
     {
-      programs.ghostty = {
+      options.programs.ghostty.useFixedSize = lib.mkEnableOption "fixed window size for Ghostty";
+
+      config.programs.ghostty = {
         enable = true;
         package = if pkgs.stdenv.isDarwin then null else pkgs.ghostty;
         settings = {
@@ -31,8 +36,6 @@ in
           working-directory = "home";
 
           window-decoration = "auto";
-          window-height = lib.mkDefault 50;
-          window-width = lib.mkDefault 125;
 
           clipboard-paste-protection = false;
           app-notifications = false;
@@ -45,6 +48,9 @@ in
             "alt+shift+h=move_tab:-1"
             "alt+shift+l=move_tab:1"
           ];
+        } // lib.optionalAttrs cfg.useFixedSize {
+          window-height = lib.mkDefault 50;
+          window-width = lib.mkDefault 125;
         };
       };
     };

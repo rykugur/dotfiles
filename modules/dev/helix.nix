@@ -288,7 +288,7 @@
                 "scls"
               ];
               formatter = {
-                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+                command = "${pkgs.prettier}/bin/prettier";
                 args = [
                   "--parser"
                   "typescript"
@@ -299,7 +299,7 @@
               name = "json";
               auto-format = true;
               formatter = {
-                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+                command = "${pkgs.prettier}/bin/prettier";
                 args = [
                   "--parser"
                   "json"
@@ -316,7 +316,7 @@
                 "scls"
               ];
               formatter = {
-                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+                command = "${pkgs.prettier}/bin/prettier";
                 args = [
                   "--parser"
                   "typescript"
@@ -377,7 +377,7 @@
                 "scls"
               ];
               formatter = {
-                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+                command = "${pkgs.prettier}/bin/prettier";
                 args = [
                   "--parser"
                   "typescript"
@@ -394,7 +394,7 @@
                 "scls"
               ];
               formatter = {
-                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+                command = "${pkgs.prettier}/bin/prettier";
                 args = [
                   "--parser"
                   "typescript"

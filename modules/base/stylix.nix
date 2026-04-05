@@ -12,6 +12,13 @@ let
           monospace = { package = pkgs.nerd-fonts.caskaydia-mono;  name = "CaskaydiaCove NFM"; };
           emoji     = { package = pkgs.noto-fonts-color-emoji;     name = "Noto Color Emoji"; };
         };
+      } // lib.optionalAttrs (options.stylix ? icons) {
+        icons = {
+          enable = true;
+          package = pkgs.papirus-icon-theme;
+          dark = "Papirus-Dark";
+          light = "Papirus-Light";
+        };
       } // lib.optionalAttrs (options.stylix ? cursor) {
         # catppuccin-cursors builds from source, takes 30+ min; not cached on nixpkgs unstable
         # cursor = {
