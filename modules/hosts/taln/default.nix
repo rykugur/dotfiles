@@ -25,6 +25,7 @@ in
       # home-manager config
       {
         home-manager = {
+          useGlobalPkgs = true;
           extraSpecialArgs = {
             inherit inputs;
             outputs = inputs.self;

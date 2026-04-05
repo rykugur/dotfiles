@@ -10,15 +10,8 @@
     final: prev:
     let
       system = prev.stdenv.hostPlatform.system;
-      pkgs-stable = import inputs.nixpkgs-stable {
-        inherit system;
-        config.allowUnfree = true;
-      };
     in
     {
-      # TODO: this can be removed when this PR hits unstable - https://nixpk.gs/pr-tracker.html?pr=505911
-      claude-code = pkgs-stable.claude-code;
-
       audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
       hyprprop = inputs.hyprland-contrib.packages.${system}.hyprprop;
       hyprland-qtutils = inputs.hyprland-qtutils.packages."${system}".default;
@@ -52,7 +45,7 @@
         fetch7z =
           { url, sha256 }:
           let
-            filename = builtins.baseNameOf url;
+            filename = baseNameOf url;
             pname = final.lib.strings.removeSuffix ".7z" filename;
             archive = prev.fetchurl { inherit url sha256; };
           in

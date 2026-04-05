@@ -34,6 +34,7 @@ in
       # home-manager config
       {
         home-manager = {
+          useGlobalPkgs = true;
           extraSpecialArgs = {
             inherit
               inputs
@@ -72,11 +73,6 @@ in
                 wezterm
                 zen-browser
               ]);
-
-              nixpkgs.config.permittedInsecurePackages = [
-                "electron-25.9.0"
-                "nexusmods-app-unfree-0.21.1"
-              ];
 
               sops.secrets = {
                 homelab_ssh_private_key = {

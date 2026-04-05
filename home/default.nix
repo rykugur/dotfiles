@@ -1,14 +1,6 @@
-{ config, inputs, outputs, pkgs, hostname, username, ... }: {
+{ config, inputs, pkgs, hostname, username, ... }: {
   imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
-  nixpkgs = {
-    overlays = [ outputs.overlays.additions outputs.overlays.modifications ];
-    config = {
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-    };
-  };
 
   sops = {
     defaultSopsFile = ../modules/hosts/${hostname}/secrets.yaml;

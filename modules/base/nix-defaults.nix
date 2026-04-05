@@ -53,7 +53,14 @@
           inputs.self.overlays.additions
           inputs.self.overlays.modifications
         ];
-        config.allowUnfree = true;
+        config = {
+          allowUnfree = true;
+          allowUnfreePredicate = _: true;
+          permittedInsecurePackages = [
+            "electron-25.9.0"
+            "nexusmods-app-unfree-0.21.1"
+          ];
+        };
       };
     };
 }
