@@ -13,6 +13,9 @@ in
 {
   flake.nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
     modules = [
+      # TODO: migrate desktop legacy modules to dendritic
+      ../../../legacy-modules/desktop
+
       self.modules.nixos.nix-defaults
       self.modules.nixos.ssh
 
