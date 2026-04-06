@@ -23,5 +23,6 @@ Roles are abstractions around modules.
 
 ## TODO
 
-- [ ] Get rid of `roles`?
-- [ ] `claude` module mirroring what we did for `opencode`
+- [x] Get rid of `roles`?
+- [x] `claude` module mirroring what we did for `opencode`
+- [ ] remove passing username/hostname around, create option/config for it
