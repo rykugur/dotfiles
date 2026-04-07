@@ -2,6 +2,7 @@
   description = "Swoleflake";
 
   inputs = {
+    ### nix/flake stuff
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -12,6 +13,12 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    import-tree.url = "github:vic/import-tree";
+    nix-wrapper-modules = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -19,6 +26,7 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ###
 
     ### de/wm stuff
     hyprland.url = "github:hyprwm/Hyprland";
@@ -43,17 +51,17 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ###
 
     ### gaming ish
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-citizen.url = "github:LovingMelody/nix-citizen";
     nix-citizen.inputs.nix-gaming.follows = "nix-gaming";
-
-    ### helix
-    helix.url = "github:helix-editor/helix";
+    ###
 
     ### random stuff
+    helix.url = "github:helix-editor/helix";
     ryze312-stackpkgs = {
       url = "github:ryze312/stackpkgs"; # for audiorelay
       inputs.nixpkgs.follows = "nixpkgs";
@@ -66,14 +74,10 @@
       url = "github:dj95/zjstatus";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ###
 
-    import-tree.url = "github:vic/import-tree";
-    nix-wrapper-modules = {
-      url = "github:BirdeeHub/nix-wrapper-modules";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    ### plugins
+    ### ai stuff
+    #  plugins
     superpowers = {
       url = "github:obra/superpowers";
       flake = false;
@@ -86,8 +90,7 @@
       url = "github:upstash/context7";
       flake = false;
     };
-
-    ### agent skills
+    # agent skills
     skills-anthropic = {
       url = "github:anthropics/skills";
       flake = false;
@@ -96,6 +99,7 @@
       url = "github:vercel-labs/agent-skills";
       flake = false;
     };
+    ###
   };
 
   outputs =

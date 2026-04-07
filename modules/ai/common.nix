@@ -14,7 +14,7 @@
       '';
 
       home.activation.rtkInitCodex = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        run ${pkgs.rtk}/bin/rtk init -g --codex --auto-patch
+        run ${pkgs.rtk}/bin/rtk init -g --codex
       '';
     };
 }
