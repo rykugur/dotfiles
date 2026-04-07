@@ -90,6 +90,11 @@ let
         "WebFetch(domain:github.com)"
       ];
     };
+    statusLine = {
+      type = "command";
+      command = "ccstatusline";
+      padding = 0;
+    };
   };
 
   mkWrappedClaudeCode =
@@ -103,9 +108,18 @@ let
 in
 {
   flake.modules.homeManager.claude-code =
-    { pkgs, ... }:
+    { config, pkgs, ... }:
+    let
+      configFile = "${config.home.homeDirectory}/.dotfiles/configs/ccstatusline/settings.json";
+      ccstatusline = pkgs.writeShellScriptBin "ccstatusline" ''
+        exec ${pkgs.bun}/bin/bun x -y ccstatusline@latest --config "${configFile}" "$@"
+      '';
+    in
     {
-      home.packages = [ (mkWrappedClaudeCode pkgs) ];
+      home.packages = [
+        (mkWrappedClaudeCode pkgs)
+        ccstatusline
+      ];
       home.file = builtins.listToAttrs (
         map (agent: {
           name = ".claude/agents/${agent.name}.md";
