@@ -45,8 +45,9 @@ in
                 developer
 
                 # individual modules (not in developer group)
-                ccstatusline
+                ai-common
                 claude-code
+                codex
                 espanso
                 homelab
                 nushell

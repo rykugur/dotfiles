@@ -68,8 +68,9 @@ in
 
                 # individual modules
                 btop
-                ccstatusline
+                ai-common
                 claude-code
+                codex
                 espanso
                 eve-online
                 homelab
