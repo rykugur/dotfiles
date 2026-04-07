@@ -1,0 +1,22 @@
+wing: dotfiles
+rooms:
+- name: configuration
+  description: Files from configs/
+- name: overlays
+  description: Files from overlays/
+- name: pkgs
+  description: Files from pkgs/
+- name: scripts
+  description: Files from scripts/
+- name: shells
+  description: Files from shells/
+- name: home
+  description: Files from home/
+- name: legacy_modules
+  description: Files from legacy-modules/
+- name: modules
+  description: Files from modules/
+- name: documentation
+  description: Files from docs/
+- name: general
+  description: Files that don't fit other rooms
