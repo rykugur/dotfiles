@@ -47,6 +47,10 @@ in
             "alt+l=next_tab"
             "alt+shift+h=move_tab:-1"
             "alt+shift+l=move_tab:1"
+            "ctrl+shift+h=goto_split:left"
+            "ctrl+shift+j=goto_split:bottom"
+            "ctrl+shift+k=goto_split:top"
+            "ctrl+shift+l=goto_split:right"
           ];
         } // lib.optionalAttrs cfg.useFixedSize {
           window-height = lib.mkDefault 50;
