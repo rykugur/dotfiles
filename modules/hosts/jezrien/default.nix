@@ -57,10 +57,7 @@ in
           users.${username} =
             { pkgs, ... }:
             {
-              imports = [
-                ../../../home
-              ]
-              ++ (with hmModules; [
+              imports = with hmModules; [
                 # groups
                 developer
                 gaming
@@ -79,12 +76,13 @@ in
                 nexus-mods
                 nushell
                 opencode
+                sops
                 starsector
                 swappy
                 television
                 wezterm
                 zen-browser
-              ]);
+              ];
 
               sops.secrets = {
                 homelab_ssh_private_key = {
@@ -155,6 +153,7 @@ in
               gtk.gtk4.theme = null;
 
               programs.ghostty.settings.window-decoration = "none";
+              xdg.enable = true;
               programs.home-manager.enable = true;
 
               systemd.user.startServices = "sd-switch";

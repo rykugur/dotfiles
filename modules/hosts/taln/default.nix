@@ -37,10 +37,7 @@ in
           users.${username} =
             { pkgs, ... }:
             {
-              imports = [
-                ../../../home
-              ]
-              ++ (with hmModules; [
+              imports = with hmModules; [
                 # group
                 developer
 
@@ -52,9 +49,10 @@ in
                 homelab
                 nushell
                 opencode
+                sops
                 ssh
                 television
-              ]);
+              ];
 
               home.packages = with pkgs; [
                 nh
@@ -64,6 +62,7 @@ in
                 tldr
               ];
 
+              xdg.enable = true;
               programs.home-manager.enable = true;
 
               home.stateVersion = "23.11";

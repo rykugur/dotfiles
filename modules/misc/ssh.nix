@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ self, ... }:
 {
   flake.modules.nixos.ssh =
     { username, ... }:
@@ -25,12 +25,8 @@
     };
 
   flake.modules.homeManager.ssh =
-    { config, hostname, pkgs, ... }:
+    { config, hostname, ... }:
     {
-      imports = [ inputs.sops-nix.homeManagerModules.sops ];
-
-      home.packages = with pkgs; [ age sops ];
-
       sops = {
         secrets.ssh_private_key = {
           sopsFile = ../hosts/${hostname}/secrets.yaml;
