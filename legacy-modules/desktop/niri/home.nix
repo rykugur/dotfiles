@@ -178,6 +178,10 @@ in
                 ]);
                 repeat = false;
               };
+              "Mod+m" = {
+                action = maximize-column;
+                repeat = false;
+              };
               "Mod+g" = {
                 action = lib.mkDefault (spawn [
                   "${config.home.homeDirectory}/.nix-profile/bin/eve-toggle.nu"

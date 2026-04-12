@@ -9,7 +9,9 @@
     in
     {
       home.packages = [
+        pkgs.llmfit
         pkgs.rtk
+
         mempalace
       ];
 
