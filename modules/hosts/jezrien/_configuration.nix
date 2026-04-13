@@ -106,6 +106,8 @@
     nix-ld = {
       enable = true;
     };
+
+    noisetorch.enable = true;
   };
 
   services = {

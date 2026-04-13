@@ -117,6 +117,12 @@ in
           spawn-at-startup = [
             { argv = [ "1password" ]; }
             { argv = [ "discord" ]; }
+            {
+              argv = [
+                "noisetorch"
+                "-i"
+              ];
+            }
             { argv = [ "steam" ]; }
             {
               argv = [
