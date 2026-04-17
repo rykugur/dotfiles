@@ -77,6 +77,8 @@
     ###
 
     ### ai stuff
+    hermes-agent.url = "github:NousResearch/hermes-agent";
+
     #  plugins
     superpowers = {
       url = "github:obra/superpowers";
