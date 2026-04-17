@@ -153,6 +153,17 @@ in
               gtk.gtk4.theme = null;
 
               programs.ghostty.settings.window-decoration = "none";
+
+              xdg.configFile."noisetorch/config.toml".text = ''
+                Threshold = 70
+                DisplayMonitorSources = false
+                EnableUpdates = true
+                FilterInput = true
+                FilterOutput = false
+                LastUsedInput = "alsa_input.usb-Elgato_Systems_Elgato_Wave_3_BS14M1A01945-00.mono-fallback"
+                LastUsedOutput = ""
+              '';
+
               xdg.enable = true;
               programs.home-manager.enable = true;
 
