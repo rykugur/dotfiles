@@ -16,6 +16,9 @@
           ui = {
             theme = "catppuccin";
           };
+          shell_integration.channel_triggers = {
+            files = [ "cat" "less" "head" "tail" "vim" "nvim" "hx" "nano" "bat" "cp" "mv" "rm" "touch" "chmod" "chown" ];
+          };
         };
       };
 
