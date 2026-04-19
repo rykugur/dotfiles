@@ -77,7 +77,7 @@ in
                 nexus-mods
                 nushell
                 opencode
-                sesh
+                # sesh
                 sops
                 starsector
                 swappy
