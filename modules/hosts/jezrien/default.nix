@@ -34,11 +34,15 @@ in
       self.modules.nixos._1password
       self.modules.nixos.btrfs
       self.modules.nixos.zsa
-      self.modules.nixos.razer
-      self.modules.nixos.obs-studio
-      self.modules.nixos.gamemode
-      self.modules.nixos.steam
+
+      self.modules.nixos.docker
+      self.modules.nixos.winboat
+
       self.modules.nixos.appimage
+      self.modules.nixos.gamemode
+      self.modules.nixos.obs-studio
+      self.modules.nixos.razer
+      self.modules.nixos.steam
 
       # home-manager config
       {
