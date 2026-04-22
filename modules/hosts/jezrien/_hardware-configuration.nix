@@ -8,7 +8,7 @@
     [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
-  boot.kernelParams = [ ];
+  boot.kernelParams = [ "nvme_core.default_ps_limit=0" ];
 
   fileSystems."/" = {
     device = "/dev/nvme0n1p2";
