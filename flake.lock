@@ -509,6 +509,22 @@
         "type": "github"
       }
     },
+    "hermes-webui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777254458,
+        "narHash": "sha256-YGn0Mh6YHk2ieHVXZ8XrkaHrH0cSFIrdOS0na+o/Lmw=",
+        "owner": "nesquena",
+        "repo": "hermes-webui",
+        "rev": "69bf2878bcd727a951e64677499ab4381f169c3f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nesquena",
+        "repo": "hermes-webui",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1011,6 +1027,22 @@
       "original": {
         "owner": "vic",
         "repo": "import-tree",
+        "type": "github"
+      }
+    },
+    "karpathy-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776679504,
+        "narHash": "sha256-4z/wRdYH7UXRzF8RJU0sw8xbpx0BW/7CBv5sVEC2knY=",
+        "owner": "forrestchang",
+        "repo": "andrej-karpathy-skills",
+        "rev": "2c606141936f1eeef17fa3043a72095b4765b9c2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "forrestchang",
+        "repo": "andrej-karpathy-skills",
         "type": "github"
       }
     },
@@ -1568,11 +1600,13 @@
         "flake-parts": "flake-parts",
         "helix": "helix",
         "hermes-agent": "hermes-agent",
+        "hermes-webui": "hermes-webui",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "hyprland-contrib": "hyprland-contrib",
         "hyprland-qtutils": "hyprland-qtutils",
         "import-tree": "import-tree",
+        "karpathy-skills": "karpathy-skills",
         "niri": "niri",
         "nix-citizen": "nix-citizen",
         "nix-darwin": "nix-darwin",

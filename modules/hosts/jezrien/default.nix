@@ -71,7 +71,7 @@ in
                 btop
                 ai-common
                 claude-code
-                hermes-agent
+                # hermes-agent
                 codex
                 espanso
                 eve-online

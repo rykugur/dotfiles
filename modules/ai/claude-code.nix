@@ -78,6 +78,7 @@ let
 
   mkPluginDirs = pkgs: [
     "${inputs.superpowers}"
+    "${inputs.karpathy-skills}"
     "${inputs.claude-plugins-official}/plugins/code-simplifier"
     # context7 plugin with .mcp.json patched to use bunx instead of failing HTTP endpoint
     "${pkgs.runCommand "context7-plugin" { } ''

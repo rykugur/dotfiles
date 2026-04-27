@@ -121,6 +121,8 @@ in
               argv = [
                 "noisetorch"
                 "-i"
+                "-s"
+                "alsa_input.usb-Elgato_Systems_Elgato_Wave_3_BS14M1A01945-00.mono-fallback"
               ];
             }
             { argv = [ "steam" ]; }
