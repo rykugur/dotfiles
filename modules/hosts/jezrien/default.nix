@@ -78,7 +78,6 @@ in
                 homelab
                 jackify
                 keebs
-                nexus-mods
                 nushell
                 opencode
                 # sesh
