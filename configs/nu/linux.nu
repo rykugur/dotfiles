@@ -27,3 +27,7 @@ alias tmat = sesh connect (sesh list -t | fzf)
 alias top = btop
 alias whatthecommit = curl -s https://whatthecommit.com/index.txt
 alias ytdl = youtube-dl --no-playlist -x --audio-format mp3 --audio-quality 3
+
+def stay-awake [] {
+  systemd-inhibit --what=idle:sleep --who=me --why=watching sleep infinity
+}
