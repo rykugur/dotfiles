@@ -55,7 +55,7 @@
                 "fd -t f"
                 "fd -t f -H"
               ];
-              display = "{split:/:-1}";
+              display = "{split:/:-1}  {split:/:0..-1}";
             };
             ui.preview_panel.header = "{}";
             preview = {
