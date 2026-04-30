@@ -117,14 +117,6 @@ in
           spawn-at-startup = [
             { argv = [ "1password" ]; }
             { argv = [ "discord" ]; }
-            {
-              argv = [
-                "noisetorch"
-                "-i"
-                "-s"
-                "alsa_input.usb-Elgato_Systems_Elgato_Wave_3_BS14M1A01945-00.mono-fallback"
-              ];
-            }
             { argv = [ "steam" ]; }
             {
               argv = [

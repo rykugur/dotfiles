@@ -106,8 +106,6 @@
     nix-ld = {
       enable = true;
     };
-
-    noisetorch.enable = true;
   };
 
   services = {
@@ -159,7 +157,10 @@
   ### custom module stuff
   ryk = {
     dankMaterialShell.screenshotBackend = "swappy";
-    pipewire.quantum = 256;
+    pipewire = {
+      quantum = 256;
+      noiseSuppression.enable = false;
+    };
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

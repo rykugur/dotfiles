@@ -12,6 +12,15 @@ let
     "git"
     "ls"
     "find"
+    "rtk gain"
+    "rtk discover"
+    "rtk --version"
+    "rtk git"
+    "rtk ls"
+    "rtk find"
+    "rtk curl"
+    "rtk nix"
+    "rtk kubectl"
   ];
 
   skills = [

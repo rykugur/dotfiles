@@ -1,7 +1,12 @@
 { ... }:
 {
   flake.modules.nixos.pipewire =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       cfg = config.ryk.pipewire;
       nsCfg = cfg.noiseSuppression;
@@ -33,9 +38,11 @@
       };
 
       config = {
-        environment.systemPackages = with pkgs;
-          [ pulseaudio alsa-utils faudio ]
-          ++ lib.optionals nsCfg.enable [ rnnoise-plugin ];
+        environment.systemPackages = with pkgs; [
+          pulseaudio
+          alsa-utils
+          faudio
+        ];
 
         services.pipewire = {
           enable = true;
@@ -45,10 +52,12 @@
           };
           pulse.enable = true;
 
+          extraLadspaPackages = lib.optionals nsCfg.enable [ pkgs.rnnoise-plugin ];
+
           extraConfig =
             let
-              rate = builtins.toString cfg.rate;
-              quantum = builtins.toString cfg.quantum;
+              rate = toString cfg.rate;
+              quantum = toString cfg.quantum;
               qor = "${quantum}/${rate}";
             in
             {
@@ -59,10 +68,12 @@
                   "default.clock.min-quantum" = quantum;
                   "default.clock.max-quantum" = quantum;
                 };
-              } // lib.optionalAttrs nsCfg.enable {
+              }
+              // lib.optionalAttrs nsCfg.enable {
                 "99-input-denoising"."context.modules" = [
                   {
                     name = "libpipewire-module-filter-chain";
+                    flags = [ "nofail" ];
                     args = {
                       "node.description" = "Noise Canceling Source";
                       "media.name" = "Noise Canceling Source";
@@ -71,7 +82,10 @@
                           {
                             type = "ladspa";
                             name = "rnnoise";
-                            plugin = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
+                            # PipeWire's LADSPA loader resolves this via LADSPA_PATH.
+                            # Using the bare plugin name is more robust here than a
+                            # store path with a ".so" suffix.
+                            plugin = "librnnoise_ladspa";
                             label = "noise_suppressor_mono";
                             control = {
                               "VAD Threshold (%)" = nsCfg.vadThreshold;
