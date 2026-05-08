@@ -44,7 +44,7 @@ in
                 # individual modules (not in developer group)
                 ai-common
                 claude-code
-                # codex
+                codex
                 espanso
                 homelab
                 nushell
