@@ -274,6 +274,7 @@ in
               "$mainMod, V, togglefloating"
 
               # "$mainMod SHIFT, F1, exec, ~/.dotfiles/configs/hypr/scripts/hyprprop-wlcopy.nu"
+              # TODO: move this script into this dir
               "$mainMod, g, exec, ~/.dotfiles/configs/nu/scripts/toggle-eve.nu"
             ]
             ++ [
