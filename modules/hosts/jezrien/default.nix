@@ -80,6 +80,7 @@ in
                 jackify
                 keebs
                 nushell
+                obsidian
                 opencode
                 # sesh
                 sops
@@ -126,7 +127,6 @@ in
                 mousai
                 nemo
                 nitch
-                obsidian
                 pavucontrol
                 playerctl
                 rcon-cli
