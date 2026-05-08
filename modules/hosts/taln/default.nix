@@ -48,6 +48,7 @@ in
                 espanso
                 homelab
                 nushell
+                obsidian
                 opencode
                 sops
                 ssh
