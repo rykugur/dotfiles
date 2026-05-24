@@ -52,7 +52,7 @@ hosts/jezrien/
 
 ### Pinning strategy
 
-A single version string (e.g. `"1.50.1"`) shared across `pkgs/sui.nix`, `pkgs/move-analyzer.nix`, and the tree-sitter grammar `rev` in `modules/dev/sui.nix`. Bumping = update one constant + three hashes. Channel: `testnet` (matches EVE Frontier docs).
+A single version string (e.g. `"1.50.1"`) shared across `pkgs/sui.nix`, `pkgs/move-analyzer.nix`, and the tree-sitter grammar `rev` in `modules/dev/sui.nix`. Bumping = update one constant + two hashes (sui tarball, move-analyzer source). Helix's grammar fetcher handles its own checksumming for the tree-sitter source. Channel: `testnet` (matches EVE Frontier docs).
 
 ## Component design
 
