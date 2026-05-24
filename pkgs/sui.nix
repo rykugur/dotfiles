@@ -25,11 +25,12 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     install -Dm755 sui $out/bin/sui
+    install -Dm755 move-analyzer $out/bin/move-analyzer
     runHook postInstall
   '';
 
   meta = {
-    description = "Sui blockchain CLI (prebuilt from MystenLabs releases)";
+    description = "Sui blockchain CLI and move-analyzer LSP (prebuilt from MystenLabs releases)";
     homepage = "https://github.com/MystenLabs/sui";
     platforms = [ "x86_64-linux" ];
   };

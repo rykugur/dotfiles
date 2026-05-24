@@ -23,4 +23,5 @@ in
 
   ### sui/move (eve frontier)
   sui = pkgs.callPackage ./sui.nix { version = suiVersion; };
+  move-analyzer = pkgs.callPackage ./move-analyzer.nix { version = suiVersion; };
 }
