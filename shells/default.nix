@@ -14,6 +14,7 @@
       fnm
       git-lfs
     ];
+
     shellHook = ''
       eval "$(fnm env)"
       fnm use
@@ -32,6 +33,13 @@
     '';
   };
 
+  react-env = pkgs.mkShell {
+    buildInputs = with pkgs; [
+      bun
+      nodejs
+    ];
+  };
+
   rust = pkgs.mkShell {
     buildInputs = with pkgs; [
       rustc
@@ -42,5 +50,13 @@
     shellHook = ''
       exec nu
     '';
+  };
+
+  rust-env = pkgs.mkShell {
+    buildInputs = with pkgs; [
+      rustc
+      cargo
+      cargo-generate
+    ];
   };
 }
