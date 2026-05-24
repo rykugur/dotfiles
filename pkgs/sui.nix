@@ -1,26 +1,36 @@
 {
   stdenv,
+  lib,
   fetchurl,
   autoPatchelfHook,
   openssl,
   version,
 }:
+let
+  sources = {
+    "x86_64-linux" = {
+      url = "https://github.com/MystenLabs/sui/releases/download/testnet-v${version}/sui-testnet-v${version}-ubuntu-x86_64.tgz";
+      sha256 = "sha256-l9bjpr6N4kwWKxjEgmBstjqnvJbAbrQ3iIw1sS/07lM=";
+    };
+    "aarch64-darwin" = {
+      url = "https://github.com/MystenLabs/sui/releases/download/testnet-v${version}/sui-testnet-v${version}-macos-arm64.tgz";
+      sha256 = "sha256-B94sfuUM75+nLGAfgR53tLpuRoJgoe76a5Upi7TtKao=";
+    };
+  };
+  source =
+    sources.${stdenv.hostPlatform.system}
+      or (throw "sui: unsupported platform ${stdenv.hostPlatform.system}");
+in
 stdenv.mkDerivation {
   pname = "sui";
   inherit version;
 
-  src = fetchurl {
-    url = "https://github.com/MystenLabs/sui/releases/download/testnet-v${version}/sui-testnet-v${version}-ubuntu-x86_64.tgz";
-    sha256 = "sha256-l9bjpr6N4kwWKxjEgmBstjqnvJbAbrQ3iIw1sS/07lM=";
-  };
+  src = fetchurl source;
 
   sourceRoot = ".";
 
-  nativeBuildInputs = [ autoPatchelfHook ];
-  buildInputs = [
-    stdenv.cc.cc.lib
-    openssl
-  ];
+  nativeBuildInputs = lib.optionals stdenv.isLinux [ autoPatchelfHook ];
+  buildInputs = lib.optionals stdenv.isLinux [ stdenv.cc.cc.lib ] ++ [ openssl ];
 
   installPhase = ''
     runHook preInstall
@@ -32,6 +42,9 @@ stdenv.mkDerivation {
   meta = {
     description = "Sui blockchain CLI and move-analyzer LSP (prebuilt from MystenLabs releases)";
     homepage = "https://github.com/MystenLabs/sui";
-    platforms = [ "x86_64-linux" ];
+    platforms = [
+      "x86_64-linux"
+      "aarch64-darwin"
+    ];
   };
 }

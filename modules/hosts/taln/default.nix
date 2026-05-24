@@ -52,6 +52,7 @@ in
                 opencode
                 sops
                 ssh
+                sui
                 television
               ];
 

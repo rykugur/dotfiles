@@ -40,30 +40,30 @@
           enable = true;
           enableDefaultConfig = false;
 
-          matchBlocks = {
+          settings = {
             "*" = {
-              forwardAgent = false;
-              addKeysToAgent = "no";
-              compression = false;
-              serverAliveInterval = 0;
-              serverAliveCountMax = 3;
-              hashKnownHosts = false;
-              userKnownHostsFile = "~/.ssh/known_hosts";
-              controlMaster = "no";
-              controlPath = "~/.ssh/master-%r@%n:%p";
-              controlPersist = "no";
+              ForwardAgent = false;
+              AddKeysToAgent = "no";
+              Compression = false;
+              ServerAliveInterval = 0;
+              ServerAliveCountMax = 3;
+              HashKnownHosts = false;
+              UserKnownHostsFile = "~/.ssh/known_hosts";
+              ControlMaster = "no";
+              ControlPath = "~/.ssh/master-%r@%n:%p";
+              ControlPersist = "no";
             };
 
             "*.local.ryk.sh" = {
-              identityFile = "~/.ssh/id_ed25519";
-              identitiesOnly = true;
-              forwardAgent = true;
+              IdentityFile = "~/.ssh/id_ed25519";
+              IdentitiesOnly = true;
+              ForwardAgent = true;
             };
 
             "github.com" = {
-              identityFile = "~/.ssh/id_ed25519";
-              identitiesOnly = true;
-              forwardAgent = false;
+              IdentityFile = "~/.ssh/id_ed25519";
+              IdentitiesOnly = true;
+              ForwardAgent = false;
             };
           };
         };

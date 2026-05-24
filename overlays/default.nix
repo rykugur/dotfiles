@@ -22,9 +22,11 @@
       # so the upstream version check misses it. Apply a linux-zen-specific
       # patch that unconditionally uses the 6-arg form.
       linuxPackages_zen = prev.linuxPackages_zen.extend (_: lprev: {
-        openrazer = lprev.openrazer.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [ ../pkgs/openrazer-zen-kernel.patch ];
-        });
+        openrazer = prev.lib.warn
+          "openrazer: linux-zen kernel patch still applied — check if linux-zen has reached a version where the upstream fix (LINUX_VERSION_CODE >= 7.0.10) triggers, or if openrazer > 3.12.2 has landed"
+          (lprev.openrazer.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ../pkgs/openrazer-zen-kernel.patch ];
+          }));
       });
 
       audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
