@@ -29,7 +29,10 @@ in
       self.modules.nixos.stylix
 
       self.modules.nixos.pipewire
-      self.modules.nixos.starcitizen
+      # disabled: nix-gaming dxvk strictDeps/structuredAttrs regression breaks
+      # rsi-launcher eval (cross-spliced through wineprefix-preparer). Using
+      # Lutris instead until upstream nix-gaming fixes it.
+      # self.modules.nixos.starcitizen
 
       self.modules.nixos._1password
       self.modules.nixos.btrfs
