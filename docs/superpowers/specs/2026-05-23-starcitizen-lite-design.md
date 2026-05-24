@@ -25,7 +25,7 @@ Dendritic module mirroring the structure of `modules/gaming/starcitizen.nix`. Ex
 - LUG prereqs (values match nix-citizen's, which exceed the LUG floor):
   - `boot.kernel.sysctl."vm.max_map_count" = lib.mkOverride 999 16777216`
   - `boot.kernel.sysctl."fs.file-max" = lib.mkOverride 999 524288`
-  - `security.pam.loginLimits = [{ domain = "*"; type = "soft"; item = "nofile"; value = "16777216"; }]`
+  - `security.pam.loginLimits` sets both `soft` and `hard` `nofile` to `16777216` (Linux requires `soft ≤ hard`; `soft`-only — as nix-citizen does — won't actually let processes raise their nofile above the system default)
 - Kernel modules (same set nix-citizen sets up):
   - `boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ]`
   - `boot.kernelModules = [ "snd-aloop" ] ++ lib.optional (lib.versionAtLeast config.boot.kernelPackages.kernel.version "6.14") "ntsync"`
