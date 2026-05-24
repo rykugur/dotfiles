@@ -12,13 +12,23 @@
 
 ---
 
+## Design Pivot (discovered during implementation)
+
+The Mysten release tarball ships `move-analyzer` alongside `sui`. The original plan to build `move-analyzer` from source via `rustPlatform.buildRustPackage` was unnecessary and hit a `cargo-vendor-dir` bug with sui's patched workspace. Pivot:
+
+- **One derivation** (`pkgs/sui.nix`) installs both `sui` and `move-analyzer` from the same tarball.
+- No `pkgs/move-analyzer.nix`. No `pkgs.move-analyzer` attribute.
+- Helix module references `${pkgs.sui}/bin/move-analyzer` directly.
+- Dev shell pulls `pkgs.sui`; both binaries end up on PATH.
+
+Tasks below reflect the post-pivot state. Task 2 is collapsed into Task 1's commits.
+
 ## File Structure
 
 ```
 pkgs/
-  sui.nix              # NEW — stdenv.mkDerivation, prebuilt sui CLI, autoPatchelfHook
-  move-analyzer.nix    # NEW — rustPlatform.buildRustPackage from sui repo source
-  default.nix          # MODIFY — add suiVersion let-binding + two callPackage entries
+  sui.nix              # NEW — installs sui + move-analyzer from one prebuilt tarball
+  default.nix          # MODIFY — add suiVersion let-binding + sui callPackage entry
 
 shells/
   default.nix          # MODIFY — add `sui` attribute
@@ -36,9 +46,8 @@ modules/hosts/jezrien/
 
 **Responsibility split (one purpose per file):**
 
-- `pkgs/sui.nix` owns the prebuilt-binary derivation and platform constraint (`x86_64-linux` only)
-- `pkgs/move-analyzer.nix` owns the source build derivation
-- `pkgs/default.nix` owns the version constant and wires both via `callPackage`
+- `pkgs/sui.nix` owns the prebuilt-binary derivation (sui + move-analyzer) and platform constraint (`x86_64-linux` only)
+- `pkgs/default.nix` owns the version constant and wires `sui` via `callPackage`
 - `shells/default.nix` owns dev shell composition
 - `configs/helix-move/queries/` owns vendored tree-sitter queries (may need helix-specific edits)
 - `modules/dev/sui.nix` owns helix integration (LSP + grammar + queries install)
@@ -213,109 +222,13 @@ EOF
 
 ---
 
-## Task 2: Create `pkgs/move-analyzer.nix` derivation
+## Task 2: ~~Create `pkgs/move-analyzer.nix` derivation~~ — SUPERSEDED BY PIVOT
 
-**Files:**
-- Create: `pkgs/move-analyzer.nix`
-- Modify: `pkgs/default.nix`
+This task is no longer needed. The Mysten prebuilt tarball ships `move-analyzer` alongside `sui`. Instead, `pkgs/sui.nix` was extended to install both binaries from the same fetched tarball.
 
-- [ ] **Step 2.1: Write the derivation with sentinel hashes**
+The pivot landed in commits `bebe5f17` (add move-analyzer install line to sui.nix) and `1f96dbb7` (remove the standalone `pkgs/move-analyzer.nix` and its `pkgs/default.nix` wiring). No further work required for this task — proceed to Task 3.
 
-Create `pkgs/move-analyzer.nix`:
-
-```nix
-{
-  rustPlatform,
-  fetchFromGitHub,
-  version,
-}:
-rustPlatform.buildRustPackage {
-  pname = "move-analyzer";
-  inherit version;
-
-  src = fetchFromGitHub {
-    owner = "MystenLabs";
-    repo = "sui";
-    rev = "testnet-v${version}";
-    sha256 = "0000000000000000000000000000000000000000000000000000";
-  };
-
-  cargoLock = {
-    lockFile = "${src}/Cargo.lock";
-  };
-
-  buildAndTestSubdir = "external-crates/move/crates/move-analyzer";
-
-  doCheck = false;
-
-  meta = {
-    description = "Move language server (from MystenLabs/sui)";
-    homepage = "https://github.com/MystenLabs/sui";
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
-  };
-}
-```
-
-**Note on `cargoLock.lockFile = "${src}/Cargo.lock"`:** if Nix complains that `src` is not in scope inside `cargoLock`, restructure as a let-binding:
-
-```nix
-let
-  src = fetchFromGitHub { ... };
-in
-rustPlatform.buildRustPackage {
-  inherit src;
-  cargoLock.lockFile = "${src}/Cargo.lock";
-  ...
-}
-```
-
-- [ ] **Step 2.2: Wire into `pkgs/default.nix`**
-
-Add a line after the `sui` entry:
-
-```nix
-  move-analyzer = pkgs.callPackage ./move-analyzer.nix { version = suiVersion; };
-```
-
-- [ ] **Step 2.3: Build to discover the source hash**
-
-Run: `nix build .#move-analyzer --no-link 2>&1 | tee /tmp/move-analyzer-hash.log`
-Expected: hash mismatch error with a real `got:` hash for the fetchFromGitHub.
-
-- [ ] **Step 2.4: Update the src sha256**
-
-Replace the placeholder in `pkgs/move-analyzer.nix` with the real hash.
-
-- [ ] **Step 2.5: Build again — handle cargo deps**
-
-Run: `nix build .#move-analyzer --no-link 2>&1 | tee /tmp/move-analyzer-build.log`
-
-Three possible outcomes:
-1. **Success** — proceed to Step 2.7.
-2. **`cargoLock` missing `outputHashes` for git dependencies** — error mentions specific git deps (e.g., `error: No hash was found for git dependency 'foo'`). Add `cargoLock.outputHashes = { "<crate>-<version>" = "<hash>"; };` to the derivation. Re-run; iterate hash by hash.
-3. **Compilation failure inside the move-analyzer crate** — likely a missing system dep. Common candidates: `pkg-config`, `openssl`, `libgit2`. Add to `nativeBuildInputs` or `buildInputs`. Re-run.
-
-- [ ] **Step 2.6: Verify the binary runs**
-
-Run: `nix run .#move-analyzer -- --version 2>&1 || nix run .#move-analyzer -- --help 2>&1 | head -5`
-
-Expected: prints version OR help text (move-analyzer may not have `--version`; help text is acceptable confirmation it runs).
-
-- [ ] **Step 2.7: Commit**
-
-```bash
-git add pkgs/move-analyzer.nix pkgs/default.nix
-git commit -m "$(cat <<'EOF'
-feat(pkgs): add move-analyzer LSP from sui source
-
-Built via rustPlatform.buildRustPackage from MystenLabs/sui at the
-same testnet tag as the sui CLI. Tests disabled (require broader
-workspace context).
-
-Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>
-EOF
-)"
-```
+References to `pkgs.move-analyzer` in later tasks are updated to use `${pkgs.sui}/bin/move-analyzer` directly.
 
 ---
 
@@ -331,8 +244,7 @@ Edit `shells/default.nix`. Insert before the closing `}`:
 ```nix
   sui = pkgs.mkShell {
     buildInputs = with pkgs; [
-      sui
-      move-analyzer
+      sui  # also brings move-analyzer onto PATH
       bun
       nodejs
       git-lfs
@@ -450,7 +362,7 @@ Create `modules/dev/sui.nix`:
       programs.helix = lib.mkIf config.programs.helix.enable {
         languages = {
           language-server.move-analyzer = {
-            command = lib.getExe pkgs.move-analyzer;
+            command = "${pkgs.sui}/bin/move-analyzer";
           };
 
           grammar = [
@@ -708,7 +620,7 @@ Check each criterion from the spec:
 
 ## Notes for the implementer
 
-- **Version bumps later:** edit `suiVersion` in `pkgs/default.nix` (one place), then re-run `nix build .#sui` and `nix build .#move-analyzer` — both will fail with new `got:` hashes, paste them in. The home-manager module reads `pkgs.sui.version` so it follows automatically. Helix will refetch the tree-sitter source on its own.
+- **Version bumps later:** edit `suiVersion` in `pkgs/default.nix` (one place), then re-run `nix build .#sui` — fails with the new `got:` hash; paste it in. Both `sui` and `move-analyzer` come from the same tarball, so one hash covers both. The home-manager module reads `pkgs.sui.version` so it follows automatically. Helix will refetch the tree-sitter source on its own.
 - **macOS:** out of scope. The `meta.platforms` constraint on `pkgs/sui.nix` ensures `nix flake check` skips it on darwin.
 - **Don't edit `modules/dev/helix.nix`** — the design constraint is that helix stays domain-agnostic. All Move-specific helix config lives in `modules/dev/sui.nix`.
 - **Reachable from outside dotfiles:** once shipped, you can use the shell from your EF project directory via `nix develop /home/dusty/projects/dotfiles#sui` or by adding a thin `flake.nix` to that project that references this flake.
