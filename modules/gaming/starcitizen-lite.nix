@@ -25,6 +25,12 @@
           item = "nofile";
           value = "16777216";
         }
+        {
+          domain = "*";
+          type = "hard";
+          item = "nofile";
+          value = "16777216";
+        }
       ];
 
       # Kernel modules nix-citizen sets up for SC's audio/video pipeline.
