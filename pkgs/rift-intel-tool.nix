@@ -8,7 +8,7 @@
 }:
 
 let
-  version = "5.18.4";
+  version = "5.21.12";
 
   # Libraries needed by the bundled JRE's AWT/Swing
   runtimeLibs = [
@@ -36,7 +36,7 @@ stdenv.mkDerivation {
 
   src = fetchurl {
     url = "https://riftforeve.online/download/rift-${version}-linux-amd64.tar.gz";
-    sha256 = "sha256-m2mJpVbwzI1c3gTXOOPPGBjVlT1VWcOEiMHlr9NVUZ8=";
+    sha256 = "sha256-JO73VyRUpRmWusRmTdFGwVTHKrMsM2YxL1BzAMR+n68=";
   };
 
   nativeBuildInputs = [ makeWrapper autoPatchelfHook ];

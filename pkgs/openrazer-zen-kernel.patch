@@ -1,0 +1,24 @@
+razerkbd: adjust hid_report_raw_event() signature for linux-zen 7.0.8+
+
+Upstream openrazer fix (commit ef574225) guards the 6-arg call on
+LINUX_VERSION_CODE >= 7.0.10. linux-zen backports the kernel API change
+from 7.0.8+ but still reports as 7.0.9, so the version check misses it.
+This overlay only applies to linuxPackages_zen, so unconditionally use
+the 6-arg form.
+
+--- a/driver/razerkbd_driver.c
++++ b/driver/razerkbd_driver.c
+@@ -4834,11 +4834,11 @@
+
+                             // report key down
+                             xdata[1] = cur_value;
+-                            hid_report_raw_event(hdev, HID_INPUT_REPORT, xdata, sizeof(xdata), 0);
++                            hid_report_raw_event(hdev, HID_INPUT_REPORT, xdata, sizeof(xdata), sizeof(xdata), 0);
+
+                             // report key up
+                             xdata[1] = 0x00;
+-                            hid_report_raw_event(hdev, HID_INPUT_REPORT, xdata, sizeof(xdata), 0);
++                            hid_report_raw_event(hdev, HID_INPUT_REPORT, xdata, sizeof(xdata), sizeof(xdata), 0);
+                         }
+                     }
+                 }

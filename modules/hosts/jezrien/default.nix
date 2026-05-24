@@ -29,7 +29,12 @@ in
       self.modules.nixos.stylix
 
       self.modules.nixos.pipewire
-      self.modules.nixos.starcitizen
+      # disabled: nix-gaming dxvk strictDeps/structuredAttrs regression breaks
+      # rsi-launcher eval (cross-spliced through wineprefix-preparer).
+      # starcitizen-lite below provides the LUG prereqs without the broken
+      # launcher path; re-enable this once upstream nix-gaming is fixed.
+      # self.modules.nixos.starcitizen
+      self.modules.nixos.starcitizen-lite
 
       self.modules.nixos._1password
       self.modules.nixos.btrfs
@@ -85,6 +90,7 @@ in
                 # sesh
                 sops
                 starsector
+                sui
                 swappy
                 television
                 wezterm
