@@ -35,9 +35,10 @@
 
       # Kernel modules nix-citizen sets up for SC's audio/video pipeline.
       boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-      boot.kernelModules =
-        [ "snd-aloop" ]
-        ++ lib.optional (lib.versionAtLeast config.boot.kernelPackages.kernel.version "6.14") "ntsync";
+      boot.kernelModules = [
+        "snd-aloop"
+      ]
+      ++ lib.optional (lib.versionAtLeast config.boot.kernelPackages.kernel.version "6.14") "ntsync";
 
       services.udev = {
         enable = true;
@@ -70,16 +71,12 @@
     let
       sys = pkgs.stdenv.hostPlatform.system;
       gameglass = inputs.nix-citizen.packages.${sys}.gameglass;
-      wineAstralPkg = inputs.nix-citizen.packages.${sys}.wine-astral;
     in
     {
       home.packages = with pkgs; [
         opentrack-StarCitizen
         gameglass
       ];
-
-      # opentrack needs a wine prefix on disk to talk to the SC wine instance.
-      home.file.".wine-astral".source = wineAstralPkg;
 
       xdg.desktopEntries.gameglass = {
         name = "GameGlass";
