@@ -87,6 +87,7 @@ in
                 # sesh
                 sops
                 starsector
+                sui
                 swappy
                 television
                 wezterm
