@@ -4,6 +4,9 @@
   pkgs ? import <nixpkgs> { },
   ...
 }:
+let
+  suiVersion = "1.72.2";
+in
 {
   ### gaming
   # star citizen
@@ -17,4 +20,7 @@
   ### misc
   rackpeek = pkgs.callPackage ./rackpeek.nix { };
   tpm = pkgs.callPackage ./tpm.nix { };
+
+  ### sui/move (eve frontier)
+  sui = pkgs.callPackage ./sui.nix { version = suiVersion; };
 }
