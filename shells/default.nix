@@ -33,13 +33,6 @@
     '';
   };
 
-  react-env = pkgs.mkShell {
-    buildInputs = with pkgs; [
-      bun
-      nodejs
-    ];
-  };
-
   rust = pkgs.mkShell {
     buildInputs = with pkgs; [
       rustc
@@ -50,6 +43,15 @@
     shellHook = ''
       exec nu
     '';
+  };
+
+  ### variants for nix-direnv
+
+  react-env = pkgs.mkShell {
+    buildInputs = with pkgs; [
+      bun
+      nodejs
+    ];
   };
 
   rust-env = pkgs.mkShell {
