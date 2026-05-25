@@ -23,4 +23,5 @@ in
 
   ### sui/move (eve frontier)
   sui = pkgs.callPackage ./sui.nix { version = suiVersion; };
+  prettier-plugin-move = pkgs.callPackage ./prettier-plugin-move.nix { };
 }

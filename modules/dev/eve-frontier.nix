@@ -17,6 +17,7 @@
               pkgs.mkShell {
                 buildInputs = [
                   customPkgs.sui
+                  customPkgs.prettier-plugin-move
                   pkgs.bun
                   pkgs.nodejs
                   pkgs.git-lfs
@@ -35,9 +36,9 @@
                   echo "  build:     sui move build"
                   # Skip `exec nu` when invoked via direnv — nu's direnv hook
                   # would re-trigger evaluation and loop forever.
-                  if [ -z "$DIRENV_DIR" ]; then
-                    exec nu
-                  fi
+                  # if [ -z "$DIRENV_DIR" ]; then
+                  #   exec nu
+                  # fi
                 '';
               };
           };
@@ -65,7 +66,14 @@
               scope = "source.move";
               file-types = [ "move" ];
               language-servers = [ "move-analyzer" ];
-              auto-format = false;
+              auto-format = true;
+              formatter = {
+                command = "${pkgs.prettier-plugin-move}/bin/prettier-move";
+                args = [
+                  "--stdin-filepath"
+                  "file.move"
+                ];
+              };
               indent = {
                 tab-width = 4;
                 unit = "    ";
