@@ -141,6 +141,11 @@
           allPackages = import ./pkgs { inherit pkgs; };
         in
         {
+          # Expose the customized pkgs (allowUnfree = true) as the canonical
+          # perSystem `pkgs` so other modules contributing perSystem outputs
+          # see the same instance.
+          _module.args.pkgs = pkgs;
+
           # Filter out packages whose meta.platforms doesn't include the current
           # system. Without this, `nix flake check` fails because it evaluates
           # every package under each system and asserts platform compatibility.
