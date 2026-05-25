@@ -1,3 +1,6 @@
+# Pinned to the testnet release channel because Eve Frontier's chain runs the
+# testnet protocol version (per docs.evefrontier.com — `suiup install sui@testnet`).
+# Do not switch to mainnet without confirming Eve Frontier's current protocol.
 {
   stdenv,
   lib,

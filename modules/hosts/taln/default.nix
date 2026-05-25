@@ -52,7 +52,7 @@ in
                 opencode
                 sops
                 ssh
-                sui
+                eve-frontier
                 television
               ];
 

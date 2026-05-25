@@ -90,7 +90,7 @@ in
                 # sesh
                 sops
                 starsector
-                sui
+                eve-frontier
                 swappy
                 television
                 wezterm

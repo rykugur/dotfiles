@@ -10,7 +10,7 @@
             "aarch64-darwin"
           ])
           {
-            sui =
+            eve-frontier =
               let
                 customPkgs = import ../../pkgs { inherit pkgs; };
               in
@@ -43,7 +43,7 @@
           };
     };
 
-  flake.modules.homeManager.sui =
+  flake.modules.homeManager.eve-frontier =
     {
       lib,
       config,
