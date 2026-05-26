@@ -50,6 +50,7 @@ in
                 nushell
                 obsidian
                 opencode
+                pi
                 sops
                 ssh
                 eve-frontier

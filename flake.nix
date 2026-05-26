@@ -87,6 +87,27 @@
       flake = false;
     };
 
+    pi = {
+      url = "github:lukasl-dev/pi.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pi-subagents = {
+      url = "github:nicobailon/pi-subagents";
+      flake = false;
+    };
+    pi-mcp-adapter = {
+      url = "github:nicobailon/pi-mcp-adapter";
+      flake = false;
+    };
+    pi-lens = {
+      url = "github:apmantza/pi-lens";
+      flake = false;
+    };
+    pi-permission-system = {
+      url = "github:MasuRii/pi-permission-system";
+      flake = false;
+    };
+
     #  plugins
     superpowers = {
       url = "github:obra/superpowers";
@@ -171,12 +192,14 @@
       "https://nix-gaming.cachix.org"
       "https://nix-citizen.cachix.org"
       "https://helix.cachix.org"
+      "https://pi.cachix.org"
     ];
     extra-trusted-public-keys = [
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       "nix-citizen.cachix.org-1:lPMkWc2X8XD4/7YPEEwXKKBg+SVbYTVrAaLA2wQTKCo="
       "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
+      "pi.cachix.org-1:lGeoGJaZ5ZDabuRzkcD5EBTNnDM4HJ1vqeOxlWk1Flk="
     ];
   };
 }

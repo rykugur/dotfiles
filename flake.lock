@@ -350,7 +350,7 @@
     },
     "flake-utils": {
       "inputs": {
-        "systems": "systems_6"
+        "systems": "systems_7"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -1458,6 +1458,91 @@
         "type": "github"
       }
     },
+    "pi": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1779782534,
+        "narHash": "sha256-atFqHQOh6c26/MvEfQ/bzfML+Pp0qCLLQjgSRqCvOsw=",
+        "owner": "lukasl-dev",
+        "repo": "pi.nix",
+        "rev": "e698be79957c5dab69290baa78bed22cddd437ae",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lukasl-dev",
+        "repo": "pi.nix",
+        "type": "github"
+      }
+    },
+    "pi-lens": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779817938,
+        "narHash": "sha256-rTJd1KZJ3igEbC39hNOhylZsgv1YzrXl98daZhkPjOQ=",
+        "owner": "apmantza",
+        "repo": "pi-lens",
+        "rev": "5a0fe0cb49efd83464f5b34c6b04cefff336f0b2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "apmantza",
+        "repo": "pi-lens",
+        "type": "github"
+      }
+    },
+    "pi-mcp-adapter": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779690548,
+        "narHash": "sha256-eHz/uivSIZ8HOalSCZgyCyOWodQJq5GapAqpT2ryn1k=",
+        "owner": "nicobailon",
+        "repo": "pi-mcp-adapter",
+        "rev": "1091b34da83d58bd2d9fcaff2dc31f449a94bf1f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nicobailon",
+        "repo": "pi-mcp-adapter",
+        "type": "github"
+      }
+    },
+    "pi-permission-system": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779453799,
+        "narHash": "sha256-KPEvzscaY/boG92DcokGBfHDvJCjvd4lzcX4u7AYMVY=",
+        "owner": "MasuRii",
+        "repo": "pi-permission-system",
+        "rev": "008bf399d430d94f4dcbe31ca9fec6745ccbdc22",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MasuRii",
+        "repo": "pi-permission-system",
+        "type": "github"
+      }
+    },
+    "pi-subagents": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779381139,
+        "narHash": "sha256-MLQ7/+xEd2xTI37rMfWaYP7I724MWN+pgXhv78OxjL8=",
+        "owner": "nicobailon",
+        "repo": "pi-subagents",
+        "rev": "86326d731b106a85c2b3ec52779e442e1ba3bdd9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nicobailon",
+        "repo": "pi-subagents",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -1592,6 +1677,11 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_6",
         "noctalia": "noctalia",
+        "pi": "pi",
+        "pi-lens": "pi-lens",
+        "pi-mcp-adapter": "pi-mcp-adapter",
+        "pi-permission-system": "pi-permission-system",
+        "pi-subagents": "pi-subagents",
         "ryze312-stackpkgs": "ryze312-stackpkgs",
         "skills-anthropic": "skills-anthropic",
         "skills-vercel": "skills-vercel",
@@ -1729,7 +1819,7 @@
           "nixpkgs"
         ],
         "nur": "nur",
-        "systems": "systems_5",
+        "systems": "systems_6",
         "tinted-kitty": "tinted-kitty",
         "tinted-schemes": "tinted-schemes",
         "tinted-tmux": "tinted-tmux",
@@ -1841,6 +1931,21 @@
       }
     },
     "systems_6": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_7": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
