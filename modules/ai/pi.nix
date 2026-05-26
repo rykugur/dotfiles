@@ -54,6 +54,13 @@ let
       special = "ask";
     };
 
+    # Gate reads behind a confirmation prompt. pi-permission-system can't
+    # express opencode's file-pattern denies (*.env, *.sops.yaml, *.tfvars),
+    # so this is the closest substitute: every read prompts the user.
+    tools = {
+      read = "ask";
+    };
+
     bash = {
       "*" = "allow";
       "rm *" = "deny";
