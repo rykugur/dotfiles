@@ -20,6 +20,10 @@
                 trigger = ":install-helix";
                 replace = "curl -fsSL s.ryk.sh/install-helix-deb | bash -s --";
               }
+              {
+                trigger = ":bootstrap-debian-lxc";
+                replace = "curl -fsSL s.ryk.sh/bootstrap-debian-lxc | bash -s --";
+              }
             ];
           };
         };
