@@ -43,47 +43,17 @@ let
 
   agents = resolveAgents { inherit tierModels agentOverrides; };
 
-  mkClaudeCodeMcpConfig = pkgs: {
-    jcodemunch = {
-      type = "stdio";
-      command = "${pkgs.uv}/bin/uvx";
-      args = [
-        "--python"
-        "3.13"
-        "jcodemunch-mcp"
-      ];
-    };
-    context-mode = {
-      type = "stdio";
-      command = "${pkgs.nodejs}/bin/npx";
-      args = [
-        "-y"
-        "context-mode"
-      ];
-      env = {
-        PATH = "${pkgs.nodejs}/bin:${pkgs.coreutils}/bin:/bin:/usr/bin";
-      };
-    };
-    mempalace = {
-      type = "stdio";
-      command = "${pkgs.uv}/bin/uv";
-      args = [
-        "run"
-        "--with"
-        "mempalace"
-        "--python"
-        "3.13"
-        "python"
-        "-m"
-        "mempalace.mcp_server"
-      ];
-    };
-    sequential-thinking = {
-      type = "stdio";
-      command = "${pkgs.bun}/bin/bunx";
-      args = [ "@modelcontextprotocol/server-sequential-thinking" ];
-    };
-  };
+  mkClaudeCodeMcpConfig =
+    pkgs:
+    let
+      mcp = import ./_mcp.nix { inherit pkgs; };
+    in
+    mcp.toClaudeCode (mcp.pick [
+      "jcodemunch"
+      "context-mode"
+      "mempalace"
+      "sequential-thinking"
+    ]);
 
   mkPluginDirs = pkgs: [
     "${inputs.superpowers}"

@@ -67,42 +67,16 @@ let
       "test-driven-development" = "allow";
       "executing-plans" = "allow";
     };
-    mcp = {
-      jcodemunch = {
-        type = "local";
-        command = [
-          "${pkgs.uv}/bin/uvx"
-          "--python"
-          "3.13"
-          "jcodemunch-mcp"
-        ];
-      };
-      context-mode = {
-        type = "local";
-        command = [
-          "${pkgs.nodejs}/bin/npx"
-          "-y"
-          "context-mode"
-        ];
-        environment = {
-          PATH = "${pkgs.nodejs}/bin:${pkgs.coreutils}/bin:/bin:/usr/bin";
-        };
-      };
-      sequential-thinking = {
-        type = "local";
-        command = [
-          "${pkgs.bun}/bin/bunx"
-          "@modelcontextprotocol/server-sequential-thinking"
-        ];
-      };
-      context7 = {
-        type = "local";
-        command = [
-          "${pkgs.bun}/bin/bunx"
-          "@upstash/context7-mcp"
-        ];
-      };
-    };
+    mcp =
+      let
+        mcp = import ./_mcp.nix { inherit pkgs; };
+      in
+      mcp.toOpencode (mcp.pick [
+        "jcodemunch"
+        "context-mode"
+        "sequential-thinking"
+        "context7"
+      ]);
   };
 in
 {
