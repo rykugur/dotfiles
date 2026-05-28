@@ -58,6 +58,8 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-citizen.url = "github:LovingMelody/nix-citizen";
     nix-citizen.inputs.nix-gaming.follows = "nix-gaming";
+    # bleeding-edge mesa_git (do NOT make it follow nixpkgs — breaks its binary cache)
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     ###
 
     ### random stuff

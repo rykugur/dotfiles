@@ -23,6 +23,7 @@ in
 
       inputs.home-manager.nixosModules.home-manager
       inputs.stylix.nixosModules.stylix
+      inputs.chaotic.nixosModules.default
 
       self.modules.nixos.meta
       self.modules.nixos.fonts

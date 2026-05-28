@@ -72,6 +72,16 @@
     };
   };
 
+  # chaotic-nyx mesa_git: staged but DISABLED for now.
+  # The Crimson Desert RDNA4 page-fault fix is not yet in mesa main (MR !41851,
+  # still on Samuel Pitoiset's branch as of last check). Flip to `true` once that
+  # MR merges to mesa main AND chaotic has rebuilt mesa_git past it, to front-run
+  # nixpkgs and get the fix early.
+  # TODO: once the fix reaches nixpkgs-unstable's mesa, remove chaotic.mesa-git
+  # entirely (drop this option + the flake input):
+  # https://gitlab.freedesktop.org/hakzsam/mesa/-/commit/113705d3abbc29404fe8e9f0385158b8e9f7755e
+  chaotic.mesa-git.enable = false;
+
   hardware = {
     amdgpu.overdrive.enable = true;
 
