@@ -87,6 +87,7 @@ in
                 nushell
                 obsidian
                 opencode
+                pi
                 # sesh
                 sops
                 starsector
