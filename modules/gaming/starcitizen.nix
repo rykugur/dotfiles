@@ -52,13 +52,16 @@
   flake.modules.homeManager.starcitizen =
     { pkgs, ... }:
     let
-      gameglass = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.gameglass;
-      wineAstralPkg = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system}.wine-astral;
+      sys = pkgs.stdenv.hostPlatform.system;
+      gameglass = inputs.nix-citizen.packages.${sys}.gameglass;
+      lug-helper = inputs.nix-citizen.packages.${sys}.lug-helper;
+      wineAstralPkg = inputs.nix-citizen.packages.${sys}.wine-astral;
     in
     {
       home.packages = with pkgs; [
         opentrack-StarCitizen
         gameglass
+        lug-helper
       ];
 
       # lazy-mode - for opentrack

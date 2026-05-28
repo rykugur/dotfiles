@@ -42,10 +42,6 @@
 
       services.udev = {
         enable = true;
-        # lug-helper bundles joystick/HOTAS udev rules. services.udev.packages
-        # pulls only /etc/udev/rules.d from the package — the GUI binary stays
-        # out of the system closure unless explicitly added to systemPackages.
-        packages = [ pkgs.lug-helper ];
         extraRules = ''
           # Set the "uaccess" tag for raw HID access for Virpil Devices in wine
           KERNEL=="hidraw*", ATTRS{idVendor}=="3344", ATTRS{idProduct}=="*", MODE="0660", TAG+="uaccess"
@@ -71,11 +67,13 @@
     let
       sys = pkgs.stdenv.hostPlatform.system;
       gameglass = inputs.nix-citizen.packages.${sys}.gameglass;
+      lug-helper = inputs.nix-citizen.packages.${sys}.lug-helper;
     in
     {
       home.packages = with pkgs; [
         opentrack-StarCitizen
         gameglass
+        lug-helper
       ];
 
       xdg.desktopEntries.gameglass = {
