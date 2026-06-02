@@ -6,6 +6,7 @@
       imports = with self.modules.homeManager; [
         # dev
         atuin
+        devenv
         git
         yaak
         zed-editor
@@ -27,9 +28,10 @@
         with pkgs;
         [
           # dev
+          ### js/ts/node
           bun
           nodejs
-
+          ### misc
           just
           prettierd
           stylua
