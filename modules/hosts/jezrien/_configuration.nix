@@ -86,7 +86,7 @@
   # chaotic input from flake.nix, and the nyx-cache substituter + key from
   # flake.nix nixConfig. The `warnings` block below will keep nagging on every
   # rebuild until this is cleaned up.
-  chaotic.mesa-git.enable = false;
+  chaotic.mesa-git.enable = true;
   warnings = lib.optionals config.chaotic.mesa-git.enable [
     ''
       chaotic.mesa-git is a TEMPORARY workaround (Crimson Desert RDNA4 fix,
