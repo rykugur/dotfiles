@@ -43,6 +43,10 @@ let
       name = "sensitive-files";
       src = ./skills/sensitive-files;
     }
+    {
+      name = "llm-wiki";
+      src = ./skills/llm-wiki;
+    }
   ];
 
   mkPiMcpConfig =
@@ -99,6 +103,7 @@ let
       "web-design-guidelines" = "allow";
       "karpathy-guidelines" = "allow";
       "sensitive-files" = "allow";
+      "llm-wiki" = "allow";
     };
 
     special = {

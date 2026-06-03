@@ -32,6 +32,10 @@ let
       name = "web-design-guidelines";
       src = "${inputs.skills-vercel}/skills/web-design-guidelines";
     }
+    {
+      name = "llm-wiki";
+      src = ./skills/llm-wiki;
+    }
   ];
 
   tierModels = {
