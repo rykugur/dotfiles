@@ -95,7 +95,7 @@ See the plan "roles-to-groups".
 
 - Shared agent definitions in `_agents.nix`
 - Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, sequential-thinking, context7)
-- Individual agent modules: `claude-code.nix`, `codex.nix`, `opencode.nix`, `pi.nix`, `hermes-agent.nix`
+- Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix`, `hermes-agent.nix`
 - `common.nix` (provides mempalace wrapper bin, rtk, etc.)
 - `skills/llm-wiki/` and `skills/sensitive-files/` — the skills this very wiki pattern comes from
 - Permission policies per agent

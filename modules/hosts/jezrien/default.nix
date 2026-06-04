@@ -73,12 +73,17 @@ in
                 gaming
                 _3dp
 
-                # individual modules
-                btop
+                # ai stuff
                 ai-common
                 claude-code
                 # hermes-agent
                 codex
+                grok
+                opencode
+                pi
+
+                # individual modules
+                btop
                 espanso
                 eve-online
                 easyeffects
@@ -87,8 +92,6 @@ in
                 keebs
                 nushell
                 obsidian
-                opencode
-                pi
                 # sesh
                 sops
                 starsector

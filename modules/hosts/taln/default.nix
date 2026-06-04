@@ -45,6 +45,7 @@ in
                 ai-common
                 claude-code
                 codex
+                grok
                 espanso
                 homelab
                 nushell

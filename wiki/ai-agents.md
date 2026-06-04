@@ -17,6 +17,7 @@ The goal: identical (or as close as the host allows) agent experience on every m
 
 - **claude-code** (Anthropic's Claude Code)
 - **codex** (OpenAI Codex / successor agent)
+- **grok** (superagent-ai/grok-cli, the Grok-powered coding agent)
 - **opencode**
 - **pi** (lukasl-dev/pi.nix) — terminal-first agent
 - **hermes-agent** (NousResearch)
