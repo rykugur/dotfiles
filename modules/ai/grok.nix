@@ -53,8 +53,33 @@ in
 {
   flake.modules.homeManager.grok =
     { config, lib, pkgs, ... }:
+    let
+      # Compute the declarative settings once and write them to a store file.
+      # This avoids embedding a huge JSON literal (with ' characters from prompts
+      # like "Sanderson's") directly into the activation script, which would break
+      # bash single-quoting and cause the activation-script.drv to fail to build.
+      baseGrokSettings = mkGrokUserSettings pkgs;
+      grokSettingsJson = pkgs.writeText "grok-nix-settings.json" (builtins.toJSON baseGrokSettings);
+
+      # If the user has declared sops.secrets.grok-api-key, provide a wrapper that
+      # auto-exports $GROK_API_KEY (and the activation also injects it to the json).
+      # This lets plain `grok` invocations "just work" with the declarative key.
+      hasGrokApiKeySecret = config ? sops && config.sops ? secrets && config.sops.secrets ? "grok-api-key";
+      grokApiKeySecretPath = if hasGrokApiKeySecret then config.sops.secrets."grok-api-key".path else null;
+
+      grokPkg =
+        if hasGrokApiKeySecret then
+          pkgs.writeShellScriptBin "grok" ''
+            if [ -z "''${GROK_API_KEY:-}" ] && [ -r "${grokApiKeySecretPath}" ]; then
+              export GROK_API_KEY="$(cat "${grokApiKeySecretPath}")"
+            fi
+            exec ${pkgs.grok-cli}/bin/grok "$@"
+          ''
+        else
+          pkgs.grok-cli;
+    in
     {
-      home.packages = [ pkgs.grok-cli ];
+      home.packages = [ grokPkg ];
 
       home.file = builtins.listToAttrs (
         map (skill: {
@@ -66,23 +91,26 @@ in
       # Declaratively manage ~/.grok/user-settings.json via activation (not home.file)
       # so that:
       # - mcp servers and subAgents (from our shared _mcp / _agents) are always present
-      # - the file remains a normal writable file in $HOME
+      # - the file remains a normal writable file in $HOME (so TUI can update it)
       # - TUI login / OAuth flows (which save apiKey to the file) continue to work
-      # - apiKey can optionally come from a sops secret (see below)
       #
-      # If you want to manage the API key declaratively with sops-nix, declare:
+      # Additionally, when you declare the sops secret (see below), we provide a
+      # thin wrapper around the grok binary that auto-exports $GROK_API_KEY from
+      # the secret (if not already set in the environment). This makes `grok` "just
+      # work" with a declarative key.
+      #
+      # To use a declarative key via sops-nix, declare in your user hm config:
       #   sops.secrets.grok-api-key = { sopsFile = ./secrets.yaml; };
-      # in your home-manager user config (alongside importing the sops module).
-      # The key will be injected on activation. Env var $GROK_API_KEY always takes precedence at runtime.
+      # (alongside importing the sops homeManager module). The activation will also
+      # put the key into the user-settings.json for tools that read it directly.
+      # Plain env var or `grok -k ...` always work and take precedence.
       home.activation.grokUserSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         set -euo pipefail
 
         SETTINGS_FILE="$HOME/.grok/user-settings.json"
         mkdir -p -m 700 "$(dirname "$SETTINGS_FILE")"
 
-        # Our declarative bits (MCP + custom sub-agents). Never include apiKey here
-        # so we don't clobber TUI-saved keys unless a sops secret is configured.
-        NIX_SETTINGS='${builtins.toJSON (mkGrokUserSettings pkgs)}'
+        NIX_SETTINGS_FILE=${grokSettingsJson}
 
         if [ -f "$SETTINGS_FILE" ]; then
           # Merge: Nix declarative keys win for mcp/subAgents; other keys (apiKey, hooks, etc.)
@@ -91,9 +119,9 @@ in
             (.[0] // {}) as $existing |
             .[1] as $nix |
             ($existing + $nix)
-          ' "$SETTINGS_FILE" <(printf '%s\n' "$NIX_SETTINGS") > "$SETTINGS_FILE.tmp"
+          ' "$SETTINGS_FILE" "$NIX_SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
         else
-          printf '%s\n' "$NIX_SETTINGS" > "$SETTINGS_FILE.tmp"
+          cp "$NIX_SETTINGS_FILE" "$SETTINGS_FILE.tmp"
         fi
 
         # If a sops secret named "grok-api-key" is configured for this user, inject/override it.
