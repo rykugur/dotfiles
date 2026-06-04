@@ -3,3 +3,9 @@
 .direnv
 .envrc
 .worktrees
+
+# grok-cli (superagent-ai/grok-cli) project-local state.
+# Global/user state lives in ~/.grok/ (managed declaratively by the
+# modules/ai/grok.nix home-manager module, including mcp + sub-agents).
+# Never commit this; similar to .claude/, .opencode/, .pi/, etc.
+.grok/

@@ -17,7 +17,7 @@ The goal: identical (or as close as the host allows) agent experience on every m
 
 - **claude-code** (Anthropic's Claude Code)
 - **codex** (OpenAI Codex / successor agent)
-- **grok** (superagent-ai/grok-cli, the Grok-powered coding agent)
+- **grok** (superagent-ai/grok-cli, the Grok-powered coding agent; uses `~/.grok/user-settings.json` for global declarative bits + `.grok/` (project) for per-tree state — both are gitignored or managed via the module)
 - **opencode**
 - **pi** (lukasl-dev/pi.nix) — terminal-first agent
 

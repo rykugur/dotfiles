@@ -6,6 +6,9 @@ let
   # (and project .agents/skills/). This matches the AGENTS.md-compatible location
   # also used by codex, so skills are shared automatically. Grok also supports
   # its own .grok/skills/ and AGENTS.md family for instructions.
+  #
+  # Project-level state (model prefs, sessions, etc.) goes in .grok/ in the cwd.
+  # This directory is intentionally gitignored (see top-level .gitignore).
 
   skills = [
     { name = "frontend-design"; src = "${inputs.skills-anthropic}/skills/frontend-design"; }
