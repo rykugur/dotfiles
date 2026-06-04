@@ -18,5 +18,7 @@ rooms:
   description: Files from modules/
 - name: documentation
   description: Files from docs/
+- name: wiki
+  description: LLM-curated llm-wiki knowledge base (wiki/ directory: schema, index, log, synthesized pages on architecture/modules/history/AI agents, plus raw sources)
 - name: general
   description: Files that don't fit other rooms

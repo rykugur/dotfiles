@@ -60,3 +60,16 @@ All modules receive `inputs`, `outputs`, `hostname`, and `username` via `special
 - Home-manager is used as a NixOS/Darwin module (not standalone)
 - Overlays are split into `additions` (new packages) and `modifications` (overrides)
 - Cachix substituters configured for hyprland, nix-gaming, nix-citizen, helix
+
+## LLM Wiki (knowledge base)
+
+This repository maintains an llm-wiki under `wiki/` following the Karpathy LLM Wiki pattern (see `modules/ai/skills/llm-wiki/SKILL.md` and `wiki/schema.md`).
+
+- `wiki/index.md` is the entry point — read it first for any question about architecture, history, modules, or agents.
+- `wiki/schema.md` contains the exact instructions and workflows for maintaining the wiki.
+- Core pages: overview, architecture, hosts, modules, history (with links to the superpowers design docs), ai-agents.
+- Raw sources go in `wiki/raw/`.
+- When making significant changes or after migrations, update or ingest into the wiki so knowledge compounds instead of being rediscovered.
+
+The wiki complements `mempalace` (configured in root `mempalace.yaml`, exposed as MCP).
+
