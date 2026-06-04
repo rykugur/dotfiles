@@ -15,7 +15,7 @@ related: ["architecture.md", "groups.md", "ai-agents.md"]
 
 ```
 modules/
-├── ai/                 # Claude Code, Codex, opencode, Pi, Hermes, common, _agents.nix, _mcp.nix, skills/
+├── ai/                 # Claude Code, Codex, grok, opencode, Pi, common, _agents.nix, _mcp.nix, skills/
 ├── audio/              # pipewire, easyeffects
 ├── base/               # fonts, meta-options, nix-defaults, stylix
 ├── browser/            # firefox, zen-browser
@@ -95,7 +95,7 @@ See the plan "roles-to-groups".
 
 - Shared agent definitions in `_agents.nix`
 - Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, sequential-thinking, context7)
-- Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix`, `hermes-agent.nix`
+- Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix` (hermes-agent was removed as it is only used imperatively on remote VMs)
 - `common.nix` (provides mempalace wrapper bin, rtk, etc.)
 - `skills/llm-wiki/` and `skills/sensitive-files/` — the skills this very wiki pattern comes from
 - Permission policies per agent

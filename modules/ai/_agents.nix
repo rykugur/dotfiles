@@ -31,6 +31,14 @@ let
       ${agent.prompt}
     '';
 
+  toGrokAgent =
+    agent:
+    {
+      name = agent.name;
+      model = agent.model;
+      instruction = agent.prompt;
+    };
+
   resolveAgents =
     { tierModels, agentOverrides ? { } }:
     map (a:
@@ -148,5 +156,6 @@ in
     resolveAgents
     toClaudeCodeAgent
     toOpencodeAgent
+    toGrokAgent
     ;
 }

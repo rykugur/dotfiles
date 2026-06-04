@@ -73,6 +73,24 @@ let
 
   # Pi mcp.json schema is the canonical form unchanged.
   toPi = serverSet: serverSet;
+
+  # Grok (superagent-ai/grok-cli) mcp config in ~/.grok/user-settings.json
+  # under mcp.servers (array of McpServerConfig).
+  # See src/utils/settings.ts in grok-cli for the type:
+  # { id, label, enabled, transport: "stdio"|"http"|"sse", command?, args?, env?, url?, headers?, cwd? }
+  toGrok =
+    serverSet:
+    lib.mapAttrsToList (
+      name: s:
+      {
+        id = name;
+        label = name;
+        enabled = true;
+        transport = "stdio";
+        inherit (s) command args;
+      }
+      // lib.optionalAttrs (s ? env) { inherit (s) env; }
+    ) serverSet;
 in
 {
   inherit
@@ -81,5 +99,6 @@ in
     toClaudeCode
     toOpencode
     toPi
+    toGrok
     ;
 }

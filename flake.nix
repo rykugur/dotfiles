@@ -79,13 +79,8 @@
     ###
 
     ### ai stuff
-    hermes-agent.url = "github:NousResearch/hermes-agent";
     karpathy-skills = {
       url = "github:forrestchang/andrej-karpathy-skills";
-      flake = false;
-    };
-    hermes-webui = {
-      url = "github:nesquena/hermes-webui";
       flake = false;
     };
 

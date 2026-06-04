@@ -76,7 +76,6 @@ in
                 # ai stuff
                 ai-common
                 claude-code
-                # hermes-agent
                 codex
                 grok
                 opencode

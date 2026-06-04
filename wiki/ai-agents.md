@@ -2,8 +2,8 @@
 title: AI Agents
 category: ai
 date: 2026-06-03
-tags: [ai, agents, claude-code, codex, opencode, pi, hermes, mempalace, llm-wiki, skills, mcp]
-sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/pi.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md"]
+tags: [ai, agents, claude-code, codex, grok, opencode, pi, mempalace, llm-wiki, skills, mcp]
+sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/pi.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
 
@@ -20,7 +20,6 @@ The goal: identical (or as close as the host allows) agent experience on every m
 - **grok** (superagent-ai/grok-cli, the Grok-powered coding agent)
 - **opencode**
 - **pi** (lukasl-dev/pi.nix) — terminal-first agent
-- **hermes-agent** (NousResearch)
 
 Each has a home-manager module under `modules/ai/<name>.nix`.
 
@@ -56,7 +55,7 @@ Skills are loaded via the agent's extension/skill mechanism:
 
 The skill files are passed as store paths (via `flake = false` inputs or direct paths) so no imperative install is needed.
 
-See how `claude-code.nix`, `opencode.nix`, `pi.nix` consume the `skills` option of their respective home-manager modules.
+See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix` consume skills (and for grok also sub-agents + MCPs) from the shared definitions.
 
 ## Why this matters (self-referentiality)
 
@@ -103,7 +102,7 @@ When an agent has the llm-wiki skill loaded (it should be by default on machines
 - "Ingest the changes from the latest refactor into the wiki"
 - "Lint the wiki for orphans and stale claims"
 - "Query the wiki: how do groups compose with ai modules?"
-- "Create a new page comparing the four main agents"
+- "Create a new page comparing the main agents"
 
 The agent will read `wiki/index.md` + `wiki/schema.md` first, then do the right thing per the workflows defined in the schema.
 

@@ -33,6 +33,14 @@ let
       src = "${inputs.skills-vercel}/skills/web-design-guidelines";
     }
     {
+      name = "karpathy-guidelines";
+      src = "${inputs.karpathy-skills}/skills/karpathy-guidelines";
+    }
+    {
+      name = "sensitive-files";
+      src = ./skills/sensitive-files;
+    }
+    {
       name = "llm-wiki";
       src = ./skills/llm-wiki;
     }
