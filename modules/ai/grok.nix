@@ -18,11 +18,17 @@ let
     { name = "llm-wiki"; src = ./skills/llm-wiki; }
   ];
 
-  # Grok model names (see `grok models` output or xAI docs).
-  # Tiers mirror the pattern used for other agents.
+  # Model names for the sub-agents (see `grok models` for current list).
+  # We pin a model per sub-agent so "reference" agents (lore, naming, etc.)
+  # can be fast/cheap while "technical" ones are smarter. This is intentional
+  # for consistent behavior across the custom agents.
+  #
+  # Note: these can get stale as xAI releases new models (grok-4, grok-3,
+  # etc. and their -latest aliases). Update as needed. Per-invocation
+  # --model may affect the main agent but sub-agents use their declared model.
   tierModels = {
     reference = "grok-3";
-    technical = "grok-4.3";
+    technical = "grok-4";
   };
 
   agentOverrides = { };
@@ -75,43 +81,37 @@ in
       );
 
       # Declaratively manage ~/.grok/user-settings.json via activation (not home.file)
-      # so that:
-      # - mcp servers and subAgents (from our shared _mcp / _agents) are always present
-      # - the file remains a normal writable file in $HOME (so the TUI login flow
-      #   can write the apiKey via OAuth/SSO and it will persist)
+      # so that mcp servers and subAgents (from our shared _mcp / _agents) are
+      # always present for the harness.
       #
-      # We never touch apiKey ourselves (no sops, no wrapper, no forcing). The
-      # merge below always preserves any existing "apiKey" (or other user-managed
-      # keys like hooks) from the live file. If the file doesn't exist yet, we
-      # create it with just the declarative bits; the TUI can then do its login
-      # and save the key.
+      # We *only update* the file if it already exists (i.e. the user has
+      # completed the TUI login flow at least once, which creates the file and
+      # writes the apiKey via its OAuth/SSO flow). This prevents us from
+      # pre-creating a keyless version that would cause the "API key required"
+      # error on first run after a delete or fresh setup.
       #
-      # To initially obtain a key via TUI: just run `grok` (it will guide you
-      # through the login flow that uses OAuth/SSO and persist the key).
-      # Subsequent runs will find it. Our activation will keep mcp/subAgents
-      # fresh without clobbering the key.
+      # The merge preserves any apiKey (and other keys like hooks) the TUI wrote.
+      # If the file is absent, we do nothing — the TUI login flow can create it
+      # with the key.
+      #
+      # Once the file exists (with your key), future switches will keep the
+      # declarative mcp + subAgents fresh without clobbering the key.
       home.activation.grokUserSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         set -euo pipefail
 
         SETTINGS_FILE="$HOME/.grok/user-settings.json"
-        mkdir -p -m 700 "$(dirname "$SETTINGS_FILE")"
-
-        NIX_SETTINGS_FILE=${grokSettingsJson}
 
         if [ -f "$SETTINGS_FILE" ]; then
-          # Merge our declarative bits over whatever is there. This keeps any
-          # apiKey (or other keys) that the TUI login flow wrote.
+          mkdir -p -m 700 "$(dirname "$SETTINGS_FILE")"
+          NIX_SETTINGS_FILE=${grokSettingsJson}
           ${lib.getExe pkgs.jq} -s '
             (.[0] // {}) as $existing |
             .[1] as $nix |
             ($existing + $nix)
           ' "$SETTINGS_FILE" "$NIX_SETTINGS_FILE" > "$SETTINGS_FILE.tmp"
-        else
-          cp "$NIX_SETTINGS_FILE" "$SETTINGS_FILE.tmp"
+          mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+          chmod 600 "$SETTINGS_FILE" || true
         fi
-
-        mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-        chmod 600 "$SETTINGS_FILE" || true
       '';
 
       # Expose the stock package for convenience (e.g. nix build .#grok or in dev shells).
