@@ -66,6 +66,7 @@ in
             # DISPLAY = null;
 
             QT_QPA_PLATFORM = "wayland";
+            GDK_BACKEND = "wayland";
 
             XDG_SESSION_TYPE = "wayland";
             XDG_CURRENT_DESKTOP = "Niri";
@@ -127,6 +128,17 @@ in
             {
               argv = [
                 "wl-paste"
+                "--watch"
+                "cliphist"
+                "store"
+              ];
+            }
+            {
+              # Also watch primary selection so that middle-click paste (and
+              # cliphist history) can see primary selections from other apps.
+              argv = [
+                "wl-paste"
+                "--primary"
                 "--watch"
                 "cliphist"
                 "store"

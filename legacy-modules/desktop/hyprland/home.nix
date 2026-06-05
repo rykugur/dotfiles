@@ -120,6 +120,7 @@ in
             "XDG_CURRENT_DESKTOP,Hyprland"
             "XDG_SESSION_DESKTOP,Hyprland"
             "QT_QPA_PLATFORM,wayland"
+            "GDK_BACKEND,wayland"
             "QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that"
             "COPYCMD,wl-copy"
             "PASTECMD,wl-paste"
@@ -175,6 +176,8 @@ in
             "albert"
             "playerctld daemon"
             "wl-paste --watch cliphist store"
+            # Also watch primary for middle-click paste sources + history.
+            "wl-paste --primary --watch cliphist store"
           ]
           # TODO: move this to caelestia module
           ++ lib.optionals (hyprCfg.bar == "caelestia") [ "caelestia-shell" ];

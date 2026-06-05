@@ -168,6 +168,10 @@ in
 
               gtk.gtk4.theme = null;
 
+              home.sessionVariables = {
+                GDK_BACKEND = "wayland";
+              };
+
               programs.ghostty.settings.window-decoration = "none";
 
               xdg.enable = true;
