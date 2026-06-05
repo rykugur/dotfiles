@@ -31,6 +31,8 @@ modules/
 ├── shell/              # atuin, carapace, direnv, fish, starship, zoxide
 ├── social/             # discord
 ├── terminal/           # bat, btop, espanso, ghostty, kitty, ranger, sesh, television, tmux, wezterm, yazi, zellij
+#                       # (see long NOTE in modules/terminal/television.nix
+#                       #  about the custom files channel `source.display`)
 ├── virtualization/     # docker, vfio, virtman, winboat
 └── (any .nix at this level or new category dirs are auto-picked up)
 ```

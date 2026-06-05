@@ -55,7 +55,71 @@
                 "fd -t f"
                 "fd -t f -H"
               ];
-              display = "{split:/:-1}  {split:/:0..-1}";
+              # NOTE: files channel `source.display` (custom TV channel)
+              #
+              # Problem: We want the *folder path visible in the results list* for
+              # disambiguation when there are duplicate basenames (default.nix,
+              # index.ts, Cargo.toml, mod.rs, etc. are common and painful).
+              # At the same time, fuzzy queries should primarily target *filenames*
+              # (e.g. typing "riinto" should strongly prefer a file whose name
+              # contains "rift-intel-tool" over an unrelated file that just lives
+              # under a folder with that name in its path).
+              #
+              # How TV works here:
+              # - `source.display` (when set) controls *both*:
+              #   1. The string rendered in the results list (and what gets
+              #      match highlights).
+              #   2. The haystack string passed to the nucleo matcher (the single
+              #      column that nucleo scores with its fzf-compatible
+              #      Smith-Waterman + bonus system; TV also sets prefer_prefix).
+              # - There is no separate "match template" vs "display template" in
+              #   the channel TOML API (as of TV 0.15).
+              # - The original raw line from the source command is still
+              #   available as "{}", and is used for preview/actions/output
+              #   unless `source.output` overrides it.
+              #
+              # Chosen template: "{split:/:-1}  {}"
+              # - Puts the basename first → gets prefix/early-match position
+              #   bonus and avoids leading gap penalties for filename queries.
+              # - Appends the full original fd path (via "{}") → the complete
+              #   folder location is visible inline in every list row.
+              # - The basename also appears again at the end of the path, giving
+              #   name matches a second strong alignment opportunity.
+              # - Result list rows look like:
+              #     "rift-intel-tool.nix  src/tools/rift-intel-tool.nix"
+              #     "default.nix           project1/default.nix"
+              #     "default.nix           project2/sub/default.nix"
+              #     "index.ts              src/components/Foo/index.ts"
+              #
+              # Why this beats the previous attempts:
+              # - Pure basename only ("{split:/:-1}"): path invisible in list
+              #   (only in preview header) → bad for duplicates.
+              # - Original attempt ("{split:/:-1}  {split:/:0..-1}"): path
+              #   (without leaf) was visible, but folder names were still fully
+              #   present in the matcher haystack and could outrank or pollute
+              #   filename results.
+              # - This version keeps full path visibility while structurally
+              #   biasing the score toward the filename via position.
+              #
+              # Trade-off: If you type something that only exists in a folder
+              # name (and not in any basename), you will still surface files
+              # under that folder (because the path text is in the haystack for
+              # visibility). Filename-intent queries win on score thanks to
+              # early positioning + gap costs for pure path matches.
+              #
+              # Future iteration ideas:
+              # - Try repeating the basename more explicitly for even stronger
+              #   bias: "{split:/:-1} {split:/:-1}  {split:/:0..-1}"
+              # - Experiment with different separators (" | ", " → ", etc.).
+              # - Consider a composite source command that emits
+              #   "basename<TAB>fullpath" + clever display + output split if we
+              #   ever want multi-column-like behavior.
+              # - If TV ever exposes a distinct "match" field separate from
+              #   display, revisit.
+              #
+              # See the conversation in this chat (around the initial display
+              # prop discussion) for the full exploration.
+              display = "{split:/:-1}  {}";
             };
             ui.preview_panel.header = "{}";
             preview = {
