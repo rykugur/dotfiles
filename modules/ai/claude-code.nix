@@ -23,28 +23,8 @@ let
     "rtk kubectl"
   ];
 
-  skills = [
-    {
-      name = "frontend-design";
-      src = "${inputs.skills-anthropic}/skills/frontend-design";
-    }
-    {
-      name = "web-design-guidelines";
-      src = "${inputs.skills-vercel}/skills/web-design-guidelines";
-    }
-    {
-      name = "karpathy-guidelines";
-      src = "${inputs.karpathy-skills}/skills/karpathy-guidelines";
-    }
-    {
-      name = "sensitive-files";
-      src = ./skills/sensitive-files;
-    }
-    {
-      name = "llm-wiki";
-      src = ./skills/llm-wiki;
-    }
-  ];
+  inherit ((import ./_skills.nix { inherit inputs; })) commonSkills;
+  skills = commonSkills;
 
   tierModels = {
     reference = "claude-haiku-4-5";
@@ -133,8 +113,8 @@ in
           value.text = toClaudeCodeAgent agent;
         }) agents
         ++ map (skill: {
-          name = ".claude/skills/${skill.name}/SKILL.md";
-          value.source = "${skill.src}/SKILL.md";
+          name = ".claude/skills/${skill.name}";
+          value.source = skill.src;
         }) skills
       );
     };

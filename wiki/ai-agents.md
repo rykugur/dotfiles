@@ -52,10 +52,11 @@ Skills are loaded via the agent's extension/skill mechanism:
 
 - `llm-wiki` (this very pattern — vendored at `modules/ai/skills/llm-wiki/SKILL.md`)
 - `sensitive-files`
+- Superpowers skills (https://github.com/obra/superpowers) — the full TDD / planning / subagent / review methodology. Installed wholesale for `.agents/skills/` consumers (codex, grok) via `_skills.nix`; loaded as plugins for claude-code and opencode.
 
-The skill files are passed as store paths (via `flake = false` inputs or direct paths) so no imperative install is needed.
+The skill files (and companion assets) are passed as store paths (via `flake = false` inputs or direct paths) so no imperative install is needed. For superpowers we symlink entire skill dirs so extra docs are present.
 
-See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix` consume skills (and for grok also sub-agents + MCPs) from the shared definitions.
+See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix` consume skills (and for grok also sub-agents + MCPs) from the shared definitions. _skills.nix now centralizes the list.
 
 ## Why this matters (self-referentiality)
 
