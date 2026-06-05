@@ -9,18 +9,34 @@ let
   # This directory is intentionally gitignored (see top-level .gitignore).
 
   skills = [
-    { name = "frontend-design"; src = "${inputs.skills-anthropic}/skills/frontend-design"; }
-    { name = "web-design-guidelines"; src = "${inputs.skills-vercel}/skills/web-design-guidelines"; }
-    { name = "karpathy-guidelines"; src = "${inputs.karpathy-skills}/skills/karpathy-guidelines"; }
-    { name = "sensitive-files"; src = ./skills/sensitive-files; }
-    { name = "llm-wiki"; src = ./skills/llm-wiki; }
+    {
+      name = "frontend-design";
+      src = "${inputs.skills-anthropic}/skills/frontend-design";
+    }
+    {
+      name = "web-design-guidelines";
+      src = "${inputs.skills-vercel}/skills/web-design-guidelines";
+    }
+    {
+      name = "karpathy-guidelines";
+      src = "${inputs.karpathy-skills}/skills/karpathy-guidelines";
+    }
+    {
+      name = "sensitive-files";
+      src = ./skills/sensitive-files;
+    }
+    {
+      name = "llm-wiki";
+      src = ./skills/llm-wiki;
+    }
   ];
 in
 {
   flake.modules.homeManager.grok =
-    { pkgs, ... }:
+    { ... }:
     {
-      home.packages = [ pkgs.grok-cli ];
+      # grok-cli requires an API key to be set and I don't care enough right now.
+      # home.packages = [ pkgs.grok-cli ];
 
       home.file = builtins.listToAttrs (
         map (skill: {
