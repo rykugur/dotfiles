@@ -1619,6 +1619,7 @@
         "skills-anthropic": "skills-anthropic",
         "skills-vercel": "skills-vercel",
         "sops-nix": "sops-nix",
+        "spt": "spt",
         "stylix": "stylix",
         "superpowers": "superpowers",
         "zen-browser": "zen-browser",
@@ -1757,6 +1758,22 @@
       "original": {
         "owner": "Mic92",
         "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "spt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780549485,
+        "narHash": "sha256-Jhnq16K5yhz/xwX+bfAIk3DNaU2ngPIz4VMBxllkx5Q=",
+        "owner": "rykugur",
+        "repo": "SPT-Linux-Guide",
+        "rev": "9e1343aba402ba4499193989311404b2aa8f9c88",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rykugur",
+        "repo": "SPT-Linux-Guide",
         "type": "github"
       }
     },

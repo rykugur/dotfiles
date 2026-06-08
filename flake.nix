@@ -60,6 +60,11 @@
     nix-citizen.inputs.nix-gaming.follows = "nix-gaming";
     # bleeding-edge mesa_git (do NOT make it follow nixpkgs — breaks its binary cache)
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
+    spt = {
+      url = "github:rykugur/SPT-Linux-Guide";
+      flake = false;
+    };
     ###
 
     ### random stuff
@@ -150,13 +155,16 @@
       ];
 
       perSystem =
-        { inputs, system, ... }:
+        { system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
           };
-          allPackages = import ./pkgs { inherit pkgs; };
+          # Use the closed-over `inputs` (from the outputs fn) so that non-flake
+          # inputs like `spt` (flake = false) are available directly as paths.
+          # (inputs' would attempt system-dependent attr access which fails for non-flakes.)
+          allPackages = import ./pkgs { inherit pkgs inputs; };
         in
         {
           # Expose the customized pkgs (allowUnfree = true) as the canonical
@@ -170,7 +178,7 @@
           packages = pkgs.lib.filterAttrs (
             _: pkg: builtins.elem system (pkg.meta.platforms or [ system ])
           ) allPackages;
-          devShells = import ./shells { inherit inputs pkgs; };
+          devShells = import ./shells { inherit pkgs; };
         };
 
       flake = {
