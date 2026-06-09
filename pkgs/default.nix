@@ -14,6 +14,19 @@ in
   # star citizen
   opentrack = pkgs.callPackage ./opentrack.nix { };
   opentrack-StarCitizen = pkgs.callPackage ./opentrack-StarCitizen.nix { };
+  # slim variants for the VITURE XR pipeline — no AI face tracker, no SteamVR
+  # output (the glasses replace face tracking, and we're driving flat-screen
+  # games via the wine bridge). Not added to home.packages directly; embedded
+  # by store path inside the opentrack-xr-run launcher in modules/gaming/viture.nix.
+  opentrack-xr = pkgs.callPackage ./opentrack.nix {
+    withOnnx = false;
+    withSteamVR = false;
+  };
+  opentrack-StarCitizen-xr = pkgs.callPackage ./opentrack-StarCitizen.nix {
+    withOnnx = false;
+    withSteamVR = false;
+  };
+  xr-to-opentrack = pkgs.callPackage ./xr-to-opentrack.nix { };
   # misc
   jackify = pkgs.callPackage ./jackify.nix { };
   eve-wrench = pkgs.callPackage ./eve-wrench.nix { };

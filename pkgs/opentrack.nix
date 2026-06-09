@@ -5,9 +5,10 @@
   fetchzip,
   makeDesktopItem,
   pkgs,
+  withOnnx ? true,
+  withSteamVR ? true,
 }:
 let
-  # for neural-net face tracking
   onnxRuntime = fetchzip {
     url = "https://github.com/microsoft/onnxruntime/releases/download/v1.21.0/onnxruntime-linux-x64-1.21.0.tgz";
     sha256 = "sha256-f2svIZMpx/id1zVJNwEUKegaRA7FyqElPujutRtJrYk=";
@@ -63,8 +64,10 @@ stdenv.mkDerivation rec {
   '';
 
   cmakeFlags = [
-    "-DSDK_WINE=ON -DSDK_VALVE_STEAMVR=${sdkSteamVr} -DONNXRuntime_DIR=${onnxRuntime}"
-  ];
+    "-DSDK_WINE=ON"
+  ]
+  ++ pkgs.lib.optional withSteamVR "-DSDK_VALVE_STEAMVR=${sdkSteamVr}"
+  ++ pkgs.lib.optional withOnnx "-DONNXRuntime_DIR=${onnxRuntime}";
 
   postInstall = ''
     wrapQtApp $out/bin/opentrack
