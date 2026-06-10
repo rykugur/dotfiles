@@ -66,6 +66,9 @@
       autoUpdate = true;
       cleanup = "uninstall";
       upgrade = true;
+      # Workaround for nix-darwin#1787: Homebrew now requires an explicit force
+      # flag alongside `brew bundle --cleanup`. Drop once nix-darwin#1789 lands.
+      extraFlags = [ "--force-cleanup" ];
     };
   };
 
