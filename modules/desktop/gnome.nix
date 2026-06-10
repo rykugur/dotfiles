@@ -15,9 +15,10 @@
           # gnome-keyring.enable = true;
         };
 
+        displayManager.gdm.enable = true;
+
         xserver = {
           enable = true;
-          displayManager.gdm.enable = true;
           desktopManager.gnome.enable = true;
         };
       };
@@ -27,6 +28,9 @@
 
   flake.modules.homeManager.gnome =
     { lib, ... }:
+    let
+      loupe = [ "org.gnome.Loupe.desktop" ];
+    in
     {
       xdg = {
         enable = true;
@@ -34,7 +38,15 @@
         mimeApps = {
           enable = true;
 
-          defaultApplications = { "image/*" = [ "org.gnome.Loupe.desktop" ]; };
+          defaultApplications = {
+            "image/jpeg" = loupe;
+            "image/png" = loupe;
+            "image/gif" = loupe;
+            "image/webp" = loupe;
+            "image/bmp" = loupe;
+            "image/tiff" = loupe;
+            "image/svg+xml" = loupe;
+          };
         };
       };
       dconf = {
@@ -42,7 +54,7 @@
         settings = {
           "org/gnome/mutter" = {
             auto-maximize = false;
-            check-alive-timeout = "30000";
+            check-alive-timeout = lib.hm.gvariant.mkUint32 30000;
             experimental-features = [ "scale-monitor-framebuffer" ];
           };
           "org/gnome/desktop/interface" = { color-scheme = lib.mkDefault "prefer-dark"; };
