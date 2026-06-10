@@ -41,6 +41,15 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Populated `wiki/concepts/README.md` and `wiki/entities/README.md` so the category directories are useful and git-trackable.
 - These changes were made as part of the initial creation pass.
 
+## [2026-06-10] update | gnome module hygiene pass
+
+- Fixed `modules/desktop/gnome.nix`:
+  - `services.xserver.displayManager.gdm` → `services.displayManager.gdm` (option moved out of xserver namespace in NixOS 24.05+; old path is a deprecated alias).
+  - `check-alive-timeout = "30000"` → `lib.hm.gvariant.mkUint32 30000` (the dconf key is uint32; passing a string stored the wrong gvariant type).
+  - `defaultApplications."image/*"` → explicit MIME types (jpeg/png/gif/webp/bmp/tiff/svg+xml). xdg-mime does not expand wildcards, so the wildcard form was silently inert.
+- Verified `modules/desktop/kde.nix` already uses the new flat `services.displayManager.sddm` form — no fix needed there.
+- No new wiki pages warranted (localized bugfix). Conventions captured here for future reference: when configuring dconf via home-manager, use `lib.hm.gvariant.mk{Uint32,Int32,Double,...}` for typed keys; MIME associations must be enumerated explicitly.
+
 ---
 
 
