@@ -70,6 +70,7 @@ $env.abbreviations = $env.abbreviations | merge {
   gds: "git diff --staged"
   gdstat: "git diff --stat"
   gf: "git fetch"
+  gitch: "git fetch"
   gfp: "git fetch -p"
   gg: "git grep --color auto -n"
   ggi: "git grep --color auto -ni"
