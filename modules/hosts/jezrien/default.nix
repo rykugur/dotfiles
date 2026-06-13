@@ -39,6 +39,7 @@ in
 
       self.modules.nixos._1password
       self.modules.nixos.btrfs
+      self.modules.nixos.dusty-nfs
       self.modules.nixos.zsa
 
       self.modules.nixos.docker
