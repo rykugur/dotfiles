@@ -1,6 +1,7 @@
 # modules/misc/dusty-nfs.nix
 #
-# NFSv4 share from truenas.local.ryk.sh:/mnt/dusty-nfs mounted at /mnt/dusty-nfs.
+# NFSv4 share from truenas.local.ryk.sh:/mnt/default_pool/dusty-nfs mounted at
+# /mnt/dusty-nfs.
 # Uses systemd automount: `noauto` + `x-systemd.automount` so nothing happens at
 # boot — the mount is established on first access and torn down after the
 # idle-timeout. Keeps the system responsive when the server is unreachable.
@@ -16,7 +17,7 @@
       environment.systemPackages = [ pkgs.nfs-utils ];
 
       fileSystems."/mnt/dusty-nfs" = {
-        device = "truenas.local.ryk.sh:/mnt/dusty-nfs";
+        device = "truenas.local.ryk.sh:/mnt/default_pool/dusty-nfs";
         fsType = "nfs";
         options = [
           "x-systemd.automount"

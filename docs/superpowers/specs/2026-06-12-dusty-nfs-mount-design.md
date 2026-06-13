@@ -5,7 +5,7 @@
 
 ## Background
 
-`truenas.local.ryk.sh` hosts a NFSv4 share named `dusty-nfs`, exported at `/mnt/dusty-nfs`. The intent is day-to-day access from jezrien (NixOS desktop) without manual `mount` invocations.
+`truenas.local.ryk.sh` hosts a NFSv4 share named `dusty-nfs`, exported at `/mnt/default_pool/dusty-nfs`. The intent is day-to-day access from jezrien (NixOS desktop) without manual `mount` invocations.
 
 A hard `fileSystems` mount is rejected because:
 
@@ -50,7 +50,7 @@ modules/hosts/jezrien/
 ```nix
 # modules/misc/dusty-nfs.nix
 #
-# NFSv4 share from truenas.local.ryk.sh:/mnt/dusty-nfs mounted at /mnt/dusty-nfs.
+# NFSv4 share from truenas.local.ryk.sh:/mnt/default_pool/dusty-nfs mounted at /mnt/dusty-nfs.
 # Uses systemd automount: noauto + x-systemd.automount so nothing happens at
 # boot — the mount is established on first access and torn down after the
 # idle-timeout. Keeps the system responsive when the server is unreachable.
@@ -66,7 +66,7 @@ modules/hosts/jezrien/
       environment.systemPackages = [ pkgs.nfs-utils ];
 
       fileSystems."/mnt/dusty-nfs" = {
-        device = "truenas.local.ryk.sh:/mnt/dusty-nfs";
+        device = "truenas.local.ryk.sh:/mnt/default_pool/dusty-nfs";
         fsType = "nfs";
         options = [
           "x-systemd.automount"
