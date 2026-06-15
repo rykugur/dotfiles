@@ -14,6 +14,7 @@ in
       with pkgs;
       [
         albert
+        jq
         slurp
         wayland-utils
         wev
@@ -21,6 +22,7 @@ in
         wl-clipboard-x11
         wlogout
         wtype
+        yad
 
         xdg-desktop-portal-gnome
         xdg-desktop-portal-gtk
@@ -33,6 +35,15 @@ in
           builtins.readFile ./scripts/conditional-fullscreen.nu
         ))
         (pkgs.writeScriptBin "eve-toggle.nu" (builtins.readFile ./scripts/toggle-eve.nu))
+        (pkgs.writeShellApplication {
+          name = "window-info.sh";
+          runtimeInputs = with pkgs; [
+            jq
+            niri
+            yad
+          ];
+          text = builtins.readFile ./scripts/window-info.sh;
+        })
       ];
 
     programs.niri = {
@@ -221,7 +232,12 @@ in
               "Mod+p".action = lib.mkDefault switch-preset-column-width;
               "Mod+Shift+p".action = lib.mkDefault switch-preset-column-width-back;
 
-              # TODO: `niri msg pick-window`
+              "Mod+F1" = {
+                action = spawn [
+                  "${config.home.homeDirectory}/.nix-profile/bin/window-info.sh"
+                ];
+                repeat = false;
+              };
             }
             // {
               "Mod+h".action = focus-column-left-or-last;
