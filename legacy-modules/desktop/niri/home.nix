@@ -366,7 +366,7 @@ in
               { app-id = "neovide"; }
               { app-id = "nemo"; }
               { app-id = "obsidian"; }
-              { app-id = "opentrack"; }
+              # { app-id = "opentrack"; }
               { app-id = "org.gnome.Nautilus"; }
               { app-id = "nemo"; }
               { app-id = "thunar"; }
