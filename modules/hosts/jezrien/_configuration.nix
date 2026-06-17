@@ -163,6 +163,9 @@
       quantum = 256;
       noiseSuppression.enable = false;
     };
+    # btrfs root is mounted compress=zstd, and swapfiles can't live on a
+    # compressed subvol. 64GB RAM + 16GB zram is plenty without a backing file.
+    zram.swapfileSize = 0;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

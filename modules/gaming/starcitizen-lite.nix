@@ -59,6 +59,13 @@
         ];
       };
 
+      # LUG cursor-warp / view-snapping fix: --force-grab-cursor needs
+      # cap_sys_nice on the gamescope wrapper.
+      programs.gamescope = {
+        enable = true;
+        capSysNice = true;
+      };
+
       home-manager.users.${username}.imports = [ self.modules.homeManager.starcitizen-lite ];
     };
 
