@@ -15,20 +15,6 @@
       # openldap's syncreplication test (test017) is timing-sensitive and flaky in Nix's sandbox
       openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
 
-      # openrazer 3.12.2 doesn't compile against kernel >= 7.0.8 due to
-      # hid_report_raw_event() signature change. Upstream fix (commit ef574225,
-      # 2026-05-21) is gated on LINUX_VERSION_CODE >= 7.0.10, but linux-zen
-      # 7.0.9 backports the API change from 7.0.8+ and still reports 7.0.9,
-      # so the upstream version check misses it. Apply a linux-zen-specific
-      # patch that unconditionally uses the 6-arg form.
-      linuxPackages_zen = prev.linuxPackages_zen.extend (_: lprev: {
-        openrazer = prev.lib.warn
-          "openrazer: linux-zen kernel patch still applied — check if linux-zen has reached a version where the upstream fix (LINUX_VERSION_CODE >= 7.0.10) triggers, or if openrazer > 3.12.2 has landed"
-          (lprev.openrazer.overrideAttrs (old: {
-            patches = (old.patches or [ ]) ++ [ ../pkgs/openrazer-zen-kernel.patch ];
-          }));
-      });
-
       audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
       hyprprop = inputs.hyprland-contrib.packages.${system}.hyprprop;
       hyprland-qtutils = inputs.hyprland-qtutils.packages."${system}".default;

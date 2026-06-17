@@ -50,7 +50,7 @@
           lsof
           nmap
           p7zip
-          silver-searcher
+          ripgrep
           speedtest-cli
           tree
           unzip

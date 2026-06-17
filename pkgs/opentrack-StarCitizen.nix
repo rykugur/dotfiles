@@ -47,7 +47,7 @@ stdenv.mkDerivation {
       libevdev
       wineWow64Packages.minimal
     ]
-    ++ (with pkgs.libsForQt5.qt5; [
+    ++ (with pkgs.libsForQt5; [
       qtbase
       qttools
       wrapQtAppsHook

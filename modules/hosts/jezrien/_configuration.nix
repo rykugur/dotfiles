@@ -74,28 +74,6 @@
     };
   };
 
-  # chaotic-nyx mesa_git: TEMPORARY workaround for the Crimson Desert RDNA4 GPU
-  # page-fault (vkd3d-proton#3058, mesa MR !41851).
-  #
-  # Lifecycle:
-  #   * ~/check-chaotic-mesa-crimson.sh → ✅  flip enable below to `true`
-  #   * ~/check-nixpkgs-mesa-crimson.sh → ✅  drop chaotic entirely (see TODO)
-  #
-  # TODO: once nixos-unstable's stock mesa carries the fix, remove this whole
-  # block, the inputs.chaotic.nixosModules.default import in default.nix, the
-  # chaotic input from flake.nix, and the nyx-cache substituter + key from
-  # flake.nix nixConfig. The `warnings` block below will keep nagging on every
-  # rebuild until this is cleaned up.
-  chaotic.mesa-git.enable = true;
-  warnings = lib.optionals config.chaotic.mesa-git.enable [
-    ''
-      chaotic.mesa-git is a TEMPORARY workaround (Crimson Desert RDNA4 fix,
-      vkd3d-proton#3058 / mesa MR !41851). Run ~/check-nixpkgs-mesa-crimson.sh
-      periodically; when it returns ✅, follow its cleanup steps to drop
-      chaotic and revert to stock mesa.
-    ''
-  ];
-
   hardware = {
     amdgpu.overdrive.enable = true;
 

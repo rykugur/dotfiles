@@ -23,7 +23,6 @@ in
 
       inputs.home-manager.nixosModules.home-manager
       inputs.stylix.nixosModules.stylix
-      inputs.chaotic.nixosModules.default
 
       self.modules.nixos.meta
       self.modules.nixos.fonts
@@ -166,8 +165,6 @@ in
                 google-chrome
 
               ];
-
-              gtk.gtk4.theme = null;
 
               home.sessionVariables = {
                 GDK_BACKEND = "wayland";
