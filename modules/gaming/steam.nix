@@ -12,7 +12,7 @@
         extraPackages = with pkgs; [
           gamemode
           # Elite Dangerous launcher; set ED's Steam launch options to:
-          #   MinEdLauncher /steam /edo %command%
+          # PROTON_USE_NTSYNC=1 gamemoderun MinEdLauncher %command% /edo /autorun /autoquit
           min-ed-launcher
         ];
         extraCompatPackages = [ pkgs.proton-ge-bin ];
