@@ -346,6 +346,14 @@ in
                 {
                   matches = [
                     {
+                      app-id = "opentrack";
+                    }
+                  ];
+                  default-column-width = p33;
+                }
+                {
+                  matches = [
+                    {
                       app-id = "steam_app_1903340";
                       title = "Clair Obscur: Expedition 33";
                     }
