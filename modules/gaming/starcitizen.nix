@@ -59,7 +59,7 @@
     in
     {
       home.packages = with pkgs; [
-        opentrack-StarCitizen
+        opentrack
         gameglass
         lug-helper
       ];

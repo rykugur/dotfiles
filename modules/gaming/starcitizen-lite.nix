@@ -34,11 +34,9 @@
       ];
 
       # Kernel modules nix-citizen sets up for SC's audio/video pipeline.
+      # (ntsync moved to its own module — it's a general wine/Proton feature, not SC's.)
       boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
-      boot.kernelModules = [
-        "snd-aloop"
-      ]
-      ++ lib.optional (lib.versionAtLeast config.boot.kernelPackages.kernel.version "6.14") "ntsync";
+      boot.kernelModules = [ "snd-aloop" ];
 
       services.udev = {
         enable = true;
@@ -59,13 +57,6 @@
         ];
       };
 
-      # LUG cursor-warp / view-snapping fix: --force-grab-cursor needs
-      # cap_sys_nice on the gamescope wrapper.
-      programs.gamescope = {
-        enable = true;
-        capSysNice = true;
-      };
-
       home-manager.users.${username}.imports = [ self.modules.homeManager.starcitizen-lite ];
     };
 
@@ -78,10 +69,42 @@
     in
     {
       home.packages = with pkgs; [
-        opentrack-StarCitizen
+        opentrack
         gameglass
         lug-helper
       ];
+
+      # LUG pre-launch / post-exit scripts for head tracking. sc-launch.sh has a
+      # manually-added hook (see the wiki Tips-and-Tricks) that runs these INSIDE its
+      # steam-run sandbox, so opentrack's FreeTrack bridge shares the game's wineserver
+      # — two separate steam-runs get private /tmp dirs hence two wineservers, and the
+      # tracking shared memory never crosses (the bug we chased for ages).
+      #
+      # They live in ~/.config/star-citizen, NOT the prefix: the LUG Helper refuses to
+      # install SC if ~/Games/star-citizen already exists, so home-manager must not
+      # pre-create it. Embedding ${pkgs.opentrack} keeps the path current across updates.
+      #
+      # Launch via the stock lug "RSI Launcher" entry; opentrack comes up with the game
+      # (configure its Wine output + Start, or enable opentrack's auto-start-tracking for
+      # hands-off) and is killed on exit. Cursor confinement stays the in-prefix
+      # UseTakeFocus=N registry key + in-game Borderless.
+      xdg.configFile = {
+        "star-citizen/sc-prelaunch.sh" = {
+          executable = true;
+          text = ''
+            #!/usr/bin/env bash
+            ${pkgs.opentrack}/bin/opentrack &
+            echo $! > /tmp/sc-opentrack.pid
+          '';
+        };
+        "star-citizen/sc-postexit.sh" = {
+          executable = true;
+          text = ''
+            #!/usr/bin/env bash
+            kill "$(cat /tmp/sc-opentrack.pid 2>/dev/null)" 2>/dev/null || true
+          '';
+        };
+      };
 
       xdg.desktopEntries.gameglass = {
         name = "GameGlass";

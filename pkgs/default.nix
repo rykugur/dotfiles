@@ -11,21 +11,10 @@ let
 in
 {
   ### gaming
-  # star citizen
-  opentrack = pkgs.callPackage ./opentrack.nix { };
-  opentrack-StarCitizen = pkgs.callPackage ./opentrack-StarCitizen.nix { };
-  # slim variants for the VITURE XR pipeline — no AI face tracker, no SteamVR
-  # output (the glasses replace face tracking, and we're driving flat-screen
-  # games via the wine bridge). Not added to home.packages directly; embedded
-  # by store path inside the opentrack-xr-run launcher in modules/gaming/viture.nix.
-  opentrack-xr = pkgs.callPackage ./opentrack.nix {
-    withOnnx = false;
-    withSteamVR = false;
-  };
-  opentrack-StarCitizen-xr = pkgs.callPackage ./opentrack-StarCitizen.nix {
-    withOnnx = false;
-    withSteamVR = false;
-  };
+  # star citizen head tracking — opentrack comes straight from nixpkgs now
+  # (2026.1.0+, which builds the SDK_WINE output module by default on x86_64),
+  # so no custom derivation is needed. The LUG Wine runners require >= 2026.1.0.
+  # The VITURE One IMU -> opentrack UDP bridge:
   xr-to-opentrack = pkgs.callPackage ./xr-to-opentrack.nix { };
   # misc
   jackify = pkgs.callPackage ./jackify.nix { };

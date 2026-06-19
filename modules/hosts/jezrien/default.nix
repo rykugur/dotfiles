@@ -47,6 +47,7 @@ in
 
       self.modules.nixos.appimage
       self.modules.nixos.gamemode
+      self.modules.nixos.ntsync
       self.modules.nixos.obs-studio
       self.modules.nixos.razer
       self.modules.nixos.steam

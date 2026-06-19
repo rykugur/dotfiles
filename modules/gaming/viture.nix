@@ -37,14 +37,17 @@
           '';
         };
 
+      # Both use nixpkgs opentrack now (2026.1.0+, SDK_WINE on). The old slim
+      # withOnnx=false / withSteamVR=false variants are gone — nixpkgs always
+      # bundles onnx, but it's cache-built so there's no local build cost.
       opentrack-xr-run = mkLauncher {
         name = "opentrack-xr-run";
-        opentrack = pkgs.opentrack-xr;
+        opentrack = pkgs.opentrack;
       };
 
       opentrack-StarCitizen-xr-run = mkLauncher {
         name = "opentrack-StarCitizen-xr-run";
-        opentrack = pkgs.opentrack-StarCitizen-xr;
+        opentrack = pkgs.opentrack;
       };
     in
     {
