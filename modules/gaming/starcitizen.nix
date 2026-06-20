@@ -8,14 +8,6 @@
     {
       imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
 
-      services.udev = {
-        enable = true;
-        extraRules = ''
-          # Set the "uaccess" tag for raw HID access for Virpil Devices in wine
-          KERNEL=="hidraw*", ATTRS{idVendor}=="3344", ATTRS{idProduct}=="*", MODE="0660", TAG+="uaccess"
-        '';
-      };
-
       nix.settings = {
         substituters = [
           "https://nix-citizen.cachix.org"

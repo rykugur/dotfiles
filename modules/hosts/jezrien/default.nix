@@ -51,6 +51,7 @@ in
       self.modules.nixos.obs-studio
       self.modules.nixos.razer
       self.modules.nixos.steam
+      self.modules.nixos.gaming
 
       # home-manager config
       {
