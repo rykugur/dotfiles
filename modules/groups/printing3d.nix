@@ -4,8 +4,9 @@
     { pkgs, ... }:
     {
       home.packages = with pkgs; [
-        qidi-slicer-bin
         freecad-wayland
+        orca-slicer
+        qidi-slicer-bin
       ];
     };
 }

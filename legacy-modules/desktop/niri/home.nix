@@ -238,6 +238,22 @@ in
                 ];
                 repeat = false;
               };
+
+              # Recenter opentrack head tracking via its DBus interface (opentrack
+              # PR #1813, present in the nixpkgs 2026-06-08 build). niri grabs this
+              # globally even over fullscreen Star Citizen, and DBus crosses the
+              # steam-run sandbox boundary on the shared session bus — unlike X11
+              # hotkeys (focus-blocked under Wayland) or key injection (needs
+              # opentrack --platform xcb, which breaks SC). Joystick-button binds
+              # aren't supported by Linux opentrack at all (opentrack #1895).
+              # NOTE: the /Tracker object only exists while tracking is *started*;
+              # the parent /com/github/opentrack object only has Start/Stop. So this
+              # is a no-op until opentrack is tracking (fine in-game).
+              # F14 is emitted by a macro pad (F13 is already Discord mute).
+              "F14" = {
+                action = spawn-sh "dbus-send --session --type=method_call --dest=com.github.opentrack /com/github/opentrack/Tracker com.github.opentrack.Tracker.Center";
+                repeat = false;
+              };
             }
             // {
               "Mod+h".action = focus-column-left-or-last;
