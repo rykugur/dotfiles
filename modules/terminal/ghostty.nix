@@ -10,7 +10,12 @@ let
 in
 {
   flake.modules.homeManager.ghostty =
-    { lib, config, pkgs, ... }:
+    {
+      lib,
+      config,
+      pkgs,
+      ...
+    }:
     let
       cfg = config.programs.ghostty;
     in
@@ -52,7 +57,8 @@ in
             "ctrl+shift+k=goto_split:top"
             "ctrl+shift+l=goto_split:right"
           ];
-        } // lib.optionalAttrs cfg.useFixedSize {
+        }
+        // lib.optionalAttrs cfg.useFixedSize {
           window-height = lib.mkDefault 50;
           window-width = lib.mkDefault 125;
         };

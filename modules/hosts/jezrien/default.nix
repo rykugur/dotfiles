@@ -87,6 +87,7 @@ in
                 # individual modules
                 btop
                 espanso
+                gtk
                 eve-online
                 easyeffects
                 homelab
