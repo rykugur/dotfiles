@@ -56,6 +56,9 @@
 
         # zswap must be disabled when using zram (LUG).
         boot.kernelParams = [ "zswap.enabled=0" ];
+
+        # Prefer fast compressed zram over evicting page cache (LUG/Fedora rec).
+        boot.kernel.sysctl."vm.swappiness" = 180;
       };
     };
 }

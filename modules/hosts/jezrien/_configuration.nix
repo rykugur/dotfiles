@@ -156,6 +156,10 @@
     cpuFreqGovernor = "performance";
   };
 
+  # Cap concurrent derivations so heavy parallel C++ builds can't blow past
+  # 64GB RAM (cores=0 keeps each job on all 24 cores, so single builds stay fast).
+  nix.settings.max-jobs = 4;
+
   ### custom module stuff
   ryk = {
     dankMaterialShell.screenshotBackend = "swappy";
