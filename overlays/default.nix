@@ -34,16 +34,6 @@
         };
       });
 
-      vscode-langservers-extracted = prev.vscode-langservers-extracted.overrideAttrs (oldAttrs: rec {
-        version = "4.8.0";
-        src = prev.fetchFromGitHub {
-          owner = "hrsh7th";
-          repo = "vscode-langservers-extracted";
-          rev = "v${version}";
-          sha256 = "sha256-sGnxmEQ0J74zNbhRpsgF/cYoXwn4jh9yBVjk6UiUdK0=";
-        };
-      });
-
       lib = prev.lib // {
         fetch7z =
           { url, sha256 }:
