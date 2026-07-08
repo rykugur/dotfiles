@@ -8,7 +8,7 @@
 }:
 
 let
-  version = "5.21.12";
+  version = "5.26.1";
 
   # Libraries needed by the bundled JRE's AWT/Swing
   runtimeLibs = [
@@ -36,16 +36,20 @@ stdenv.mkDerivation {
 
   src = fetchurl {
     url = "https://riftforeve.online/download/rift-${version}-linux-amd64.tar.gz";
-    sha256 = "sha256-JO73VyRUpRmWusRmTdFGwVTHKrMsM2YxL1BzAMR+n68=";
+    sha256 = "sha256-P1giszmWoxsq8LzPqGsKJauWjomed6zNhEwdAGeAwO8=";
   };
 
-  nativeBuildInputs = [ makeWrapper autoPatchelfHook ];
+  nativeBuildInputs = [
+    makeWrapper
+    autoPatchelfHook
+  ];
 
   buildInputs = [
     pkgs.wmctrl
     pkgs.wayland
     stdenv.cc.cc.lib
-  ] ++ runtimeLibs;
+  ]
+  ++ runtimeLibs;
 
   unpackPhase = ''
     tar -xzf $src
@@ -62,7 +66,13 @@ stdenv.mkDerivation {
 
     wrapProgram $out/bin/rift \
       --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibs} \
-      --prefix PATH : ${lib.makeBinPath [ pkgs.xwininfo pkgs.xprop pkgs.wmctrl ]}
+      --prefix PATH : ${
+        lib.makeBinPath [
+          pkgs.xwininfo
+          pkgs.xprop
+          pkgs.wmctrl
+        ]
+      }
 
     runHook postInstall
   '';
