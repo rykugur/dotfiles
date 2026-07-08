@@ -36,6 +36,15 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
+
+    # RTL8125 2.5GbE NIC: use Realtek's vendor r8125 driver instead of the
+    # in-kernel r8169. r8169 leaves hardware offloads disabled (rx-gro-hw fixed
+    # off, sg/tso off) and can't absorb packet reordering on some upstream paths,
+    # which throttles parallel downloads — Steam/Valve capped ~20 Mbps here while
+    # a Windows box on the same LAN hit ~900. See Arcanum [[Slow Steam Downloads]].
+    extraModulePackages = [ config.boot.kernelPackages.r8125 ];
+    blacklistedKernelModules = [ "r8169" ];
+
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
