@@ -190,8 +190,7 @@ in
               };
               "Mod+e" = {
                 action = lib.mkDefault (spawn [
-                  "nautilus"
-                  "--new-window"
+                  "nemo"
                 ]);
                 repeat = false;
               };
