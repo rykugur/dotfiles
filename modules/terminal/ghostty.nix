@@ -45,8 +45,6 @@ in
           clipboard-paste-protection = false;
           app-notifications = false;
 
-          command = "${pkgs.nushell}/bin/nu --login";
-
           keybind = [
             "alt+h=previous_tab"
             "alt+l=next_tab"
