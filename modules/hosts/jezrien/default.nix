@@ -81,6 +81,7 @@ in
                 claude-code
                 codex
                 grok
+                herdr
                 opencode
                 pi
 

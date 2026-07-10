@@ -9,7 +9,6 @@
     in
     {
       home.packages = [
-        pkgs.herdr
         pkgs.llmfit
         pkgs.rtk
 

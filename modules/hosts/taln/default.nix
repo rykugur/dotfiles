@@ -46,6 +46,7 @@ in
                 claude-code
                 codex
                 grok
+                herdr
                 espanso
                 homelab
                 nushell
