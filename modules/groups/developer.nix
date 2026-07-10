@@ -9,7 +9,6 @@
         devenv
         git
         yaak
-        zed-editor
 
         # terminal
         ghostty
