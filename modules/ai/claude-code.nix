@@ -69,6 +69,7 @@ let
 
   claudeCodeSettings = {
     permissions = {
+      defaultMode = "auto";
       allow = map (cmd: "Bash(${cmd}:*)") allowedBashCommands ++ [
         "mcp__jcodemunch__*"
         "mcp__mempalace__*"
