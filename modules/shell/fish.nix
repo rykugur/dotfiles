@@ -1,8 +1,8 @@
 { ... }:
 {
   flake.modules.homeManager.fish =
-    { pkgs, ... }:
-    {
+    { config, lib, pkgs, ... }:
+    lib.mkIf (config.ryk.defaultShell == "fish") {
       home.packages = with pkgs; [
         babelfish
 
@@ -22,10 +22,5 @@
       };
 
       programs.fzf.enable = true;
-
-      # programs.zoxide = {
-      #   enable = true;
-      #   enableFishIntegration = true;
-      # };
     };
 }

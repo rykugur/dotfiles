@@ -49,7 +49,7 @@ in
                 herdr
                 espanso
                 homelab
-                nushell
+                shell
                 obsidian
                 opencode
                 pi

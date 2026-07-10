@@ -1,6 +1,6 @@
 # Nushell — dendritic homeManager module
 { ... }: {
-  flake.modules.homeManager.nushell = { pkgs, ... }:
+  flake.modules.homeManager.nushell = { config, lib, pkgs, ... }:
     let
       nu-scripts = pkgs.fetchFromGitHub {
         owner = "nushell";
@@ -8,7 +8,8 @@
         rev = "e380c8a355b4340c26dc51c6be7bed78f87b0c71";
         sha256 = "sha256-b2AeWiHRz1LbiGR1gOJHBV3H56QP7h8oSTzg+X4Shk8=";
       };
-    in {
+    in
+    lib.mkIf (config.ryk.defaultShell == "nushell") {
       programs.nushell = {
         enable = true;
         extraEnv = ''

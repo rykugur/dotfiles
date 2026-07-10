@@ -95,7 +95,7 @@ in
                 homelab
                 jackify
                 keebs
-                nushell
+                shell
                 obsidian
                 # sesh
                 sops
