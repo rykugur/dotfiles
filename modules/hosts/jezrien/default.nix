@@ -26,6 +26,7 @@ in
 
       self.modules.nixos.meta
       self.modules.nixos.fonts
+      self.modules.nixos.login-shell
       self.modules.nixos.stylix
 
       self.modules.nixos.pipewire
