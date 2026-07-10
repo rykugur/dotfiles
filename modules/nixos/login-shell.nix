@@ -20,10 +20,9 @@
       config = {
         users.users.${config.ryk.username}.shell = shellPkg;
 
-        # Make the chosen shell a valid login shell (/etc/shells).
-        environment.shells = [ shellPkg ];
+        # fish registers itself via programs.fish below; others need explicit /etc/shells entry.
+        environment.shells = lib.mkIf (cfg != "fish") [ shellPkg ];
 
-        # fish's NixOS module wires completions + /etc/shells + system integration.
         programs.fish.enable = lib.mkIf (cfg == "fish") true;
       };
     };
