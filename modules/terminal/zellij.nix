@@ -18,7 +18,6 @@
         enable = true;
         settings = {
           theme = "catppuccin-mocha";
-          # default_shell = "nu";
           plugins = {
             "autolock location=\"file:${
               builtins.unsafeDiscardStringContext zellij-autolock

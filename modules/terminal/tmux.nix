@@ -18,7 +18,6 @@
         escapeTime = 0;
         mouse = true;
 
-        shell = "${pkgs.nushell}/bin/nu";
         terminal = ",xterm-256color:Tc";
 
         plugins = with pkgs.tmuxPlugins; [ sensible yank ];

@@ -20,7 +20,6 @@ in
           initial_window_width = "160c";
           initial_window_height = "40c";
           copy_on_select = "clipboard";
-          shell = "${pkgs.nushell}/bin/nu --login";
         };
         themeFile = "Catppuccin-Mocha";
       };
