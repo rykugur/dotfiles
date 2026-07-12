@@ -1,7 +1,7 @@
-{ ... }:
+{ self, ... }:
 {
   flake.modules.nixos.login-shell =
-    { config, lib, pkgs, ... }:
+    { config, lib, pkgs, username, ... }:
     let
       cfg = config.ryk.defaultShell;
       shellPkg = {
@@ -24,6 +24,9 @@
         environment.shells = lib.mkIf (cfg != "fish") [ shellPkg ];
 
         programs.fish.enable = lib.mkIf (cfg == "fish") true;
+
+        # Selecting a shell pulls in its home-manager config too (NixOS hosts only).
+        home-manager.users.${username}.imports = [ self.modules.homeManager.shell ];
       };
     };
 }

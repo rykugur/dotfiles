@@ -95,7 +95,6 @@ in
                 homelab
                 jackify
                 keebs
-                shell
                 obsidian
                 # sesh
                 sops
@@ -174,6 +173,7 @@ in
 
               home.sessionVariables = {
                 GDK_BACKEND = "wayland";
+                PROTON_USE_NTSYNC = "1";
               };
 
               programs.ghostty.settings.window-decoration = "none";
