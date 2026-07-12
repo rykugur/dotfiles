@@ -25,10 +25,9 @@ modules/
 ├── groups/             # developer.nix, gaming.nix, printing3d.nix (_3dp)
 ├── hosts/              # jezrien/, taln/  (the composition roots)
 ├── misc/               # appimage, distrobox, homelab, keebs, sops, ssh
-├── nixos/              # 1password, btrfs, obs-studio, razer, wooting, zsa  (NixOS-only)
-├── nushell.nix
+├── nixos/              # 1password, btrfs, login-shell, obs-studio, razer, wooting, zsa  (NixOS-only)
 ├── productivity/       # obsidian
-├── shell/              # atuin, carapace, direnv, fish, starship, zoxide
+├── shell/              # atuin, carapace, default-shell, direnv, fish, nushell, starship, zoxide
 ├── social/             # discord
 ├── terminal/           # bat, btop, espanso, ghostty, kitty, ranger, sesh, television, tmux, wezterm, yazi, zellij
 #                       # (see long NOTE in modules/terminal/television.nix
@@ -90,6 +89,27 @@ See the plan "roles-to-groups".
 - `base/nix-defaults.nix`, `base/meta-options.nix`
 - `nixos/` category for system-only concerns (even if some could be home)
 - Many "terminal" and "shell" modules are actually home-manager (they configure user programs)
+
+## Default shell (`ryk.defaultShell`)
+
+One option selects the primary user's shell everywhere. `ryk.defaultShell`
+(enum `fish` | `nushell` | `bash`, default `nushell`) is declared at the NixOS
+layer in `modules/nixos/login-shell.nix`, which sets `users.users.<name>.shell`
+and registers the choice in `/etc/shells`. A home-manager aggregator
+`modules/shell/default-shell.nix` (`flake.modules.homeManager.shell`) mirrors the
+value via `osConfig.ryk.defaultShell or "nushell"` — the `or` fallback keeps
+nushell active on darwin, which has no NixOS `ryk` namespace — and imports the
+`fish` + `nushell` submodules, each gating its **entire** config with
+`lib.mkIf (config.ryk.defaultShell == "<shell>")` (so an unselected shell's
+`home.packages` don't leak). Terminals (kitty/tmux/zellij/ghostty) no longer
+hardcode a shell; they inherit `$SHELL` from the login shell. Hosts import the
+`shell` group rather than a specific shell module. `bash` is the POSIX escape
+hatch if a non-POSIX login shell trips a greeter or tool. See
+`docs/superpowers/specs/2026-07-10-default-shell-design.md`.
+
+Note: `ryk.defaultShell` and `ryk.username` are scalar **config-value** options
+(plain `mkOption`, not activation toggles) in the `ryk.*` namespace declared in
+`modules/base/meta-options.nix` and sibling NixOS modules.
 
 ## AI modules — special because meta
 

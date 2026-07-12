@@ -23,12 +23,16 @@ The three (sometimes four) machines managed by Swoleflake.
   - Peripherals (razer, wooting, zsa)
   - Virtualization (docker, winboat, vfio?)
   - 1password, sops, btrfs maintenance, obs-studio, gamemode, appimage
+  - Login shell is option-driven via `ryk.defaultShell` (default `nushell`; see [Modules → Default shell](modules.md))
   - Legacy desktop modules still partially active (dankMaterialShell, hyprland/niri configs in legacy)
 - **Secrets**: `modules/hosts/jezrien/secrets.yaml`
 - **Hardware config**: `_hardware-configuration.nix`
 - **Special WM configs**: `_hyprland-config.nix`, `_niri-config.nix`
+- **Networking**: single plain **dhcpcd** scripted-networking stack (`networking.useDHCP` in `_hardware-configuration.nix`); no NetworkManager/networkd. RTL8125 2.5GbE NIC uses the vendor `r8125` driver (`r8169` blacklisted in `_configuration.nix`).
 
 Jezrien is the "full fat" machine where most new modules are proven.
+
+> **Note on the `r8125` driver + slow Steam downloads.** The `r8125` swap in `_configuration.nix` was made chasing slow Steam downloads, but a 2026-07-09 investigation proved it is **not** the fix: the host (network, driver, DNS, disk) is all provably fast, and the slowness is a **Valve Steam-for-Linux client bug** (kernel-confirmed `app_limited` / ~177 KB receive window; upstream #13024). Keep the driver (a valid offload improvement) but don't attribute the Steam issue to it, and **don't build a CDN-blackhole module** — see [Steam-for-Linux Slow Download Investigation](sources/steam-linux-slow-download-investigation.md).
 
 ## taln (laptop)
 

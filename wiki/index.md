@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-06-03 (initial bootstrap + first source ingest + mempalace/CLAUDE integration)
+Last major update: 2026-07-12 (default-shell feature — `ryk.defaultShell` — ingested)
 
 ---
 
@@ -34,6 +34,7 @@ Last major update: 2026-06-03 (initial bootstrap + first source ingest + mempala
 
 - [raw/README.md](raw/README.md) — Explains the immutable raw layer and how internal vs external sources are handled.
 - [2026-03-23 Dendritic Module Conversion (source)](sources/2026-03-23-dendritic-module-conversion.md) — Summary + implications of the foundational dendritic design spec.
+- [Steam-for-Linux Slow Download Investigation (source)](sources/steam-linux-slow-download-investigation.md) — 2026-07-09 debugging: jezrien host proven fast; slow Steam downloads are a Valve client bug (#13024), not the NIC/config; `r8125` swap didn't fix it; no config fix exists. (sources: live measurements, upstream issues)
 
 ---
 

@@ -50,6 +50,26 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Verified `modules/desktop/kde.nix` already uses the new flat `services.displayManager.sddm` form — no fix needed there.
 - No new wiki pages warranted (localized bugfix). Conventions captured here for future reference: when configuring dconf via home-manager, use `lib.hm.gvariant.mk{Uint32,Int32,Double,...}` for typed keys; MIME associations must be enumerated explicitly.
 
+## [2026-07-09] ingest | Steam-for-Linux slow-download investigation (jezrien)
+
+- Created [sources/steam-linux-slow-download-investigation.md](sources/steam-linux-slow-download-investigation.md): systematic-debugging pass on jezrien's slow Steam downloads (~50–110 Mbps vs 917 Mbps on Windows / 780 Mbps raw on same box).
+- **Conclusion**: root cause is a Valve Steam-for-Linux client bug (kernel-confirmed `app_limited` + ~177 KB receive window + ~1.2 Mbps/conn; upstream #13024), NOT jezrien's network/driver/DNS/disk (all measured fast/clean). No NixOS config fix exists.
+- Recorded that the `r8125` driver swap in `modules/hosts/jezrien/_configuration.nix` was an attempted fix that did **not** resolve it (kept as a valid offload improvement only), and that a CDN-blackhole module (#13378) was considered and **rejected** (throttle is receiver-side, not CDN selection). Only real workaround: DepotDownloader for big pulls.
+- Updated [hosts.md](hosts.md): added a Networking bullet + a note under jezrien pointing at the investigation and clarifying the `r8125` code.
+- Updated [index.md](index.md): listed the new source page under Sources; bumped "last major update" to 2026-07-09.
+- Note: borderline vs the schema's "no transient debugging notes" rule — kept because it explains an existing config decision (the `r8125` blacklist) and prevents re-investigating the host or building the doomed blackhole module.
+
+## [2026-07-12] ingest | User-definable default shell (`ryk.defaultShell`)
+
+- New feature merged to master: a single `ryk.defaultShell` option (enum `fish` | `nushell` | `bash`, default `nushell`) as the source of truth for the primary user's login shell and the shell active everywhere.
+- Architecture: system-canonical option in `modules/nixos/login-shell.nix` (sets `users.users.<name>.shell` + `/etc/shells`) + a home-manager aggregator `modules/shell/default-shell.nix` (`flake.modules.homeManager.shell`) that mirrors the value via `osConfig.ryk.defaultShell or "nushell"` and gates the `fish`/`nushell` submodules with `lib.mkIf` (whole-attrset, no package leakage).
+- Moved `modules/nushell.nix` → `modules/shell/nushell.nix`. Removed hardcoded nushell launch from `kitty`/`tmux`/`zellij`/`ghostty` — they now inherit `$SHELL`.
+- Updated [modules.md](modules.md): fixed the tree (nushell relocated, added `default-shell`/`login-shell`) and added a "Default shell" section documenting the mechanism + the `ryk.*` config-value option namespace.
+- Updated [hosts.md](hosts.md): noted jezrien's login shell is now `ryk.defaultShell`-driven.
+- Updated [index.md](index.md): bumped "last major update" to 2026-07-12.
+- Primary artifacts: `docs/superpowers/specs/2026-07-10-default-shell-design.md` and `docs/superpowers/plans/2026-07-10-default-shell.md`.
+- Open follow-up (not done): `modules/ai/herdr.nix:11` `terminal.default_shell = "nu"` is a separate hardcoded spot that could also follow the option — left as a user judgment call.
+
 ---
 
 
