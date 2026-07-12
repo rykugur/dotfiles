@@ -174,6 +174,8 @@ in
               home.sessionVariables = {
                 GDK_BACKEND = "wayland";
                 PROTON_USE_NTSYNC = "1";
+                PROTON_NO_ESYNC = "1";
+                PROTON_NO_FSYNC = "1";
               };
 
               programs.ghostty.settings.window-decoration = "none";
