@@ -53,7 +53,7 @@ modules/
   virtualization/ Docker, VFIO, virt-manager
 configs/        Raw dotfiles (fish, neovim, starship, wezterm, ...) symlinked by HM
 overlays/       Package additions and modifications
-pkgs/           Custom derivations (eve-wrench, opentrack, rackpeek, ...)
+pkgs/           Custom derivations (eve-wrench, opentrack, ...)
 shells/         Dev shell definitions
 scripts/        Bootstrap scripts for LXC containers
 ```

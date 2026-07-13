@@ -21,7 +21,7 @@
             model-path = "${rnnoise-marathon}";
             output-gain = 0.0;
             release = 20.0;
-            vad-thres = 90.0;
+            vad-thres = 93.0;
             wet = 0.0;
           };
         };

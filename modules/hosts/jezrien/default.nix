@@ -84,7 +84,7 @@ in
                 grok
                 herdr
                 opencode
-                pi
+                oh-my-pi
 
                 # individual modules
                 btop

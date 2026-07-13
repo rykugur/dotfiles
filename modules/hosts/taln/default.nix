@@ -52,7 +52,7 @@ in
                 shell
                 obsidian
                 opencode
-                pi
+                oh-my-pi
                 sops
                 ssh
                 eve-frontier

@@ -1,5 +1,6 @@
 $env.abbreviations = {}
 
+source ./docker.nu
 source ./git.nu
 source ./k8s.nu
 source ./git.nu
