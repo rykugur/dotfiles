@@ -87,12 +87,27 @@ Closes the VAD-triggering gap. Starting parameters:
 
 ### Preset file & loading
 
-Keep the **same preset filename** the module writes today
-(`~/.local/share/easyeffects/input/rnnoise.json`) so whatever selects/autoloads
-it keeps working — only the contents change. Renaming would require re-selecting
-the preset in EasyEffects, so it's avoided. (The filename becoming a slight
-misnomer is an acceptable trade for not breaking preset loading. If a rename is
-later wanted, it must be paired with whatever selects the preset.)
+**Rename** the preset from `rnnoise.json` to a name that reflects its contents —
+`mic-chain.json` (preset name "mic-chain") — since it will no longer be rnnoise.
+
+EasyEffects applies effects from its **dconf state**, not by reading the preset
+JSON on every launch; a preset only takes effect when it is *loaded* (which
+writes its settings into dconf). Confirmed on this host: dconf holds
+`last-used-output-preset='Heavy Bass'` and there is no dconf value pinning an
+input preset by content — the active input effects live in dconf, and the
+module's JSON is the preset that gets loaded into it. Consequences of the
+rename, all handled by the plan:
+
+- After rebuild, the new `mic-chain` preset must be **loaded once** in
+  EasyEffects (Settings → load preset, or via autoload) for the new chain to
+  apply. This is also why prior `vad-thres` edits only took effect on reload.
+- If an **autoload** entry exists for the mic device
+  (`~/.config/easyeffects/autoload/input/`) pointing at `rnnoise`, it must be
+  repointed to `mic-chain` (or created) so the chain auto-applies on device
+  connect. The plan inspects this directory and decides.
+- The stale `~/.local/share/easyeffects/input/rnnoise.json` (now an unmanaged
+  dangling symlink once the module stops writing it) and the home-manager
+  `rnnoise.json.bak` should be removed as cleanup.
 
 ## Implementation notes / risks
 
@@ -111,15 +126,17 @@ later wanted, it must be paired with whatever selects the preset.)
 
 ## Success criteria
 
-- `modules/audio/easyeffects.nix` writes an input preset with
-  `plugins_order = [ "deepfilter#0", "gate#0" ]` and valid config blocks for
-  both; no `rnnoise` block and no model fetch remain.
+- `modules/audio/easyeffects.nix` writes an input preset named `mic-chain.json`
+  with `plugins_order = [ "deepfilter#0", "gate#0" ]` and valid config blocks for
+  both; no `rnnoise` block and no model fetch remain, and the old `rnnoise.json`
+  is no longer written.
 - `nix flake check` passes; the rendered JSON (via `nix eval`) shows both
   plugins with the intended parameters.
-- Live: after rebuild + EasyEffects restart, EasyEffects shows Deep Noise
-  Suppression and Gate both active in the input chain, and the input meter drops
-  to (near-)silence when the user is quiet with the TV audible — enough that
-  Discord's mic no longer activates in the gaps.
+- Live: after rebuild + loading the `mic-chain` preset (and EasyEffects
+  restart), EasyEffects shows Deep Noise Suppression and Gate both active in the
+  input chain, and the input meter drops to (near-)silence when the user is
+  quiet with the TV audible — enough that Discord's mic no longer activates in
+  the gaps.
 
 ## Out of scope
 
