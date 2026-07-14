@@ -60,11 +60,11 @@ extra packaging**.
 
 ### Plugin chain
 
-The input preset's `plugins_order` becomes `[ "deepfilter#0", "gate#0" ]`. The
+The input preset's `plugins_order` becomes `[ "deepfilternet#0", "gate#0" ]`. The
 `rnnoise#0` block and the `rnnoise-marathon` model fetch (`pkgs.fetchurl`) are
 removed.
 
-### Stage 1 — Deep Noise Suppression (`deepfilter#0`)
+### Stage 1 — Deep Noise Suppression (`deepfilternet#0`)
 
 Removes the TV underneath the voice during speech. Effectively one user-facing
 control (an attenuation limit in dB). Start at strong/full suppression; tunable
@@ -127,7 +127,7 @@ rename, all handled by the plan:
 ## Success criteria
 
 - `modules/audio/easyeffects.nix` writes an input preset named `mic-chain.json`
-  with `plugins_order = [ "deepfilter#0", "gate#0" ]` and valid config blocks for
+  with `plugins_order = [ "deepfilternet#0", "gate#0" ]` and valid config blocks for
   both; no `rnnoise` block and no model fetch remain, and the old `rnnoise.json`
   is no longer written.
 - `nix flake check` passes; the rendered JSON (via `nix eval`) shows both
