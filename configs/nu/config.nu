@@ -7,10 +7,11 @@ source ./git.nu
 source ./linux.nu
 source ./misc.nu
 source ./nix.nu
-source ./pz.nu
 source ./zellij.nu
 
 source ./eve.nu
+source ./pz.nu
+source ./stalker2.nu
 source ./starcitizen.nu
 
 use ./abbreviations.nu

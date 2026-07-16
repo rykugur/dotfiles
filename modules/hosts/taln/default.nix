@@ -45,7 +45,6 @@ in
                 ai-common
                 claude-code
                 codex
-                grok
                 herdr
                 espanso
                 homelab

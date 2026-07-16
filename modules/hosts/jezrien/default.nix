@@ -81,7 +81,6 @@ in
                 ai-common
                 claude-code
                 codex
-                grok
                 herdr
                 opencode
                 oh-my-pi
