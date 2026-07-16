@@ -123,6 +123,7 @@ in
                 # desktop
                 arandr
                 cliphist
+                pinta
                 xrandr
                 xbacklight
 

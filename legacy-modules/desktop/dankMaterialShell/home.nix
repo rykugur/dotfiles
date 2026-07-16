@@ -92,6 +92,13 @@ in
               "screenshot"
               "--no-file"
             ];
+            "Mod+Shift+Print".action = spawn [
+              "dms"
+              "ipc"
+              "call"
+              "niri"
+              "screenshot"
+            ];
             # "Mod+Shift+Print".action = spawn [ "dms" "screenshot" "--no-file" ];
             "Mod+Shift+e".action = spawnAction [
               "powermenu"

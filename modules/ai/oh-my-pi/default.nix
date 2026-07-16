@@ -1,6 +1,7 @@
 { ... }:
 let
   version = "16.4.8";
+  carapace = import ./_carapace.nix;
 
   mkOhMyPi =
     pkgs:
@@ -93,13 +94,48 @@ let
         platforms = builtins.attrNames sources;
       };
     };
+
+  mkCompletion =
+    pkgs: ohMyPi: shell:
+    pkgs.runCommand "omp-${shell}-completion" { nativeBuildInputs = [ ohMyPi ]; } ''
+      export HOME="$TMPDIR"
+      omp completions ${shell} > "$out"
+    '';
+
 in
 {
   flake.modules.homeManager.oh-my-pi =
-    { pkgs, ... }:
     {
-      home.packages = [ (mkOhMyPi pkgs) ];
-    };
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      ohMyPi = mkOhMyPi pkgs;
+    in
+    lib.mkMerge [
+      {
+        home.packages = [ ohMyPi ];
+      }
+
+      (lib.mkIf (config.ryk.defaultShell == "fish") {
+        xdg.configFile."fish/completions/omp.fish".source = mkCompletion pkgs ohMyPi "fish";
+      })
+
+      (lib.mkIf (config.ryk.defaultShell == "nushell") {
+        xdg.configFile."carapace/specs/omp.yaml".text = builtins.toJSON carapace.spec;
+      })
+
+      (lib.mkIf (config.ryk.defaultShell == "bash") {
+        programs.bash = {
+          enable = true;
+          enableCompletion = true;
+        };
+
+        home.file.".local/share/bash-completion/completions/omp".source = mkCompletion pkgs ohMyPi "bash";
+      })
+    ];
 
   perSystem =
     { pkgs, ... }:

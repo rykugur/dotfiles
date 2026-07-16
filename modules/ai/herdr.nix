@@ -1,7 +1,7 @@
 { ... }:
 {
   flake.modules.homeManager.herdr =
-    { osConfig, ... }:
+    { config, lib, osConfig, ... }:
     let
       # herdr's default_shell wants a command name; ryk.defaultShell uses "nushell".
       shellCmd = {
@@ -22,5 +22,10 @@
           pane_gaps = true;
         };
       };
+
+      # Keep the OMP lifecycle extension in lockstep with the configured Herdr binary.
+      home.activation.installHerdrOmpIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run ${config.programs.herdr.package}/bin/herdr integration install omp
+      '';
     };
 }
