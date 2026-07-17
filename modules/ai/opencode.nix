@@ -71,7 +71,6 @@ let
       mcp.toOpencode (mcp.pick [
         "jcodemunch"
         "context-mode"
-        "sequential-thinking"
         "context7"
       ]);
   };

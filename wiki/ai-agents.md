@@ -39,7 +39,6 @@ Defined once in `_mcp.nix`:
 - `jcodemunch`
 - `context-mode`
 - `mempalace` (the memory palace MCP + CLI that complements this wiki)
-- `sequential-thinking`
 - `context7`
 
 Each agent module imports the shared definition and translates it into the schema that agent expects (stdio for Claude Code, etc.).

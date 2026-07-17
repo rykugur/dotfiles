@@ -39,7 +39,6 @@ let
         "jcodemunch"
         "context-mode"
         "mempalace"
-        "sequential-thinking"
         "context7"
       ]);
     };
@@ -75,7 +74,6 @@ let
       "context7_*" = "allow";
       "context-mode_ctx_*" = "allow";
       "mempalace_*" = "allow";
-      "sequential-thinking_*" = "allow";
     };
 
     skills = lib.genAttrs (map (s: s.name) skills) (_: "allow");

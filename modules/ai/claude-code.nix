@@ -44,7 +44,6 @@ let
       "jcodemunch"
       "context-mode"
       "mempalace"
-      "sequential-thinking"
     ]);
 
   mkPluginDirs = pkgs: [

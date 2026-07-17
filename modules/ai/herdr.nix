@@ -21,6 +21,12 @@
           pane_borders = true;
           pane_gaps = true;
         };
+        keys = {
+          previous_tab = "prefix+h";
+          next_tab = "prefix+l";
+          focus_pane_left = "";
+          focus_pane_right = "";
+        };
       };
 
       # Keep the OMP lifecycle extension in lockstep with the configured Herdr binary.

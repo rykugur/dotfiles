@@ -116,7 +116,7 @@ Note: `ryk.defaultShell` and `ryk.username` are scalar **config-value** options
 `modules/ai/` is one of the most interesting parts of the repo:
 
 - Shared agent definitions in `_agents.nix`
-- Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, sequential-thinking, context7)
+- Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, context7)
 - Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix` (hermes-agent was removed as it is only used imperatively on remote VMs)
 - `common.nix` (provides mempalace wrapper bin, rtk, etc.)
 - `skills/llm-wiki/` and `skills/sensitive-files/` — the skills this very wiki pattern comes from

@@ -34,10 +34,6 @@ let
         "mempalace.mcp_server"
       ];
     };
-    sequential-thinking = {
-      command = "${pkgs.bun}/bin/bunx";
-      args = [ "@modelcontextprotocol/server-sequential-thinking" ];
-    };
     context7 = {
       command = "${pkgs.bun}/bin/bunx";
       args = [ "@upstash/context7-mcp" ];
