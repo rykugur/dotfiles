@@ -56,3 +56,9 @@ write_release "$tmpdir/malformed-digest.json" false false
 jq '(.assets[] | select(.name == "omp-linux-x64")).digest = "sha512:bad"' "$tmpdir/malformed-digest.json" > "$tmpdir/malformed-digest.tmp"
 mv "$tmpdir/malformed-digest.tmp" "$tmpdir/malformed-digest.json"
 assert_rejected "$tmpdir/malformed-digest.json" 17.0.1
+
+printf '%s\n' '{"sentinel":true}' > "$tmpdir/existing.json"
+! normalize_release "$tmpdir/draft.json" 17.0.1 > "$tmpdir/new.json"
+jq -e '.sentinel == true' "$tmpdir/existing.json"
+write_lock "$tmpdir/lock.json" "$tmpdir/existing.json"
+jq -e '.version == "17.0.1"' "$tmpdir/existing.json"

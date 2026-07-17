@@ -1,9 +1,21 @@
 {
-  "version": "16.4.8",
+  "version": "17.0.1",
   "sources": {
-    "x86_64-linux": { "asset": "omp-linux-x64", "hash": "sha256-zfB3XgW4jWP52mBt5ULMP8C+7fCoZLSsQvd3lh+GhEw=" },
-    "aarch64-linux": { "asset": "omp-linux-arm64", "hash": "sha256-nOVX1ojLTTW6uiImJOt/RgFi4e8BDk5M8C8UIxLGacU=" },
-    "x86_64-darwin": { "asset": "omp-darwin-x64", "hash": "sha256-PocAgPRDgfbkhRA/+KgGds9GNUW0AN/HCdenS3q9yhs=" },
-    "aarch64-darwin": { "asset": "omp-darwin-arm64", "hash": "sha256-PaPT3RU6auZVyViRzQZtwAJE6cN+fJ8Yihl5FwRddEc=" }
+    "x86_64-linux": {
+      "asset": "omp-linux-x64",
+      "hash": "sha256-QnqHQ7C073AcxKDGa/HwuRzsBigOjfYilKEU4H+zghU="
+    },
+    "aarch64-linux": {
+      "asset": "omp-linux-arm64",
+      "hash": "sha256-jOcwYeAvbU4H36FND1k9CJSYcFb3A7GMGxUY1WHupQk="
+    },
+    "x86_64-darwin": {
+      "asset": "omp-darwin-x64",
+      "hash": "sha256-FjGg7Y4vc0zoZ7tEvNuh/W3Os12KtMIKE3Yp69zWy0Y="
+    },
+    "aarch64-darwin": {
+      "asset": "omp-darwin-arm64",
+      "hash": "sha256-73v/zOUjOlogosd77hfgpY7uTYaoysxed9BaPO6VTPg="
+    }
   }
 }

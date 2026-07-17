@@ -118,7 +118,26 @@ in
 
   perSystem =
     { pkgs, ... }:
+    let
+      updateOhMyPi = pkgs.writeShellApplication {
+        name = "update-oh-my-pi";
+        runtimeInputs = [ pkgs.curl pkgs.git pkgs.jq pkgs.nix ];
+        text = ''
+          exec ${./update-omp.sh} "$@"
+        '';
+      };
+    in
     {
-      packages.oh-my-pi = mkOhMyPi pkgs;
+      packages = {
+        oh-my-pi = mkOhMyPi pkgs;
+        update-oh-my-pi = updateOhMyPi;
+      };
+
+      checks.oh-my-pi-update = pkgs.runCommand "oh-my-pi-update-test" {
+        nativeBuildInputs = [ pkgs.bash pkgs.jq pkgs.nix ];
+      } ''
+        NIX_CONFIG='experimental-features = nix-command' ${pkgs.bash}/bin/bash ${./.}/update-omp.test.sh
+        touch $out
+      '';
     };
 }

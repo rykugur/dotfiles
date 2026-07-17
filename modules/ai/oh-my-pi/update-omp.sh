@@ -40,6 +40,36 @@ normalize_release() {
       "aarch64-darwin":{asset:"omp-darwin-arm64",hash:$darwin_arm64}}}'
 }
 
+write_lock() {
+  local source="$1" destination="$2" tmp
+  tmp="$(mktemp "${destination}.tmp.XXXXXX")"
+  trap 'rm -f "$tmp"' RETURN
+  cp "$source" "$tmp"
+  mv "$tmp" "$destination"
+  trap - RETURN
+}
+
+main() {
+  local requested_version="${1:-}" repo_root release_json lock_json old_version endpoint
+  [[ $# -le 1 ]] || { echo "usage: update-oh-my-pi [VERSION]" >&2; return 2; }
+  [[ -z "$requested_version" || "$requested_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || return 2
+
+  repo_root="$(git -C "$PWD" rev-parse --show-toplevel)"
+  [[ -f "$repo_root/modules/ai/oh-my-pi/release.json" ]] || return 1
+  lock_json="$repo_root/modules/ai/oh-my-pi/release.json"
+  old_version="$(jq -er '.version' "$lock_json")"
+  endpoint="$api_base/latest"
+  [[ -z "$requested_version" ]] || endpoint="$api_base/tags/v$requested_version"
+
+  release_json="$(mktemp)"
+  trap "rm -f '$release_json' '${release_json}.lock'" EXIT
+  curl --fail --location --silent --show-error "$endpoint" > "$release_json"
+  normalize_release "$release_json" "$requested_version" > "${release_json}.lock"
+  write_lock "${release_json}.lock" "$lock_json"
+  nix build "$repo_root#oh-my-pi"
+  printf 'Updated OMP %s -> %s\n' "$old_version" "$(jq -er '.version' "$lock_json")"
+}
+
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
   main "$@"
 fi
