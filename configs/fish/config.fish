@@ -18,6 +18,10 @@ for file in $fish_conf_dir/functions/*
     source $file
 end
 
+for file in $fish_conf_dir/completions/*.fish
+    source $file
+end
+
 # Load any local configs
 # Do this last, since we might want to override abbreviations, aliases, etc.
 for file in $HOME/.local/fish/*.fish
