@@ -12,9 +12,16 @@ function zellij-create-or-attach
             return 2
     end
 
-    zellij-exists "$session"; and begin
-        zellij attach "$session"
-        return $status
+    zellij-exists "$session"
+    set -l exists_status $status
+    switch $exists_status
+        case 0
+            zellij attach "$session"
+            return $status
+        case 1
+            # No-op, proceed to create
+        case '*'
+            return $exists_status
     end
 
     if test -n "$layout"; and test -e "$layout"
