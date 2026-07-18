@@ -182,6 +182,33 @@ set curl_args (string split0 < $CURL_ARGS)
 test (count $curl_args) -eq 1 -a "$curl_args[1]" = '$env.API_URL'
 or fail 'curl-multiline unexpectedly evaluated a Nu expression'
 
+set -gx CURL_MULTILINE 'curl --data "C:\Users\fish\payload" https://example.invalid/windows'
+curl-multiline
+set curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 3 -a "$curl_args[1]" = --data -a "$curl_args[2]" = 'C:\Users\fish\payload' -a "$curl_args[3]" = https://example.invalid/windows
+or fail 'curl-multiline stripped a literal Windows backslash inside double quotes'
+set -gx CURL_MULTILINE 'curl --data "a\"b" https://example.invalid/escaped-quote'
+curl-multiline
+set curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 3 -a "$curl_args[1]" = --data -a "$curl_args[2]" = 'a"b' -a "$curl_args[3]" = https://example.invalid/escaped-quote
+or fail 'curl-multiline did not unescape a valid double-quoted escape'
+set -gx CURL_MULTILINE 'curl --data "a\`b" https://example.invalid/escaped-backtick'
+curl-multiline
+set curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 3 -a "$curl_args[1]" = --data -a "$curl_args[2]" = 'a`b' -a "$curl_args[3]" = https://example.invalid/escaped-backtick
+or fail 'curl-multiline did not unescape a valid double-quoted backtick escape'
+set -l quoted_newline_body (printf '%s\n%s' first second | string collect --no-trim-newlines)
+set -gx CURL_MULTILINE (printf '%s\n%s\n%s' 'curl --data "first' 'second" https://example.invalid/newline' '' | string collect --no-trim-newlines)
+curl-multiline
+set curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 3 -a "$curl_args[1]" = --data -a "$curl_args[2]" = "$quoted_newline_body" -a "$curl_args[3]" = https://example.invalid/newline
+or fail 'curl-multiline stripped a literal newline inside a double-quoted body'
+set -gx CURL_MULTILINE (printf '%s\n%s' 'curl --request GET' 'https://example.invalid/separate' | string collect --no-trim-newlines)
+curl-multiline
+set curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 3 -a "$curl_args[1]" = --request -a "$curl_args[2]" = GET -a "$curl_args[3]" = https://example.invalid/separate
+or fail 'curl-multiline did not split unquoted newline-separated arguments'
+
 rm -f $GIT_ARGS
 git.tree >/dev/null
 git.head >/dev/null
@@ -300,10 +327,12 @@ nd task-6-shell
 set -l nd_args (string split0 < $NIX_ARGS)
 test (count $nd_args) -eq 2 -a "$nd_args[1]" = develop -a "$nd_args[2]" = "$DOTFILES_DIR#task-6-shell"
 or fail 'nd did not develop the requested DOTFILES_DIR shell target'
-set -l nr_definition (abbr --show nr.)
-string match --quiet '*nix repl --expr*' "$nr_definition"
-and string match --quiet '*builtins.getFlake*' "$nr_definition"
-and string match --quiet '*(pwd)*' "$nr_definition"
-or fail 'nr. did not evaluate the flake for the current directory'
+set -l nr_dir $test_root/nr-flake
+mkdir -p $nr_dir
+cd $nr_dir
+nr.
+set -l nr_args (string split0 < $NIX_ARGS)
+test (count $nr_args) -eq 3 -a "$nr_args[1]" = repl -a "$nr_args[2]" = --expr -a "$nr_args[3]" = "builtins.getFlake \"$nr_dir\""
+or fail 'nr. did not pass the current directory to nix as a flake expression'
 
 rm -rf -- $test_root

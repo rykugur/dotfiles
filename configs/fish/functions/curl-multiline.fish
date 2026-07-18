@@ -6,7 +6,7 @@ function curl-multiline --description "Run an edited multiline curl command with
     end
 
     set -l command_line (printf '%s' "$content" | replace-multiline | string collect)
-    set -l argument_line (string replace --regex '^curl[[:space:]]+' '' -- "$command_line")
+    set -l argument_line (string replace --regex '^curl[[:space:]]+' '' -- "$command_line" | string collect)
     if test "$argument_line" = "$command_line"
         echo "The edited command must begin with curl." >&2
         return 2
@@ -18,9 +18,29 @@ function curl-multiline --description "Run an edited multiline curl command with
     set -l escaped 0
     set -l token_started 0
 
-    for character in (string match --all --regex '[\s\S]' -- "$argument_line")
+    set -l newline (printf '\n' | string collect --no-trim-newlines)
+    set -l newline_separator 0
+    for character in (string split '' -- "$argument_line" | string join0 | string split0)
+        if test -z "$character"
+            if test $newline_separator -eq 1
+                set newline_separator 0
+                continue
+            end
+            set character "$newline"
+            set newline_separator 1
+        else
+            set newline_separator 0
+        end
         if test $escaped -eq 1
-            set token "$token$character"
+            if test "$quote" = '"'
+                if test "$character" = '"' -o "$character" = '$' -o "$character" = '`' -o "$character" = '\\' -o "$character" = "$newline"
+                    set token "$token$character"
+                else
+                    set token "$token\\$character"
+                end
+            else
+                set token "$token$character"
+            end
             set escaped 0
             set token_started 1
             continue

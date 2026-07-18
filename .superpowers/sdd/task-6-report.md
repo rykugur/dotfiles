@@ -5,7 +5,7 @@
 - Added dashed Fish functions for every helper sourced from `configs/nu/eve.nu`, `configs/nu/pz.nu`, `configs/nu/stalker2.nu`, and `configs/nu/starcitizen.nu`.
 - Added `tests/fish/project-helpers-load.test.fish`, which sources the Fish configuration and asserts all 14 Task 6 functions exist.
 - Appended the final command-equivalence matrix to `docs/superpowers/specs/2026-07-16-fish-migration-design.md`. It inventories every function, alias, and abbreviation sourced by `configs/nu/config.nu`; it records no intentionally Nu-only entry.
-- Updated `configs/fish/exports.fish` to initialize `LOCAL_CONFIG_FILE` to `$HOME/.local/fish/config.fish` when unset; game paths remain computed inside their helpers rather than added as universal variables.
+- Updated `configs/fish/exports.fish` to initialize `FISH_LOCAL_CONFIG_FILE` to `$HOME/.local/fish/config.fish` when unset; game paths remain computed inside their helpers rather than added as universal variables.
 
 ## TDD evidence
 
@@ -146,3 +146,22 @@ nix run nixpkgs#fish -- --no-execute \
 ```
 
 The regressions use temporary directories and local command stubs only; no external or system-changing operation ran.
+
+## Remaining Task 6 review remediation
+
+- Corrected the local-config scope summary to name `FISH_LOCAL_CONFIG_FILE`.
+- Replaced the static `nr.` abbreviation with a Fish function. It expands `$PWD` directly into the single Nix expression argument, and the parity regression uses a local fake `nix` to assert `repl`, `--expr`, and `builtins.getFlake "<current-directory>"` argv values.
+- Kept `curl-multiline` evaluation-free while preserving raw input: its extraction now collects the `string replace` result as one value, character iteration retains literal newlines, double-quoted backslashes remain literal except before `"`, `$`, `` ` ``, `\`, or a newline, and unquoted newlines delimit arguments.
+- Added curl regressions for a double-quoted Windows path, valid double-quoted quote and backtick escapes, a literal double-quoted newline body, and unquoted newline-separated arguments.
+
+## Remaining Task 6 verification
+
+The following focused checks completed with no output and exit 0:
+
+```sh
+nix run nixpkgs#fish -- --no-config tests/fish/task-6-parity.test.fish
+nix run nixpkgs#fish -- --no-config tests/fish/project-helpers-load.test.fish
+nix run nixpkgs#fish -- --no-execute \
+  configs/fish/functions/curl-multiline.fish \
+  configs/fish/ez/nixos.fish
+```
