@@ -18,12 +18,12 @@ abbr --add --global agbt 'ag --ignore-dir build --ignore-dir node_modules --igno
 abbr --add --global fish.profile 'fish --profile-startup ./fish.profile -i -c exit'
 abbr --add --global pyhttp 'python -m SimpleHTTPServer'
 abbr --add --global pyjson 'python -m json.tool'
-abbr --add --global cwd 'pwd | tr -d "\n" | cmd.copy'
+abbr --add --global cwd 'pwd | tr -d "\n" | cmd-copy'
 abbr --add --global gri 'grep -i'
 abbr --add --global grin 'grep -ni'
 abbr --add --global grine 'grep -niRE'
 abbr --add --global pagi 'ps aux | grep -v grep | grep -i'
-abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
+abbr --add --global pwdc 'pwd | string trim | cmd-copy'
 abbr --add --global ssh.forcePass 'ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'
 abbr --add --global sv 'sudo nvim'
 abbr --add --global taill 'tail -Fn 999'
@@ -49,8 +49,6 @@ abbr --add --global kpf 'kubectl port-forward'
 abbr --add --global ktx kubectx
 abbr --add --global kns kubens
 
-alias cmd.copy "eval $COPYCMD"
-alias cmd.paste "eval $PASTECMD"
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
 alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"

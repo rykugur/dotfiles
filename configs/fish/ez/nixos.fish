@@ -33,7 +33,6 @@ abbr --add --global nfu "nix flake update"
 abbr --add --global nr "nix repl"
 abbr --add --global nrn "nix repl --file '<nixpkgs>'"
 abbr --add --global nr. "nix repl --file ."
-abbr --add --global nrf 'nix repl --expr "builtins.getFlake \"$HOME/.dotfiles\""'
 
 abbr --add --global ns 'nix shell'
 abbr --add --global nds nix-shell
@@ -49,5 +48,5 @@ abbr --add --global snb 'sudo nixos-rebuild boot'
 abbr --add --global snrsfu 'sudo nixos-rebuild switch --flake $DOTFILES_DIR --update'
 
 function shash
-    nix hash to-sri --type sha256 (nix-prefetch-url $argv)
+    nix-get-hash $argv
 end
