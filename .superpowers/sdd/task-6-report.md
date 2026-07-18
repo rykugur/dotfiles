@@ -5,7 +5,7 @@
 - Added dashed Fish functions for every helper sourced from `configs/nu/eve.nu`, `configs/nu/pz.nu`, `configs/nu/stalker2.nu`, and `configs/nu/starcitizen.nu`.
 - Added `tests/fish/project-helpers-load.test.fish`, which sources the Fish configuration and asserts all 14 Task 6 functions exist.
 - Appended the final command-equivalence matrix to `docs/superpowers/specs/2026-07-16-fish-migration-design.md`. It inventories every function, alias, and abbreviation sourced by `configs/nu/config.nu`; it records no intentionally Nu-only entry.
-- Left `configs/fish/exports.fish` unchanged: game paths are computed inside their functions, as required, rather than added as universal variables.
+- Updated `configs/fish/exports.fish` to initialize `LOCAL_CONFIG_FILE` to `$HOME/.local/fish/config.fish` when unset; game paths remain computed inside their helpers rather than added as universal variables.
 
 ## TDD evidence
 
@@ -99,3 +99,27 @@ Addressed every finding from `FishProjectHelpersReviewer`:
   ```
 
 - The new regressions invoke only local stubs; no SSH, SCP, game, or real Nix development operations ran. A focused source scan of the repaired PZ, EANM, and curl helpers found no `nu -c` or `fish -c`.
+
+## Follow-up parity review evidence
+
+- `psw` now captures exactly the five `ps -eo pid=,comm=,pcpu=,pmem=,args=` fields with whitespace-aware matching before it applies CPU, memory, or command predicates. The regression uses normal leading record padding plus a tab field separator and covers all three predicates.
+- Added argument-taking `shlink-create`, `ghostty-fix-terminfo`, `1password-copy-ssh-pub-key`, and `proxmox-install-helix` functions. The regression records their argument vectors and the two SSH pipeline payloads with local stubs.
+- Aligned `getmyip`, `cat`, `dfh`, `tmat`, and `top` with their Nu commands. `pagi` now matches only the `comm` process-name field; its unavoidable record-vs-table difference is explicitly partial. `curl-multiline` is explicitly partial because its safe tokenizer keeps Nu expressions such as `$env.API_URL` literal instead of evaluating them.
+- The matrix now defines every unannotated mapping as exact and labels each differing mapping partial or intentionally non-equivalent. It contains no intentionally non-equivalent entries.
+- Fresh focused verification completed with no output and exit 0:
+
+  ```sh
+  nix run nixpkgs#fish -- --no-config tests/fish/task-6-parity.test.fish
+  nix run nixpkgs#fish -- --no-config tests/fish/project-helpers-load.test.fish
+  nix run nixpkgs#fish -- --no-execute \
+    configs/fish/functions/psw.fish \
+    configs/fish/functions/pagi.fish \
+    configs/fish/functions/shlink-create.fish \
+    configs/fish/functions/ghostty-fix-terminfo.fish \
+    configs/fish/functions/1password-copy-ssh-pub-key.fish \
+    configs/fish/functions/proxmox-install-helix.fish \
+    configs/fish/ez/linux.fish \
+    configs/fish/ez/misc.fish
+  ```
+
+- The follow-up regression invokes only local stubs; it does not contact Kubernetes, SSH hosts, 1Password, Shlink, Proxmox, or game services.

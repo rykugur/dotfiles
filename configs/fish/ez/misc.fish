@@ -22,7 +22,6 @@ abbr --add --global cwd 'pwd | tr -d "\n" | cmd-copy'
 abbr --add --global gri 'grep -i'
 abbr --add --global grin 'grep -ni'
 abbr --add --global grine 'grep -niRE'
-abbr --add --global pagi 'ps aux | grep -v grep | grep -i'
 abbr --add --global pwdc 'pwd | string trim | cmd-copy'
 abbr --add --global ssh.forcePass 'ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'
 abbr --add --global sv 'sudo nvim'
@@ -52,7 +51,7 @@ abbr --add --global kns kubens
 
 alias dupes "find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD"
 alias dush "du -sh"
-alias getmyip "dig +short myip.opendns.com @resolver1.opendns.com"
+alias getmyip "curl -L ifconfig.me"
 alias grep "grep --color"
 alias murder "kill -9"
 alias ndots "cd ~/.dotfiles/; and nvim ."
@@ -80,30 +79,14 @@ alias awk7 "awk '{print \$7}'"
 alias awk8 "awk '{print \$8}'"
 alias awk9 "awk '{print \$9}'"
 
-### optional aliases, depend on a program being on the path
-if which -a duf &>/dev/null
-    alias dfh duf
-else if which -a pydf &>/dev/null
-    alias dfh pydf
-else
-    alias dfh "df -h"
-end
+alias dfh duf
 
 if which -a eza &>/dev/null
     alias ls eza
 end
 alias ll "command ls -al"
 
-if which -a btop &>/dev/null
-    alias top btop
-else if which -a bashtop &>/dev/null
-    alias top bashtop
-else if which -a bpytop &>/dev/null
-    alias top bpytop
-end
-
-if which -a bat &>/dev/null
-    alias cat bat
-end
+alias top btop
+alias cat bat
 
 alias whatthecommit "curl -s https://whatthecommit.com/index.txt"

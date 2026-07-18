@@ -40,7 +40,7 @@ function psw --description "Filter process records by field, operator, and value
     end
 
     for line in (command ps -eo pid=,comm=,pcpu=,pmem=,args=)
-        set -l fields (string split --no-empty --max 4 ' ' (string trim -- "$line"))
+        set -l fields (string match --regex --groups-only '^[[:space:]]*([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+(.*)$' -- "$line")
         set -q fields[$column]; or continue
         set -l value "$fields[$column]"
         set -l matches 1

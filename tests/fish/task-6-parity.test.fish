@@ -14,6 +14,16 @@ set -gx CURL_ARGS $test_root/curl-args
 set -gx GIT_ARGS $test_root/git-args
 set -gx LS_ARGS $test_root/ls-args
 set -gx ZELLIJ_ARGS $test_root/zellij-args
+set -gx KUBECTL_ARGS $test_root/kubectl-args
+set -gx SSH_ARGS $test_root/ssh-args
+set -gx SSH_INPUT $test_root/ssh-input
+set -gx BAT_ARGS $test_root/bat-args
+set -gx DUF_ARGS $test_root/duf-args
+set -gx DF_ARGS $test_root/df-args
+set -gx SESH_ARGS $test_root/sesh-args
+set -gx TMAT_ARGS $test_root/tmat-args
+set -gx BTOP_ARGS $test_root/btop-args
+set -gx TOP_ARGS $test_root/top-args
 mkdir -p $stub_dir $HOME
 
 function fail
@@ -30,8 +40,20 @@ printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$CURL_ARGS"' >$stub_dir/curl
 printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$OS_NAME"' >$stub_dir/uname
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" >> "$GIT_ARGS"' >$stub_dir/git
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$LS_ARGS"' >$stub_dir/ls
-printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "101 alpha 2.5 0.1 /bin/alpha" "202 busy 12.5 1.2 /usr/bin/busy --serve"' >$stub_dir/ps
+printf '%s\n' '#!/bin/sh' 'printf "  101 alpha 2.5 0.1 /bin/alpha\n  202\tbusy 12.5 1.2 /usr/bin/busy --serve\n"' >$stub_dir/ps
 printf '%s\n' '#!/bin/sh' 'case "$1" in' '  ls) printf "%s\\n" "work-main Created" ;;' '  *) printf "%s\\0" "$@" > "$ZELLIJ_ARGS" ;;' 'esac' >$stub_dir/zellij
+printf '%s\n' '#!/bin/sh' 'exit 1' >$stub_dir/which
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$BAT_ARGS"' >$stub_dir/bat
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$DUF_ARGS"' >$stub_dir/duf
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$DF_ARGS"' >$stub_dir/df
+printf '%s\n' '#!/bin/sh' 'if test "$1" = list; then printf "%s\n" review-session; else printf "%s\\0" "$@" > "$SESH_ARGS"; fi' >$stub_dir/sesh
+printf '%s\n' '#!/bin/sh' 'printf "%s\n" review-session' >$stub_dir/fzf
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$TMAT_ARGS"' >$stub_dir/tmat
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$BTOP_ARGS"' >$stub_dir/btop
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$TOP_ARGS"' >$stub_dir/top
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$KUBECTL_ARGS"' >$stub_dir/kubectl
+printf '%s\n' '#!/bin/sh' 'printf "%s\n" terminfo-payload' >$stub_dir/infocmp
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$SSH_ARGS"' 'IFS= read -r line; printf "%s\n" "$line" > "$SSH_INPUT"' >$stub_dir/ssh
 chmod +x $stub_dir/*
 
 source $repo/configs/fish/config.fish
@@ -61,7 +83,7 @@ test $eanm_success_status -eq 0
 or fail 'eve-eanm did not return the JAR success status'
 test "$PWD" = "$caller"
 or fail 'eve-eanm leaked its successful directory change'
-test (cat $EANM_PWD) = $eve_settings
+test (string collect < $EANM_PWD) = $eve_settings
 or fail 'eve-eanm did not invoke the JAR from the host settings directory'
 set -gx NIX_STATUS 23
 eve-eanm >/dev/null 2>/dev/null
@@ -121,6 +143,12 @@ test (count $curl_args) -eq 5
 or fail 'curl-multiline did not parse a five-argument curl invocation'
 test "$curl_args[1]" = -H -a "$curl_args[2]" = 'X: y' -a "$curl_args[3]" = --data -a "$curl_args[4]" = '{"a":"b"}' -a "$curl_args[5]" = https://example.invalid/api
 or fail 'curl-multiline did not preserve quoted arguments after line continuation removal'
+set -gx API_URL https://expanded.invalid
+set -gx CURL_MULTILINE 'curl $env.API_URL'
+curl-multiline
+set curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 1 -a "$curl_args[1]" = '$env.API_URL'
+or fail 'curl-multiline unexpectedly evaluated a Nu expression'
 
 rm -f $GIT_ARGS
 git.tree >/dev/null
@@ -136,10 +164,97 @@ set -l ll_args (string split0 < $LS_ARGS)
 test (count $ll_args) -eq 1 -a "$ll_args[1]" = -al
 or fail 'll did not include hidden files with ls -al'
 
+set -l busy_record (printf '  202\tbusy 12.5 1.2 /usr/bin/busy --serve')
 psw cpu '>' 10 >$test_root/psw-output
-set -l psw_output (cat $test_root/psw-output)
-test "$psw_output" = '202 busy 12.5 1.2 /usr/bin/busy --serve'
-or fail 'psw did not filter the cpu field with a structured predicate'
+set -l psw_output (string collect < $test_root/psw-output)
+test "$psw_output" = "$busy_record"
+or fail 'psw did not parse padded records before filtering the cpu field'
+psw mem '>=' 1 >$test_root/psw-output
+test (string collect < $test_root/psw-output) = "$busy_record"
+or fail 'psw did not filter the memory field in padded records'
+psw command '=~' '^/usr/bin/busy --serve$' >$test_root/psw-output
+test (string collect < $test_root/psw-output) = "$busy_record"
+or fail 'psw did not filter the command field in padded records'
+
+rm -f $CURL_ARGS
+getmyip
+test -f $CURL_ARGS
+or fail 'getmyip did not use Nu-compatible curl'
+set -l getmyip_args (string split0 < $CURL_ARGS)
+test (string join '|' -- $getmyip_args) = '-L|ifconfig.me'
+or fail 'getmyip did not request ifconfig.me through curl -L'
+
+rm -f $BAT_ARGS
+cat $EANM_PWD >/dev/null
+test -f $BAT_ARGS
+or fail 'cat did not use Nu-compatible bat'
+set -l cat_args (string split0 < $BAT_ARGS)
+test (count $cat_args) -eq 1 -a "$cat_args[1]" = $EANM_PWD
+or fail 'cat did not forward file arguments to bat'
+
+rm -f $DUF_ARGS $DF_ARGS
+dfh --wide
+test -f $DUF_ARGS
+or fail 'dfh did not use Nu-compatible duf'
+set -l dfh_args (string split0 < $DUF_ARGS)
+test (string join '|' -- $dfh_args) = '--wide'
+or fail 'dfh did not forward arguments to duf'
+test ! -f $DF_ARGS
+or fail 'dfh fell back to df'
+
+rm -f $SESH_ARGS $TMAT_ARGS
+tmat
+test -f $SESH_ARGS
+or fail 'tmat did not invoke sesh'
+set -l sesh_args (string split0 < $SESH_ARGS)
+test (string join '|' -- $sesh_args) = 'connect|review-session'
+or fail 'tmat did not connect the fzf-selected sesh session'
+test ! -f $TMAT_ARGS
+or fail 'tmat fell back to tmux attachment'
+
+rm -f $BTOP_ARGS $TOP_ARGS
+top --demo
+test -f $BTOP_ARGS
+or fail 'top did not use Nu-compatible btop'
+set -l top_args (string split0 < $BTOP_ARGS)
+test (string join '|' -- $top_args) = '--demo'
+or fail 'top did not forward arguments to btop'
+test ! -f $TOP_ARGS
+or fail 'top fell back to the system command'
+
+shlink-create --slug parity --url https://example.invalid/parity
+set -l kubectl_args (string split0 < $KUBECTL_ARGS)
+test (string join '|' -- $kubectl_args) = '--namespace|shlink|exec|-it|deployments/shlink|--|bin/cli|short-url:create|--custom-slug|parity|https://example.invalid/parity'
+or fail 'shlink-create did not pass slug and URL to the Shlink CLI'
+
+ghostty-fix-terminfo parity-host
+set -l ssh_args (string split0 < $SSH_ARGS)
+test (string join '|' -- $ssh_args) = 'parity-host|--|tic|-x|-'
+or fail 'ghostty-fix-terminfo did not target tic on the supplied host'
+test (string collect < $SSH_INPUT) = terminfo-payload
+or fail 'ghostty-fix-terminfo did not pipe terminfo to ssh'
+
+function op-ssh-public-key
+    printf '%s\n' 'ssh-ed25519 parity-key'
+end
+1password-copy-ssh-pub-key parity-host
+set ssh_args (string split0 < $SSH_ARGS)
+test (string join '|' -- $ssh_args) = 'parity-host|mkdir ~/.ssh 2>/dev/null; cat >>~/.ssh/authorized_keys'
+or fail '1password-copy-ssh-pub-key did not target the supplied host'
+test (string collect < $SSH_INPUT) = 'ssh-ed25519 parity-key'
+or fail '1password-copy-ssh-pub-key did not pipe the public key to ssh'
+
+proxmox-install-helix parity-host
+set ssh_args (string split0 < $SSH_ARGS)
+test (string join '|' -- $ssh_args) = 'parity-host|curl -L https://shlink.ryk.sh/helix-deb | sh'
+or fail 'proxmox-install-helix did not target the supplied host'
+
+pagi '^busy$' >$test_root/pagi-output
+test (string collect < $test_root/pagi-output) = "$busy_record"
+or fail 'pagi did not apply its regex to the process-name field'
+pagi serve >$test_root/pagi-output
+test ! -s $test_root/pagi-output
+or fail 'pagi matched command arguments instead of process names'
 
 zellij-exists work
 or fail 'zellij-exists did not retain Nu regex/substring semantics'

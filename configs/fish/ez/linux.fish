@@ -35,8 +35,4 @@ function tmn --description "Presents the user with a list of tmux sessions to st
     tmuxifier load-session $selection
 end
 
-if which -a sesh &>/dev/null
-    alias tmat "sesh connect (sesh list -t | fzf)"
-else
-    abbr --add --global tmat tmux a -t
-end
+alias tmat "sesh connect (sesh list -t | fzf)"
