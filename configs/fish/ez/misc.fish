@@ -31,6 +31,7 @@ abbr --add --global pn pnpm
 abbr --add --global psw 'ps aux | grep'
 abbr --add --global za 'zellij attach'
 abbr --add --global zj zellij
+alias kubectl kubecolor
 abbr --add --global k kubectl
 abbr --add --global ka 'kubectl apply'
 abbr --add --global kaf 'kubectl apply -f'
