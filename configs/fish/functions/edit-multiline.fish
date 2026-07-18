@@ -1,8 +1,9 @@
 function edit-multiline
     set -l content
-    read --null content
-    if test -z "$content"
+    if test -t 0
         set content (cmd-paste | string collect --no-trim-newlines); or return
+    else
+        read --null content
     end
 
     if test -z "$content"

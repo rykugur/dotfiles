@@ -48,5 +48,6 @@ abbr --add --global snb 'sudo nixos-rebuild boot'
 abbr --add --global snrsfu 'sudo nixos-rebuild switch --flake $DOTFILES_DIR --update'
 
 function shash
-    nix-prefetch-url $argv | nix hash to-sri --type sha256
+    set -l prefetched_hash (nix-prefetch-url $argv); or return
+    nix hash to-sri --type sha256 "$prefetched_hash"
 end

@@ -7,7 +7,7 @@ function gas
             or break
         end
         if test "$porcelain_status" = AM -o "$porcelain_status" = MM
-            git add -- (string sub --start 4 -- $entry)
+            git add -- "$(string sub --start 4 -- $entry)"
         end
     end
 end
