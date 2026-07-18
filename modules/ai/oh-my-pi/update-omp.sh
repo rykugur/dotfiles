@@ -5,6 +5,13 @@ readonly api_base='https://api.github.com/repos/can1357/oh-my-pi/releases'
 readonly systems=(x86_64-linux aarch64-linux x86_64-darwin aarch64-darwin)
 readonly assets=(omp-linux-x64 omp-linux-arm64 omp-darwin-x64 omp-darwin-arm64)
 
+temporary_paths=()
+
+cleanup_temporary_paths() {
+  rm -f -- "${temporary_paths[@]}"
+}
+
+
 sri_hash() {
   nix hash convert --hash-algo sha256 --to sri "$1"
 }
@@ -62,11 +69,12 @@ main() {
   [[ -z "$requested_version" ]] || endpoint="$api_base/tags/v$requested_version"
 
   release_json="$(mktemp)"
-  trap "rm -f '$release_json' '${release_json}.lock'" EXIT
+  temporary_paths=("$release_json" "${release_json}.lock")
+  trap cleanup_temporary_paths EXIT
   curl --fail --location --silent --show-error "$endpoint" > "$release_json"
   normalize_release "$release_json" "$requested_version" > "${release_json}.lock"
   write_lock "${release_json}.lock" "$lock_json"
-  nix build "$repo_root#oh-my-pi"
+  nix build --no-link "$repo_root#oh-my-pi"
   printf 'Updated OMP %s -> %s\n' "$old_version" "$(jq -er '.version' "$lock_json")"
 }
 

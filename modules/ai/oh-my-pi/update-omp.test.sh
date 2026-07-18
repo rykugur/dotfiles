@@ -62,3 +62,103 @@ printf '%s\n' '{"sentinel":true}' > "$tmpdir/existing.json"
 jq -e '.sentinel == true' "$tmpdir/existing.json"
 write_lock "$tmpdir/lock.json" "$tmpdir/existing.json"
 jq -e '.version == "17.0.1"' "$tmpdir/existing.json"
+
+bash_path="$(command -v bash)"
+real_nix="$(command -v nix)"
+real_mv="$(command -v mv)"
+fake_bin="$tmpdir/fake-bin"
+test_repo="$tmpdir/repo"
+mkdir -p "$fake_bin" "$test_repo/modules/ai/oh-my-pi"
+
+printf '#!%s\n' "$bash_path" > "$fake_bin/curl"
+cat >> "$fake_bin/curl" <<'EOF'
+set -euo pipefail
+cat "$UPDATE_OMP_TEST_RELEASE"
+EOF
+chmod +x "$fake_bin/curl"
+
+printf '#!%s\n' "$bash_path" > "$fake_bin/git"
+cat >> "$fake_bin/git" <<'EOF'
+set -euo pipefail
+[[ "$#" -eq 4 && "$1" == -C && "$2" == "$UPDATE_OMP_TEST_REPO" && "$3" == rev-parse && "$4" == --show-toplevel ]] || exit 1
+printf '%s\n' "$2"
+EOF
+chmod +x "$fake_bin/git"
+
+printf '#!%s\n' "$bash_path" > "$fake_bin/nix"
+cat >> "$fake_bin/nix" <<'EOF'
+set -euo pipefail
+if [[ "$1" == hash ]]; then
+  exec "$REAL_NIX" "$@"
+fi
+[[ "$1" == build ]] || exit 1
+if [[ "$EXPECT_NO_LINK" == true ]]; then
+  [[ "$#" -eq 3 && "$2" == --no-link && "$3" == "$EXPECTED_NIX_TARGET" ]] || exit 1
+fi
+[[ ! -e "$PWD/result" ]] || exit 1
+printf '%s\n' "$*" > "$NIX_BUILD_LOG"
+EOF
+chmod +x "$fake_bin/nix"
+
+printf '#!%s\n' "$bash_path" > "$fake_bin/mv"
+cat >> "$fake_bin/mv" <<'EOF'
+set -euo pipefail
+source="$1"
+destination="$2"
+[[ "$#" -eq 2 && "$destination" == "$EXPECTED_LOCK_PATH" ]] || exit 1
+[[ "$(dirname "$source")" == "$(dirname "$destination")" ]] || exit 1
+[[ "$source" == "$destination".tmp.* ]] || exit 1
+printf '%s\n' "$source" > "$ATOMIC_RENAME_LOG"
+exec "$REAL_MV" "$@"
+EOF
+chmod +x "$fake_bin/mv"
+
+run_updater() {
+  local release="$1" updater_tmpdir="$2" expect_no_link="${3:-false}"
+  (
+    cd "$test_repo"
+    TMPDIR="$updater_tmpdir" \
+      UPDATE_OMP_TEST_RELEASE="$release" \
+      REAL_NIX="$real_nix" \
+      REAL_MV="$real_mv" \
+      UPDATE_OMP_TEST_REPO="$test_repo" \
+      EXPECT_NO_LINK="$expect_no_link" \
+      EXPECTED_NIX_TARGET="$test_repo#oh-my-pi" \
+      EXPECTED_LOCK_PATH="$test_repo/modules/ai/oh-my-pi/release.json" \
+      NIX_BUILD_LOG="$tmpdir/nix-build.log" \
+      ATOMIC_RENAME_LOG="$tmpdir/atomic-rename.log" \
+      PATH="$fake_bin:$PATH" \
+      "$bash_path" "$module_dir/update-omp.sh" 17.0.1
+  )
+}
+
+write_release "$tmpdir/cleanup-stable.json" false false
+printf '%s\n' '{"version":"old"}' > "$test_repo/modules/ai/oh-my-pi/release.json"
+injection_marker="$tmpdir/injection-marker"
+unsafe_tmpdir="$tmpdir/unsafe'\$(touch \"\$INJECTION_MARKER\")'"
+mkdir -p "$unsafe_tmpdir"
+INJECTION_MARKER="$injection_marker" run_updater "$tmpdir/cleanup-stable.json" "$unsafe_tmpdir"
+[[ ! -e "$injection_marker" ]] || {
+  printf 'temporary path was parsed by the EXIT trap\n' >&2
+  exit 1
+}
+
+safe_tmpdir="$tmpdir/safe"
+mkdir -p "$safe_tmpdir"
+printf '%s\n' '{"version":"sentinel"}' > "$test_repo/modules/ai/oh-my-pi/release.json"
+cp "$test_repo/modules/ai/oh-my-pi/release.json" "$tmpdir/release-before-invalid.json"
+rm -f "$tmpdir/nix-build.log" "$tmpdir/atomic-rename.log"
+write_release "$tmpdir/invalid-for-main.json" true false
+if run_updater "$tmpdir/invalid-for-main.json" "$safe_tmpdir" true; then
+  printf 'invalid release metadata unexpectedly updated the lock\n' >&2
+  exit 1
+fi
+cmp -s "$tmpdir/release-before-invalid.json" "$test_repo/modules/ai/oh-my-pi/release.json"
+[[ ! -e "$tmpdir/nix-build.log" && ! -e "$tmpdir/atomic-rename.log" ]]
+
+printf '%s\n' '{"version":"old"}' > "$test_repo/modules/ai/oh-my-pi/release.json"
+rm -f "$tmpdir/nix-build.log" "$tmpdir/atomic-rename.log" "$test_repo/result"
+run_updater "$tmpdir/cleanup-stable.json" "$safe_tmpdir" true
+jq -e '.version == "17.0.1"' "$test_repo/modules/ai/oh-my-pi/release.json"
+[[ ! -e "$test_repo/result" ]]
+[[ -s "$tmpdir/nix-build.log" && -s "$tmpdir/atomic-rename.log" ]]
