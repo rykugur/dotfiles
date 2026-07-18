@@ -11,7 +11,7 @@ function dots --description "Open the dotfiles or local Fish configuration direc
     end
 
     if set -q _flag_l; or set -q _flag_local
-        set -l config_file $LOCAL_CONFIG_FILE
+        set -l config_file $FISH_LOCAL_CONFIG_FILE
         set -l config_dir (path dirname "$config_file")
 
         if not test -e "$config_file"

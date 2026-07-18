@@ -24,6 +24,7 @@ set -gx SESH_ARGS $test_root/sesh-args
 set -gx TMAT_ARGS $test_root/tmat-args
 set -gx BTOP_ARGS $test_root/btop-args
 set -gx TOP_ARGS $test_root/top-args
+set -gx FISH_PATH (status fish-path)
 mkdir -p $stub_dir $HOME
 
 function fail
@@ -54,7 +55,12 @@ printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$TOP_ARGS"' >$stub_dir/top
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$KUBECTL_ARGS"' >$stub_dir/kubectl
 printf '%s\n' '#!/bin/sh' 'printf "%s\n" terminfo-payload' >$stub_dir/infocmp
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$SSH_ARGS"' 'IFS= read -r line; printf "%s\n" "$line" > "$SSH_INPUT"' >$stub_dir/ssh
+printf '%s\n' '#!/bin/sh' 'exec "$FISH_PATH" "$@"' >$stub_dir/fish
 chmod +x $stub_dir/*
+set -l nu_local_config $test_root/nu/vendor/autoload/config.nu
+set -l local_config $test_root/local/fish/config.fish
+set -gx LOCAL_CONFIG_FILE $nu_local_config
+set -gx FISH_LOCAL_CONFIG_FILE $local_config
 
 source $repo/configs/fish/config.fish
 set -gx EDITOR $stub_dir/editor
@@ -93,13 +99,23 @@ or fail 'eve-eanm did not preserve the JAR failure status'
 test "$PWD" = "$caller"
 or fail 'eve-eanm leaked its failed directory change'
 
-set -l local_config $test_root/local/fish/config.fish
-set -gx LOCAL_CONFIG_FILE $local_config
 dots --local
 test -f $local_config
 or fail 'dots --local did not create the missing local config'
+test ! -e $nu_local_config
+or fail 'dots --local used the inherited Nushell local config target'
 test "$PWD" = (path dirname $local_config)
 or fail 'dots --local did not enter the local config directory'
+set -l default_child_nu_local_config $test_root/default-child-nu/vendor/autoload/config.nu
+set -l default_child_command 'source "$DOTFILES_DIR/configs/fish/config.fish"; test "$FISH_LOCAL_CONFIG_FILE" = "$HOME/.local/fish/config.fish"; and dots --local; and test -f "$FISH_LOCAL_CONFIG_FILE"; and test ! -e "$LOCAL_CONFIG_FILE"'
+env -u FISH_LOCAL_CONFIG_FILE HOME="$HOME" DOTFILES_DIR="$DOTFILES_DIR" PATH="$PATH" LOCAL_CONFIG_FILE="$default_child_nu_local_config" $FISH_PATH --no-config -c "$default_child_command"
+or fail 'Fish did not default its local config independently of Nushell'
+
+set -l child_nu_local_config $test_root/child-nu/vendor/autoload/config.nu
+set -l child_fish_local_config $test_root/child-fish/config.fish
+set -l child_command 'source "$DOTFILES_DIR/configs/fish/config.fish"; test "$FISH_LOCAL_CONFIG_FILE" = "$EXPECTED_FISH_LOCAL_CONFIG"; and dots --local; and test -f "$EXPECTED_FISH_LOCAL_CONFIG"; and test ! -e "$LOCAL_CONFIG_FILE"'
+env HOME="$HOME" DOTFILES_DIR="$DOTFILES_DIR" PATH="$PATH" LOCAL_CONFIG_FILE="$child_nu_local_config" FISH_LOCAL_CONFIG_FILE="$child_fish_local_config" EXPECTED_FISH_LOCAL_CONFIG="$child_fish_local_config" $FISH_PATH --no-config -c "$child_command"
+or fail 'Fish inherited the Nushell local config target'
 cd $caller
 dots -l
 test "$PWD" = (path dirname $local_config)
@@ -132,6 +148,22 @@ is-darwin
 or fail 'is-darwin did not delegate to is-os'
 is-linux
 and fail 'is-linux matched Darwin'
+
+set -lx USER fish-parity-user
+set -l darwin_eve_settings "$HOME/Library/Application Support/CCP/EVE/_users_{$USER}_library_application_support_eve_online_sharedcache_tq_eve.app_contents_resources_build_tranquility"
+mkdir -p "$darwin_eve_settings"
+cd $caller
+eve-settings
+test "$PWD" = "$darwin_eve_settings"
+or fail 'eve-settings did not use the Darwin user settings path'
+
+set -gx PASTE_MULTILINE_OUTPUT $test_root/paste-multiline-output
+function cmd-paste
+    printf '%s\0' "string join '' fish - syntax >$PASTE_MULTILINE_OUTPUT"
+end
+paste-multiline
+test (string collect < $test_root/paste-multiline-output) = fish-syntax
+or fail 'paste-multiline did not execute Fish syntax'
 
 function edit-multiline
     printf '%s' "$CURL_MULTILINE"

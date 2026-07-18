@@ -5,7 +5,7 @@
 fish_add_path $HOME/bin
 set -gx GITS_DIR $HOME/gits
 set -q DOTFILES_DIR; or set -gx DOTFILES_DIR $HOME/.dotfiles
-set -q LOCAL_CONFIG_FILE; or set -gx LOCAL_CONFIG_FILE $HOME/.local/fish/config.fish
+set -q FISH_LOCAL_CONFIG_FILE; or set -gx FISH_LOCAL_CONFIG_FILE $HOME/.local/fish/config.fish
 set -gx NIXPKGS_ALLOW_UNFREE 1
 set -gx STEAM_LIBRARY_DIR $HOME/.local/share/steam
 set -gx NH_FLAKE $DOTFILES_DIR

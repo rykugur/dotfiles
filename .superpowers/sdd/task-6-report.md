@@ -123,3 +123,26 @@ Addressed every finding from `FishProjectHelpersReviewer`:
   ```
 
 - The follow-up regression invokes only local stubs; it does not contact Kubernetes, SSH hosts, 1Password, Shlink, Proxmox, or game services.
+
+## Final parity review remediation
+
+- Delimited `$USER` in the Darwin `eve-settings` path, so Fish now expands the username before the literal `_library_...` suffix.
+- Replaced Fish's use of `LOCAL_CONFIG_FILE` with `FISH_LOCAL_CONFIG_FILE`. It defaults to `$HOME/.local/fish/config.fish` and accepts a deliberate Fish-specific override, without following a Nushell login shell's inherited `LOCAL_CONFIG_FILE`.
+- The parity regression starts child Fish processes with inherited Nushell `LOCAL_CONFIG_FILE=config.nu`: one confirms the Fish default `$HOME/.local/fish/config.fish`, while another supplies a Fish-specific target. Both verify `dots --local` creates only the Fish target.
+- The matrix now labels `paste-multiline-nu` → `paste-multiline` partial: the Fish replacement evaluates clipboard content using `fish -c`, so it executes Fish rather than Nushell syntax. The regression verifies a Fish-only `string join` clipboard command.
+
+## Final verification
+
+The following focused checks completed with no output and exit 0:
+
+```sh
+nix run nixpkgs#fish -- --no-config tests/fish/task-6-parity.test.fish
+nix run nixpkgs#fish -- --no-config tests/fish/project-helpers-load.test.fish
+nix run nixpkgs#fish -- --no-execute \
+  configs/fish/exports.fish \
+  configs/fish/functions/dots.fish \
+  configs/fish/functions/eve-settings.fish \
+  configs/fish/functions/paste-multiline.fish
+```
+
+The regressions use temporary directories and local command stubs only; no external or system-changing operation ran.
