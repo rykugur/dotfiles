@@ -63,6 +63,12 @@ set -l local_config $test_root/local/fish/config.fish
 set -gx LOCAL_CONFIG_FILE $nu_local_config
 set -gx FISH_LOCAL_CONFIG_FILE $local_config
 
+# Mock zellij for regex regression tests
+function zellij
+    if test "$argv[1]" = "ls"
+        printf "session1\n"
+    end
+end
 source $repo/configs/fish/config.fish
 set -gx EDITOR $stub_dir/editor
 
@@ -333,12 +339,93 @@ pagi serve >$test_root/pagi-output
 test ! -s $test_root/pagi-output
 or fail 'pagi matched command arguments instead of process names'
 
+zellij-exists "(" 2>/dev/null
+set -l zellij_calls
+test $status -eq 2
+or fail 'zellij-exists did not return status 2 for invalid regex'
+
+
+# Assert zellij attach and zellij -s/--layout were never called
+test $status -eq 2
+or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
+zellij-exists "[" 2>/dev/null
+test $status -eq 2
+or fail 'zellij-exists did not return status 2 for invalid regex'
+
+# Test invalid regex (unclosed bracket) in zellij-create-or-attach
+set -l zellij_calls
+zellij-create-or-attach "["
+test $status -eq 2
+or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
+
+# Assert zellij attach and zellij -s/--layout were never called
+for call in $zellij_calls
+    if test "$call[1]" = "attach"; or test "$call[1]" = "-s"; or test "$call[1]" = "--layout"
+        fail "zellij attach/-s/--layout was called for invalid regex: $call"
+    end
+end
 zellij-exists work
 or fail 'zellij-exists did not retain Nu regex/substring semantics'
-zellij-create-or-attach work
+zellij-create-or-attach "["
 set -l zellij_args (string split0 < $ZELLIJ_ARGS)
 test (count $zellij_args) -eq 2 -a "$zellij_args[1]" = attach -a "$zellij_args[2]" = work
 or fail 'zellij-create-or-attach did not attach a substring-matched session'
+# Regression test for invalid regex in zellij-exists and zellij-create-or-attach
+function zellij
+    if test "$argv[1]" = "ls"
+        printf "session1\n"
+    end
+end
+
+# Test invalid regex (unclosed bracket) in zellij-exists
+zellij-exists "[" 2>/dev/null
+test $status -eq 2
+or fail 'zellij-exists did not return status 2 for invalid regex'
+
+# Test invalid regex (unclosed bracket) in zellij-create-or-attach
+set -l zellij_calls
+function zellij
+    set -a zellij_calls $argv
+    if test "$argv[1]" = "ls"
+        printf "session1\n"
+    end
+end
+
+zellij-create-or-attach "["
+test $status -eq 2
+or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
+
+# Assert zellij attach and zellij -s/--layout were never called
+for call in $zellij_calls
+    if test "$call[1]" = "attach" -o "$call[1]" = "-s" -o "$call[1]" = "--layout"
+        fail "zellij attach/-s/--layout was called for invalid regex: $call"
+    end
+end
+
+# Test invalid regex (unclosed bracket) in zellij-exists
+zellij-exists "[" 2>/dev/null
+test $status -eq 2
+or fail 'zellij-exists did not return status 2 for invalid regex'
+
+# Test invalid regex (unclosed bracket) in zellij-create-or-attach
+set -l zellij_calls
+function zellij
+    set -a zellij_calls $argv
+    if test "$argv[1]" = "ls"
+        printf "session1\n"
+    end
+end
+
+zellij-create-or-attach "["
+test $status -eq 2
+or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
+
+# Assert zellij attach and zellij -s/--layout were never called
+for call in $zellij_calls
+    if test "$call[1]" = "attach" -o "$call[1]" = "-s" -o "$call[1]" = "--layout"
+        fail "zellij attach/-s/--layout was called for invalid regex: $call"
+    end
+end
 
 set -gx NIX_STATUS 0
 nd task-6-shell
