@@ -28,7 +28,6 @@ abbr --add --global ssh.forcePass 'ssh -o PreferredAuthentications=password -o P
 abbr --add --global sv 'sudo nvim'
 abbr --add --global taill 'tail -Fn 999'
 abbr --add --global pn pnpm
-abbr --add --global psw 'ps aux | grep'
 abbr --add --global za 'zellij attach'
 abbr --add --global zj zellij
 alias kubectl kubecolor
@@ -92,10 +91,8 @@ end
 
 if which -a eza &>/dev/null
     alias ls eza
-    alias ll "eza --long --git --git-repos-no-status --header --icons"
-else
-    alias ll "ls -lh"
 end
+alias ll "command ls -al"
 
 if which -a btop &>/dev/null
     alias top btop

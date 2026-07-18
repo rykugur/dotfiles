@@ -8,8 +8,7 @@ set -gx HOME $test_root/home
 set -gx DOTFILES_DIR $repo
 set -gx PATH $stub_dir $PATH
 set -gx GIT_ADD_LOG $test_root/git-add.log
-set -gx PREFETCH_ARG $test_root/prefetch-arg
-set -gx NIX_ARGS $test_root/nix-args
+set -gx PREFETCH_GIT_ARGS $test_root/prefetch-git-args
 set -gx EDITOR true
 mkdir -p $stub_dir $work_dir $HOME
 
@@ -28,14 +27,9 @@ printf '%s\n' '#!/bin/sh' \
 chmod +x $stub_dir/git
 
 printf '%s\n' '#!/bin/sh' \
-    'printf "%s\\n" "$1" > "$PREFETCH_ARG"' \
-    'printf "sha256-from-prefetch\\n"' >$stub_dir/nix-prefetch-url
-chmod +x $stub_dir/nix-prefetch-url
-
-printf '%s\n' '#!/bin/sh' \
-    'printf "%s\\0" "$@" > "$NIX_ARGS"' \
-    'printf "sri:%s\\n" "$5"' >$stub_dir/nix
-chmod +x $stub_dir/nix
+    'printf "%s\0" "$@" > "$PREFETCH_GIT_ARGS"' \
+    'printf "prefetched-git\n"' >$stub_dir/nix-prefetch-git
+chmod +x $stub_dir/nix-prefetch-git
 
 printf '%s\n' '#!/bin/sh' \
     'printf "%s" "$CLIPBOARD_CONTENT"' >$stub_dir/wl-paste
@@ -73,15 +67,14 @@ contains -- payload $staged
 and fail 'gas acted on rename/copy sources named AM payload or MM payload'
 
 set -l url https://example.invalid/archive.tar.gz
-set -l shash_output (shash $url)
-test "$shash_output" = sri:sha256-from-prefetch
-or fail 'shash did not pass nix-prefetch-url output to nix hash to-sri'
-test (cat $PREFETCH_ARG) = $url
-or fail 'shash did not pass its URL to nix-prefetch-url'
-set -l nix_args (string split0 < $NIX_ARGS)
-test (count $nix_args) -eq 5
-and test "$nix_args[1]" = hash -a "$nix_args[2]" = to-sri -a "$nix_args[3]" = --type -a "$nix_args[4]" = sha256 -a "$nix_args[5]" = sha256-from-prefetch
-or fail 'shash did not invoke nix hash to-sri --type sha256 with the prefetched hash argument'
+set -l rev 0123456789abcdef
+set -l shash_output (shash $url $rev)
+test "$shash_output" = prefetched-git
+or fail 'shash did not return nix-prefetch-git output'
+set -l prefetch_args (string split0 < $PREFETCH_GIT_ARGS)
+test (count $prefetch_args) -eq 4
+and test "$prefetch_args[1]" = --url -a "$prefetch_args[2]" = $url -a "$prefetch_args[3]" = --rev -a "$prefetch_args[4]" = $rev
+or fail 'shash did not call nix-prefetch-git with URL and revision'
 
 set -gx CLIPBOARD_CONTENT 'clipboard replacement'
 set -l piped_content (printf 'piped\ncontent' | string collect --no-trim-newlines)
@@ -113,7 +106,8 @@ printf 'replace-multiline >%s\n' (string escape -- $interactive_replace_output) 
 printf 'cmp --silent %s %s; or exit 1\n' (string escape -- $interactive_replace_output) (string escape -- $interactive_replace_expected) >>$interactive_script
 printf 'edit-multiline >%s\n' (string escape -- $interactive_edit_output) >>$interactive_script
 printf 'cmp --silent %s %s; or exit 1\n' (string escape -- $interactive_edit_output) (string escape -- $interactive_edit_expected) >>$interactive_script
-set -l interactive_command (string join ' ' -- timeout --signal=KILL 2 fish --no-config (string escape -- $interactive_script))
+set -l fish_bin (status fish-path)
+set -l interactive_command (string join ' ' -- timeout --signal=KILL 2 (string escape -- $fish_bin) --no-config (string escape -- $interactive_script))
 script --quiet --return --command "$interactive_command" /dev/null >/dev/null
 or fail 'replace-multiline or edit-multiline did not use the clipboard immediately on interactive stdin'
 

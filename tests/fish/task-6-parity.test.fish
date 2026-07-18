@@ -1,0 +1,162 @@
+#!/usr/bin/env fish
+
+set -l repo (path resolve (path dirname (path dirname (path dirname (status filename)))))
+set -l test_root (mktemp -d)
+set -l stub_dir $test_root/bin
+set -gx HOME $test_root/home
+set -gx DOTFILES_DIR $repo
+set -gx PATH $stub_dir $PATH
+set -gx SCP_ARGS $test_root/scp-args
+set -gx EANM_PWD $test_root/eanm-pwd
+set -gx NIX_ARGS $test_root/nix-args
+set -gx EDITOR_ARGS $test_root/editor-args
+set -gx CURL_ARGS $test_root/curl-args
+set -gx GIT_ARGS $test_root/git-args
+set -gx LS_ARGS $test_root/ls-args
+set -gx ZELLIJ_ARGS $test_root/zellij-args
+mkdir -p $stub_dir $HOME
+
+function fail
+    echo $argv >&2
+    rm -rf -- $test_root
+    exit 1
+end
+
+printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$HOSTNAME_OUTPUT"' >$stub_dir/hostname
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" >> "$SCP_ARGS"' >$stub_dir/scp
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$NIX_ARGS"' 'printf "%s\\n" "$PWD" > "$EANM_PWD"' 'exit "${NIX_STATUS:-0}"' >$stub_dir/nix
+printf '%s\n' '#!/bin/sh' 'if [ "$#" -gt 0 ]; then printf "%s\0" "$@" > "$EDITOR_ARGS"; else : > "$EDITOR_ARGS"; fi' >$stub_dir/editor
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$CURL_ARGS"' >$stub_dir/curl
+printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$OS_NAME"' >$stub_dir/uname
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" >> "$GIT_ARGS"' >$stub_dir/git
+printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$LS_ARGS"' >$stub_dir/ls
+printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "101 alpha 2.5 0.1 /bin/alpha" "202 busy 12.5 1.2 /usr/bin/busy --serve"' >$stub_dir/ps
+printf '%s\n' '#!/bin/sh' 'case "$1" in' '  ls) printf "%s\\n" "work-main Created" ;;' '  *) printf "%s\\0" "$@" > "$ZELLIJ_ARGS" ;;' 'esac' >$stub_dir/zellij
+chmod +x $stub_dir/*
+
+source $repo/configs/fish/config.fish
+set -gx EDITOR $stub_dir/editor
+
+set -gx HOSTNAME_OUTPUT current-host
+pz-copy-mod-config parity-remote >/dev/null
+set -l scp_args (string split0 < $SCP_ARGS)
+test (count $scp_args) -eq 4
+or fail 'pz-copy-mod-config did not make both scp calls'
+test "$scp_args[1]" = 'parity-remote:~/Zomboid/Lua/saved_outfits.txt'
+or fail 'pz-copy-mod-config expanded the remote home directory'
+test "$scp_args[3]" = 'parity-remote:~/Zomboid/Lua/pz_modlist_settings.cfg'
+or fail 'pz-copy-mod-config expanded the second remote home directory'
+test "$scp_args[2]" = "$HOME/Zomboid/Lua/saved_outfits.txt"
+or fail 'pz-copy-mod-config changed the local destination path'
+
+set -l caller $test_root/caller
+set -l eve_settings $HOME/gits/games/eve/eve-settings/evehost
+mkdir -p $caller $eve_settings
+set -gx HOSTNAME_OUTPUT evehost.local
+set -gx NIX_STATUS 0
+cd $caller
+eve-eanm
+set -l eanm_success_status $status
+test $eanm_success_status -eq 0
+or fail 'eve-eanm did not return the JAR success status'
+test "$PWD" = "$caller"
+or fail 'eve-eanm leaked its successful directory change'
+test (cat $EANM_PWD) = $eve_settings
+or fail 'eve-eanm did not invoke the JAR from the host settings directory'
+set -gx NIX_STATUS 23
+eve-eanm >/dev/null 2>/dev/null
+set -l eanm_failure_status $status
+test $eanm_failure_status -eq 23
+or fail 'eve-eanm did not preserve the JAR failure status'
+test "$PWD" = "$caller"
+or fail 'eve-eanm leaked its failed directory change'
+
+set -l local_config $test_root/local/fish/config.fish
+set -gx LOCAL_CONFIG_FILE $local_config
+dots --local
+test -f $local_config
+or fail 'dots --local did not create the missing local config'
+test "$PWD" = (path dirname $local_config)
+or fail 'dots --local did not enter the local config directory'
+cd $caller
+dots -l
+test "$PWD" = (path dirname $local_config)
+or fail 'dots -l did not enter the local config directory'
+dots --edit --local
+test (string split0 < $EDITOR_ARGS) = config.fish
+or fail 'dots --edit --local did not edit the local config file'
+cd $caller
+rm -f $EDITOR_ARGS
+dots -e
+test "$PWD" = "$DOTFILES_DIR"
+or fail 'dots -e did not enter DOTFILES_DIR'
+test ! -s $EDITOR_ARGS
+or fail 'dots -e did not invoke the editor without a filename'
+dots --configs >/dev/null 2>/dev/null
+test $status -ne 0
+or fail 'dots still accepts the unrelated --configs option'
+
+set -gx OS_NAME Linux
+is-os linux
+or fail 'is-os linux did not match Linux'
+is-os macos
+and fail 'is-os macos matched Linux'
+set -gx OS_NAME Darwin
+is-os darwin
+or fail 'is-os darwin did not match Darwin'
+is-macos
+or fail 'is-macos did not delegate to is-os'
+is-darwin
+or fail 'is-darwin did not delegate to is-os'
+is-linux
+and fail 'is-linux matched Darwin'
+
+function edit-multiline
+    printf '%s' "$CURL_MULTILINE"
+end
+set -gx CURL_MULTILINE (printf '%s\n%s' "curl -H 'X: y' --data '{\"a\":\"b\"}' \\" '  https://example.invalid/api' | string collect)
+curl-multiline
+set -l curl_args (string split0 < $CURL_ARGS)
+test (count $curl_args) -eq 5
+or fail 'curl-multiline did not parse a five-argument curl invocation'
+test "$curl_args[1]" = -H -a "$curl_args[2]" = 'X: y' -a "$curl_args[3]" = --data -a "$curl_args[4]" = '{"a":"b"}' -a "$curl_args[5]" = https://example.invalid/api
+or fail 'curl-multiline did not preserve quoted arguments after line continuation removal'
+
+rm -f $GIT_ARGS
+git.tree >/dev/null
+git.head >/dev/null
+set -l git_args (string split0 < $GIT_ARGS)
+contains -- --graph $git_args
+or fail 'git.tree did not execute git log --graph'
+contains -- --oneline $git_args
+and contains -- -1 $git_args
+or fail 'git.head did not request one abbreviated one-line commit'
+ll >/dev/null
+set -l ll_args (string split0 < $LS_ARGS)
+test (count $ll_args) -eq 1 -a "$ll_args[1]" = -al
+or fail 'll did not include hidden files with ls -al'
+
+psw cpu '>' 10 >$test_root/psw-output
+set -l psw_output (cat $test_root/psw-output)
+test "$psw_output" = '202 busy 12.5 1.2 /usr/bin/busy --serve'
+or fail 'psw did not filter the cpu field with a structured predicate'
+
+zellij-exists work
+or fail 'zellij-exists did not retain Nu regex/substring semantics'
+zellij-create-or-attach work
+set -l zellij_args (string split0 < $ZELLIJ_ARGS)
+test (count $zellij_args) -eq 2 -a "$zellij_args[1]" = attach -a "$zellij_args[2]" = work
+or fail 'zellij-create-or-attach did not attach a substring-matched session'
+
+set -gx NIX_STATUS 0
+nd task-6-shell
+set -l nd_args (string split0 < $NIX_ARGS)
+test (count $nd_args) -eq 2 -a "$nd_args[1]" = develop -a "$nd_args[2]" = "$DOTFILES_DIR#task-6-shell"
+or fail 'nd did not develop the requested DOTFILES_DIR shell target'
+set -l nr_definition (abbr --show nr.)
+string match --quiet '*nix repl --expr*' "$nr_definition"
+and string match --quiet '*builtins.getFlake*' "$nr_definition"
+and string match --quiet '*(pwd)*' "$nr_definition"
+or fail 'nr. did not evaluate the flake for the current directory'
+
+rm -rf -- $test_root

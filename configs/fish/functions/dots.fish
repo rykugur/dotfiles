@@ -1,28 +1,35 @@
 #!/usr/bin/fish
 
-function dots --description "cd wrapper for dots dir"
-    set -l argc (count $argv)
-
-    set -l _dots_dir $DOTFILES_DIR
-    if test -d $_dots_dir
-        set _dots_dir $DOTFILES_DIR
-    else
-        echo DOTFILES_DIR not set
-    end
-
-    if test $argc -eq 0
-        cd $_dots_dir
-        return
-    end
-
-    set -l options (fish_opt -s h -l help) (fish_opt -s c -l configs) (fish_opt -s f -l fish)
-
+function dots --description "Open the dotfiles or local Fish configuration directory"
+    set -l options (fish_opt -s e -l edit) (fish_opt -s l -l local)
     argparse $options -- $argv
     or return
 
-    test -n "$_flag_c"; or test -n "$_flag_configs"; and cd $_dots_dir/configs; and return
-    test -n "$_flag_f"; or test -n "$_flag_fish"; and cd $_dots_dir/configs/fish; and return
+    set -l editing
+    if set -q _flag_e; or set -q _flag_edit
+        set editing 1
+    end
+
+    if set -q _flag_l; or set -q _flag_local
+        set -l config_file $LOCAL_CONFIG_FILE
+        set -l config_dir (path dirname "$config_file")
+
+        if not test -e "$config_file"
+            mkdir -p "$config_dir"; and touch "$config_file"; or return
+        end
+
+        cd "$config_dir"; or return
+        if test -n "$editing"
+            command $EDITOR (path basename "$config_file")
+        end
+        return
+    end
+
+    cd "$DOTFILES_DIR"; or return
+    if test -n "$editing"
+        command $EDITOR
+    end
 end
 
-complete -f -c dots -n dots -a --configs
-complete -f -c dots -n dots -a --fish
+complete -f -c dots -s e -l edit
+complete -f -c dots -s l -l local

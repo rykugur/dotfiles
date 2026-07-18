@@ -12,7 +12,7 @@ function pz-copy-mod-config --description "Copy Project Zomboid mod configuratio
 
     set -l lua_dir "$HOME/Zomboid/Lua"
     echo "Copying PZ files: saved_outfits.txt pz_modlist_settings.cfg"
-    scp "$host:$lua_dir/saved_outfits.txt" "$lua_dir/saved_outfits.txt"
-    scp "$host:$lua_dir/pz_modlist_settings.cfg" "$lua_dir/pz_modlist_settings.cfg"
+    scp "$host:~/Zomboid/Lua/saved_outfits.txt" "$lua_dir/saved_outfits.txt"
+    scp "$host:~/Zomboid/Lua/pz_modlist_settings.cfg" "$lua_dir/pz_modlist_settings.cfg"
     echo "Done"
 end
