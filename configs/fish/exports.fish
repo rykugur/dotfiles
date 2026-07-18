@@ -3,6 +3,11 @@
 
 ### set additional paths
 fish_add_path $HOME/bin
+set -gx GITS_DIR $HOME/gits
+set -q DOTFILES_DIR; or set -gx DOTFILES_DIR $HOME/.dotfiles
+set -gx NIXPKGS_ALLOW_UNFREE 1
+set -gx STEAM_LIBRARY_DIR $HOME/.local/share/steam
+set -gx NH_FLAKE $DOTFILES_DIR
 
 # add yarn global if yarn exists
 if which -a yarn &>/dev/null

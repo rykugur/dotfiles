@@ -27,6 +27,27 @@ abbr --add --global pwdc 'pwd | trim.newlines | cmd.copy'
 abbr --add --global ssh.forcePass 'ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'
 abbr --add --global sv 'sudo nvim'
 abbr --add --global taill 'tail -Fn 999'
+abbr --add --global pn pnpm
+abbr --add --global psw 'ps aux | grep'
+abbr --add --global za 'zellij attach'
+abbr --add --global zj zellij
+abbr --add --global k kubectl
+abbr --add --global ka 'kubectl apply'
+abbr --add --global kaf 'kubectl apply -f'
+abbr --add --global kd 'kubectl describe'
+abbr --add --global kdel 'kubectl delete'
+abbr --add --global kdes 'kubectl describe'
+abbr --add --global kg 'kubectl get'
+abbr --add --global kgn 'kubectl get nodes'
+abbr --add --global kgp 'kubectl get pods'
+abbr --add --global kgs 'kubectl get services'
+abbr --add --global kgw 'kubectl get -o wide'
+abbr --add --global kgwn 'kubectl get -o wide nodes'
+abbr --add --global kgwp 'kubectl get -o wide pods'
+abbr --add --global kgws 'kubectl get -o wide services'
+abbr --add --global kpf 'kubectl port-forward'
+abbr --add --global ktx kubectx
+abbr --add --global kns kubens
 
 alias cmd.copy "eval $COPYCMD"
 alias cmd.paste "eval $PASTECMD"

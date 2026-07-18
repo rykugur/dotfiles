@@ -1,4 +1,5 @@
 abbr --add --global nb "nix build"
+abbr --add --global ndb nix-build
 
 alias ndl "nd --lua"
 alias ndv "nd --nvim"
@@ -34,13 +35,18 @@ abbr --add --global nrn "nix repl --file '<nixpkgs>'"
 abbr --add --global nr. "nix repl --file ."
 abbr --add --global nrf 'nix repl --expr "builtins.getFlake \"$HOME/.dotfiles\""'
 
-abbr --add --global ns nix-shell
+abbr --add --global ns 'nix shell'
+abbr --add --global nds nix-shell
+abbr --add --global ndsp 'nix-shell -p'
 
 abbr --add --global snr "sudo nixos-rebuild"
 abbr --add --global snrs "sudo nixos-rebuild switch"
 abbr --add --global snrsf "sudo nixos-rebuild switch --flake $DOTFILES_DIR"
-
-set -gx NIXPKGS_ALLOW_UNFREE 1
+abbr --add --global snrb 'sudo nixos-rebuild boot'
+abbr --add --global snrbf 'sudo nixos-rebuild boot --flake $DOTFILES_DIR'
+abbr --add --global snrbfu 'sudo nixos-rebuild boot --flake $DOTFILES_DIR --update'
+abbr --add --global snb 'sudo nixos-rebuild boot'
+abbr --add --global snrsfu 'sudo nixos-rebuild switch --flake $DOTFILES_DIR --update'
 
 function shash
     nix hash to-sri --type sha256 (nix-prefetch-url $argv)

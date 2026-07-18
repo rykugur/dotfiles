@@ -5,7 +5,7 @@ end
 set -q __fish_personal_dotfiles_sourced; and exit
 set -g __fish_personal_dotfiles_sourced 1
 
-set -gx DOTFILES_DIR $HOME/.dotfiles
+set -q DOTFILES_DIR; or set -gx DOTFILES_DIR $HOME/.dotfiles
 set -l fish_conf_dir $DOTFILES_DIR/configs/fish
 
 source $fish_conf_dir/exports.fish
