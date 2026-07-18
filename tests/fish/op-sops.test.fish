@@ -40,6 +40,13 @@ printf '%s\n' '#!/bin/sh' \
     '  rm -f "$KEY_FILE_TO_RACE"' \
     '  mkdir "$KEY_FILE_TO_RACE"' \
     'fi' \
+    'if [ "$NIX_REPLACE_AGE_DIR" = 1 ]; then' \
+    '  mv "$AGE_DIR_TO_RACE" "$RENAMED_AGE_DIR"' \
+    '  mkdir -p "$AGE_DIR_TO_RACE"' \
+    'fi' \
+    'if [ "$NIX_SEND_TERM" = 1 ]; then' \
+    '  kill -TERM "$PPID"' \
+    'fi' \
     'printf "converted:"' \
     'cat' >$stub_dir/nix
 chmod +x $stub_dir/nix
@@ -100,6 +107,21 @@ or fail 'sops-setup-new-host changed the existing key mode after a failed conver
 test -z (command find $key_dir -maxdepth 1 -name '.keys.txt.*' -print)
 or fail 'sops-setup-new-host left a temporary key file after a failed conversion'
 
+printf 'existing-key\n' >$key_file
+chmod 600 $key_file
+set -lx NIX_SEND_TERM 1
+set -l term_output (fish --no-config -c 'source "$DOTFILES_DIR/configs/fish/config.fish"; sops-setup-new-host --yes item-1' 2>&1)
+set -l term_status $status
+set -e NIX_SEND_TERM
+test $term_status -eq 143
+or fail "sops-setup-new-host did not terminate with SIGTERM status during conversion (got $term_status)"
+not string match -q '*PRIVATE*' -- $term_output
+or fail 'sops-setup-new-host leaked private material after SIGTERM during conversion'
+string match -q existing-key < $key_file
+or fail 'sops-setup-new-host replaced a key after SIGTERM during conversion'
+test -z (command find $key_dir -maxdepth 1 -name '.keys.txt.*' -print)
+or fail 'sops-setup-new-host left a temporary key file after SIGTERM during conversion'
+
 rm $key_file
 set -l symlink_target $test_root/symlink-target
 printf 'original-target\n' >$symlink_target
@@ -142,5 +164,29 @@ test -d $key_file
 or fail 'sops-setup-new-host did not preserve the replacement destination'
 test -z (command find $key_dir -maxdepth 1 -name '.keys.txt.*' -print)
 or fail 'sops-setup-new-host left a temporary key file after a rename failure'
+
+
+rm -rf -- $HOME/.config
+set -l renamed_key_dir $test_root/renamed-age
+set -lx NIX_REPLACE_AGE_DIR 1
+set -lx AGE_DIR_TO_RACE $key_dir
+set -lx RENAMED_AGE_DIR $renamed_key_dir
+set -l directory_replace_output (sops-setup-new-host --yes item-1 2>&1)
+set -l directory_replace_status $status
+set -e NIX_REPLACE_AGE_DIR
+set -e AGE_DIR_TO_RACE
+set -e RENAMED_AGE_DIR
+test $directory_replace_status -eq 0
+or fail 'sops-setup-new-host failed after its age directory was renamed and replaced'
+not string match -q '*PRIVATE*' -- $directory_replace_output
+or fail 'sops-setup-new-host leaked private material after age directory replacement'
+test -f $renamed_key_dir/keys.txt
+or fail 'sops-setup-new-host did not replace keys.txt in the renamed original directory'
+string match -q converted:PRIVATE < $renamed_key_dir/keys.txt
+or fail 'sops-setup-new-host wrote an unexpected key in the renamed original directory'
+test ! -e $key_file
+or fail 'sops-setup-new-host wrote to the replacement age directory'
+test -z (command find $renamed_key_dir -maxdepth 1 -name '.keys.txt.*' -print)
+or fail 'sops-setup-new-host left a temporary key file in the renamed original directory'
 
 rm -rf -- $test_root
