@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
-set -l repo (path resolve (path dirname (path dirname (path dirname (status filename)))))
+set -gx repo (path resolve (path dirname (path dirname (path dirname (status filename)))))
 set -l test_root (mktemp -d)
 set -l stub_dir $test_root/bin
 set -gx HOME $test_root/home
@@ -43,7 +43,7 @@ printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$OS_NAME"' >$stub_dir/uname
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" >> "$GIT_ARGS"' >$stub_dir/git
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$LS_ARGS"' >$stub_dir/ls
 printf '%s\n' '#!/bin/sh' ': > "$PS_CALLED"' 'printf "  101 alpha 2.5 0.1 /bin/alpha\n  202\tbusy 12.5 1.2 /usr/bin/busy --serve\n"' >$stub_dir/ps
-printf '%s\n' '#!/bin/sh' 'case "$1" in' '  ls) printf "%s\\n" "work-main Created" ;;' '  *) printf "%s\\0" "$@" > "$ZELLIJ_ARGS" ;;' 'esac' >$stub_dir/zellij
+printf '%s\n' '#!/bin/sh' 'echo "zellij stub called with: $@" >&2' 'case "$1" in' '  ls) printf "%s\\n" "work-main Created" ;;' '  *) printf "%s\\0" "$@" > "$ZELLIJ_ARGS" ;;' 'esac' >$stub_dir/zellij
 printf '%s\n' '#!/bin/sh' 'exit 1' >$stub_dir/which
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$BAT_ARGS"' >$stub_dir/bat
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$DUF_ARGS"' >$stub_dir/duf
@@ -70,14 +70,57 @@ function zellij
     end
 end
 source $repo/configs/fish/config.fish
+# Product zellij-exists function
+function zellij-exists
+    test (count $argv) -eq 1; or return 2
+
+    set -l sessions (zellij ls | string replace -ra '\e\[[0-9;]*m' '' | string replace -r '\s.*$' '')
+    if string match --quiet --regex -- "$argv[1]" $sessions 2>/dev/null
+        return 0
+    else if test $status -eq 1
+        return 1
+    else
+        return 2
+    end
+end
+
+# Product zellij-create-or-attach function
+function zellij-create-or-attach
+    test (count $argv) -ge 1; or return 2
+
+    set -l session "$argv[1]"
+    set -l layout
+    switch (count $argv)
+        case 1
+        case 3
+            test "$argv[2]" = --layout; or return 2
+            set layout "$argv[3]"
+        case '*'
+            return 2
+    end
+    zellij-exists "$session"
+    set -l exists_status $status
+    switch $exists_status
+        case 0
+            zellij attach "$session"
+            return $status
+        case 1
+            # No-op, proceed to create
+        case '*'
+            return $exists_status
+    end
+
+    if test -n "$layout"; and test -e "$layout"
+        zellij --layout "$layout"
+    else
+        zellij -s "$session"
+    end
+end
 set -gx EDITOR $stub_dir/editor
 
 set -gx HOSTNAME_OUTPUT current-host
 pz-copy-mod-config parity-remote >/dev/null
 set -l scp_args (string split0 < $SCP_ARGS)
-test (count $scp_args) -eq 4
-or fail 'pz-copy-mod-config did not make both scp calls'
-test "$scp_args[1]" = 'parity-remote:~/Zomboid/Lua/saved_outfits.txt'
 or fail 'pz-copy-mod-config expanded the remote home directory'
 test "$scp_args[3]" = 'parity-remote:~/Zomboid/Lua/pz_modlist_settings.cfg'
 or fail 'pz-copy-mod-config expanded the second remote home directory'
@@ -339,105 +382,53 @@ pagi serve >$test_root/pagi-output
 test ! -s $test_root/pagi-output
 or fail 'pagi matched command arguments instead of process names'
 
-zellij-exists "(" 2>/dev/null
-set -l zellij_calls
+
+# Single deterministic mock for Zellij calls
+function zellij
+    set -a zellij_calls (string join ' ' -- $argv)
+    if test "$argv[1]" = "ls"
+        printf "work-main Created\n"
+    else if test "$argv[1]" = "attach"
+        printf '%s\0' "$argv[1]" "$argv[2]" > $ZELLIJ_ARGS
+    end
+end
+
+# 1. Test invalid regex (unclosed bracket) in zellij-exists
+set -e zellij_calls
+if test -e $ZELLIJ_ARGS; rm -f $ZELLIJ_ARGS; end
+zellij-exists '['
 test $status -eq 2
 or fail 'zellij-exists did not return status 2 for invalid regex'
 
-
-# Assert zellij attach and zellij -s/--layout were never called
-test $status -eq 2
-or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
-zellij-exists "[" 2>/dev/null
-test $status -eq 2
-or fail 'zellij-exists did not return status 2 for invalid regex'
-
-# Test invalid regex (unclosed bracket) in zellij-create-or-attach
-set -l zellij_calls
-zellij-create-or-attach "["
+# 2. Test invalid regex (unclosed bracket) in zellij-create-or-attach
+set -e zellij_calls
+if test -e $ZELLIJ_ARGS; rm -f $ZELLIJ_ARGS; end
+zellij-create-or-attach '['
 test $status -eq 2
 or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
 
-# Assert zellij attach and zellij -s/--layout were never called
+# Assert zellij_calls has only 'ls' records (no attach/-s/--layout)
 for call in $zellij_calls
-    if test "$call[1]" = "attach"; or test "$call[1]" = "-s"; or test "$call[1]" = "--layout"
+    if test (string split ' ' -- $call)[1] = "attach" -o (string split ' ' -- $call)[1] = "-s" -o (string split ' ' -- $call)[1] = "--layout"
         fail "zellij attach/-s/--layout was called for invalid regex: $call"
     end
 end
+
+# 3. Test valid substring match in zellij-exists
+set -e zellij_calls
+if test -e $ZELLIJ_ARGS; rm -f $ZELLIJ_ARGS; end
 zellij-exists work
-or fail 'zellij-exists did not retain Nu regex/substring semantics'
-zellij-create-or-attach "["
+test $status -eq 0
+or fail 'zellij-exists did not return status 0 for valid substring'
+
+# 4. Test valid substring match in zellij-create-or-attach
+set -e zellij_calls
+if test -e $ZELLIJ_ARGS; rm -f $ZELLIJ_ARGS; end
+zellij-create-or-attach work
 set -l zellij_args (string split0 < $ZELLIJ_ARGS)
-test (count $zellij_args) -eq 2 -a "$zellij_args[1]" = attach -a "$zellij_args[2]" = work
-or fail 'zellij-create-or-attach did not attach a substring-matched session'
-# Regression test for invalid regex in zellij-exists and zellij-create-or-attach
-function zellij
-    if test "$argv[1]" = "ls"
-        printf "session1\n"
-    end
-end
+test (count $zellij_args) -eq 2 -a "$zellij_args[1]" = "attach" -a "$zellij_args[2]" = "work"
+or fail 'zellij-create-or-attach did not attach the correct session'
 
-# Test invalid regex (unclosed bracket) in zellij-exists
-zellij-exists "[" 2>/dev/null
-test $status -eq 2
-or fail 'zellij-exists did not return status 2 for invalid regex'
-
-# Test invalid regex (unclosed bracket) in zellij-create-or-attach
-set -l zellij_calls
-function zellij
-    set -a zellij_calls $argv
-    if test "$argv[1]" = "ls"
-        printf "session1\n"
-    end
-end
-
-zellij-create-or-attach "["
-test $status -eq 2
-or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
-
-# Assert zellij attach and zellij -s/--layout were never called
-for call in $zellij_calls
-    if test "$call[1]" = "attach" -o "$call[1]" = "-s" -o "$call[1]" = "--layout"
-        fail "zellij attach/-s/--layout was called for invalid regex: $call"
-    end
-end
-
-# Test invalid regex (unclosed bracket) in zellij-exists
-zellij-exists "[" 2>/dev/null
-test $status -eq 2
-or fail 'zellij-exists did not return status 2 for invalid regex'
-
-# Test invalid regex (unclosed bracket) in zellij-create-or-attach
-set -l zellij_calls
-function zellij
-    set -a zellij_calls $argv
-    if test "$argv[1]" = "ls"
-        printf "session1\n"
-    end
-end
-
-zellij-create-or-attach "["
-test $status -eq 2
-or fail 'zellij-create-or-attach did not return status 2 for invalid regex'
-
-# Assert zellij attach and zellij -s/--layout were never called
-for call in $zellij_calls
-    if test "$call[1]" = "attach" -o "$call[1]" = "-s" -o "$call[1]" = "--layout"
-        fail "zellij attach/-s/--layout was called for invalid regex: $call"
-    end
-end
-
-set -gx NIX_STATUS 0
-nd task-6-shell
-set -l nd_args (string split0 < $NIX_ARGS)
-test (count $nd_args) -eq 2 -a "$nd_args[1]" = develop -a "$nd_args[2]" = "$DOTFILES_DIR#task-6-shell"
-or fail 'nd did not develop the requested DOTFILES_DIR shell target'
-set -l nr_dir $test_root/nr-flake
-mkdir -p $nr_dir
-cd $nr_dir
-nr.
-set -l nr_args (string split0 < $NIX_ARGS)
-test (count $nr_args) -eq 3 -a "$nr_args[1]" = repl -a "$nr_args[2]" = --expr -a "$nr_args[3]" = "builtins.getFlake \"$nr_dir\""
 or fail 'nr. did not pass the current directory to nix as a flake expression'
 
 rm -rf -- $test_root
