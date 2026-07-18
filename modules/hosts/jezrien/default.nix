@@ -180,7 +180,7 @@ in
 
               programs.ghostty.settings.window-decoration = "none";
 
-              ryk.enableFishTrial = true;
+              ryk.defaultShell = "fish";
 
               xdg.enable = true;
               programs.home-manager.enable = true;

@@ -15,10 +15,5 @@
         description = "Which shell's home-manager config is active.";
       };
 
-      options.ryk.enableFishTrial = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Enable Fish alongside the configured login shell during migration.";
-      };
     };
 }

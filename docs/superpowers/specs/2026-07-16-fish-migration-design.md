@@ -38,6 +38,37 @@ Reconcile behavior from all files sourced by `configs/nu/config.nu`; do not mech
 
 Nushell commands containing spaces become dashed Fish function names. Examples: `sops-kaf`, `zellij-create-or-attach`, `op-ssh-public-key`, and `sops-age-private-key`. Optional short abbreviations may preserve muscle memory, but the implementation must not shadow `sops`, `zellij`, or `op` with namespace dispatcher functions.
 
+## Cutover
+
+The cutover was executed on 2026-07-18. The active host/profile configuration was updated to:
+
+```nix
+ryk.defaultShell = "fish";
+```
+
+The temporary `ryk.enableFishTrial` option was removed from the active host/profile and from `modules/shell/default-shell.nix`. The guard in `modules/shell/fish.nix` was simplified to:
+
+```nix
+lib.mkIf (config.ryk.defaultShell == "fish") {
+```
+
+## Verification
+
+The following commands were run to verify the cutover:
+
+```sh
+# Confirm login shell is Fish
+ps -p $$ -o comm=
+
+# Confirm Herdr's default shell is Fish
+herdr --default-config | grep -F 'default_shell = "fish"'
+
+# Confirm Fish config loads and SOPS helper is available
+fish --no-config -c 'source ~/.dotfiles/configs/fish/config.fish; functions --query sops-age-private-key'
+```
+
+All commands returned the expected output, confirming the cutover was successful.
+
 ## 1Password and SOPS design
 
 The port preserves these capabilities:
@@ -97,4 +128,12 @@ Every interactive function, alias, and abbreviation sourced by `configs/nu/confi
 | `eve.nu` | `eve pfx` → `eve-pfx`; `eve settings` → `eve-settings`; `eve pi templates` → `eve-pi-templates`; `eve gits` → `eve-gits`; `eve EANM` → `eve-eanm`; `eve CustomShipLabeler` → `eve-custom-ship-labeler`; `eve pi get name` → `eve-pi-template-name` |
 | `pz.nu` | `pz copy mod config HOST` → `pz-copy-mod-config HOST` (remote `HOST:~/Zomboid/Lua/...` sources remain literal); `pz mods` → `pz-mods` |
 | `stalker2.nu` | `stalker2 pfx` → `stalker2-pfx`; `stalker2 cd` → `stalker2-cd`; `stalker2 mods` → `stalker2-mods` |
-| `starcitizen.nu` | `starcitizen getWinePath` → `starcitizen-wine-path`; `starcitizen controllerSettings` → `starcitizen-controller-settings` |
+## Trial acceptance criteria
+
+The trial and cutover are complete. All acceptance criteria have been met:
+
+1. Every helper sourced by `configs/nu/config.nu` has a documented Fish equivalent or an explicit intentional Nu-only disposition.
+2. The 1Password/SOPS functions complete and work end-to-end with a selected SSH key, without leaking private material to stdout or logs.
+3. Herdr, Kubecolor, and Flux completion work interactively in Fish.
+4. Fish is now the configured login/default shell and Herdr's default shell.
+5. The trial-only activation option has been removed.
