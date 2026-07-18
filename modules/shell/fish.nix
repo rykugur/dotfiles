@@ -2,7 +2,7 @@
 {
   flake.modules.homeManager.fish =
     { config, lib, pkgs, ... }:
-    lib.mkIf (config.ryk.defaultShell == "fish") {
+    lib.mkIf (config.ryk.defaultShell == "fish" || config.ryk.enableFishTrial) {
       home.packages = with pkgs; [
         babelfish
 
