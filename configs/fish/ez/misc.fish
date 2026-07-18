@@ -35,6 +35,7 @@ alias kubectl kubecolor
 abbr --add --global k kubectl
 abbr --add --global ka 'kubectl apply'
 abbr --add --global kaf 'kubectl apply -f'
+abbr --add --global skaf sops-kaf
 abbr --add --global kd 'kubectl describe'
 abbr --add --global kdel 'kubectl delete'
 abbr --add --global kdes 'kubectl describe'
