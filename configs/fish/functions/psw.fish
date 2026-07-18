@@ -38,6 +38,14 @@ function psw --description "Filter process records by field, operator, and value
             return 2
         end
     end
+    if test "$operator" = '=~'
+        string match --quiet --regex -- "$expected" '' 2>/dev/null
+        if test $status -eq 2
+            echo "psw requires a valid regex" >&2
+            return 2
+        end
+    end
+
 
     for line in (command ps -eo pid=,comm=,pcpu=,pmem=,args=)
         set -l fields (string match --regex --groups-only '^[[:space:]]*([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+(.*)$' -- "$line")

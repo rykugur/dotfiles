@@ -25,6 +25,7 @@ set -gx TMAT_ARGS $test_root/tmat-args
 set -gx BTOP_ARGS $test_root/btop-args
 set -gx TOP_ARGS $test_root/top-args
 set -gx FISH_PATH (status fish-path)
+set -gx PS_CALLED $test_root/ps-called
 mkdir -p $stub_dir $HOME
 
 function fail
@@ -41,7 +42,7 @@ printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$CURL_ARGS"' >$stub_dir/curl
 printf '%s\n' '#!/bin/sh' 'printf "%s\\n" "$OS_NAME"' >$stub_dir/uname
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" >> "$GIT_ARGS"' >$stub_dir/git
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$LS_ARGS"' >$stub_dir/ls
-printf '%s\n' '#!/bin/sh' 'printf "  101 alpha 2.5 0.1 /bin/alpha\n  202\tbusy 12.5 1.2 /usr/bin/busy --serve\n"' >$stub_dir/ps
+printf '%s\n' '#!/bin/sh' ': > "$PS_CALLED"' 'printf "  101 alpha 2.5 0.1 /bin/alpha\n  202\tbusy 12.5 1.2 /usr/bin/busy --serve\n"' >$stub_dir/ps
 printf '%s\n' '#!/bin/sh' 'case "$1" in' '  ls) printf "%s\\n" "work-main Created" ;;' '  *) printf "%s\\0" "$@" > "$ZELLIJ_ARGS" ;;' 'esac' >$stub_dir/zellij
 printf '%s\n' '#!/bin/sh' 'exit 1' >$stub_dir/which
 printf '%s\n' '#!/bin/sh' 'printf "%s\\0" "$@" > "$BAT_ARGS"' >$stub_dir/bat
@@ -234,6 +235,13 @@ or fail 'psw did not filter the memory field in padded records'
 psw command '=~' '^/usr/bin/busy --serve$' >$test_root/psw-output
 test (string collect < $test_root/psw-output) = "$busy_record"
 or fail 'psw did not filter the command field in padded records'
+rm -f $PS_CALLED
+psw command '=~' '[' >/dev/null 2>/dev/null
+test $status -eq 2
+or fail 'psw did not reject an invalid regex with status 2'
+test ! -e $PS_CALLED
+or fail 'psw scanned processes before rejecting an invalid regex'
+
 
 rm -f $CURL_ARGS
 getmyip
@@ -302,6 +310,16 @@ test (string join '|' -- $ssh_args) = 'parity-host|mkdir ~/.ssh 2>/dev/null; cat
 or fail '1password-copy-ssh-pub-key did not target the supplied host'
 test (string collect < $SSH_INPUT) = 'ssh-ed25519 parity-key'
 or fail '1password-copy-ssh-pub-key did not pipe the public key to ssh'
+rm -f $SSH_ARGS $SSH_INPUT
+function op-ssh-public-key
+    return 130
+end
+1password-copy-ssh-pub-key parity-host >/dev/null 2>/dev/null
+test $status -eq 130
+or fail '1password-copy-ssh-pub-key did not propagate op cancellation'
+test ! -e $SSH_ARGS
+or fail '1password-copy-ssh-pub-key invoked ssh after op cancellation'
+
 
 proxmox-install-helix parity-host
 set ssh_args (string split0 < $SSH_ARGS)

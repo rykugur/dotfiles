@@ -4,5 +4,8 @@ function 1password-copy-ssh-pub-key --description "Copy the selected 1Password S
         return 2
     end
 
-    op-ssh-public-key | command ssh "$argv[1]" 'mkdir ~/.ssh 2>/dev/null; cat >>~/.ssh/authorized_keys'
+    set -l public_key (op-ssh-public-key)
+    or return
+
+    printf '%s\n' $public_key | command ssh "$argv[1]" 'mkdir ~/.ssh 2>/dev/null; cat >>~/.ssh/authorized_keys'
 end

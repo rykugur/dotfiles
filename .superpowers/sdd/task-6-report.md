@@ -62,10 +62,10 @@ Addressed every finding from `FishProjectHelpersReviewer`:
 
 - `pz-copy-mod-config` now sends literal `HOST:~/Zomboid/Lua/...` sources while retaining expanded local destinations.
 - `eve-eanm` uses `pushd`/`popd`, restores the invoking directory after both success and JAR failure, and returns the JAR status.
-- `dots` now accepts Nu-compatible `--edit`/`-e` and `--local`/`-l`; local mode creates `$LOCAL_CONFIG_FILE` (`$HOME/.local/fish/config.fish` by default), enters its directory, and edits it when requested.
+- `dots` now accepts Nu-compatible `--edit`/`-e` and `--local`/`-l`; local mode creates `$FISH_LOCAL_CONFIG_FILE` (`$HOME/.local/fish/config.fish` by default), enters its directory, and edits it when requested.
 - Added parameterized `is-os OS`, plus `is-linux`, `is-macos`, and `is-darwin` wrappers; they compare `uname`, with `macos` and `darwin` both matching Darwin.
 - Added `curl-multiline`, which removes line continuations and parses the edited leading-`curl` text into a quoted Fish argument vector without `nu -c`, `fish -c`, or shell evaluation.
-- Restored `nd SHELL` (`nix develop "$DOTFILES_DIR#SHELL"`), `shash URL REV` (`nix-prefetch-git --url URL --rev REV`), and `nr.` (`nix repl --expr "builtins.getFlake \"(pwd)\""`).
+- Restored `nd SHELL` (`nix develop "$DOTFILES_DIR#SHELL"`), `shash URL REV` (`nix-prefetch-git --url URL --rev REV`), and `nr.` (`nix repl --expr "builtins.getFlake \"$PWD\""`).
 - Restored `git.tree`, `git.head`, and `ll` to their Nu command arguments (`git log --graph`, `gll --oneline -1`, and `command ls -al`).
 - Replaced the `psw` grep abbreviation with a Fish field predicate helper. The matrix explicitly marks the unavoidable syntax/output difference: Fish requires shell-redirection operators to be quoted and returns `ps -eo` records rather than a Nushell table.
 - Restored `zellij-exists` regex matching; `zellij-create-or-attach` now follows the Nu substring/regex attach branch.
@@ -165,3 +165,23 @@ nix run nixpkgs#fish -- --no-execute \
   configs/fish/functions/curl-multiline.fish \
   configs/fish/ez/nixos.fish
 ```
+
+## Final Task 6 review remediation
+
+- `1password-copy-ssh-pub-key` now retrieves the public key before it starts SSH and propagates an `op-ssh-public-key` failure or cancellation. The local-stub regression makes `op-ssh-public-key` return 130 and asserts that the SSH stub is never invoked.
+- `psw` now validates an `=~` regex once before it scans processes. Invalid regex operands return 2; the regression confirms the `ps` stub has not run.
+- Replaced the superseded remediation examples with `FISH_LOCAL_CONFIG_FILE` and the current `nr.` `$PWD` expression.
+
+## Final Task 6 verification
+
+The following focused checks completed with no output and exit 0:
+
+```sh
+nix run nixpkgs#fish -- --no-config tests/fish/task-6-parity.test.fish
+nix run nixpkgs#fish -- --no-execute \
+  configs/fish/functions/1password-copy-ssh-pub-key.fish \
+  configs/fish/functions/psw.fish \
+  tests/fish/task-6-parity.test.fish
+```
+
+The regression uses temporary directories and local command stubs only; it made no real SSH or 1Password request.
