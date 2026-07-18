@@ -148,3 +148,22 @@ Every parser check and both focused test files exited 0 with no output.
 - The quoted `gas` command substitution is the only change to its pre-existing NUL-record parser and preserves status handling.
 - The multiline helpers preserve their prior empty-input clipboard fallback while avoiding a terminal read.
 - The `.envrc` guard precedes the only write and also protects a dangling symlink.
+
+## Final newline-path correction
+
+`gas` now consumes the three-byte porcelain header with `read --nchars 3` and reads the remainder of the NUL-delimited record directly into `pathname`. This avoids command substitution for the pathname, so an `AM`/`MM` filename ending in a literal newline remains unchanged when passed as the sole argument after `git add --`.
+
+`helpers-behavior.test.fish` adds an `AM ending newline\n` record and asserts the fake `git add --` log contains that exact trailing-newline pathname.
+
+### Focused Nix Fish verification
+
+```sh
+nix shell nixpkgs#fish --command fish --no-config tests/fish/helpers-behavior.test.fish
+nix shell nixpkgs#fish --command fish --no-config tests/fish/helpers-load.test.fish
+```
+
+Both commands exited 0 with no output. Before the implementation change, the new behavior test failed with:
+
+```text
+gas stripped a trailing newline from the pathname passed to git add
+```

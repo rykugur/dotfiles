@@ -22,7 +22,7 @@ end
 printf '%s\n' '#!/bin/sh' \
     'case "$1" in' \
     '  ls-files) printf "untracked victim\\0" ;;' \
-    '  status) printf "R  renamed target\\0?? victim\\0?? untracked victim\\0C  copied target\\0AM payload\\0R  another target\\0MM payload\\0AM actual add\\0MM actual modify\\0AM actual\\nadd\\0" ;;' \
+    '  status) printf "R  renamed target\\0?? victim\\0?? untracked victim\\0C  copied target\\0AM payload\\0R  another target\\0MM payload\\0AM actual add\\0MM actual modify\\0AM actual\\nadd\\0AM ending newline\\n\\0" ;;' \
     '  add) test "$#" -eq 3 || { printf "invalid-argument-count:%s\\n" "$#" >> "$GIT_ADD_LOG"; exit 1; }; printf "%s\\0" "$3" >> "$GIT_ADD_LOG" ;;' \
     'esac' >$stub_dir/git
 chmod +x $stub_dir/git
@@ -66,6 +66,9 @@ or fail 'gas did not stage the MM pathname'
 set -l newline_path (printf 'actual\nadd' | string collect --no-trim-newlines)
 contains -- $newline_path $staged
 or fail 'gas split a newline-containing pathname passed to git add'
+set -l trailing_newline_path (printf 'ending newline\n' | string collect --no-trim-newlines)
+contains -- $trailing_newline_path $staged
+or fail 'gas stripped a trailing newline from the pathname passed to git add'
 contains -- payload $staged
 and fail 'gas acted on rename/copy sources named AM payload or MM payload'
 
