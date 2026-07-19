@@ -1,31 +1,13 @@
 { ... }:
 let
-  version = "16.4.8";
-  carapace = import ./_carapace.nix;
+  release = builtins.fromJSON (builtins.readFile ./release.json);
+  inherit (release) version sources;
 
   mkOhMyPi =
     pkgs:
     let
       inherit (pkgs) lib;
 
-      sources = {
-        x86_64-linux = {
-          asset = "omp-linux-x64";
-          sha256 = "0k44hqgrcxzp8anb8r58y3nvxh1zri1favb0vbwn73dq0mg7gw6d";
-        };
-        aarch64-linux = {
-          asset = "omp-linux-arm64";
-          sha256 = "1ib9qq92651gy164w3h1xzhn40a6gzmj89i2pax3akfbi3b5grcw";
-        };
-        x86_64-darwin = {
-          asset = "omp-darwin-x64";
-          sha256 = "06yapmx4p9yp173xy05l8lsldkvn0slghgqhhpjgd0a3yj0011ry";
-        };
-        aarch64-darwin = {
-          asset = "omp-darwin-arm64";
-          sha256 = "0ivlbl21fy8ri8c9yz3yqgll80n0dl3cv4aqr5aycsis2pfx78rx";
-        };
-      };
 
       srcInfo =
         sources.${pkgs.stdenv.hostPlatform.system}
@@ -44,7 +26,7 @@ let
 
       src = pkgs.fetchurl {
         url = "https://github.com/can1357/oh-my-pi/releases/download/v${version}/${srcInfo.asset}";
-        inherit (srcInfo) sha256;
+        sha256 = srcInfo.hash;
       };
 
       dontUnpack = true;
@@ -123,9 +105,6 @@ in
         xdg.configFile."fish/completions/omp.fish".source = mkCompletion pkgs ohMyPi "fish";
       })
 
-      (lib.mkIf (config.ryk.defaultShell == "nushell") {
-        xdg.configFile."carapace/specs/omp.yaml".text = builtins.toJSON carapace.spec;
-      })
 
       (lib.mkIf (config.ryk.defaultShell == "bash") {
         programs.bash = {
@@ -139,7 +118,26 @@ in
 
   perSystem =
     { pkgs, ... }:
+    let
+      updateOhMyPi = pkgs.writeShellApplication {
+        name = "update-oh-my-pi";
+        runtimeInputs = [ pkgs.curl pkgs.git pkgs.jq pkgs.nix ];
+        text = ''
+          exec ${./update-omp.sh} "$@"
+        '';
+      };
+    in
     {
-      packages.oh-my-pi = mkOhMyPi pkgs;
+      packages = {
+        oh-my-pi = mkOhMyPi pkgs;
+        update-oh-my-pi = updateOhMyPi;
+      };
+
+      checks.oh-my-pi-update = pkgs.runCommand "oh-my-pi-update-test" {
+        nativeBuildInputs = [ pkgs.bash pkgs.jq pkgs.nix ];
+      } ''
+        NIX_CONFIG='experimental-features = nix-command' ${pkgs.bash}/bin/bash ${./.}/update-omp.test.sh
+        touch $out
+      '';
     };
 }
