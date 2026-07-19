@@ -6,17 +6,9 @@ Prepare Fish as the primary interactive shell while keeping Nushell as the activ
 
 ## Activation and cutover
 
-`ryk.defaultShell` remains `"nushell"` during the trial. Add a focused trial option that enables `programs.fish` and sources `configs/fish/config.fish` without changing the login shell or disabling `programs.nushell`.
+`ryk.defaultShell` remains `"nushell"`. The Fish Home Manager module is enabled alongside Nushell whenever the configured default shell is Nushell or Fish, so start it explicitly with `fish` while evaluating the migration.
 
-The existing Carapace module already enables its Fish and Nushell integrations independently whenever the corresponding shell is enabled. During the trial both integrations are active.
-
-After verification, set:
-
-```nix
-ryk.defaultShell = "fish";
-```
-
-Remove the temporary trial option in the same change. `modules/ai/herdr.nix` derives Herdr's `terminal.default_shell` from `ryk.defaultShell`, so Herdr follows the cutover automatically.
+Carapace enables each shell integration independently when that shell is active. This keeps Nushell unchanged while making Fish and its generated Herdr completion available for manual trials.
 
 ## Fish command organization
 
@@ -37,37 +29,6 @@ Reconcile behavior from all files sourced by `configs/nu/config.nu`; do not mech
 | Project/game commands | Port individually before declaring the trial complete. |
 
 Nushell commands containing spaces become dashed Fish function names. Examples: `sops-kaf`, `zellij-create-or-attach`, `op-ssh-public-key`, and `sops-age-private-key`. Optional short abbreviations may preserve muscle memory, but the implementation must not shadow `sops`, `zellij`, or `op` with namespace dispatcher functions.
-
-## Cutover
-
-The cutover was executed on 2026-07-18. The active host/profile configuration was updated to:
-
-```nix
-ryk.defaultShell = "fish";
-```
-
-The temporary `ryk.enableFishTrial` option was removed from the active host/profile and from `modules/shell/default-shell.nix`. The guard in `modules/shell/fish.nix` was simplified to:
-
-```nix
-lib.mkIf (config.ryk.defaultShell == "fish") {
-```
-
-## Verification
-
-The following commands were run to verify the cutover:
-
-```sh
-# Confirm login shell is Fish
-ps -p $$ -o comm=
-
-# Confirm Herdr's default shell is Fish
-herdr --default-config | grep -F 'default_shell = "fish"'
-
-# Confirm Fish config loads and SOPS helper is available
-fish --no-config -c 'source ~/.dotfiles/configs/fish/config.fish; functions --query sops-age-private-key'
-```
-
-All commands returned the expected output, confirming the cutover was successful.
 
 ## 1Password and SOPS design
 
@@ -128,12 +89,10 @@ Every interactive function, alias, and abbreviation sourced by `configs/nu/confi
 | `eve.nu` | `eve pfx` → `eve-pfx`; `eve settings` → `eve-settings`; `eve pi templates` → `eve-pi-templates`; `eve gits` → `eve-gits`; `eve EANM` → `eve-eanm`; `eve CustomShipLabeler` → `eve-custom-ship-labeler`; `eve pi get name` → `eve-pi-template-name` |
 | `pz.nu` | `pz copy mod config HOST` → `pz-copy-mod-config HOST` (remote `HOST:~/Zomboid/Lua/...` sources remain literal); `pz mods` → `pz-mods` |
 | `stalker2.nu` | `stalker2 pfx` → `stalker2-pfx`; `stalker2 cd` → `stalker2-cd`; `stalker2 mods` → `stalker2-mods` |
-## Trial acceptance criteria
+## Manual trial checks
 
-The trial and cutover are complete. All acceptance criteria have been met:
+- Start Fish explicitly: `fish`.
+- Verify `herdr`, `kubecolor`, and `flux` completion interactively.
+- Exercise `sops-setup-new-host` only when ready to create the local age key; it writes private material to `~/.config/sops/age/keys.txt`.
 
-1. Every helper sourced by `configs/nu/config.nu` has a documented Fish equivalent or an explicit intentional Nu-only disposition.
-2. The 1Password/SOPS functions complete and work end-to-end with a selected SSH key, without leaking private material to stdout or logs.
-3. Herdr, Kubecolor, and Flux completion work interactively in Fish.
-4. Fish is now the configured login/default shell and Herdr's default shell.
-5. The trial-only activation option has been removed.
+Nushell remains the login/default shell, and Herdr continues to default to `nu`, until an explicit future cutover.

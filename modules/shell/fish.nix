@@ -2,7 +2,7 @@
 {
   flake.modules.homeManager.fish =
     { config, lib, pkgs, ... }:
-    lib.mkIf (config.ryk.defaultShell == "fish") {
+    lib.mkIf (builtins.elem config.ryk.defaultShell [ "fish" "nushell" ]) {
       home.packages = with pkgs; [
         babelfish
 
@@ -21,6 +21,5 @@
         '';
       };
 
-      programs.fzf.enable = true;
     };
 }

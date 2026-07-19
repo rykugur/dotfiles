@@ -180,7 +180,7 @@ in
 
               programs.ghostty.settings.window-decoration = "none";
 
-              ryk.defaultShell = "fish";
+              ryk.defaultShell = "nushell";
 
               xdg.enable = true;
               programs.home-manager.enable = true;
