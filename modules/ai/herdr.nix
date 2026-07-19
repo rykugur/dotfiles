@@ -33,11 +33,5 @@
       home.activation.installHerdrOmpIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         run ${config.programs.herdr.package}/bin/herdr integration install omp
       '';
-      home.activation.installHerdrFishCompletion = lib.mkIf config.programs.fish.enable (
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          run mkdir -p "$HOME/.config/fish/completions"
-          run sh -c '${config.programs.herdr.package}/bin/herdr completion fish > "$HOME/.config/fish/completions/herdr.fish"'
-        ''
-      );
     };
 }
