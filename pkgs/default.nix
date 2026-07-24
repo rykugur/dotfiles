@@ -16,6 +16,7 @@ in
   # so no custom derivation is needed. The LUG Wine runners require >= 2026.1.0.
   # The VITURE One IMU -> opentrack UDP bridge:
   xr-to-opentrack = pkgs.callPackage ./xr-to-opentrack.nix { };
+  trios = pkgs.callPackage ./trios.nix { };
   # misc
   jackify = pkgs.callPackage ./jackify.nix { };
   eve-wrench = pkgs.callPackage ./eve-wrench.nix { };
