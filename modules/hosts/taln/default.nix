@@ -55,6 +55,7 @@ in
                 sops
                 ssh
                 eve-frontier
+                starsector
                 television
               ];
 
