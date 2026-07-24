@@ -3,6 +3,8 @@
   stdenv,
   fetchzip,
   autoPatchelfHook,
+  copyDesktopItems,
+  makeDesktopItem,
   makeWrapper,
   atk,
   cairo,
@@ -56,12 +58,26 @@ let
     libxkbcommon
     pango
   ];
+
+  desktopItem = makeDesktopItem {
+    name = "trios";
+    desktopName = "TriOS";
+    genericName = "Starsector launcher and mod manager";
+    comment = "All-in-one Starsector launcher, mod manager, and toolkit";
+    exec = "trios";
+    icon = "trios";
+    categories = [ "Game" ];
+    extraConfig = {
+      Categories = "Game;";
+    };
+  };
 in
 stdenv.mkDerivation {
   inherit pname version src;
 
-  nativeBuildInputs = [ makeWrapper ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
+  nativeBuildInputs = [ makeWrapper copyDesktopItems ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
   buildInputs = lib.optionals stdenv.isLinux linuxRuntimeDeps;
+  desktopItems = lib.optionals stdenv.isLinux [ desktopItem ];
   preFixup = lib.optionalString stdenv.isLinux ''
     addAutoPatchelfSearchPath ${jre_headless}/lib/openjdk/lib/server
   '';
@@ -74,9 +90,14 @@ stdenv.mkDerivation {
       ''
         install -Dm755 TriOS $out/libexec/trios/TriOS
         cp -r lib data $out/libexec/trios/
+        install -Dm644 \
+          data/flutter_assets/assets/images/telos_faction_crest.png \
+          $out/share/icons/hicolor/128x128/apps/trios.png
+        chmod +x $out/libexec/trios/data/flutter_assets/assets/linux/7zip/x64/7zzs
 
         makeWrapper $out/libexec/trios/TriOS $out/bin/trios \
           --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath linuxRuntimeDeps}"
+        runHook postInstall
       ''
     else
       ''
