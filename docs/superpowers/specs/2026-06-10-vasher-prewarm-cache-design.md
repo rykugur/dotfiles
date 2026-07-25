@@ -1,7 +1,7 @@
 # Vasher — Pre-Warming Binary Cache LXC
 
 **Date:** 2026-06-10
-**Status:** Draft for review
+**Status:** Superseded by `2026-07-25-vasher-binary-cache-design.md`
 
 ## Summary
 
