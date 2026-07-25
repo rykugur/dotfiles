@@ -48,7 +48,7 @@ The initial platform is an unprivileged Proxmox LXC with nesting enabled, four C
 
 Jezrien is a cache consumer only. A NixOS module adds these entries to `nix.settings`:
 
-- `http://vasher.lan:5000/` as the first substituter;
+- `http://vasher.local.ryk.sh:5000/` as the first substituter;
 - Vasher's dedicated public cache-signing key in `trusted-public-keys`.
 
 Harmonia listens only on the LAN. Its private key is a sops-managed secret readable only by the Harmonia service account. The cache URL and signing key stay stable if the host migrates from LXC to bare metal.
@@ -141,7 +141,7 @@ nix build .#nixosConfigurations.jezrien.config.system.build.toplevel \
   --no-link --print-out-paths
 ```
 
-After promotion, Jezrien must switch to that exact commit and confirm that the requested closure is substituted from `http://vasher.lan:5000/` rather than locally built. Verify cache health with `GET /nix-cache-info` and verify retained store content after garbage collection.
+After promotion, Jezrien must switch to that exact commit and confirm that the requested closure is substituted from `http://vasher.local.ryk.sh:5000/` rather than locally built. Verify cache health with `GET /nix-cache-info` and verify retained store content after garbage collection.
 
 ## Implementation acceptance criteria
 

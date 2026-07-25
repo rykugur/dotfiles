@@ -12,7 +12,7 @@
 
 - Vasher MUST be `x86_64-linux`; it needs no GPU and no AMD CPU.
 - Vasher MUST NOT be configured as an SSH remote builder; do not add `nix.buildMachines` or `nix.distributedBuilds` anywhere.
-- The only cache endpoint is `http://vasher.lan:5000/`, trusted by Vasher's dedicated signing public key.
+- The only cache endpoint is `http://vasher.local.ryk.sh:5000/`, trusted by Vasher's dedicated signing public key.
 - `cache-bump` MUST advance only after Vasher builds `nixosConfigurations.jezrien.config.system.build.toplevel` for that exact revision.
 - Jobs MUST serialize and coalesce naturally: a busy trigger exits successfully and the next 15-minute master timer processes the newest revision.
 - Keep exactly five successful closure GC roots. Failed work MUST NOT advance `cache-bump` or remove good roots.
@@ -338,7 +338,7 @@ in
     in {
       options.ryk.vasherCache = {
         enable = lib.mkEnableOption "the Vasher LAN binary cache";
-        url = lib.mkOption { type = lib.types.str; default = "http://vasher.lan:5000/"; };
+        url = lib.mkOption { type = lib.types.str; default = "http://vasher.local.ryk.sh:5000/"; };
         serve = lib.mkOption { type = lib.types.bool; default = false; };
       };
 
@@ -535,7 +535,7 @@ Run:
 nix eval .#nixosConfigurations.jezrien.config.nix.settings.substituters --json
 nix eval .#nixosConfigurations.jezrien.config.nix.buildMachines --json
 ```
-Expected: the first output contains `http://vasher.lan:5000/`; the second is `[]`.
+Expected: the first output contains `http://vasher.local.ryk.sh:5000/`; the second is `[]`.
 
 ```bash
 git add modules/hosts/jezrien/default.nix modules/hosts/jezrien/_configuration.nix
@@ -559,18 +559,18 @@ nix build .#vasher-lxc-image
 scp result/tarball/*.tar.xz proxmox:/var/lib/vz/template/cache/
 ssh proxmox 'bash -s -- /var/lib/vz/template/cache/nixos-system-x86_64-linux.tar.xz' \
   < scripts/bootstrap/proxmox-lxc-create.sh
-scp -r /tmp/vasher-sops-key vasher.lan:/var/lib/sops-nix/
-ssh root@vasher.lan 'chmod 700 /var/lib/sops-nix && chmod 400 /var/lib/sops-nix/key.txt && nixos-rebuild switch --flake github:rykugur/dotfiles#vasher'
+scp -r /tmp/vasher-sops-key vasher.local.ryk.sh:/var/lib/sops-nix/
+ssh root@vasher.local.ryk.sh 'chmod 700 /var/lib/sops-nix && chmod 400 /var/lib/sops-nix/key.txt && nixos-rebuild switch --flake github:rykugur/dotfiles#vasher'
 ```
 
 - [ ] **Step 2: Verify scheduler, server, and successful candidate behavior**
 
 Run:
 ```bash
-ssh root@vasher.lan 'systemctl list-timers vasher-prebuild-master.timer vasher-prebuild-candidate.timer --no-pager'
-ssh root@vasher.lan 'systemctl start vasher-prebuild-candidate.service'
-curl --fail http://vasher.lan:5000/nix-cache-info
-ssh root@vasher.lan 'cat /var/lib/vasher/last-build.json && ls -1 /var/lib/vasher/gcroots'
+ssh root@vasher.local.ryk.sh 'systemctl list-timers vasher-prebuild-master.timer vasher-prebuild-candidate.timer --no-pager'
+ssh root@vasher.local.ryk.sh 'systemctl start vasher-prebuild-candidate.service'
+curl --fail http://vasher.local.ryk.sh:5000/nix-cache-info
+ssh root@vasher.local.ryk.sh 'cat /var/lib/vasher/last-build.json && ls -1 /var/lib/vasher/gcroots'
 ```
 
 Expected: both timers are scheduled; the candidate service records success and publishes the built revision; `nix-cache-info` returns HTTP 200; at most five roots exist after six successful runs.
@@ -584,7 +584,7 @@ git fetch origin
 git merge --ff-only origin/cache-bump
 git push origin master
 sudo nixos-rebuild switch --flake .#jezrien 2>&1 | tee /tmp/vasher-switch.log
-grep -F "http://vasher.lan:5000" /tmp/vasher-switch.log
+grep -F "http://vasher.local.ryk.sh:5000" /tmp/vasher-switch.log
 ```
 
 Expected: the switch downloads matching paths from Vasher; no local `building '/nix/store/…'` line appears for paths already retained by Vasher.
@@ -597,7 +597,7 @@ Insert before `## nixy (test container)`:
 ## vasher (LAN binary cache)
 
 - **Platform**: `x86_64-linux`, NixOS, initially a Proxmox LXC
-- **Purpose**: prebuild Jezrien's current `master` closure and a nightly updated-lock candidate; serve retained signed paths over `http://vasher.lan:5000/`
+- **Purpose**: prebuild Jezrien's current `master` closure and a nightly updated-lock candidate; serve retained signed paths over `http://vasher.local.ryk.sh:5000/`
 - **Not a remote builder**: Jezrien only substitutes cache paths; it never delegates builds over SSH.
 - **Promotion**: `git fetch origin && git merge --ff-only origin/cache-bump && git push origin master && sudo nixos-rebuild switch --flake .#jezrien`
 - **Retention**: five successful closures under `/var/lib/vasher/gcroots`
