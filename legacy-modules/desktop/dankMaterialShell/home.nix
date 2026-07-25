@@ -50,6 +50,8 @@ in
           # SettingsSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js
           # SessionSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
           dynamicThemeing = false;
+          enableU2f = true;
+
 
           acMonitorTimeout = 900; # 15 min
           acLockTimeout = 1800; # 30 min

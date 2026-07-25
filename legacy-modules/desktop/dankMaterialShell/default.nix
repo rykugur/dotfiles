@@ -32,6 +32,13 @@ in
     services.accounts-daemon.enable = lib.mkIf (cfg.avatar != null) true;
 
     systemd.user.services.niri-flake-polkit.enable = false;
+    security.pam.services."dankshell-u2f".text = ''
+      auth     required ${pkgs.pam_u2f}/lib/security/pam_u2f.so cue
+      account  required pam_permit.so
+      password required pam_deny.so
+      session  required pam_permit.so
+    '';
+
 
     system.activationScripts.dankMaterialShellAvatar = lib.mkIf (cfg.avatar != null) (
       lib.concatStringsSep "\n" [

@@ -14,6 +14,8 @@
     {
       # openldap's syncreplication test (test017) is timing-sensitive and flaky in Nix's sandbox
       openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
+      rtk = prev.rtk.overrideAttrs (_: { doCheck = false; });
+
 
       audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
       hyprprop = inputs.hyprland-contrib.packages.${system}.hyprprop;

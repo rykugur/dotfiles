@@ -58,6 +58,7 @@
           allowUnfreePredicate = _: true;
           permittedInsecurePackages = [
             "electron-25.9.0"
+            "electron-40.10.5"
           ];
         };
       };
