@@ -14,6 +14,11 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     import-tree.url = "github:vic/import-tree";
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-wrapper-modules = {
       url = "github:BirdeeHub/nix-wrapper-modules";
       inputs.nixpkgs.follows = "nixpkgs";
