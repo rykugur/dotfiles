@@ -122,11 +122,42 @@ Result: exit status `0`.
 
 ### Change
 
-- Roots are keyed by the built output and its Git revision; an existing key is
-  reused rather than creating another dated root.
+- Roots are keyed only by the built store-output basename, so an output retains
+  one stable root across Git revisions.
 - Candidate commits its lockfile update, registers the keyed root, then uses
   the existing two-attempt lease push. Root pruning and collection happen only
   after that publication succeeds.
 - Master keeps its nonblocking coalescing lock; candidate now blocks on the
   same lock before its work begins. The status trap, sandbox, service/timer
   names, and push retry are unchanged.
+
+## Output-unique, recency-safe root correction
+
+### Root cause
+
+- Prefixing root names with the Git revision created duplicate roots for one
+  store output when its source revision changed.
+- Reusing an existing root left its symlink timestamp unchanged, allowing that
+  current output to become the oldest root and be pruned during a later
+  rotation.
+
+### Disposable generated-wrapper RED→GREEN reproductions
+
+Each harness copied the generated `vasher-prebuild` wrapper, redirected only
+its private `/var/lib/vasher` state to a temporary directory, and prepended
+disposable fake external commands. No network, deployment, store mutation, or
+real garbage collection was performed.
+
+| Invariant | RED: prior wrapper | GREEN: corrected wrapper |
+| --- | --- | --- |
+| One output built at two Git revisions has one root | `FAIL: same output at two revisions retained 2 roots` | `PASS: same output at two revisions retained one root` |
+| A reused output survives the next new-output rotation after five roots | `FAIL: reused output a was pruned during later rotation` | `PASS: reused output a survived later rotation` |
+
+### Focused closure verification
+
+```sh
+nix build .#nixosConfigurations.vasher.config.system.build.toplevel --no-link --print-out-paths
+```
+
+Result: exit status `0`.
+

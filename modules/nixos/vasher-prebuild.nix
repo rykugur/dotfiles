@@ -66,11 +66,11 @@
             fi
           fi
 
-          revision=$(git -C "$worktree" rev-parse HEAD)
-          root_path="$roots/$revision-''${out##*/}"
+          root_path="$roots/''${out##*/}"
           if [[ ! -e "$root_path" ]]; then
             nix-store --add-root "$root_path" --indirect --realise "$out"
           fi
+          touch -h "$root_path"
 
           if [[ $mode == candidate ]]; then
             git -C "$worktree" push --force-with-lease origin "HEAD:$CACHE_BRANCH" || {
