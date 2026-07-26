@@ -78,3 +78,19 @@ bash -n scripts/vasher-promote.sh scripts/tests/test-vasher-promote.sh
 Exact output: none. Exit status: `0`.
 
 The test uses a temporary local bare repository and stubbed `sudo`/`nh`; it does not contact a network remote or run a real rebuild.
+
+## Stale-ref hardening evidence
+
+RED: after the fixture deleted the remote `cache-bump` branch while the checkout retained
+`origin/cache-bump`, `bash scripts/tests/test-vasher-promote.sh` exited `1`. The unpruned
+script fast-forwarded and pushed the stale candidate, invoked the `nh` stub, and the fixture
+reported `expected command to fail`.
+
+GREEN: with `git fetch --prune origin`, the same fixture exits `0`. It observes the deleted
+remote-tracking ref, rejects the missing candidate before promotion or `nh`, then recreates the
+candidate and verifies both the checkout and bare remote `refs/heads/master` equal it before
+the recorded stub invocation. The dirty and non-`master` cases run with that valid candidate
+already present and assert neither effect occurs.
+
+`bash -n scripts/vasher-promote.sh scripts/tests/test-vasher-promote.sh` exits `0` with no output.
+The fixture continues to use only a temporary local bare repository and stubbed `sudo`/`nh`.

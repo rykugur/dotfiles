@@ -9,6 +9,7 @@ trap 'rm -rf "$tmp"' EXIT
 make_repo() {
   local remote=$1 source=$2 checkout=$3
   git init --bare "$remote" >/dev/null
+  git -C "$remote" symbolic-ref HEAD refs/heads/master
   git init "$source" >/dev/null
   git -C "$source" config user.name test
   git -C "$source" config user.email test@example.invalid
@@ -42,17 +43,34 @@ assert_fails() {
   fi
 }
 
+printf 'candidate\n' > "$source/file"
+git -C "$source" commit -am candidate >/dev/null
+candidate=$(git -C "$source" rev-parse HEAD)
+git -C "$source" push origin HEAD:cache-bump >/dev/null
+git -C "$checkout" fetch origin cache-bump:refs/remotes/origin/cache-bump >/dev/null
+base=$(git -C "$checkout" rev-parse master)
+
+assert_no_effects() {
+  test "$(git -C "$checkout" rev-parse master)" = "$base"
+  test ! -e "$tmp/nh.log"
+}
+
 printf 'dirty\n' >> "$checkout/file"
 assert_fails "$checkout/scripts/vasher-promote.sh"
+assert_no_effects
 git -C "$checkout" checkout -- file
 
 git -C "$checkout" switch -c feature >/dev/null
 assert_fails "$checkout/scripts/vasher-promote.sh"
+assert_no_effects
 git -C "$checkout" switch master >/dev/null
 
-printf 'candidate\n' > "$source/file"
-git -C "$source" commit -am candidate >/dev/null
+git -C "$source" push origin --delete cache-bump >/dev/null
+assert_fails "$checkout/scripts/vasher-promote.sh"
+assert_no_effects
+
 git -C "$source" push origin HEAD:cache-bump >/dev/null
 PATH="$stub_bin:$PATH" NH_LOG="$tmp/nh.log" "$checkout/scripts/vasher-promote.sh"
-test "$(git -C "$checkout" rev-parse master)" = "$(git -C "$checkout" rev-parse origin/cache-bump)"
+test "$(git -C "$checkout" rev-parse master)" = "$candidate"
+test "$(git -C "$remote" rev-parse refs/heads/master)" = "$candidate"
 test "$(cat "$tmp/nh.log")" = "os switch .#$(hostname)"

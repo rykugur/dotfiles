@@ -13,7 +13,7 @@ fail() {
 [[ -z $(git status --porcelain) ]] || fail 'checkout must be clean'
 
 printf '%s\n' 'Fetching origin...'
-git fetch origin
+git fetch --prune origin
 
 git rev-parse --verify --quiet origin/cache-bump >/dev/null || fail 'origin/cache-bump does not exist'
 git merge-base --is-ancestor HEAD origin/cache-bump || fail 'origin/cache-bump cannot fast-forward master'
