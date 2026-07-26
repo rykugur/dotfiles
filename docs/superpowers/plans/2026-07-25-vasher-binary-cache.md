@@ -265,39 +265,33 @@ git commit -m "feat(vasher): add Proxmox LXC image and bootstrap"
 **Interfaces:**
 - Produces: `swoleflake/deploy_key` and `swoleflake/harmonia_signing_key` sops secret paths plus `cache-signing-key.pub`, the versioned public key imported by both cache roles.
 
-- [ ] **Step 1: Generate a persistent age recipient and copy its private half to the future host**
+- [ ] **Step 1: Create and retain the dedicated age bootstrap identity**
 
-Run:
-```bash
-age-keygen -o /tmp/vasher-age.txt
-install -D -m 0400 /tmp/vasher-age.txt /tmp/vasher-sops-key/key.txt
-```
-
-Add the `age1...` public recipient printed by `age-keygen` to `.sops.yaml`, then add a creation rule for `modules/hosts/vasher/secrets.yaml` whose recipients are the existing operator recipient and the new Vasher recipient.
-
-- [ ] **Step 2: Generate independent cache and Git identities**
-
-Run:
-```bash
-nix-store --generate-binary-cache-key vasher.swoleflake-1 /tmp/vasher-sign.key /tmp/vasher-sign.pub
-ssh-keygen -t ed25519 -N '' -f /tmp/vasher-deploy-key -C vasher-cache-bump
-```
-
-Install `/tmp/vasher-deploy-key.pub` as a GitHub deploy key restricted to `cache-bump`, then copy the public cache key into the repository:
+Run locally without displaying its private output:
 
 ```bash
-install -D -m 0644 /tmp/vasher-sign.pub modules/hosts/vasher/cache-signing-key.pub
+umask 077
+age-keygen -o /tmp/vasher-sops-age.txt
+age-keygen -y /tmp/vasher-sops-age.txt
 ```
 
-- [ ] **Step 3: Encrypt the two private values**
+Store `/tmp/vasher-sops-age.txt` in 1Password. Add the resulting public `age1...` recipient to `.sops.yaml`, with the existing operator recipient, for `modules/hosts/vasher/secrets.yaml`. The private age identity is copied later to `/var/lib/sops-nix/key.txt` after the seed LXC boots; it is never committed.
 
-Open the encrypted file with:
+- [ ] **Step 2: Create and centrally retain host, deploy, and cache identities**
 
-```bash
-sops modules/hosts/vasher/secrets.yaml
+Keep the 1Password-managed SSH host private key under the YAML key `ssh_host_ed25519_key`. Create a GitHub deploy key restricted to `cache-bump` and a Harmonia keypair named `vasher.swoleflake-1`; install the Harmonia public half at `modules/hosts/vasher/cache-signing-key.pub`.
+
+- [ ] **Step 3: Encrypt the final secret document**
+
+Using `sops`, encrypt `modules/hosts/vasher/secrets.yaml` to the operator and Vasher age recipients. It must contain only these key paths:
+
+```text
+ssh_host_ed25519_key
+swoleflake/deploy_key
+swoleflake/harmonia_signing_key
 ```
 
-Create the `swoleflake.deploy_key` YAML literal from `/tmp/vasher-deploy-key` and the `swoleflake.harmonia_signing_key` YAML literal from `/tmp/vasher-sign.key`, then save. Do not stage the plaintext temporary files.
+Do not read, display, or commit plaintext private key material.
 
 
 - [ ] **Step 4: Verify encryption and commit only encrypted configuration**
@@ -316,10 +310,11 @@ git commit -m "feat(vasher): add encrypted cache identities"
 
 **Files:**
 - Create: `modules/nixos/vasher-cache.nix`
+- Modify: `modules/hosts/vasher/default.nix`
 - Modify: `modules/hosts/vasher/_role.nix`
 
 **Interfaces:**
-- Produces: `ryk.vasherCache.enable`, `ryk.vasherCache.url`, and a public key loaded from `modules/hosts/vasher/cache-signing-key.pub`; enabling it configures only Nix substituters and trusted signing keys.
+- Produces: `ryk.vasherCache.enable`, `ryk.vasherCache.url`, and a public key loaded from `modules/hosts/vasher/cache-signing-key.pub`; enabling the server also materializes the 1Password-managed SSH host key and configures Harmonia.
 
 - [ ] **Step 1: Create `modules/nixos/vasher-cache.nix`**
 
@@ -346,14 +341,27 @@ in
           };
         }
         (lib.mkIf cfg.serve {
-          sops.secrets."swoleflake/harmonia_signing_key" = {
+          sops.secrets.vasher_ssh_host_ed25519_key = {
+            key = "ssh_host_ed25519_key";
+            owner = "root";
+            group = "root";
+            mode = "0600";
+          };
+          sops.secrets.vasher_harmonia_signing_key = {
+            key = "swoleflake/harmonia_signing_key";
             owner = "harmonia";
             group = "harmonia";
             mode = "0400";
           };
+          services.openssh.hostKeys = [
+            {
+              path = config.sops.secrets.vasher_ssh_host_ed25519_key.path;
+              type = "ed25519";
+            }
+          ];
           services.harmonia = {
             enable = true;
-            signKeyPaths = [ config.sops.secrets."swoleflake/harmonia_signing_key".path ];
+            signKeyPaths = [ config.sops.secrets.vasher_harmonia_signing_key.path ];
             settings = {
               bind = "[::]:5000";
               priority = 30;
@@ -366,7 +374,7 @@ in
 }
 ```
 
-- [ ] **Step 2: Enable the server role**
+- [ ] **Step 2: Enable and import the server module**
 
 Append this to `modules/hosts/vasher/_role.nix`:
 
@@ -377,6 +385,8 @@ Append this to `modules/hosts/vasher/_role.nix`:
   };
 ```
 
+Add `self.modules.nixos.vasher-cache` after `./_platform-lxc.nix` in `modules/hosts/vasher/default.nix`.
+
 - [ ] **Step 3: Verify the Vasher closure and commit**
 
 Run:
@@ -385,8 +395,7 @@ nix build .#nixosConfigurations.vasher.config.system.build.toplevel --no-link --
 ```
 Expected: a Vasher system store path; Nix accepts the Harmonia secret ownership and service configuration.
 
-```bash
-git add modules/nixos/vasher-cache.nix modules/hosts/vasher/_role.nix
+git add modules/nixos/vasher-cache.nix modules/hosts/vasher/default.nix modules/hosts/vasher/_role.nix
 git commit -m "feat(vasher): serve signed Harmonia cache"
 ```
 
@@ -475,13 +484,15 @@ systemd.timers.vasher-prebuild-candidate.timerConfig = {
 };
 ```
 
-- [ ] **Step 3: Enable it from the role and verify its syntax through the NixOS closure**
+- [ ] **Step 3: Enable and import it from the Vasher host**
 
 Add to `modules/hosts/vasher/_role.nix`:
 
 ```nix
   ryk.vasherPrebuild.enable = true;
 ```
+
+Add `self.modules.nixos.vasher-prebuild` after `self.modules.nixos.vasher-cache` in `modules/hosts/vasher/default.nix`.
 
 Run:
 ```bash
@@ -492,7 +503,7 @@ Expected: successful closure build; `writeShellApplication` shellchecks the embe
 - [ ] **Step 4: Commit**
 
 ```bash
-git add modules/nixos/vasher-prebuild.nix modules/hosts/vasher/_role.nix
+git add modules/nixos/vasher-prebuild.nix modules/hosts/vasher/default.nix modules/hosts/vasher/_role.nix
 git commit -m "feat(vasher): prebuild master and nightly candidates"
 ```
 
