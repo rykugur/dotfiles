@@ -559,27 +559,63 @@ git commit -m "feat(jezrien): consume Vasher binary cache"
 - Consumes: completed LXC image, encrypted secrets, and final public key.
 - Produces: a deployed cache endpoint and operator documentation.
 
-- [ ] **Step 1: Provision the LXC and deploy the real configuration**
+- [ ] **Step 1: Provision the LXC and perform the first runtime switch without SSHing to the seed**
 
-Run:
+The seed image generates transient SSH host keys. Do **not** connect to
+`vasher.local.ryk.sh` or add its seed key to `known_hosts` before the first
+real switch; that switch replaces the seed key with the SOPS-backed Ed25519
+host key.
+
+Run from the operator workstation:
+
 ```bash
 nix build .#vasher-lxc-image
 scp result/tarball/*.tar.xz proxmox:/var/lib/vz/template/cache/
 ssh proxmox 'bash -s -- /var/lib/vz/template/cache/nixos-system-x86_64-linux.tar.xz' \
   < scripts/bootstrap/proxmox-lxc-create.sh
-ssh root@vasher.local.ryk.sh 'mkdir -p /var/lib/sops-nix'
-scp /tmp/vasher-sops-age.txt root@vasher.local.ryk.sh:/var/lib/sops-nix/key.txt
-ssh root@vasher.local.ryk.sh 'chmod 700 /var/lib/sops-nix && chmod 400 /var/lib/sops-nix/key.txt && nixos-rebuild switch --flake github:rykugur/dotfiles#vasher'
+cat /tmp/vasher-sops-age.txt | ssh proxmox 'umask 077; cat > /root/vasher-age-key.txt'
 ```
 
-- [ ] **Step 2: Verify scheduler, server, and successful candidate behavior**
+From the Proxmox console (or over the already-trusted Proxmox management
+connection), use `pct exec` and `pct push` to install the age key with its
+final permissions and make the first switch:
+
+```bash
+pct exec 200 -- install -d -m 700 /var/lib/sops-nix
+pct push 200 /root/vasher-age-key.txt /var/lib/sops-nix/key.txt --user 0 --group 0 --perms 0400
+rm -f /root/vasher-age-key.txt
+pct exec 200 -- nixos-rebuild switch --flake github:rykugur/dotfiles#vasher
+```
+
+After that switch, obtain the runtime key fingerprint through the Proxmox
+console:
+
+```bash
+pct exec 200 -- ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
+```
+
+Fetch the public key only after the switch, compare the displayed SHA256
+fingerprint exactly with the console fingerprint, and add it to the local
+`known_hosts` file only if they match:
+
+```bash
+ssh-keyscan -t ed25519 vasher.local.ryk.sh > /tmp/vasher-runtime-ed25519.pub
+ssh-keygen -lf /tmp/vasher-runtime-ed25519.pub
+# Continue only when this SHA256 fingerprint exactly matches the Proxmox-console output.
+ssh-keygen -R vasher.local.ryk.sh
+cat /tmp/vasher-runtime-ed25519.pub >> "$HOME/.ssh/known_hosts"
+rm -f /tmp/vasher-runtime-ed25519.pub
+```
+
+- [ ] **Step 2: Verify scheduler, server, and successful candidate behavior with the verified runtime host key**
 
 Run:
+
 ```bash
-ssh root@vasher.local.ryk.sh 'systemctl list-timers vasher-prebuild-master.timer vasher-prebuild-candidate.timer --no-pager'
-ssh root@vasher.local.ryk.sh 'systemctl start vasher-prebuild-candidate.service'
+ssh -o StrictHostKeyChecking=yes root@vasher.local.ryk.sh 'systemctl list-timers vasher-prebuild-master.timer vasher-prebuild-candidate.timer --no-pager'
+ssh -o StrictHostKeyChecking=yes root@vasher.local.ryk.sh 'systemctl start vasher-prebuild-candidate.service'
 curl --fail http://vasher.local.ryk.sh:5000/nix-cache-info
-ssh root@vasher.local.ryk.sh 'cat /var/lib/vasher/last-build.json && ls -1 /var/lib/vasher/gcroots'
+ssh -o StrictHostKeyChecking=yes root@vasher.local.ryk.sh 'cat /var/lib/vasher/last-build.json && ls -1 /var/lib/vasher/gcroots'
 ```
 
 Expected: both timers are scheduled; the candidate service records success and publishes the built revision; `nix-cache-info` returns HTTP 200; at most five roots exist after six successful runs.
