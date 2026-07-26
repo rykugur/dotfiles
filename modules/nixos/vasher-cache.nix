@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 let
   publicKey = builtins.readFile ../hosts/vasher/cache-signing-key.pub;
 in
@@ -9,6 +9,8 @@ in
       cfg = config.ryk.vasherCache;
     in
     {
+      imports = [ inputs.sops-nix.nixosModules.sops ];
+
       options.ryk.vasherCache = {
         enable = lib.mkEnableOption "the Vasher LAN binary cache";
         url = lib.mkOption {
