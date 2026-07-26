@@ -395,6 +395,7 @@ nix build .#nixosConfigurations.vasher.config.system.build.toplevel --no-link --
 ```
 Expected: a Vasher system store path; Nix accepts the Harmonia secret ownership and service configuration.
 
+```bash
 git add modules/nixos/vasher-cache.nix modules/hosts/vasher/default.nix modules/hosts/vasher/_role.nix
 git commit -m "feat(vasher): serve signed Harmonia cache"
 ```
