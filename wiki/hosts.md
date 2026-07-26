@@ -52,7 +52,7 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 ## vasher (LAN binary cache)
 
 - **Platform**: `x86_64-linux`, NixOS, initially a Proxmox LXC
-- **Purpose**: prebuild Jezrien's current `master` closure and a nightly updated-lock candidate; serve retained signed paths over `http://vasher.lan:5000/`
+- **Purpose**: prebuild Jezrien's current `master` closure and a nightly updated-lock candidate; serve retained signed paths over `http://vasher.local.ryk.sh:5000/`
 - **Not a remote builder**: Jezrien only substitutes cache paths; it never delegates builds over SSH.
 - **Promotion**: `git fetch origin && git merge --ff-only origin/cache-bump && git push origin master && sudo nixos-rebuild switch --flake .#jezrien`
 - **Retention**: five successful closures under `/var/lib/vasher/gcroots`
