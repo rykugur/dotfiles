@@ -39,8 +39,8 @@ in
           };
           sops.secrets.vasher_harmonia_signing_key = {
             key = "swoleflake/harmonia_signing_key";
-            owner = "harmonia";
-            group = "harmonia";
+            owner = "root";
+            group = "root";
             mode = "0400";
           };
           services.openssh.hostKeys = [
