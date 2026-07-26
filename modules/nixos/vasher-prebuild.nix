@@ -42,7 +42,7 @@
           [[ -d "$repo/.git" ]] || git clone "$REPO_URL" "$repo"
           git -C "$repo" fetch origin master
           worktree=/var/lib/vasher/worktrees/"$mode"
-          if [[ ! -d "$worktree/.git" ]]; then
+          if [[ ! -e "$worktree/.git" ]]; then
             mkdir -p "$(dirname "$worktree")"
             git -C "$repo" worktree add --detach "$worktree" origin/master
           fi
@@ -54,10 +54,11 @@
           fi
 
           out=$(nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
-          ln -sfn "$out" "$roots/$(date -u +%Y%m%dT%H%M%SZ)-$mode"
+          root_path="$roots/$(date -u +%Y%m%dT%H%M%SZ)-$mode"
+          nix-store --add-root "$root_path" --indirect --realise "$out"
           # shellcheck disable=SC2012
           mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
-          for root in "''${stale[@]:-}"; do rm -f "$roots/$root"; done
+          for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
           nix-collect-garbage
 
           if [[ $mode == candidate ]]; then
