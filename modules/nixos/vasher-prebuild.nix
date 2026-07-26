@@ -54,13 +54,6 @@
           fi
 
           out=$(nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
-          root_path="$roots/$(date -u +%Y%m%dT%H%M%SZ)-$mode"
-          nix-store --add-root "$root_path" --indirect --realise "$out"
-          # shellcheck disable=SC2012
-          mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
-          for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
-          nix-collect-garbage
-
           if [[ $mode == candidate ]]; then
             git -C "$worktree" add flake.lock
             if ! git -C "$worktree" diff --cached --quiet; then
@@ -72,6 +65,14 @@
               git -C "$worktree" push --force-with-lease origin "HEAD:$CACHE_BRANCH"
             }
           fi
+
+          root_path="$roots/$(date -u +%Y%m%dT%H%M%SZ)-$mode"
+          nix-store --add-root "$root_path" --indirect --realise "$out"
+          # shellcheck disable=SC2012
+          mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
+          for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
+          nix-collect-garbage
+
           jq -n --arg mode "$mode" --arg out "$out" --arg revision "$(git -C "$worktree" rev-parse HEAD)" \
             '{status:"success",mode:$mode,output:$out,revision:$revision}' > "$status"
         '';
