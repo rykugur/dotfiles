@@ -73,40 +73,39 @@ Result: exit status `0`.
 /nix/store/57ygkdgh4kfsq5yb3s1lqaiv8fqd5bwk-nixos-system-vasher-lxc-proxmox-26.11.20260723.e2587ca
 ```
 
-## Candidate publication ordering regression
+## Final scheduler corrections
 
-### Root cause
+### Root causes
 
-The generated candidate script built the closure, created a root, pruned roots
-beyond five, and collected garbage before committing and publishing the
-candidate lock update. Both `push --force-with-lease` attempts can fail, so
-that ordering released a retained root even though publication failed.
+- Timestamp-only root names created a distinct root for every unchanged master
+  build, allowing no-op polling to spend the five-root budget.
+- Candidate publication happened before its root was registered, so a root
+  registration failure could publish an unretained closure. The former repair
+  also performed root rotation before publication, so a failed push could
+  discard a retained root.
+- Both modes used a nonblocking lock; a candidate scheduled while a master
+  build held it exited successfully without running.
 
-### Disposable behavioral RED→GREEN reproduction
+### Disposable generated-wrapper RED→GREEN reproductions
 
-The reproduction executed a temporary copy of the actual generated
-`vasher-prebuild` wrapper. It changed only the wrapper's private
-`/var/lib/vasher` state directory to a temporary directory and supplied
-disposable command fakes. It seeded five retained roots, made `nix build`
-succeed, created roots through the generated `nix-store --add-root` call, and
-made both candidate `git push --force-with-lease` attempts fail. The generated
-candidate invocation therefore exited nonzero as production does after a
-failed retry; the harness then asserted every original retained root still
-existed.
+Each harness copied the generated `vasher-prebuild` wrapper, changed only its
+private `/var/lib/vasher` directory to a disposable state directory, and
+prepended disposable fake external commands. It exercised the copied wrapper,
+not a hand-written model. No network, deployment, or real garbage collection
+was performed.
 
-Before the ordering change, the real generated wrapper failed the assertion:
+| Invariant | RED: prior wrapper | GREEN: corrected wrapper |
+| --- | --- | --- |
+| Repeated no-op master builds retain one root for an unchanged output/revision | `/tmp/vasher-unique-roots-red-P34bll/run.sh` exited 1: `FAIL: repeated no-op master build retained 2 roots` | `/tmp/vasher-unique-roots-green-aKzJ9z/run.sh` exited 0: `PASS: repeated no-op master build retained one root` |
+| Root-registration failure prevents candidate publication | `/tmp/vasher-candidate-root-red-x3U6MA/run.sh` exited 1: `FAIL: candidate published despite root registration failure` | `/tmp/vasher-candidate-root-green-Odhshn/run.sh` exited 0: `PASS: root registration failure prevented publication` |
+| Failed candidate publication retains its new root, retains the prior five roots, and does not GC | `/tmp/vasher-candidate-push-red-loXpIM/run.sh` exited 1: `FAIL: failed publication did not retain its new root (found 5 roots)` | `/tmp/vasher-candidate-push-green-84VLbo/run.sh` exited 0: `PASS: failed publication kept new and existing roots without GC` |
+| Candidate waits behind the shared lock | `/tmp/vasher-candidate-lock-red-4wU2Dj/run.sh` exited 1: `FAIL: candidate skipped while the shared lock was held` | `/tmp/vasher-candidate-lock-green-MMmnmK/run.sh` exited 0: `PASS: candidate waited for the shared lock and then built` |
+
+The updated generated wrapper was also run under a held lock in master mode:
 
 ```text
-$ /tmp/vasher-root-retention-red-HjaSkU/run-red.sh
-FAIL: retained root removed: /tmp/vasher-root-retention-red-HjaSkU/state/gcroots/old-root-5
-```
-
-After the ordering change, the rebuilt generated wrapper retained all five
-original roots despite both forced publication failures:
-
-```text
-$ /tmp/vasher-root-retention-green-AIfVvx/run-green.sh
-PASS: all five original roots survived failed publication
+$ /tmp/vasher-master-coalesce-uQYOgr/run.sh
+PASS: master coalesced without starting a build
 ```
 
 ### Focused closure verification
@@ -118,18 +117,16 @@ nix build .#nixosConfigurations.vasher.config.system.build.toplevel --no-link --
 Result: exit status `0`.
 
 ```text
-/nix/store/7w7xkj4kkp0yv7mxxw28c7pfizfy4xb1-nixos-system-vasher-lxc-proxmox-26.11.20260723.e2587ca
+/nix/store/rm3h17wl9gn6p0d77iq17w83351gbz6d-nixos-system-vasher-lxc-proxmox-26.11.20260723.e2587ca
 ```
 
 ### Change
 
-- `modules/nixos/vasher-prebuild.nix`: candidate-only commit/push (including
-  the existing fetch-and-retry lease push) now occurs immediately after the
-  successful build and before root creation, pruning, and collection.
-- Master still follows its original build → root → prune → GC flow.
-- The shared lock, failure-status trap, retry semantics, and deployment
-  behavior are unchanged.
-
-### Concerns
-
-- None.
+- Roots are keyed by the built output and its Git revision; an existing key is
+  reused rather than creating another dated root.
+- Candidate commits its lockfile update, registers the keyed root, then uses
+  the existing two-attempt lease push. Root pruning and collection happen only
+  after that publication succeeds.
+- Master keeps its nonblocking coalescing lock; candidate now blocks on the
+  same lock before its work begins. The status trap, sandbox, service/timer
+  names, and push retry are unchanged.

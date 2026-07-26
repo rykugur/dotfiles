@@ -34,7 +34,11 @@
           trap record_failure ERR
 
           exec 9>/var/lib/vasher/prebuild.lock
-          flock -n 9 || exit 0
+          if [[ $mode == master ]]; then
+            flock -n 9 || exit 0
+          else
+            flock 9
+          fi
 
           repo=/var/lib/vasher/repo
           roots=/var/lib/vasher/gcroots
@@ -60,14 +64,21 @@
               git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
                 commit -m "chore: nightly flake.lock update ($(date -I))"
             fi
+          fi
+
+          revision=$(git -C "$worktree" rev-parse HEAD)
+          root_path="$roots/$revision-''${out##*/}"
+          if [[ ! -e "$root_path" ]]; then
+            nix-store --add-root "$root_path" --indirect --realise "$out"
+          fi
+
+          if [[ $mode == candidate ]]; then
             git -C "$worktree" push --force-with-lease origin "HEAD:$CACHE_BRANCH" || {
               git -C "$worktree" fetch origin "$CACHE_BRANCH:refs/remotes/origin/$CACHE_BRANCH"
               git -C "$worktree" push --force-with-lease origin "HEAD:$CACHE_BRANCH"
             }
           fi
 
-          root_path="$roots/$(date -u +%Y%m%dT%H%M%SZ)-$mode"
-          nix-store --add-root "$root_path" --indirect --realise "$out"
           # shellcheck disable=SC2012
           mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
           for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
