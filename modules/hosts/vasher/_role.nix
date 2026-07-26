@@ -1,6 +1,9 @@
 { inputs, pkgs, ... }:
 {
-  imports = [ inputs.sops-nix.nixosModules.sops ];
+  imports = [
+    inputs.sops-nix.nixosModules.sops
+    ./_ssh-access.nix
+  ];
 
   networking.hostName = "vasher";
   time.timeZone = "America/Chicago";
@@ -39,17 +42,9 @@
     shell = pkgs.bashInteractive;
   };
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "prohibit-password";
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-    };
-  };
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAgLk3xlBbjNte2VW4ZE6ewngB07bZ1MdkOBnJFFnzQV"
-  ];
+  # Extra hardening beyond the shared baseline: the seed image leaves keyboard-
+  # interactive auth alone so a console rescue stays possible during bootstrap.
+  services.openssh.settings.KbdInteractiveAuthentication = false;
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
