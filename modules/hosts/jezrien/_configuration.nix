@@ -21,6 +21,7 @@
     common-cpu-amd
     common-gpu-amd
   ]);
+  ryk.vasherCache.enable = true;
 
   # TODO: find a better spot for this
   nix.settings = {

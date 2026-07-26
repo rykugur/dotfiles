@@ -17,6 +17,7 @@ in
       ../../../legacy-modules/desktop
 
       self.modules.nixos.nix-defaults
+      self.modules.nixos.vasher-cache
       self.modules.nixos.ssh
 
       ./_configuration.nix
