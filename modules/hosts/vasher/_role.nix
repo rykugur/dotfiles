@@ -2,7 +2,7 @@
 {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    ./_ssh-access.nix
+    ./_ssh.nix
   ];
 
   networking.hostName = "vasher";
@@ -42,9 +42,6 @@
     shell = pkgs.bashInteractive;
   };
 
-  # Extra hardening beyond the shared baseline: the seed image leaves keyboard-
-  # interactive auth alone so a console rescue stays possible during bootstrap.
-  services.openssh.settings.KbdInteractiveAuthentication = false;
 
   sops = {
     defaultSopsFile = ./secrets.yaml;

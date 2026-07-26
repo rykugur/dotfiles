@@ -2,7 +2,7 @@
 {
   imports = [
     "${modulesPath}/virtualisation/proxmox-lxc.nix"
-    ./_ssh-access.nix
+    ./_ssh.nix
   ];
 
   networking.hostName = "vasher";
