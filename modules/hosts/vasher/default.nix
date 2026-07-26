@@ -9,6 +9,7 @@
       ./_role.nix
       ./_platform-lxc.nix
       self.modules.nixos.vasher-cache
+      self.modules.nixos.vasher-prebuild
     ];
     specialArgs = { inherit inputs; };
   };

@@ -61,6 +61,7 @@
     enable = true;
     serve = true;
   };
+  ryk.vasherPrebuild.enable = true;
 
   environment.systemPackages = with pkgs; [ git jq ];
   system.stateVersion = "24.11";
