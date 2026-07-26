@@ -567,7 +567,8 @@ nix build .#vasher-lxc-image
 scp result/tarball/*.tar.xz proxmox:/var/lib/vz/template/cache/
 ssh proxmox 'bash -s -- /var/lib/vz/template/cache/nixos-system-x86_64-linux.tar.xz' \
   < scripts/bootstrap/proxmox-lxc-create.sh
-scp -r /tmp/vasher-sops-key vasher.local.ryk.sh:/var/lib/sops-nix/
+ssh root@vasher.local.ryk.sh 'mkdir -p /var/lib/sops-nix'
+scp /tmp/vasher-sops-age.txt root@vasher.local.ryk.sh:/var/lib/sops-nix/key.txt
 ssh root@vasher.local.ryk.sh 'chmod 700 /var/lib/sops-nix && chmod 400 /var/lib/sops-nix/key.txt && nixos-rebuild switch --flake github:rykugur/dotfiles#vasher'
 ```
 
