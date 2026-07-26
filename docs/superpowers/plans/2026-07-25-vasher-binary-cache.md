@@ -48,8 +48,6 @@
 - Create: `modules/hosts/vasher/_role.nix`
 - Create: `modules/hosts/vasher/_platform-lxc.nix`
 - Create: `modules/hosts/vasher/default.nix`
-- Create: `modules/hosts/vasher/secrets.yaml`
-- Create: `modules/hosts/vasher/cache-signing-key.pub`
 
 **Interfaces:**
 - Produces: `nixosConfigurations.vasher` for later image and deployment tasks.
@@ -94,7 +92,7 @@ nixos-generators = {
 
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
+      experimental-features = "nix-command flakes pipe-operators";
       trusted-users = [ "root" "vasher" ];
       auto-optimise-store = true;
       substituters = [
@@ -148,9 +146,9 @@ nixos-generators = {
 }
 ```
 
-- [ ] **Step 4: Create an encrypted-empty secrets file and register the host**
+- [ ] **Step 4: Register the host**
 
-Create `modules/hosts/vasher/secrets.yaml` using `sops` after Task 3 creates the age recipient. Then create `modules/hosts/vasher/default.nix`:
+Create `modules/hosts/vasher/default.nix`:
 
 ```nix
 { inputs, self, ... }:
@@ -161,8 +159,6 @@ Create `modules/hosts/vasher/secrets.yaml` using `sops` after Task 3 creates the
       self.modules.nixos.nix-defaults
       ./_role.nix
       ./_platform-lxc.nix
-      self.modules.nixos.vasher-cache
-      self.modules.nixos.vasher-prebuild
     ];
     specialArgs = { inherit inputs; };
   };
