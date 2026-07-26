@@ -57,6 +57,11 @@
   };
 
   networking.firewall.enable = true;
+  ryk.vasherCache = {
+    enable = true;
+    serve = true;
+  };
+
   environment.systemPackages = with pkgs; [ git jq ];
   system.stateVersion = "24.11";
 }
