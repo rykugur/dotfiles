@@ -43,27 +43,37 @@ hint:
 hint: 	git branch -m <name>
 hint:
 hint: Disable this message with "git config set advice.defaultBranchName false"
-To /tmp/tmp.uA8mKTOXB0/remote.git
+To /tmp/tmp.LsN8L4cxKl/remote.git
  * [new branch]      master -> master
-Cloning into '/tmp/tmp.uA8mKTOXB0/checkout'...
+Cloning into '/tmp/tmp.LsN8L4cxKl/checkout'...
 done.
+To /tmp/tmp.LsN8L4cxKl/remote.git
+ * [new branch]      HEAD -> cache-bump
+From /tmp/tmp.LsN8L4cxKl/remote
+ * [new branch]      cache-bump -> origin/cache-bump
 vasher-promote: checkout must be clean
 Switched to a new branch 'feature'
 vasher-promote: checkout must be on master
 Switched to branch 'master'
-To /tmp/tmp.uA8mKTOXB0/remote.git
+To /tmp/tmp.LsN8L4cxKl/remote.git
+ - [deleted]         cache-bump
+Fetching origin...
+From /tmp/tmp.LsN8L4cxKl/remote
+ - [deleted]         (none)     -> origin/cache-bump
+vasher-promote: origin/cache-bump does not exist
+To /tmp/tmp.LsN8L4cxKl/remote.git
  * [new branch]      HEAD -> cache-bump
 Fetching origin...
-From /tmp/tmp.uA8mKTOXB0/remote
+From /tmp/tmp.LsN8L4cxKl/remote
  * [new branch]      cache-bump -> origin/cache-bump
 Fast-forwarding master to cache-bump...
-Updating ea57dde..7a55028
+Updating 2ae1118..cf6fdf4
 Fast-forward
  file | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 Pushing master...
-To /tmp/tmp.uA8mKTOXB0/remote.git
-   ea57dde..7a55028  master -> master
+To /tmp/tmp.LsN8L4cxKl/remote.git
+   2ae1118..cf6fdf4  master -> master
 Switching NixOS host jezrien...
 ```
 
