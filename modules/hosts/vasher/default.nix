@@ -1,5 +1,7 @@
 { inputs, self, ... }:
 {
+  imports = [ ./_image.nix ];
+
   flake.nixosConfigurations.vasher = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
