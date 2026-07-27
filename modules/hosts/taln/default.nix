@@ -21,6 +21,7 @@ in
       self.modules.darwin.fonts
       self.modules.darwin.stylix
       self.modules.darwin.aerospace
+      self.modules.darwin.dusty-nfs
 
       # home-manager config
       {
