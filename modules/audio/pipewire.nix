@@ -133,6 +133,22 @@
                   "resample.quality" = 1;
                 };
               };
+              pipewire-pulse."93-starcitizen-buffer"."stream.rules" = [
+                {
+                  matches = [
+                    {
+                      "application.name" = "Star Citizen";
+                      "application.process.binary" = "wine64-preloader";
+                      "media.class" = "Stream/Output/Audio";
+                    }
+                  ];
+                  actions."update-props" = {
+                    # Decouple SC's load-time audio production from the 256-frame
+                    # hardware cycle without increasing latency for other clients.
+                    "node.latency" = "1024/48000";
+                  };
+                }
+              ];
             };
         };
 
