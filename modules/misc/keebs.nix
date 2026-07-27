@@ -4,19 +4,20 @@
     { pkgs, ... }:
     let
       madnoodle-micro-pad = pkgs.fetchurl {
-        url =
-          "https://github.com/The-Mad-Noodle/Mad-Noodle-Via-Support/releases/download/v.2.0/noodlepad_micro.json";
+        url = "https://github.com/The-Mad-Noodle/Mad-Noodle-Via-Support/releases/download/v2.1/noodlepad_micro.json";
         sha256 = "sha256-F6AxJcqBnNnIr18WvPEQ5O1RUQelUHPbCiXUq1jhRLM=";
       };
       madnoodle-udon13-v2 = pkgs.fetchurl {
-        url =
-          "https://github.com/The-Mad-Noodle/Mad-Noodle-Via-Support/releases/download/v2.0/udon13v2.json";
+        url = "https://github.com/The-Mad-Noodle/Mad-Noodle-Via-Support/releases/download/v2.0/udon13v2.json";
         sha256 = "sha256-YS+QToYqFOQGUwn7Im/hSa+woNb0EHgvgavdEDpnDRU=";
       };
     in
     {
       home = {
-        packages = [ pkgs.qmk pkgs.wootility ];
+        packages = [
+          pkgs.qmk
+          pkgs.wootility
+        ];
 
         file = {
           ".via-config-files/noodlepad-micro.json" = {
