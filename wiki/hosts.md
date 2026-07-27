@@ -58,8 +58,8 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 - **Retention**: five successful closures under `/var/lib/vasher/gcroots`
 - **Resources**: CT 200 uses 4 cores, 12 GiB RAM, and 2 GiB swap. Vasher Nix limits builds to one derivation with four build cores (`max-jobs = 1`, `cores = 4`).
 - **Deploy**: `ssh root@vasher.local.ryk.sh 'nixos-rebuild switch --refresh --flake github:rykugur/dotfiles#vasher'` applies the role without starting a candidate.
-- **Verify**: `ssh root@vasher.local.ryk.sh 'nix config show | grep -E "^(max-jobs|cores) ="'` reports `max-jobs = 1` and `cores = 4`; `free -h` shows the CT envelope.
-- **Run/recover**: start a detached candidate with `systemctl start --no-block vasher-prebuild-candidate.service`; from the Proxmox host, stop it with `pct exec 200 -- /run/current-system/sw/bin/systemctl stop vasher-prebuild-candidate.service` if memory pressure threatens the host.
+- **Verify**: `ssh root@vasher.local.ryk.sh 'nix config show | grep -E "^(max-jobs|cores) ="'` reports `max-jobs = 1` and `cores = 4`; `ssh root@vasher.local.ryk.sh 'free -h'` shows the CT envelope.
+- **Run/recover**: start a detached candidate with `ssh root@vasher.local.ryk.sh 'systemctl start --no-block vasher-prebuild-candidate.service'`; from the Proxmox host, stop it with `pct exec 200 -- /run/current-system/sw/bin/systemctl stop vasher-prebuild-candidate.service` if memory pressure threatens the host.
 - **Migration**: retain the role module and replace the LXC platform module with bare-metal hardware, filesystem, bootloader, and networking configuration.
 
 ## nixy (test container)
