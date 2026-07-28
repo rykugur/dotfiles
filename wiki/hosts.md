@@ -46,6 +46,7 @@ Jezrien is the "full fat" machine where most new modules are proven.
   - No heavy Linux gaming stack or VFIO
   - Different terminal / browser preferences sometimes
 - **Secrets**: `modules/hosts/taln/secrets.yaml`
+- **NFS**: mounts the `dusty-nfs` TrueNAS share on-demand at `~/Documents/dusty-nfs` via `self.modules.darwin.dusty-nfs` (macOS autofs — see [modules.md](modules.md#dusty-nfs-nfs-automount)).
 
 Taln demonstrates that the dendritic + groups approach gives near-identical experiences across OSes.
 

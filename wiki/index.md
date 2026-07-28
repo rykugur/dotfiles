@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-07-12 (default-shell feature — `ryk.defaultShell` — ingested)
+Last major update: 2026-07-27 (dusty-nfs autofs mount on taln — darwin — ingested)
 
 ---
 

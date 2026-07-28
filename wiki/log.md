@@ -70,6 +70,16 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Primary artifacts: `docs/superpowers/specs/2026-07-10-default-shell-design.md` and `docs/superpowers/plans/2026-07-10-default-shell.md`.
 - Open follow-up (not done): `modules/ai/herdr.nix:11` `terminal.default_shell = "nu"` is a separate hardcoded spot that could also follow the option — left as a user judgment call.
 
+## [2026-07-27] ingest | dusty-nfs autofs mount on taln (darwin)
+
+- Implemented the Darwin case the 2026-06-12 design had deferred: `modules/misc/dusty-nfs.nix` now also defines `flake.modules.darwin.dusty-nfs`, mounting the TrueNAS `dusty-nfs` share on-demand at `~/Documents/dusty-nfs` via macOS autofs (direct map `/etc/auto_dusty_nfs` → neutral mountpoint `/System/Volumes/Data/mnt/dusty-nfs`, `/etc/auto_master` splice in `postActivation`, home-manager `mkOutOfStoreSymlink`). Wired into `modules/hosts/taln/default.nix`.
+- **Blocker found + fixed (separate commit):** `modules/ai/herdr.nix`'s `installHerdrOmpIntegration` home-manager activation ran `herdr integration install omp`, which exits non-zero when `~/.omp/agent/extensions` is missing. Under `set -e` that aborted the *entire* nix-darwin activation before any `postActivation` step — silently skipping the NFS splice (and everything else after home-manager). Fix: `mkdir -p` the extensions dir before the install. This was failing every `darwin-rebuild switch` on taln, not just NFS.
+- Also cleaned up a pre-existing manual `/etc/fstab` NFSv3 entry (IP-based) for the same share that macOS's built-in `/- -static` map was auto-mounting at `/System/Volumes/Data/mnt/default_pool/dusty-nfs` — removed so there is one declarative mechanism.
+- Design decision: the darwin variant inlines its 3-line home-manager symlink rather than splitting into a separate `flake.modules.homeManager.dusty-nfs` (YAGNI — Darwin-only, no cross-host reuse).
+- Updated [modules.md](modules.md) (new "dusty-nfs (NFS automount)" section) and [hosts.md](hosts.md) (taln NFS bullet).
+- Primary artifacts: `docs/superpowers/specs/2026-07-27-dusty-nfs-darwin-design.md`, `docs/superpowers/plans/2026-07-27-dusty-nfs-darwin.md`.
+- Deferred: off-LAN graceful-failure check (validated on-LAN only; `soft,timeo=50` set).
+
 ---
 
 

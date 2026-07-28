@@ -111,6 +111,34 @@ Note: `ryk.defaultShell` and `ryk.username` are scalar **config-value** options
 (plain `mkOption`, not activation toggles) in the `ryk.*` namespace declared in
 `modules/base/meta-options.nix` and sibling NixOS modules.
 
+## dusty-nfs (NFS automount)
+
+`modules/misc/dusty-nfs.nix` mounts the TrueNAS share
+`truenas.local.ryk.sh:/mnt/default_pool/dusty-nfs` (NFSv4) on-demand, one module
+registering **two platform variants**:
+
+- **`flake.modules.nixos.dusty-nfs`** (jezrien) — systemd automount
+  (`x-systemd.automount` + `noauto`) at `/mnt/dusty-nfs`. Mounts on first access,
+  idle-unmounts, fails fast (`soft`, `timeo`) so an unreachable server never
+  blocks boot or hangs `ls`.
+- **`flake.modules.darwin.dusty-nfs`** (taln) — macOS **autofs**. `environment.etc`
+  writes a direct map `/etc/auto_dusty_nfs` pointing at a neutral data-volume
+  mountpoint `/System/Volumes/Data/mnt/dusty-nfs`; a `postActivation` script
+  idempotently splices `/-  /etc/auto_dusty_nfs` into macOS's `/etc/auto_master`
+  and runs `automount -vc`; a home-manager `mkOutOfStoreSymlink` exposes it at
+  `~/Documents/dusty-nfs`. On-demand autofs keeps taln responsive off-LAN (where
+  `*.local.ryk.sh` won't resolve). The neutral path avoids TCC prompts on
+  `~/Documents` and the read-only system volume (`/mnt` would need
+  `synthetic.conf` + reboot).
+
+Gotcha learned during the taln rollout: the darwin `postActivation` splice runs
+*late* in `activate` (under `set -e`, after home-manager). A failing home-manager
+activation script (`herdr integration install omp` — since fixed) aborted
+activation before the splice ran, so `/etc/auto_master` was silently never
+updated while the `environment.etc` map file (written earlier) existed —
+misleadingly looking half-applied. See
+`docs/superpowers/specs/2026-07-27-dusty-nfs-darwin-design.md`.
+
 ## AI modules — special because meta
 
 `modules/ai/` is one of the most interesting parts of the repo:
