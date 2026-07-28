@@ -22,13 +22,15 @@
           TARGET_ATTR=${lib.escapeShellArg cfg.targetAttr}
           CACHE_BRANCH=${lib.escapeShellArg cfg.cacheBranch}
           KEEP_ROOTS=${toString cfg.keepRoots}
+          EXCLUDED_PACKAGES=${lib.escapeShellArg (builtins.toJSON cfg.excludedPackages)}
           mode=$1
           status=/var/lib/vasher/last-build.json
           record_failure() {
             local exit_code=$?
             trap - ERR
             jq -n --arg mode "$mode" --argjson exitCode "$exit_code" \
-              '{status:"failed",mode:$mode,exitCode:$exitCode}' > "$status" || true
+              --argjson excludedPackages "$EXCLUDED_PACKAGES" \
+              '{status:"failed",mode:$mode,exitCode:$exitCode,excludedPackages:$excludedPackages}' > "$status" || true
             exit "$exit_code"
           }
           trap record_failure ERR
@@ -85,7 +87,8 @@
           nix-collect-garbage
 
           jq -n --arg mode "$mode" --arg out "$out" --arg revision "$(git -C "$worktree" rev-parse HEAD)" \
-            '{status:"success",mode:$mode,output:$out,revision:$revision}' > "$status"
+            --argjson excludedPackages "$EXCLUDED_PACKAGES" \
+            '{status:"success",mode:$mode,output:$out,revision:$revision,excludedPackages:$excludedPackages}' > "$status"
         '';
       };
       serviceConfig = {
@@ -120,6 +123,11 @@
         targetAttr = lib.mkOption {
           type = lib.types.str;
           default = "nixosConfigurations.jezrien.config.system.build.toplevel";
+        };
+        excludedPackages = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = "Package names intentionally excluded from the prebuilt closure.";
         };
         cacheBranch = lib.mkOption {
           type = lib.types.str;

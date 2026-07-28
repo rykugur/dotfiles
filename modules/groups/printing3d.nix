@@ -1,14 +1,20 @@
 { ... }:
 {
   flake.modules.homeManager._3dp =
-    { pkgs, ... }:
+    { config, lib, pkgs, ... }:
     {
-      home.packages = with pkgs; [
-        freecad-wayland
+      options.ryk.printing3d.enableBambuStudio = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Whether to install Bambu Studio.";
+      };
 
-        bambu-studio
-        orca-slicer
-        qidi-slicer-bin
-      ];
+      config.home.packages = with pkgs;
+        [
+          freecad-wayland
+          orca-slicer
+          qidi-slicer-bin
+        ]
+        ++ lib.optionals config.ryk.printing3d.enableBambuStudio [ bambu-studio ];
     };
 }

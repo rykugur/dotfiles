@@ -55,7 +55,11 @@
     enable = true;
     serve = true;
   };
-  ryk.vasherPrebuild.enable = true;
+  ryk.vasherPrebuild = {
+    enable = true;
+    targetAttr = "nixosConfigurations.jezrien-prebuild.config.system.build.toplevel";
+    excludedPackages = [ "bambu-studio" ];
+  };
 
   environment.systemPackages = with pkgs; [ git jq ];
   system.stateVersion = "24.11";

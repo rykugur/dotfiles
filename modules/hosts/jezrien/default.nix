@@ -9,9 +9,7 @@ let
   # TODO: this can be removed once all modules are migrated
   username = "dusty";
   hmModules = config.flake.modules.homeManager;
-in
-{
-  flake.nixosConfigurations.jezrien = inputs.nixpkgs.lib.nixosSystem {
+  mkJezrien = extraModules: inputs.nixpkgs.lib.nixosSystem {
     modules = [
       # TODO: migrate desktop legacy modules to dendritic
       ../../../legacy-modules/desktop
@@ -192,7 +190,7 @@ in
             };
         };
       }
-    ];
+    ] ++ extraModules;
     specialArgs = {
       inherit
         inputs
@@ -202,5 +200,15 @@ in
       outputs = inputs.self;
       hostname = "jezrien";
     };
+  };
+in
+{
+  flake.nixosConfigurations = {
+    jezrien = mkJezrien [ ];
+    jezrien-prebuild = mkJezrien [
+      {
+        home-manager.users.${username}.ryk.printing3d.enableBambuStudio = false;
+      }
+    ];
   };
 }
