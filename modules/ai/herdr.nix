@@ -30,7 +30,11 @@
       };
 
       # Keep the OMP lifecycle extension in lockstep with the configured Herdr binary.
+      # `herdr integration install omp` errors out if the extensions dir is missing,
+      # which aborts the whole activation under `set -e`; create it first so the
+      # integration installs cleanly on hosts where omp hasn't been run yet.
       home.activation.installHerdrOmpIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run mkdir -p ${config.home.homeDirectory}/.omp/agent/extensions
         run ${config.programs.herdr.package}/bin/herdr integration install omp
       '';
     };
