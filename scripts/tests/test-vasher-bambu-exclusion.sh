@@ -27,3 +27,9 @@ for package in freecad orca-slicer qidi-slicer; do
 done
 
 nix eval "$repo_root#nixosConfigurations.jezrien-prebuild.config.system.build.toplevel.drvPath" --raw >/dev/null
+
+target_attr=$(nix eval "$repo_root#nixosConfigurations.vasher.config.ryk.vasherPrebuild.targetAttr" --raw)
+test "$target_attr" = 'nixosConfigurations.jezrien-prebuild.config.system.build.toplevel'
+
+excluded_packages=$(nix eval "$repo_root#nixosConfigurations.vasher.config.ryk.vasherPrebuild.excludedPackages" --json)
+test "$excluded_packages" = '["bambu-studio"]'
