@@ -9,6 +9,7 @@
         runtimeInputs = with pkgs; [
           bash
           coreutils
+          curl
           git
           jq
           nix
@@ -57,14 +58,18 @@
 
           if [[ $mode == candidate ]]; then
             nix flake update --flake "$worktree"
+            (
+              cd "$worktree"
+              ${pkgs.bash}/bin/bash ${../ai/oh-my-pi/update-omp.sh}
+            )
           fi
 
           out=$(nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
           if [[ $mode == candidate ]]; then
-            git -C "$worktree" add flake.lock
+            git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
             if ! git -C "$worktree" diff --cached --quiet; then
               git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
-                commit -m "chore: nightly flake.lock update ($(date -I))"
+                commit -m "chore: nightly flake.lock and OMP update ($(date -I))"
             fi
           fi
 
