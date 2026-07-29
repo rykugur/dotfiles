@@ -53,9 +53,10 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 ## vasher (LAN binary cache)
 
 - **Platform**: `x86_64-linux`, NixOS, initially a Proxmox LXC
-- **Purpose**: prebuild Jezrien's current `master` closure and a nightly updated-lock candidate; serve retained signed paths over `http://vasher.local.ryk.sh:5000/`
+- **Purpose**: prebuild Jezrien's current `master` closure and a nightly candidate that updates both flake inputs and OMP; serve retained signed paths over `http://vasher.local.ryk.sh:5000/`
 - **Not a remote builder**: Jezrien only substitutes cache paths; it never delegates builds over SSH.
-- **Promotion**: `git fetch origin && git merge --ff-only origin/cache-bump && git push origin master && sudo nixos-rebuild switch --flake .#jezrien`
+- **Promotion**: on a clean `master` checkout, run `scripts/vasher-promote.sh`. It fast-forwards only to `origin/cache-bump`, pushes `master`, then runs `sudo nh os switch .#<local-hostname>`.
+- **OMP updates**: only the nightly candidate runs `update-omp.sh`. A successful reduced-closure build publishes its tested `flake.lock` and `modules/ai/oh-my-pi/release.json` together on `cache-bump`; the normal promotion script advances both.
 - **Retention**: five successful closures under `/var/lib/vasher/gcroots`
 - **Resources**: CT 200 uses 4 cores, 12 GiB RAM, and 2 GiB swap. Vasher Nix limits builds to one derivation with four build cores (`max-jobs = 1`, `cores = 4`).
 - **Deploy**: `ssh root@vasher.local.ryk.sh 'nixos-rebuild switch --refresh --flake github:rykugur/dotfiles#vasher'` applies the role without starting a candidate.
