@@ -80,9 +80,9 @@
           touch -h "$root_path"
 
           if [[ $mode == candidate ]]; then
-            git -C "$worktree" push --force-with-lease origin "HEAD:$CACHE_BRANCH" || {
+            git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH" || {
               git -C "$worktree" fetch origin "$CACHE_BRANCH:refs/remotes/origin/$CACHE_BRANCH"
-              git -C "$worktree" push --force-with-lease origin "HEAD:$CACHE_BRANCH"
+              git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH"
             }
           fi
 
