@@ -26,4 +26,4 @@ git push origin master
 
 host=$(hostname)
 printf 'Switching NixOS host %s...\n' "$host"
-sudo nh os switch ".#$host"
+nh os switch ".#$host"
