@@ -19,7 +19,7 @@ def --env dots [--edit (-e) --local (-l)] {
 }
 
 def is-os [os: string] {
-  let os_lowercase = ($nu.os-info.name | str downcase)
+  let os_lowercase = ($nu.os-info.name | str lowercase)
   match $os {
     "linux" => ($os_lowercase == "linux"),
     "macos" => ($os_lowercase == "macos"),
