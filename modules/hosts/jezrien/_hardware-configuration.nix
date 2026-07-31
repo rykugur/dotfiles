@@ -11,19 +11,19 @@
   boot.kernelParams = [ "nvme_core.default_ps_limit=0" ];
 
   fileSystems."/" = {
-    device = "/dev/nvme0n1p2";
+    device = "/dev/disk/by-uuid/f7490b2f-459c-490c-af7e-a4eecace9a30";
     fsType = "btrfs";
     options = [ "subvol=root" "compress=zstd" ];
   };
 
   fileSystems."/home" = {
-    device = "/dev/nvme0n1p2";
+    device = "/dev/disk/by-uuid/f7490b2f-459c-490c-af7e-a4eecace9a30";
     fsType = "btrfs";
     options = [ "subvol=home" "compress=zstd" ];
   };
 
   fileSystems."/nix" = {
-    device = "/dev/nvme0n1p2";
+    device = "/dev/disk/by-uuid/f7490b2f-459c-490c-af7e-a4eecace9a30";
     fsType = "btrfs";
     options = [ "subvol=nix" "compress=zstd" "noatime" ];
   };
