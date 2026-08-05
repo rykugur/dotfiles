@@ -41,6 +41,9 @@
     group = "vasher";
     home = "/var/lib/vasher";
     createHome = true;
+    # Caddy can traverse to its explicitly routed dashboard files without
+    # gaining permission to list Vasher's state or repository.
+    homeMode = "0711";
     shell = pkgs.bashInteractive;
   };
 
