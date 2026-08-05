@@ -29,6 +29,7 @@
           base_revision=
           candidate_revision=
           out=
+          root_created=false
           status_tmp="$status.$$"
           lock_acquired=false
 
@@ -133,12 +134,14 @@
           root_path="$roots/''${out##*/}"
           if [[ ! -e "$root_path" ]]; then
             nix-store --add-root "$root_path" --indirect --realise "$out"
+            root_created=true
           fi
           touch -h "$root_path"
 
 
           git -C "$repo" fetch origin master
           if [[ $(git -C "$repo" rev-parse origin/master) != "$base_revision" ]]; then
+            [[ $root_created == true ]] && rm -f "$root_path"
             prune_roots
             write_status stale null
             exit 0
