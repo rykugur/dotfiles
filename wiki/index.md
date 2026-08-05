@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-07-27 (dusty-nfs autofs mount on taln — darwin — ingested)
+Last major update: 2026-07-30 (Vasher status dashboard and operational entity page — ingested)
 
 ---
 
@@ -25,6 +25,10 @@ Last major update: 2026-07-27 (dusty-nfs autofs mount on taln — darwin — ing
 - [Modules](modules.md) — Inventory and mental model of the modules/ tree, registration pattern, groups vs legacy roles, how to add a module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, dendritic conversion timeline, where to find the primary design artifacts.
 - [AI Agents](ai-agents.md) — First-class declarative provisioning of Claude Code, Codex, opencode, Pi, Hermes. MCP centralization, skills (including this llm-wiki), mempalace relationship, self-referentiality.
+
+## Entities
+
+- [Vasher](entities/vasher.md) — LAN-only signed binary cache and serialized Jezrien prebuilder: candidate freshness/promotion boundary, resource envelope, bounded status files, Caddy-served React work ledger, and deployment checks. (sources: Vasher host and role modules)
 
 ## Schema & Navigation
 

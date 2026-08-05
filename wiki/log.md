@@ -80,6 +80,12 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Primary artifacts: `docs/superpowers/specs/2026-07-27-dusty-nfs-darwin-design.md`, `docs/superpowers/plans/2026-07-27-dusty-nfs-darwin.md`.
 - Deferred: off-LAN graceful-failure check (validated on-LAN only; `soft,timeo=50` set).
 
+## [2026-07-30] ingest | Vasher cache and status dashboard
+
+- Created [entities/vasher.md](entities/vasher.md), consolidating the LXC’s cache/prebuild role, the serialized freshness and promotion boundary, reduced Jezrien target, resource envelope, retention, deployment, and operator commands.
+- Recorded the static React work ledger: Catppuccin Mocha styling, Caddy’s LAN-only port `5080`, three curated read-only endpoints, five-second polling, and bounded status/history/log artifacts. No Node service, SSR, journal API, remote build delegation, or dashboard writes were introduced.
+- Updated [hosts.md](hosts.md) with the dashboard entry point and entity link; updated [index.md](index.md) with the new entity catalog entry and last-major-update date.
+
 ---
 
 

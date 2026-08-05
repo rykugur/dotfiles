@@ -54,6 +54,7 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 
 - **Platform**: `x86_64-linux`, NixOS, initially a Proxmox LXC
 - **Purpose**: prebuild Jezrien's current `master` closure and a nightly candidate that updates both flake inputs and OMP; serve retained signed paths over `http://vasher.local.ryk.sh:5000/`
+- **Status**: [Vasher work ledger](entities/vasher.md#status-dashboard) is a LAN-only Catppuccin Mocha dashboard at `http://vasher.local.ryk.sh:5080/`; it polls curated prebuild state, bounded history, and a 200-line log tail every five seconds.
 - **Not a remote builder**: Jezrien only substitutes cache paths; it never delegates builds over SSH.
 - **Promotion**: on a clean `master` checkout, run `scripts/vasher-promote.sh`. It fast-forwards only to `origin/cache-bump`, pushes `master`, then runs `sudo nh os switch .#<local-hostname>`.
 - **OMP updates**: only the nightly candidate runs `update-omp.sh`. A successful reduced-closure build publishes its tested `flake.lock` and `modules/ai/oh-my-pi/release.json` together on `cache-bump`; the normal promotion script advances both.
@@ -64,6 +65,7 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 - **Run/recover**: start a detached candidate with `ssh root@vasher.local.ryk.sh 'systemctl start --no-block vasher-prebuild-candidate.service'`; from the Proxmox host, stop it with `pct exec 200 -- /run/current-system/sw/bin/systemctl stop vasher-prebuild-candidate.service` if memory pressure threatens the host.
 Vasher prebuilds `nixosConfigurations.jezrien-prebuild`, which intentionally omits `bambu-studio`. A successful `last-build.json` must report `"excludedPackages":["bambu-studio"]`; Jezrien builds that package locally when promoting `cache-bump`.
 - **Migration**: retain the role module and replace the LXC platform module with bare-metal hardware, filesystem, bootloader, and networking configuration.
+- **Details**: [Vasher](entities/vasher.md) documents the candidate lifecycle, promotion boundary, dashboard, and operational checks.
 
 ## nixy (test container)
 
