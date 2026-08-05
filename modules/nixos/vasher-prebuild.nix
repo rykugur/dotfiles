@@ -29,10 +29,18 @@
           base_revision=
           candidate_revision=
           out=
+          status_tmp="$status.$$"
+          lock_acquired=false
+
+          cleanup_status_tmp() {
+            rm -f "$status_tmp"
+          }
+          trap cleanup_status_tmp EXIT
 
           write_status() {
             local state=$1
             local exit_code=$2
+            rm -f "$status_tmp"
             jq -n \
               --arg state "$state" \
               --arg mode "$mode" \
@@ -49,14 +57,14 @@
                 output: $output,
                 excludedPackages: $excludedPackages
               } + if $exitCode == null then {} else { exitCode: $exitCode } end' \
-              > "$status.tmp"
-            mv "$status.tmp" "$status"
+              > "$status_tmp"
+            mv "$status_tmp" "$status"
           }
 
           record_failure() {
             local exit_code=$?
             trap - ERR
-            write_status failed "$exit_code" || true
+            [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
             exit "$exit_code"
           }
           trap record_failure ERR
@@ -64,7 +72,7 @@
           record_interruption() {
             local exit_code=$1
             trap - ERR INT TERM
-            write_status failed "$exit_code" || true
+            [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
             exit "$exit_code"
           }
           trap 'record_interruption 130' INT
@@ -72,8 +80,8 @@
 
           exec 9>/var/lib/vasher/prebuild.lock
           case $mode in
-            refresh) flock -n 9 || exit 0 ;;
-            candidate) flock 9 ;;
+            refresh) flock -n 9 || exit 0; lock_acquired=true ;;
+            candidate) flock 9; lock_acquired=true ;;
             *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
           esac
 
@@ -128,10 +136,10 @@
           fi
           touch -h "$root_path"
 
-          prune_roots
 
           git -C "$repo" fetch origin master
           if [[ $(git -C "$repo" rev-parse origin/master) != "$base_revision" ]]; then
+            prune_roots
             write_status stale null
             exit 0
           fi
@@ -140,6 +148,7 @@
             git -C "$worktree" fetch origin "$CACHE_BRANCH:refs/remotes/origin/$CACHE_BRANCH"
             git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH"
           }
+          prune_roots
 
           nix-collect-garbage
 
