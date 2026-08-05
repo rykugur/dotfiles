@@ -4,6 +4,22 @@
     { config, lib, pkgs, ... }:
     let
       cfg = config.ryk.vasherPrebuild;
+      runtime = pkgs.writeTextFile {
+        name = "vasher-prebuild.sh";
+        executable = true;
+        text = builtins.readFile ./vasher-prebuild.sh;
+      };
+      dashboard = pkgs.buildNpmPackage {
+        pname = "vasher-dashboard";
+        version = "1.0.0";
+        src = ./vasher-dashboard;
+        npmDepsHash = "sha256-Lt2zzqo4LIbO93T7XZbVAVJ9/foyXopE5wpIixxVmjM=";
+        npmBuildScript = "build";
+        installPhase = ''
+          mkdir -p "$out/share/vasher-dashboard"
+          cp -r dist/. "$out/share/vasher-dashboard/"
+        '';
+      };
       prebuild = pkgs.writeShellApplication {
         name = "vasher-prebuild";
         runtimeInputs = with pkgs; [
@@ -17,145 +33,13 @@
           util-linux
         ];
         text = ''
-          set -Eeuo pipefail
-
-          REPO_URL=${lib.escapeShellArg cfg.repoUrl}
-          TARGET_ATTR=${lib.escapeShellArg cfg.targetAttr}
-          CACHE_BRANCH=${lib.escapeShellArg cfg.cacheBranch}
-          KEEP_ROOTS=${toString cfg.keepRoots}
-          EXCLUDED_PACKAGES=${lib.escapeShellArg (builtins.toJSON cfg.excludedPackages)}
-          mode=$1
-          status=/var/lib/vasher/last-build.json
-          base_revision=
-          candidate_revision=
-          out=
-          root_created=false
-          status_tmp="$status.$$"
-          lock_acquired=false
-
-          cleanup_status_tmp() {
-            rm -f "$status_tmp"
-          }
-          trap cleanup_status_tmp EXIT
-
-          write_status() {
-            local state=$1
-            local exit_code=$2
-            rm -f "$status_tmp"
-            jq -n \
-              --arg state "$state" \
-              --arg mode "$mode" \
-              --arg baseRevision "$base_revision" \
-              --arg revision "$candidate_revision" \
-              --arg output "$out" \
-              --argjson exitCode "$exit_code" \
-              --argjson excludedPackages "$EXCLUDED_PACKAGES" \
-              '{
-                state: $state,
-                mode: $mode,
-                baseRevision: $baseRevision,
-                revision: $revision,
-                output: $output,
-                excludedPackages: $excludedPackages
-              } + if $exitCode == null then {} else { exitCode: $exitCode } end' \
-              > "$status_tmp"
-            mv "$status_tmp" "$status"
-          }
-
-          record_failure() {
-            local exit_code=$?
-            trap - ERR
-            [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
-            exit "$exit_code"
-          }
-          trap record_failure ERR
-
-          record_interruption() {
-            local exit_code=$1
-            trap - ERR INT TERM
-            [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
-            exit "$exit_code"
-          }
-          trap 'record_interruption 130' INT
-          trap 'record_interruption 143' TERM
-
-          exec 9>/var/lib/vasher/prebuild.lock
-          case $mode in
-            refresh) flock -n 9 || exit 0; lock_acquired=true ;;
-            candidate) flock 9; lock_acquired=true ;;
-            *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
-          esac
-
-          repo=/var/lib/vasher/repo
-          roots=/var/lib/vasher/gcroots
-          mkdir -p "$roots"
-          [[ -d "$repo/.git" ]] || git clone "$REPO_URL" "$repo"
-          git -C "$repo" fetch --prune origin
-          base_revision=$(git -C "$repo" rev-parse origin/master)
-
-          candidate_covers_base() {
-            git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$CACHE_BRANCH" &&
-              git -C "$repo" merge-base --is-ancestor "$base_revision" "origin/$CACHE_BRANCH"
-          }
-
-          prune_roots() {
-            # shellcheck disable=SC2012
-            mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
-            for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
-          }
-
-          if [[ $mode == refresh ]] && candidate_covers_base; then
-            write_status idle null
-            exit 0
-          fi
-
-          write_status building null
-          worktree=/var/lib/vasher/worktrees/"$mode"
-          if [[ ! -e "$worktree/.git" ]]; then
-            mkdir -p "$(dirname "$worktree")"
-            git -C "$repo" worktree add --detach "$worktree" "$base_revision"
-          fi
-          git -C "$worktree" reset --hard "$base_revision"
-
-          nix flake update --flake "$worktree"
-          (
-            cd "$worktree"
-            ${pkgs.bash}/bin/bash ${../ai/oh-my-pi/update-omp.sh}
-          )
-
-          out=$(nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
-          git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
-          if ! git -C "$worktree" diff --cached --quiet; then
-            git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
-              commit -m "chore: refreshed flake.lock and OMP update ($(date -I))"
-          fi
-          candidate_revision=$(git -C "$worktree" rev-parse HEAD)
-
-          root_path="$roots/''${out##*/}"
-          if [[ ! -e "$root_path" ]]; then
-            nix-store --add-root "$root_path" --indirect --realise "$out"
-            root_created=true
-          fi
-          touch -h "$root_path"
-
-
-          git -C "$repo" fetch origin master
-          if [[ $(git -C "$repo" rev-parse origin/master) != "$base_revision" ]]; then
-            [[ $root_created == true ]] && rm -f "$root_path"
-            prune_roots
-            write_status stale null
-            exit 0
-          fi
-
-          git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH" || {
-            git -C "$worktree" fetch origin "$CACHE_BRANCH:refs/remotes/origin/$CACHE_BRANCH"
-            git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH"
-          }
-          prune_roots
-
-          nix-collect-garbage
-
-          write_status success null
+          export REPO_URL=${lib.escapeShellArg cfg.repoUrl}
+          export TARGET_ATTR=${lib.escapeShellArg cfg.targetAttr}
+          export CACHE_BRANCH=${lib.escapeShellArg cfg.cacheBranch}
+          export KEEP_ROOTS=${lib.escapeShellArg (toString cfg.keepRoots)}
+          export EXCLUDED_PACKAGES=${lib.escapeShellArg (builtins.toJSON cfg.excludedPackages)}
+          export OMP_UPDATER=${lib.escapeShellArg ../ai/oh-my-pi/update-omp.sh}
+          exec ${pkgs.bash}/bin/bash ${runtime} "$@"
         '';
       };
       serviceConfig = {
@@ -235,6 +119,32 @@
             RandomizedDelaySec = "10m";
           };
         };
+        services.caddy = {
+          enable = true;
+          virtualHosts."http://:5080".extraConfig = ''
+            handle /api/status.json {
+              rewrite * /status.json
+              root * /var/lib/vasher/dashboard
+              file_server
+            }
+            handle /api/history.json {
+              rewrite * /history.json
+              root * /var/lib/vasher/dashboard
+              file_server
+            }
+            handle /api/log.txt {
+              rewrite * /log.txt
+              root * /var/lib/vasher/dashboard
+              file_server
+            }
+            handle {
+              root * ${dashboard}/share/vasher-dashboard
+              try_files {path} /index.html
+              file_server
+            }
+          '';
+        };
+        networking.firewall.interfaces.eth0.allowedTCPPorts = [ 5080 ];
       };
     };
 }
