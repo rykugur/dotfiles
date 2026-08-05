@@ -61,6 +61,15 @@
           }
           trap record_failure ERR
 
+          record_interruption() {
+            local exit_code=$1
+            trap - ERR INT TERM
+            write_status failed "$exit_code" || true
+            exit "$exit_code"
+          }
+          trap 'record_interruption 130' INT
+          trap 'record_interruption 143' TERM
+
           exec 9>/var/lib/vasher/prebuild.lock
           case $mode in
             refresh) flock -n 9 || exit 0 ;;
@@ -78,6 +87,12 @@
           candidate_covers_base() {
             git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$CACHE_BRANCH" &&
               git -C "$repo" merge-base --is-ancestor "$base_revision" "origin/$CACHE_BRANCH"
+          }
+
+          prune_roots() {
+            # shellcheck disable=SC2012
+            mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
+            for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
           }
 
           if [[ $mode == refresh ]] && candidate_covers_base; then
@@ -113,6 +128,8 @@
           fi
           touch -h "$root_path"
 
+          prune_roots
+
           git -C "$repo" fetch origin master
           if [[ $(git -C "$repo" rev-parse origin/master) != "$base_revision" ]]; then
             write_status stale null
@@ -124,9 +141,6 @@
             git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH"
           }
 
-          # shellcheck disable=SC2012
-          mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
-          for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
           nix-collect-garbage
 
           write_status success null
