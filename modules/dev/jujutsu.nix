@@ -11,6 +11,11 @@
             name = "rykugur";
             email = "rollhax@gmail.com";
           };
+          signing = {
+            behavior = "own";
+            backend = "ssh";
+            key = "~/.ssh/id_ed25519.pub";
+          };
         };
       };
     };
