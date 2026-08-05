@@ -15,8 +15,9 @@ fail() {
 printf '%s\n' 'Fetching origin...'
 git fetch --prune origin
 
-git rev-parse --verify --quiet origin/cache-bump >/dev/null || fail 'origin/cache-bump does not exist'
-git merge-base --is-ancestor HEAD origin/cache-bump || fail 'origin/cache-bump cannot fast-forward master'
+candidate_message="candidate for $(git rev-parse --short HEAD) is rebuilding or unavailable; retry after Vasher refreshes it"
+git rev-parse --verify --quiet origin/cache-bump >/dev/null || fail "$candidate_message"
+git merge-base --is-ancestor HEAD origin/cache-bump || fail "$candidate_message"
 
 printf '%s\n' 'Fast-forwarding master to cache-bump...'
 git merge --ff-only origin/cache-bump
