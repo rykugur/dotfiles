@@ -189,11 +189,11 @@
         };
 
         systemd.services = {
-          vasher-prebuild-master = service "master";
+          vasher-prebuild-refresh = service "refresh";
           vasher-prebuild-candidate = service "candidate";
         };
 
-        systemd.timers.vasher-prebuild-master = {
+        systemd.timers.vasher-prebuild-refresh = {
           wantedBy = [ "timers.target" ];
           timerConfig = {
             OnBootSec = "5m";
