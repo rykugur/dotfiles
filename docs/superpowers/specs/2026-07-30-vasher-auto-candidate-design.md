@@ -13,20 +13,16 @@ Let `master` advance normally while Vasher continuously produces a promotable ca
 - Every refresh runs both `nix flake update` and `modules/ai/oh-my-pi/update-omp.sh` before building.
 - The nightly job forces one refresh even when `master` has not changed.
 - Only one prebuild runs at a time. Multiple `master` changes while one is running collapse into one next refresh of the newest revision.
-- `cache-bump` is published only after the build succeeds and only if `origin/master` still equals the revision captured at the start of that candidate.
-- A stale, running, or failed candidate never changes `master`.
+- Vasher checks `origin/master` again after a successful build and records `stale` instead of publishing when it has already advanced.
+- A stale, running, or failed candidate never changes `master`; `scripts/vasher-promote.sh` is the only promotion path and rejects every candidate that cannot fast-forward it.
 
 ## Candidate states
 
 Vasher persists a small status record under `/var/lib/vasher` containing at least the mode, target `master` revision, candidate revision when available, state (`idle`, `building`, `success`, `failed`, or `stale`), and failure exit code when applicable.
 
-A candidate is promotable only when:
+A candidate is promotable only when current `master` is an ancestor of `origin/cache-bump`. The promotion command enforces this condition after fetching; it never trusts lifecycle state alone.
 
-1. its state is `success`;
-2. its recorded target revision equals current `origin/master`; and
-3. `origin/master` is an ancestor of `origin/cache-bump`.
-
-A completed build whose starting `master` revision is no longer current is recorded as `stale`; it is not published. The next scheduled refresh rebuilds from the newest revision.
+A build whose starting `master` revision is already obsolete at Vasher's final check is recorded as `stale` and not published. A `master` change after that check can leave `cache-bump` temporarily stale, but it remains ineligible for promotion and the next scheduled refresh replaces it.
 
 ## Scheduling
 

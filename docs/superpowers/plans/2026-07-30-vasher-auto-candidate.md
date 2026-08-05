@@ -4,7 +4,7 @@
 
 **Goal:** Keep `cache-bump` automatically rebuilt from current `master` with fresh flake and OMP updates, so promotion stays fast-forward-only without manual candidate maintenance.
 
-**Architecture:** Replace the existing periodic master build with a non-blocking freshness probe. The probe starts a serialized candidate build only when `cache-bump` no longer covers `origin/master`; a nightly forced run retains update cadence during quiet periods. The candidate records machine-readable lifecycle state and publishes only if its captured base revision remains current. Promotion retains its safety check but explains that Vasher is refreshing rather than telling the operator to repair Git history.
+**Architecture:** Replace the existing periodic master build with a non-blocking freshness probe. The probe starts a serialized candidate build only when `cache-bump` no longer covers `origin/master`; a nightly forced run retains update cadence during quiet periods. The candidate records machine-readable lifecycle state and avoids publishing when its base is already obsolete at its final check. Promotion retains its ancestry safety check, so a candidate that becomes stale in the remaining fetch-to-push window is never promoted.
 
 **Tech Stack:** NixOS modules, Bash, systemd timers/services, Git, Nix, jq.
 
