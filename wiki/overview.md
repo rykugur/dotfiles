@@ -11,7 +11,7 @@ related: ["architecture.md", "hosts.md", "ai-agents.md"]
 
 **Swoleflake** is a Nix flake that declaratively manages system and home configurations for multiple machines (NixOS desktops, a MacBook, and test containers) using a modern "dendritic" flake-parts + import-tree architecture, home-manager, and sops-nix for secrets.
 
-It is the personal dotfiles / infrastructure-as-code setup for user `dusty`.
+It is a personal dotfiles / infrastructure-as-code setup for a primary user.
 
 ## What it provides
 

@@ -25,13 +25,13 @@ Steam game downloads on jezrien crawl at **~50–110 Mbps** while a Windows box 
 | Path to Steam CDN (`ord1`) | 11 ms RTT, 0% loss | ✅ excellent |
 | `r8125` driver under live load | 0 drops / retrans / reorder | ✅ clean |
 | Disk write (btrfs zstd:3, incompressible) | 829 MB/s | ✅ fast |
-| DNS | local LAN resolver `10.3.9.5/.6` (= Windows) | ✅ same |
-| Steam library backing store | local NVMe (not the `dusty-nfs` automount) | ✅ n/a |
+| DNS | LAN resolver | ✅ same |
+| Steam library backing store | local NVMe (not the on-demand NFS mount) | ✅ n/a |
 | Steam throttle setting | `DownloadThrottleKbps = 0` | ✅ none |
 
 ## Dead ends (do not retry)
 
-Region change (`CellIDServerOverride 76`→Chicago/`1` — a symptom, not cause), clear download cache (×2), `steam_dev.cfg` HTTP/2 disable (already present), Steam Client Beta (also froze the UI), BBR, NIC-offload toggles, IPv6 disable, dnsmasq. All confirmed useless here — the same list the upstream #13378 reporter exhausted before finding it was client-side.
+Region overrides, clear download cache (×2), HTTP/2 disable, Steam Client Beta, BBR, NIC-offload toggles, IPv6 disable, and local DNS changes were all confirmed useless here. The same upstream issue record reached the same conclusion: the defect is client-side.
 
 ## CDN-blackhole workaround: rejected for jezrien
 
