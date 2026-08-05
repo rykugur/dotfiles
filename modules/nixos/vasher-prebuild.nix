@@ -26,52 +26,86 @@
           EXCLUDED_PACKAGES=${lib.escapeShellArg (builtins.toJSON cfg.excludedPackages)}
           mode=$1
           status=/var/lib/vasher/last-build.json
+          base_revision=
+          candidate_revision=
+          out=
+
+          write_status() {
+            local state=$1
+            local exit_code=$2
+            jq -n \
+              --arg state "$state" \
+              --arg mode "$mode" \
+              --arg baseRevision "$base_revision" \
+              --arg revision "$candidate_revision" \
+              --arg output "$out" \
+              --argjson exitCode "$exit_code" \
+              --argjson excludedPackages "$EXCLUDED_PACKAGES" \
+              '{
+                state: $state,
+                mode: $mode,
+                baseRevision: $baseRevision,
+                revision: $revision,
+                output: $output,
+                excludedPackages: $excludedPackages
+              } + if $exitCode == null then {} else { exitCode: $exitCode } end' \
+              > "$status.tmp"
+            mv "$status.tmp" "$status"
+          }
+
           record_failure() {
             local exit_code=$?
             trap - ERR
-            jq -n --arg mode "$mode" --argjson exitCode "$exit_code" \
-              --argjson excludedPackages "$EXCLUDED_PACKAGES" \
-              '{status:"failed",mode:$mode,exitCode:$exitCode,excludedPackages:$excludedPackages}' > "$status" || true
+            write_status failed "$exit_code" || true
             exit "$exit_code"
           }
           trap record_failure ERR
 
           exec 9>/var/lib/vasher/prebuild.lock
-          if [[ $mode == master ]]; then
-            flock -n 9 || exit 0
-          else
-            flock 9
-          fi
+          case $mode in
+            refresh) flock -n 9 || exit 0 ;;
+            candidate) flock 9 ;;
+            *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
+          esac
 
           repo=/var/lib/vasher/repo
           roots=/var/lib/vasher/gcroots
           mkdir -p "$roots"
           [[ -d "$repo/.git" ]] || git clone "$REPO_URL" "$repo"
-          git -C "$repo" fetch origin master
+          git -C "$repo" fetch --prune origin
+          base_revision=$(git -C "$repo" rev-parse origin/master)
+
+          candidate_covers_base() {
+            git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$CACHE_BRANCH" &&
+              git -C "$repo" merge-base --is-ancestor "$base_revision" "origin/$CACHE_BRANCH"
+          }
+
+          if [[ $mode == refresh ]] && candidate_covers_base; then
+            write_status idle null
+            exit 0
+          fi
+
+          write_status building null
           worktree=/var/lib/vasher/worktrees/"$mode"
           if [[ ! -e "$worktree/.git" ]]; then
             mkdir -p "$(dirname "$worktree")"
-            git -C "$repo" worktree add --detach "$worktree" origin/master
+            git -C "$repo" worktree add --detach "$worktree" "$base_revision"
           fi
-          git -C "$worktree" fetch origin master
-          git -C "$worktree" reset --hard origin/master
+          git -C "$worktree" reset --hard "$base_revision"
 
-          if [[ $mode == candidate ]]; then
-            nix flake update --flake "$worktree"
-            (
-              cd "$worktree"
-              ${pkgs.bash}/bin/bash ${../ai/oh-my-pi/update-omp.sh}
-            )
-          fi
+          nix flake update --flake "$worktree"
+          (
+            cd "$worktree"
+            ${pkgs.bash}/bin/bash ${../ai/oh-my-pi/update-omp.sh}
+          )
 
           out=$(nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
-          if [[ $mode == candidate ]]; then
-            git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
-            if ! git -C "$worktree" diff --cached --quiet; then
-              git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
-                commit -m "chore: nightly flake.lock and OMP update ($(date -I))"
-            fi
+          git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
+          if ! git -C "$worktree" diff --cached --quiet; then
+            git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
+              commit -m "chore: refreshed flake.lock and OMP update ($(date -I))"
           fi
+          candidate_revision=$(git -C "$worktree" rev-parse HEAD)
 
           root_path="$roots/''${out##*/}"
           if [[ ! -e "$root_path" ]]; then
@@ -79,21 +113,23 @@
           fi
           touch -h "$root_path"
 
-          if [[ $mode == candidate ]]; then
-            git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH" || {
-              git -C "$worktree" fetch origin "$CACHE_BRANCH:refs/remotes/origin/$CACHE_BRANCH"
-              git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH"
-            }
+          git -C "$repo" fetch origin master
+          if [[ $(git -C "$repo" rev-parse origin/master) != "$base_revision" ]]; then
+            write_status stale null
+            exit 0
           fi
+
+          git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH" || {
+            git -C "$worktree" fetch origin "$CACHE_BRANCH:refs/remotes/origin/$CACHE_BRANCH"
+            git -C "$worktree" push --force-with-lease origin "HEAD:refs/heads/$CACHE_BRANCH"
+          }
 
           # shellcheck disable=SC2012
           mapfile -t stale < <(ls -1t "$roots" | tail -n +$((KEEP_ROOTS + 1)))
           for root in "''${stale[@]}"; do rm -f "$roots/$root"; done
           nix-collect-garbage
 
-          jq -n --arg mode "$mode" --arg out "$out" --arg revision "$(git -C "$worktree" rev-parse HEAD)" \
-            --argjson excludedPackages "$EXCLUDED_PACKAGES" \
-            '{status:"success",mode:$mode,output:$out,revision:$revision,excludedPackages:$excludedPackages}' > "$status"
+          write_status success null
         '';
       };
       serviceConfig = {
