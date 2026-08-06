@@ -95,10 +95,40 @@ in
     }:
     let
       ohMyPi = mkOhMyPi pkgs;
+      modelRoles = {
+        default = "openai-codex/gpt-5.6-terra";
+        smol = "openai-codex/gpt-5.6-luna";
+        slow = "openai-codex/gpt-5.6-sol";
+      };
+
+      fallbackChains = {
+        default = [
+          "xai-oauth/grok-4.5"
+          "openrouter/deepseek/deepseek-v4-flash-0731"
+        ];
+        smol = [
+          "xai-oauth/grok-4.5"
+          "openrouter/deepseek/deepseek-v4-flash-0731"
+        ];
+        slow = [
+          "xai-oauth/grok-4.5"
+          "openrouter/deepseek/deepseek-v4-flash-0731"
+        ];
+      };
     in
     lib.mkMerge [
       {
         home.packages = [ ohMyPi ];
+
+        home.activation.ohMyPiModelConfiguration =
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            run ${ohMyPi}/bin/omp config set modelRoles ${
+              lib.escapeShellArg (builtins.toJSON modelRoles)
+            }
+            run ${ohMyPi}/bin/omp config set retry.fallbackChains ${
+              lib.escapeShellArg (builtins.toJSON fallbackChains)
+            }
+          '';
       }
 
       (lib.mkIf (config.ryk.defaultShell == "fish") {
