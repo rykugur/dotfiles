@@ -15,7 +15,7 @@
 
       xdg.configFile."direnv/direnv.toml".text = ''
         [whitelist]
-        prefix = ["/home/dusty/.dotfiles", "/home/dusty/projects"]
+        prefix = ["/home/dusty/.dotfiles/", "/home/dusty/projects/"]
       '';
     };
 }
