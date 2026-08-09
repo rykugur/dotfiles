@@ -29,13 +29,14 @@ Herdr's tab API offers ordered navigation only, not directional movement. Theref
 
 Populate `focus_pane_left`, `focus_pane_down`, `focus_pane_up`, and `focus_pane_right` in `programs.herdr.settings.keys`. Keep the existing `previous_tab` and `next_tab` values unchanged.
 
-Home Manager renders the updated settings into `~/.config/herdr/config.toml`. Reloading the Herdr server applies the change without modifying OMP's lifecycle integration.
+Home Manager renders the updated settings into `~/.config/herdr/config.toml` when the user deploys the configuration. This change does not modify OMP's lifecycle integration.
 
 ## Validation
 
-1. Evaluate the affected Home Manager configuration.
-2. Activate or render the Home Manager configuration and inspect the generated `[keys]` section.
-3. Reload Herdr configuration and verify `prefix+Shift+h/j/k/l` focuses the corresponding adjacent pane while `prefix+h/l` still selects the previous/next tab.
+1. Agents are permitted only to evaluate and build the affected Home Manager activation package.
+2. Agents MUST NOT run Home Manager activation, `nixos-rebuild switch`, or any other NixOS rebuild/switch or deployment command.
+3. Agents MUST NOT reload Herdr or perform live keypress verification.
+4. The user reserves NixOS rebuild/switch, Home Manager activation, Herdr reload, deployment, and live keypress verification for their normal workflow.
 
 ## Error handling
 
