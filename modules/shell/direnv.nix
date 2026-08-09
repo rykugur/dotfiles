@@ -12,5 +12,10 @@
         enableNushellIntegration = config.programs.nushell.enable;
         enableZshIntegration = config.programs.zsh.enable;
       };
+
+      xdg.configFile."direnv/direnv.toml".text = ''
+        [whitelist]
+        prefix = ["/home/dusty/.dotfiles", "/home/dusty/projects"]
+      '';
     };
 }
