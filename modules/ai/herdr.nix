@@ -24,8 +24,10 @@
         keys = {
           previous_tab = "prefix+h";
           next_tab = "prefix+l";
-          focus_pane_left = "";
-          focus_pane_right = "";
+          focus_pane_left = "prefix+shift+h";
+          focus_pane_down = "prefix+shift+j";
+          focus_pane_up = "prefix+shift+k";
+          focus_pane_right = "prefix+shift+l";
         };
       };
 
