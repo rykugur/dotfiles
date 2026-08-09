@@ -33,9 +33,10 @@ Home Manager renders the updated settings into `~/.config/herdr/config.toml` whe
 
 ## Validation
 
-1. Evaluate and build the affected Home Manager activation package; agents MUST NOT activate or deploy it.
-2. The user may inspect the generated `[keys]` section after their normal deployment workflow.
-3. The user may reload Herdr and verify `prefix+Shift+h/j/k/l` focuses the corresponding adjacent pane while `prefix+h/l` still selects the previous/next tab.
+1. Agents are permitted only to evaluate and build the affected Home Manager activation package.
+2. Agents MUST NOT run Home Manager activation, `nixos-rebuild switch`, or any other NixOS rebuild/switch or deployment command.
+3. Agents MUST NOT reload Herdr or perform live keypress verification.
+4. The user reserves NixOS rebuild/switch, Home Manager activation, Herdr reload, deployment, and live keypress verification for their normal workflow.
 
 ## Error handling
 
