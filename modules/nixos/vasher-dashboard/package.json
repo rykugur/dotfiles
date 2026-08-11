@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && vite build"
+    "build": "tsc --noEmit && vite build",
+    "test": "TZ=UTC node --test test/date-format.test.ts"
   },
   "dependencies": {
     "react": "19.2.0",
