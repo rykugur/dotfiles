@@ -9,5 +9,8 @@ const timestampFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 export function formatTimestamp(timestamp: string): string {
-  return timestampFormatter.format(new Date(timestamp));
+  return timestampFormatter
+    .formatToParts(new Date(timestamp))
+    .map(({ type, value }) => (type === "year" ? value.padStart(4, "0") : value))
+    .join("");
 }
