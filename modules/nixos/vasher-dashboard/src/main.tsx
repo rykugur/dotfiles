@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { formatTimestamp } from "./date-format.ts";
 import "./dashboard.css";
 
 type State = "idle" | "building" | "success" | "failed" | "stale";
@@ -107,7 +108,7 @@ function App() {
               <dt>Candidate</dt><dd>{shortRevision(status.revision)}</dd>
               <dt>Mode</dt><dd>{status.mode}</dd>
               <dt>Excluded</dt><dd>{status.excludedPackages.join(", ") || "none"}</dd>
-              <dt>Updated</dt><dd>{new Date(status.updatedAt).toLocaleString()}</dd>
+              <dt>Updated</dt><dd>{formatTimestamp(status.updatedAt)}</dd>
             </dl>
           </div></article>
           <aside className="panel"><h2>Scheduler</h2><div className="scheduler">
@@ -115,7 +116,7 @@ function App() {
             <div><p className="eyebrow">Nightly candidate</p><p className="clock">03:00</p><p className="sub">randomized delay ≤ 10m</p></div>
           </div></aside>
           <article className="panel full"><h2>Recent runs</h2><ol className="runs">
-            {history.length === 0 ? <li>No terminal builds recorded yet.</li> : history.map((run) => <li key={`${run.updatedAt}-${run.state}`}><time>{new Date(run.updatedAt).toLocaleString()}</time><span className={`badge ${run.state}`}>{run.state.toUpperCase()}</span><span>{shortRevision(run.revision || run.baseRevision)}</span></li>)}
+            {history.length === 0 ? <li>No terminal builds recorded yet.</li> : history.map((run) => <li key={`${run.updatedAt}-${run.state}`}><time>{formatTimestamp(run.updatedAt)}</time><span className={`badge ${run.state}`}>{run.state.toUpperCase()}</span><span>{shortRevision(run.revision || run.baseRevision)}</span></li>)}
           </ol></article>
           <article className="panel full"><h2>Latest build log</h2><pre>{log || "No captured build output yet."}</pre></article>
         </section>
