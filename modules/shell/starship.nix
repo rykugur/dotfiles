@@ -14,10 +14,11 @@
 
         settings = {
           format = lib.concatStrings (
-            config.programs.starship.prependFormat
-            ++ [ "$all$line_break$kubernetes$line_break$character" ]
+            config.programs.starship.prependFormat ++ [ "$all$line_break$kubernetes$line_break$character" ]
           );
-          hostname = { ssh_symbol = ""; };
+          hostname = {
+            ssh_symbol = "";
+          };
           nix_shell = {
             format = "[$name]($style)";
             heuristic = true;

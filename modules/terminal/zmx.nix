@@ -1,7 +1,12 @@
 { self, ... }:
 {
   flake.modules.homeManager.zmx =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     {
       imports = [ self.modules.homeManager.starshipFormat ];
 
