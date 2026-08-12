@@ -35,7 +35,7 @@ programs.starship.settings.env_var.ZMX_SESSION = {
 
 The `starship` module gains a `programs.starship.prependFormat` list option, defaulting to `[]`. It constructs the configured format from that ordered list followed by the existing base format (`$all$line_break$kubernetes$line_break$character`). Its default produces byte-for-byte the existing prompt.
 
-When Starship is enabled, the ZMX module adds `$env_var.ZMX_SESSION` to `prependFormat` with `lib.mkBefore`; future modules can contribute their own prefix without duplicating or replacing the base string. Nix only orders list definitions—its string option type rejects two competing values—so this composition point is required to retain the existing format safely.
+When Starship is enabled, the ZMX module adds `${env_var.ZMX_SESSION}` to `prependFormat` with `lib.mkBefore`; future modules can contribute their own prefix without duplicating or replacing the base string. Nix only orders list definitions—its string option type rejects two competing values—so this composition point is required to retain the existing format safely.
 
 Starship omits the env-var module when `ZMX_SESSION` is not set, so the prompt is unchanged outside a ZMX session.
 
@@ -49,6 +49,6 @@ Starship omits the env-var module when `ZMX_SESSION` is not set, so the prompt i
 ## Verification
 
 - Evaluate the jezrien Home Manager configuration and confirm `zmx` and `zsm` are in its package set.
-- Evaluate the merged Starship settings and confirm the format begins with `$env_var.ZMX_SESSION` while retaining the existing base format.
+- Evaluate the merged Starship settings and confirm the format begins with `${env_var.ZMX_SESSION}` while retaining the existing base format.
 - Confirm the env-var module fields match the upstream ZMX recommendation.
 - Evaluate the taln/Darwin configuration to confirm the Linux-only package condition does not introduce an unsupported package reference.

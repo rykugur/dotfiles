@@ -32,7 +32,7 @@
 Run:
 
 ```bash
-nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.starship { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; programs.starship.prependFormat = [ "$env_var.ZMX_SESSION" ]; } ]; }; in configuration.config.programs.starship.settings.format'
+nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.starship { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; programs.starship.prependFormat = [ "\${env_var.ZMX_SESSION}" ]; } ]; }; in configuration.config.programs.starship.settings.format'
 ```
 
 Expected: FAIL with `The option programs.starship.prependFormat does not exist`.
@@ -85,10 +85,10 @@ Change the module body to declare the list option, move its current configuratio
 Run:
 
 ```bash
-nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.starship { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; programs.starship.prependFormat = [ "$env_var.ZMX_SESSION" ]; } ]; }; in configuration.config.programs.starship.settings.format'
+nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.starship { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; programs.starship.prependFormat = [ "\${env_var.ZMX_SESSION}" ]; } ]; }; in configuration.config.programs.starship.settings.format'
 ```
 
-Expected: `$env_var.ZMX_SESSION$all$line_break$kubernetes$line_break$character`.
+Expected: `${env_var.ZMX_SESSION}$all$line_break$kubernetes$line_break$character`.
 
 - [ ] **Step 4: Commit the compositional Starship configuration**
 
@@ -131,7 +131,7 @@ Create `modules/terminal/zmx.nix`:
       home.packages = [ pkgs.zmx ] ++ lib.optionals pkgs.stdenv.isLinux [ pkgs.zsm ];
 
       programs.starship = lib.mkIf config.programs.starship.enable {
-        prependFormat = lib.mkBefore [ "$env_var.ZMX_SESSION" ];
+        prependFormat = lib.mkBefore [ "\${env_var.ZMX_SESSION}" ];
         settings.env_var.ZMX_SESSION = {
           symbol = " ";
           format = "[$symbol$env_value]($style) ";
@@ -175,7 +175,7 @@ nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pk
 ```
 
 Expected:
-- Format is `$env_var.ZMX_SESSION$all$line_break$kubernetes$line_break$character`.
+- Format is `${env_var.ZMX_SESSION}$all$line_break$kubernetes$line_break$character`.
 - The JSON object has `symbol` ` `, `format` `[$symbol$env_value]($style) `, `description` `zmx session name`, and `style` `bold magenta`.
 - The exported ZMX module evaluates successfully.
 - The Linux package-name list contains one `zmx-*` and one `zsm-*` entry.
