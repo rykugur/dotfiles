@@ -1528,6 +1528,7 @@
         "spt": "spt",
         "stylix": "stylix",
         "superpowers": "superpowers",
+        "umbrella": "umbrella",
         "zen-browser": "zen-browser",
         "zjstatus": "zjstatus"
       }
@@ -1891,6 +1892,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "umbrella": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785508161,
+        "narHash": "sha256-laZlgbRdBMAvbJr1PFZHC3M8Y0743TxmTm+Vj+zJnHM=",
+        "owner": "PZ-Umbrella",
+        "repo": "Umbrella",
+        "rev": "98f50ae698aab1dc7c44ba4fba87c33c800fee20",
+        "type": "github"
+      },
+      "original": {
+        "owner": "PZ-Umbrella",
+        "repo": "Umbrella",
         "type": "github"
       }
     },

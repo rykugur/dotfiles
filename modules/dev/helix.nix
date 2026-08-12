@@ -99,8 +99,9 @@
             gopls = {
               command = "${pkgs.gopls}/bin/gopls";
             };
-            lua-language-server = {
-              command = "${pkgs.lua-language-server}/bin/lua-language-server";
+            emmylua-ls = {
+              command = lib.getExe pkgs.emmylua-ls;
+              config.workspace.library = [ "${inputs.umbrella}/library" ];
             };
             helm_ls = {
               command = "${pkgs.helm-ls}/bin/helm_ls";
@@ -326,6 +327,7 @@
             {
               name = "lua";
               auto-format = true;
+              language-servers = [ "emmylua-ls" ];
               formatter = {
                 command = "${pkgs.luaformatter}/bin/lua-format";
               };

@@ -72,6 +72,10 @@
 
     ### random stuff
     helix.url = "github:helix-editor/helix";
+    umbrella = {
+      url = "github:PZ-Umbrella/Umbrella";
+      flake = false;
+    };
     ryze312-stackpkgs = {
       url = "github:ryze312/stackpkgs"; # for audiorelay
       inputs.nixpkgs.follows = "nixpkgs";
