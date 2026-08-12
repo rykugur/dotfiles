@@ -17,9 +17,9 @@
         bat
         carapace
         direnv
-        starship
         yazi
         zellij
+        zmx
         zoxide
       ];
 
@@ -59,8 +59,6 @@
           wget
           xz
           zip
-          zmx # testing lightweight zellij replacement
-          zsm # zmx-session-manager
         ]
         ++ lib.optionals pkgs.stdenv.isLinux [
           warp-terminal
