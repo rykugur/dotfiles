@@ -88,6 +88,7 @@
       url = "github:dj95/zjstatus";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zmx-session-manager.url = "github:mdsakalu/zmx-session-manager";
     ###
 
     ### ai stuff

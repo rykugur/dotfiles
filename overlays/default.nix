@@ -1,7 +1,12 @@
 { inputs, ... }:
 {
   # This one brings our custom packages from the 'pkgs' directory
-  additions = final: _prev: import ../pkgs { pkgs = final; inherit inputs; };
+  additions =
+    final: _prev:
+    import ../pkgs {
+      pkgs = final;
+      inherit inputs;
+    };
 
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.
@@ -13,9 +18,12 @@
     in
     {
       # openldap's syncreplication test (test017) is timing-sensitive and flaky in Nix's sandbox
-      openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
-      rtk = prev.rtk.overrideAttrs (_: { doCheck = false; });
-
+      openldap = prev.openldap.overrideAttrs (_: {
+        doCheck = false;
+      });
+      rtk = prev.rtk.overrideAttrs (_: {
+        doCheck = false;
+      });
 
       audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
       hyprprop = inputs.hyprland-contrib.packages.${system}.hyprprop;
@@ -35,6 +43,7 @@
           hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
         };
       });
+      zsm = inputs.zmx-session-manager.packages.${system}.default;
 
       lib = prev.lib // {
         fetch7z =

@@ -11,6 +11,7 @@
         yaak
 
         # terminal
+        helix
         ghostty
         kitty
         bat
@@ -19,8 +20,8 @@
         starship
         yazi
         zellij
+        zmx
         zoxide
-        helix
       ];
 
       home.packages =
@@ -41,12 +42,15 @@
           # terminal
           cmatrix
           dnsutils
+          duf
+          dust
           dysk
           fzf
-          jq
+          gdu
           glow
           ldns
           lsof
+          jq
           nmap
           p7zip
           ripgrep
@@ -56,9 +60,6 @@
           wget
           xz
           zip
-          duf
-          dust
-          gdu
         ]
         ++ lib.optionals pkgs.stdenv.isLinux [
           warp-terminal
