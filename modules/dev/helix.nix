@@ -101,7 +101,7 @@
             };
             emmylua-ls = {
               command = lib.getExe pkgs.emmylua-ls;
-              config.workspace.library = [ "${inputs.umbrella}/library" ];
+              config.emmylua.workspace.library = [ "${inputs.umbrella}/library" ];
             };
             helm_ls = {
               command = "${pkgs.helm-ls}/bin/helm_ls";
