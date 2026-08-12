@@ -3,6 +3,11 @@
   flake.modules.homeManager.helix =
     { lib, pkgs, ... }:
     {
+      home.packages = with pkgs; [
+        television
+        yazi
+      ];
+
       programs.helix = {
         enable = true;
         package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.default;

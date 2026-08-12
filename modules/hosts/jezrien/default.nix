@@ -17,7 +17,7 @@ let
       self.modules.nixos.nix-defaults
       self.modules.nixos.vasher-cache
       self.modules.nixos.ssh
-
+      self.modules.nixos.helix-root
       ./_configuration.nix
 
       inputs.home-manager.nixosModules.home-manager
