@@ -11,8 +11,8 @@ let
   hmModules = config.flake.modules.homeManager;
   mkJezrien = extraModules: inputs.nixpkgs.lib.nixosSystem {
     modules = [
-      # TODO: migrate desktop legacy modules to dendritic
-      ../../../legacy-modules/desktop
+      # WM: niri (hyprland lives at self.modules.nixos.hyprland)
+      self.modules.nixos.niri
 
       self.modules.nixos.nix-defaults
       self.modules.nixos.vasher-cache

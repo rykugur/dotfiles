@@ -1,7 +1,7 @@
 ---
 title: Architecture
 category: core
-date: 2026-06-03
+date: 2026-08-12
 tags: [architecture, dendritic, flake-parts, import-tree, modules, groups]
 sources: ["CLAUDE.md", "flake.nix", "DENDRITIC_MIGRATION.md", "docs/superpowers/specs/2026-03-23-dendritic-module-conversion-design.md", "modules/hosts/jezrien/default.nix"]
 related: ["overview.md", "modules.md", "hosts.md", "history.md"]
@@ -31,7 +31,7 @@ Swoleflake uses a **dendritic** (fine-grained, self-describing, auto-discovered)
      flake.modules.homeManager.my-feature = ...
    }
    ```
-5. Host configuration modules (in `modules/hosts/<name>/default.nix`) then consume from the accumulated `config.flake.modules` (or `self.modules`) plus legacy paths, home-manager setup, specialArgs, and produce `flake.nixosConfigurations.<name>` / `darwinConfigurations`.
+5. Host configuration modules (in `modules/hosts/<name>/default.nix`) consume from the accumulated `config.flake.modules` (or `self.modules`), wire home-manager and special args, and produce `flake.nixosConfigurations.<name>` / `darwinConfigurations`.
 
 The net effect: dropping a new correctly-shaped `.nix` file into `modules/` (in the right category subdir) makes it available everywhere without touching central lists.
 
@@ -80,11 +80,12 @@ Home-manager is used **as a NixOS / nix-darwin module**, never standalone. Host 
 
 Cachix substituters are configured for hyprland, nix-gaming, nix-citizen, helix, pi, chaotic/nyx.
 
-## Legacy / transition
+## Migration status
 
-A large body of work ("the dendritic migration") moved from a classic structure (legacy-modules + explicit imports + roles) to the current form. See [history.md](history.md) and the dated plans/specs under `docs/superpowers/`.
-
-Some legacy desktop modules are still pulled in explicitly on jezrien during the final cleanup phases.
+The dendritic migration is complete. The final desktop stack—hyprland, niri,
+DankMaterialShell, and noctalia—moved into `modules/desktop/` on 2026-08-12, and
+`legacy-modules/` was removed. See [history.md](history.md) and the dated
+plans/specs under `docs/superpowers/` for the staged migration record.
 
 ## Why this shape?
 
@@ -94,10 +95,9 @@ Some legacy desktop modules are still pulled in explicitly on jezrien during the
 - Plays extremely well with AI agents: the structure is regular, so agents can navigate and modify modules reliably.
 - The AI modules (`modules/ai/`) are themselves dendritic and use the same patterns — very meta when the agents are editing the system that manages them.
 
-## Open questions / TODOs (as of bootstrap)
+## Open questions / TODOs
 
 - Fully remove manual `username` / `hostname` threading (see CLAUDE.md).
-- Complete draining of `legacy-modules/`.
-- Some module options still live in old shapes; full consistency pass ongoing.
+- Some module options still live in older config-value shapes; consistency work is ongoing.
 
 See [modules.md](modules.md) for an inventory of what's actually there today.

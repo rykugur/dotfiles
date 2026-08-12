@@ -1,0 +1,522 @@
+{ inputs, self, ... }:
+{
+  flake.modules.nixos.niri =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    let
+      cfg = config.ryk.niri;
+    in
+    {
+      imports = [
+        inputs.niri.nixosModules.niri
+      ]
+      # Bars declare their own options + home-manager wiring; pulling both in
+      # keeps `bar` a single switch instead of a per-host import dance.
+      ++ (with self.modules.nixos; [
+        dank-material-shell
+        noctalia
+      ]);
+
+      options.ryk.niri = {
+        enable = lib.mkEnableOption "the niri window manager";
+
+        monitors = lib.mkOption {
+          type = lib.types.attrs;
+          default = { };
+          description = "Monitors to define.";
+        };
+
+        touch = lib.mkOption {
+          type = lib.types.nullOr (
+            lib.types.submodule {
+              options = {
+                input = lib.mkOption {
+                  type = lib.types.nullOr lib.types.str;
+                  default = null;
+                  description = ''Name of the touch input monitor. Example: "HDMI-A-1."'';
+                };
+
+                rotation = lib.mkOption {
+                  type = lib.types.nullOr (
+                    lib.types.enum [
+                      "0"
+                      "90"
+                      "180"
+                      "270"
+                    ]
+                  );
+                  default = null;
+                  description = "Touch rotation direction; generates libinput calibration-matrix accordingly.";
+                  example = "90";
+                };
+              };
+            }
+          );
+          default = null;
+        };
+
+        bar = lib.mkOption {
+          type = lib.types.enum [
+            "dankMaterialShell"
+            "noctalia"
+            "none"
+          ];
+          default = "none";
+        };
+
+        # TODO: use this in the home-manager layout block
+        defaultColumnWidth = lib.mkOption {
+          type = lib.types.float;
+          default = 0.66;
+        };
+
+        # TODO: use this in the home-manager layout block
+        proportions = lib.mkOption {
+          type = lib.types.listOf lib.types.float;
+          default = [
+            0.33
+            0.66
+            1.0
+          ];
+        };
+      };
+
+      config = lib.mkIf cfg.enable {
+        programs.niri = {
+          enable = true;
+          package = pkgs.niri;
+        };
+
+        ryk.desktop.compositor = "niri";
+
+        ryk.dankMaterialShell.enable = cfg.bar == "dankMaterialShell";
+        ryk.noctalia.enable = cfg.bar == "noctalia";
+
+        home-manager.users.${config.ryk.username}.imports = [ self.modules.homeManager.niri ];
+      };
+    };
+
+  flake.modules.homeManager.niri =
+    {
+      config,
+      lib,
+      nixosConfig,
+      pkgs,
+      ...
+    }:
+    let
+      niriCfg = nixosConfig.ryk.niri;
+    in
+    {
+      imports = [ self.modules.homeManager.nautilus ];
+
+      home.packages =
+        with pkgs;
+        [
+          albert
+          jq
+          slurp
+          wayland-utils
+          wev
+          wl-clipboard
+          wl-clipboard-x11
+          wlogout
+          wtype
+          yad
+
+          xdg-desktop-portal-gnome
+          xdg-desktop-portal-gtk
+
+          xwayland-satellite
+        ]
+        ++ [
+          (pkgs.writeScriptBin "conditional-kill.nu" (builtins.readFile ./scripts/conditional-kill.nu))
+          (pkgs.writeScriptBin "conditional-fullscreen.nu" (
+            builtins.readFile ./scripts/conditional-fullscreen.nu
+          ))
+          (pkgs.writeScriptBin "eve-toggle.nu" (builtins.readFile ./scripts/toggle-eve.nu))
+          (pkgs.writeShellApplication {
+            name = "window-info.sh";
+            runtimeInputs = with pkgs; [
+              jq
+              niri
+              yad
+            ];
+            text = builtins.readFile ./scripts/window-info.sh;
+          })
+        ];
+
+      programs.niri = {
+        package = pkgs.niri;
+
+        settings =
+          let
+            p25 = {
+              proportion = 1.0 / 4.0;
+            };
+            p33 = {
+              proportion = 1.0 / 3.0;
+            };
+            p50 = {
+              proportion = 1.0 / 2.0;
+            };
+            p66 = {
+              proportion = 2.0 / 3.0;
+            };
+            p75 = {
+              proportion = 3.0 / 4.0;
+            };
+            p100 = {
+              proportion = 1.0;
+            };
+          in
+          {
+            # debug = { skip-cursor-only-updates-during-vrr = [ ]; };
+
+            environment = {
+              # DISPLAY = null;
+
+              QT_QPA_PLATFORM = "wayland";
+              GDK_BACKEND = "wayland";
+
+              XDG_SESSION_TYPE = "wayland";
+              XDG_CURRENT_DESKTOP = "Niri";
+              XDG_SESSION_DESKTOP = "Niri";
+            };
+
+            input = {
+              keyboard = {
+                repeat-delay = 200;
+                repeat-rate = 60;
+                numlock = true;
+                xkb = {
+                  layout = "us";
+                  options = "fkeys:basic_13-24";
+                };
+              };
+              # TODO: waiting for flake owner to implement this
+              # touch = let
+              #   matrices = {
+              #     "0" = [ 1.0 0.0 0.0 0.0 1.0 0.0 ];
+              #     "90" = [ 0.0 1.0 0.0 (-1.0) 0.0 1.0 ];
+              #     "180" = [ (-1.0) 0.0 1.0 0.0 (-1.0) 1.0 ];
+              #     "270" = [ 0.0 (-1.0) 1.0 1.0 0.0 0.0 ];
+              #   };
+              # in lib.mkIf (niriCfg.touch.input != null) {
+              #   enable = true;
+              #   map-to-output = niriCfg.touch.input;
+              #   calibration-matrix = lib.mkIf (niriCfg.touch.rotation != null)
+              #     matrices.${niriCfg.touch.rotation};
+              # };
+            };
+
+            outputs = niriCfg.monitors;
+
+            layout = {
+              # TODO: update these to use niriCfg.defaultColumnWidth and
+              # niriCfg.proportions
+              preset-column-widths = [
+                p25
+                p33
+                p50
+                p66
+                p75
+                p100
+              ];
+              default-column-width = p66;
+            };
+
+            spawn-at-startup = [
+              { argv = [ "1password" ]; }
+              { argv = [ "discord" ]; }
+              { argv = [ "steam" ]; }
+              {
+                argv = [
+                  "playerctld"
+                  "daemon"
+                ];
+              }
+              {
+                argv = [
+                  "wl-paste"
+                  "--watch"
+                  "cliphist"
+                  "store"
+                ];
+              }
+              {
+                # Also watch primary selection so that middle-click paste (and
+                # cliphist history) can see primary selections from other apps.
+                argv = [
+                  "wl-paste"
+                  "--primary"
+                  "--watch"
+                  "cliphist"
+                  "store"
+                ];
+              }
+              {
+                argv = [
+                  "corectrl"
+                  "--minimize-systray"
+                ];
+              }
+              {
+                sh = "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false";
+              }
+            ];
+
+            binds =
+              with config.lib.niri.actions;
+              let
+                launcherAction = spawn [
+                  "albert"
+                  "toggle"
+                ];
+              in
+              {
+                "Mod+Return" = {
+                  action = spawn [
+                    "ghostty"
+                    "--gtk-single-instance=true"
+                  ];
+                  repeat = false;
+                };
+                "Mod+r".action = lib.mkDefault launcherAction;
+                "Mod+Space".action = lib.mkDefault launcherAction;
+                "Mod+Print" = {
+                  action = lib.mkDefault (spawn-sh ''grim -g "$(slurp)" - | wl-copy'');
+                  repeat = false;
+                };
+                "Mod+e" = {
+                  action = lib.mkDefault (spawn [
+                    "nemo"
+                  ]);
+                  repeat = false;
+                };
+                "Mod+f" = {
+                  action = lib.mkDefault (spawn [
+                    "${config.home.homeDirectory}/.nix-profile/bin/conditional-fullscreen.nu"
+                  ]);
+                  repeat = false;
+                };
+                "Mod+m" = {
+                  action = maximize-column;
+                  repeat = false;
+                };
+                "Mod+g" = {
+                  action = lib.mkDefault (spawn [
+                    "${config.home.homeDirectory}/.nix-profile/bin/eve-toggle.nu"
+                  ]);
+                  repeat = false;
+                };
+                "Mod+o".action = show-hotkey-overlay;
+                "Mod+q" = {
+                  action = lib.mkDefault (spawn [
+                    "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill.nu"
+                  ]);
+                  repeat = false;
+                };
+                "Mod+v" = {
+                  action = toggle-window-floating;
+                  repeat = false;
+                };
+                "Mod+w" = {
+                  action = toggle-column-tabbed-display;
+                  repeat = false;
+                };
+
+                "Mod+Shift+e".action = lib.mkDefault quit;
+
+                "Mod+p".action = lib.mkDefault switch-preset-column-width;
+                "Mod+Shift+p".action = lib.mkDefault switch-preset-column-width-back;
+
+                "Mod+F1" = {
+                  action = spawn [
+                    "${config.home.homeDirectory}/.nix-profile/bin/window-info.sh"
+                  ];
+                  repeat = false;
+                };
+
+                # Recenter opentrack head tracking via its DBus interface (opentrack
+                # PR #1813, present in the nixpkgs 2026-06-08 build). niri grabs this
+                # globally even over fullscreen Star Citizen, and DBus crosses the
+                # steam-run sandbox boundary on the shared session bus — unlike X11
+                # hotkeys (focus-blocked under Wayland) or key injection (needs
+                # opentrack --platform xcb, which breaks SC). Joystick-button binds
+                # aren't supported by Linux opentrack at all (opentrack #1895).
+                # NOTE: the /Tracker object only exists while tracking is *started*;
+                # the parent /com/github/opentrack object only has Start/Stop. So this
+                # is a no-op until opentrack is tracking (fine in-game).
+                # F14 is emitted by a macro pad (F13 is already Discord mute).
+                "F14" = {
+                  action = spawn-sh "dbus-send --session --type=method_call --dest=com.github.opentrack /com/github/opentrack/Tracker com.github.opentrack.Tracker.Center";
+                  repeat = false;
+                };
+              }
+              // {
+                "Mod+h".action = focus-column-left-or-last;
+                "Mod+j".action = focus-window-or-workspace-down;
+                "Mod+k".action = focus-window-or-workspace-up;
+                "Mod+l".action = focus-column-right-or-first;
+
+                "Mod+WheelScrollUp".action = focus-column-left;
+                "Mod+WheelScrollDown".action = focus-column-right;
+
+                "Mod+Shift+h".action = move-column-left-or-to-monitor-left;
+                "Mod+Shift+j".action = move-window-down-or-to-workspace-down;
+                "Mod+Shift+k".action = move-window-up-or-to-workspace-up;
+                "Mod+Shift+l".action = move-column-right-or-to-monitor-right;
+
+                "Mod+Tab" = {
+                  action = toggle-overview;
+                  cooldown-ms = 250;
+                };
+              }
+              // {
+                XF86AudioLowerVolume.action = lib.mkDefault (spawn-sh "amixer sset Master 5%-");
+                XF86AudioRaiseVolume.action = lib.mkDefault (spawn-sh "amixer sset Master 5%+");
+                XF86AudioMute.action = lib.mkDefault (spawn-sh "amixer sset Master toggle");
+                XF86AudioPlay.action = lib.mkDefault (spawn-sh "playerctl play-pause");
+                XF86AudioPause.action = lib.mkDefault (spawn-sh "playerctl play-pause");
+                XF86AudioNext.action = lib.mkDefault (spawn-sh "playerctl next");
+                XF86AudioPrev.action = lib.mkDefault (spawn-sh "playerctl previous");
+                XF86MonBrightnessUp.action = lib.mkDefault (spawn-sh "xbacklight +5");
+                XF86MonBrightnessDown.action = lib.mkDefault (spawn-sh "xbacklight -5");
+                XF86Tools.action = lib.mkDefault (spawn-sh "amixer sset Capture toggle");
+              };
+
+            window-rules =
+              let
+                mkFloatingAppRule = appInfos: {
+                  matches = (
+                    map (appInfo: {
+                      app-id = appInfo.app-id or null;
+                      title = appInfo.title or null;
+                    }) appInfos
+                  );
+                  open-floating = true;
+                };
+                mkFloatingAppRules = appInfos: lib.map (appInfo: mkFloatingAppRule [ appInfo ]) appInfos;
+              in
+              [
+                (
+                  (mkFloatingAppRule [ { app-id = "1password"; } ])
+                  // {
+                    block-out-from = "screen-capture";
+                  }
+                )
+                {
+                  geometry-corner-radius =
+                    let
+                      r = 8.0;
+                    in
+                    {
+                      top-left = r;
+                      top-right = r;
+                      bottom-left = r;
+                      bottom-right = r;
+                    };
+                  clip-to-geometry = true;
+                  draw-border-with-background = false;
+                }
+                {
+                  matches = [ { app-id = "com.mitchellh.ghostty"; } ];
+                  default-column-width = p33;
+                }
+                {
+                  matches = [ { app-id = "discord"; } ];
+                  default-column-width = p50;
+                }
+              ]
+              ++
+                # game-specific rules
+                [
+                  {
+                    matches = [
+                      {
+                        app-id = "steam";
+                        title = "Friends List";
+                      }
+                    ];
+                    default-column-width = p33;
+                  }
+                  # {
+                  #   matches = [{
+                  #     app-id = "gamescope";
+                  #     title = "ARC Raiders";
+                  #   }];
+                  #   variable-refresh-rate = true;
+                  # }
+                  {
+                    matches = [
+                      {
+                        app-id = "steam_app_8500";
+                        title = "EVE Launcher";
+                      }
+                    ];
+                    default-column-width = p33;
+                    # variable-refresh-rate = true;
+                  }
+                  {
+                    matches = [
+                      {
+                        app-id = "opentrack";
+                      }
+                    ];
+                    default-column-width = p33;
+                  }
+                  {
+                    matches = [
+                      {
+                        app-id = "steam_app_1903340";
+                        title = "Clair Obscur: Expedition 33";
+                      }
+                    ];
+                    open-fullscreen = true;
+                    # variable-refresh-rate = true;
+                  }
+                  # {
+                  #   matches = [{
+                  #     app-id = "starcitizen.exe";
+                  #     # title = "^Star Citizen.*$";
+                  #   }];
+                  #   variable-refresh-rate = true;
+                  # }
+                ]
+              ++ (mkFloatingAppRules [
+                { app-id = "galculator"; }
+                { app-id = "neovide"; }
+                { app-id = "nemo"; }
+                { app-id = "obsidian"; }
+                # { app-id = "opentrack"; }
+                { app-id = "org.gnome.Nautilus"; }
+                { app-id = "nemo"; }
+                { app-id = "thunar"; }
+                { app-id = "org.pulseaudio.pavucontrol"; }
+                { app-id = "pavucontrol"; }
+                { app-id = "ristretto"; }
+                { app-id = "vlc"; }
+                { app-id = "yad"; }
+                { app-id = "zenity"; }
+              ]);
+          };
+      };
+
+      xdg = {
+        enable = true;
+
+        mimeApps = {
+          enable = true;
+
+          defaultApplications = {
+            "image/png" = [ "feh.desktop" ];
+          };
+        };
+      };
+    };
+}

@@ -6,33 +6,35 @@ Migrating Swoleflake from a traditional module import structure to the dendritic
 
 Every `.nix` file under `modules/` is a flake-parts top-level module, auto-imported via `import-tree`. Modules register themselves into the appropriate class (`nixos`, `darwin`, `homeManager`) using `flake.modules.<class>.<name>`, rather than being explicitly imported by path in `flake.nix` or host configs.
 
-## Phases
+## Status
 
-### Phase 1: Tooling Setup (Complete)
+The migration is complete as of 2026-08-12.
 
-Added the required tooling and scaffolding so that dendritic modules can be written in subsequent phases, without breaking the existing configuration.
+### Phase 1: Tooling setup (complete)
 
-- Added `import-tree` flake input
-- Enabled `flake-parts.flakeModules.modules` (provides `flake.modules.<class>.<name>` option infrastructure)
-- Renamed `modules/` to `legacy-modules/` to free the path for dendritic modules
-- Updated all references in `flake.nix`, host configs (`jezrien`, `taln`, `nixy`)
-- Created new `modules/` directory with a placeholder module to validate the `import-tree` pipeline
-- Verified with `nix flake check`
+- Added the `import-tree` flake input.
+- Enabled `flake-parts.flakeModules.modules`.
+- Renamed the original `modules/` tree to `legacy-modules/` while conversion was in progress.
+- Validated the discovery pipeline with `nix flake check`.
 
-### Phase 2: Migrate Modules
+### Phase 2: Module migration (complete)
 
-Convert legacy modules to dendritic modules one at a time:
+Every reusable module now registers through `flake.modules.<class>.<name>` under
+`modules/`. The last holdouts—hyprland, niri, DankMaterialShell, and noctalia—
+were converted into cross-class desktop modules. `legacy-modules/` was removed.
 
-1. Move a module from `legacy-modules/` into `modules/`
-2. Rewrite it as a flake-parts top-level module that registers into the appropriate class via `flake.modules.<class>.<name>`
-3. Remove the explicit import from host configs / `flake.nix`
-4. Verify with `nix flake check` and a test build
+The desktop conversion also:
 
-Repeat until `legacy-modules/` is empty, then remove it.
+- kept `ryk.hyprland.*` and `ryk.niri.*` as host configuration values;
+- made bars compositor-aware through `ryk.desktop.compositor`;
+- removed the unavailable hyprland scrolling plugin path;
+- ported noctalia from the removed v4 `programs.noctalia-shell` interface to the
+  v5 `programs.noctalia` TOML schema and `noctalia msg` IPC;
+- removed the unused legacy desktop keybind helper.
 
-### Phase 3: Migrate Roles
+### Phase 3: Roles migration (complete)
 
-Once modules are dendritic, roles can be reworked or eliminated — modules can compose themselves without a separate role layer.
+The old role layer was replaced by composable modules and `modules/groups/`.
 
 ## Directory Structure
 
@@ -46,14 +48,10 @@ modules/           # all modules, explicitly imported by path
   desktop/
   ...
 
-# After Phase 1 (current)
-legacy-modules/    # existing modules, unchanged
-modules/           # dendritic modules, auto-imported by import-tree
-  placeholder.nix
-
-# After Phase 2 (goal)
-modules/           # all modules, dendritic
-  <module>.nix     # each file is a flake-parts top-level module
+# Current
+modules/           # all modules, dendritic and auto-imported
+  <category>/
+    <module>.nix   # registers one or more module classes
 ```
 
 ## Key Concepts

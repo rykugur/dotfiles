@@ -13,17 +13,17 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-07-30 (Vasher status dashboard and operational entity page — ingested)
+Last major update: 2026-08-12 (dendritic desktop migration completed; legacy tree removed)
 
 ---
 
 ## Core
 
 - [Overview](overview.md) — High-level description of Swoleflake, hosts, quick-start commands, philosophy. (sources: README, CLAUDE.md, flake.nix)
-- [Architecture](architecture.md) — Dendritic loading, flake-parts + import-tree, groups, special args, home-manager integration, legacy notes. (sources: CLAUDE, design docs, host wiring)
+- [Architecture](architecture.md) — Complete dendritic loading model: flake-parts + import-tree, groups, special args, home-manager integration, and migration status. (sources: CLAUDE, design docs, host wiring)
 - [Hosts](hosts.md) — jezrien, taln, nixy details, common wiring pattern, how to add a host.
-- [Modules](modules.md) — Inventory and mental model of the modules/ tree, registration pattern, groups vs legacy roles, how to add a module.
-- [History & Major Migrations](history.md) — The "superpowers" campaign, dendritic conversion timeline, where to find the primary design artifacts.
+- [Modules](modules.md) — Current modules tree, registration pattern, groups, compositor/bar composition, and how to add a module.
+- [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
 - [AI Agents](ai-agents.md) — First-class declarative provisioning of Claude Code, Codex, opencode, Pi, Hermes. MCP centralization, skills (including this llm-wiki), mempalace relationship, self-referentiality.
 
 ## Entities

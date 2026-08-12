@@ -1,7 +1,7 @@
 ---
 title: History & Major Migrations
 category: migration
-date: 2026-06-03
+date: 2026-08-12
 tags: [history, migration, dendritic, superpowers, refactor]
 sources: ["DENDRITIC_MIGRATION.md", "docs/superpowers/plans/*.md", "docs/superpowers/specs/*.md"]
 related: ["architecture.md", "overview.md"]
@@ -21,6 +21,11 @@ These are **primary sources** for the wiki. When in doubt about "why is it like 
 Synthesized per-source pages live under `wiki/sources/` (e.g. [2026-03-23 Dendritic Conversion](../sources/2026-03-23-dendritic-module-conversion.md)).
 
 ## Timeline of major efforts (reverse chrono, approximate)
+
+- **2026-08**: Dendritic migration completed
+  - Converted the final desktop stack (hyprland, niri, DankMaterialShell, noctalia).
+  - Removed `legacy-modules/` and the last explicit legacy import from jezrien.
+  - Ported noctalia to its v5 TOML module/IPC surface and retired hyprland's unavailable scrolling plugin.
 
 - **2026-05**: Pi agent module + shared MCP centralization (`pi.nix`, `_mcp.nix`)
   - Goal: give the `pi` terminal agent the same declarative Nix treatment as claude-code/opencode/codex.
@@ -69,10 +74,9 @@ Each major refactor was preceded by a design doc (tradeoffs, data model, exact c
 
 This is excellent raw material for an llm-wiki: the specs are the "primary literature" of the system's evolution.
 
-## Current status (as of initial wiki creation)
+## Current status
 
-- Dendritic conversion is largely complete for new work.
-- Legacy desktop modules still partially active on jezrien (being cleaned).
+- The dendritic conversion is complete; `legacy-modules/` no longer exists.
 - Groups are the composition story.
 - AI agents are fully declarative and include the tools that maintain this wiki (mempalace + llm-wiki skill).
 - More small cleanups and feature additions are continuous (see open items in root CLAUDE.md and TODOs scattered in code).

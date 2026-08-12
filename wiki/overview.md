@@ -1,7 +1,7 @@
 ---
 title: Overview
 category: core
-date: 2026-06-03
+date: 2026-08-12
 tags: [swoleflake, overview, nix, flake]
 sources: ["README.md", "CLAUDE.md", "flake.nix"]
 related: ["architecture.md", "hosts.md", "ai-agents.md"]
@@ -44,13 +44,13 @@ nix flake update <input-name>
 
 ## High level architecture (one paragraph)
 
-Everything interesting lives under `modules/`. `flake.nix` uses `import-tree` to auto-discover and load every `.nix` file as a flake-parts module. Modules self-register into `flake.modules.nixos.*`, `flake.modules.homeManager.*`, etc. Hosts compose the right subsets (plus legacy modules during transition) and wire home-manager with special args (`hostname`, `username`, `inputs`, `outputs`). Groups in `modules/groups/` compose cross-platform feature sets (developer, gaming, 3d-printing). AI agents are first-class citizens in `modules/ai/`.
+Everything interesting lives under `modules/`. `flake.nix` uses `import-tree` to auto-discover and load every `.nix` file as a flake-parts module. Modules self-register into `flake.modules.nixos.*`, `flake.modules.homeManager.*`, etc. Hosts compose the right subsets and wire home-manager with special args (`hostname`, `username`, `inputs`, `outputs`). Groups in `modules/groups/` compose cross-platform feature sets (developer, gaming, 3d-printing). AI agents are first-class citizens in `modules/ai/`.
 
 ## Current hosts
 
 | Host     | Platform          | Role                          | Key traits |
 |----------|-------------------|-------------------------------|------------|
-| jezrien  | x86_64-linux NixOS | Primary desktop, gaming, dev | Hyprland + niri, lots of gaming modules (Star Citizen lite, EVE, etc.), AI agents |
+| jezrien  | x86_64-linux NixOS | Primary desktop, gaming, dev | Niri (active) + dormant Hyprland profile, lots of gaming modules, AI agents |
 | taln     | aarch64-darwin    | Portable MacBook             | Aerospace WM, lighter gaming, full dev + AI tooling |
 | nixy     | x86_64-linux NixOS (LXC) | Test / throwaway container  | Minimal, used for validation |
 
@@ -63,7 +63,6 @@ Everything interesting lives under `modules/`. `flake.nix` uses `import-tree` to
 - `overlays/` + `pkgs/` — custom package work.
 - `shells/` — dev shells (default, language-specific).
 - `docs/superpowers/` — historical design docs and migration plans (the "superpowers" that drove the dendritic refactor).
-- `legacy-modules/` — old structure, being drained.
 - `wiki/` — this LLM-curated knowledge base (you are reading part of it).
 
 ## Philosophy
@@ -72,8 +71,8 @@ Declarative everything. Fine-grained modules over monoliths. Auto-discovery to r
 
 ## Status
 
-Always a work in progress (see the warning in README). Major migration to full dendritic modules was executed in a series of planned steps documented under `docs/superpowers/`.
+The multi-stage migration to full dendritic modules is complete; its design record remains under `docs/superpowers/` and in [history.md](history.md).
 
 ---
 
-*Maintained by the llm-wiki process. Last synthesized: 2026-06-03 during initial bootstrap.*
+*Maintained by the llm-wiki process. Last synthesized: 2026-08-12 after the final desktop-module migration.*

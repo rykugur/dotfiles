@@ -2,7 +2,7 @@
   ryk.hyprland = {
     enable = true;
     bar = "dankMaterialShell";
-    layout = "scrolling";
+    layout = "master";
     monitors =
       [ "DP-1,3440x1440@175,0x1440,1" "DP-2,3440x1440@144,0x0,1,vrr,0" ];
 

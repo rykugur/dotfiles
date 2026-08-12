@@ -1,7 +1,7 @@
 ---
 title: Modules
 category: core
-date: 2026-06-03
+date: 2026-08-12
 tags: [modules, dendritic, groups, import-tree]
 sources: ["modules/", "CLAUDE.md", "architecture.md", "docs/superpowers/plans/2026-03-25-roles-to-groups.md"]
 related: ["architecture.md", "groups.md", "ai-agents.md"]
@@ -11,7 +11,7 @@ related: ["architecture.md", "groups.md", "ai-agents.md"]
 
 `modules/` is the single source of truth for almost all behavior. Thanks to `import-tree`, structure + naming + self-registration tell the story.
 
-## Top-level layout (as of 2026-06-03)
+## Top-level layout (as of 2026-08-12)
 
 ```
 modules/
@@ -19,7 +19,7 @@ modules/
 ├── audio/              # pipewire, easyeffects
 ├── base/               # fonts, meta-options, nix-defaults, stylix
 ├── browser/            # firefox, zen-browser
-├── desktop/            # aerospace, albert, flameshot, fuzzel, gnome, kde, nautilus, nemo, swappy, swaylock, thunar, walker
+├── desktop/            # compositors/bars (niri, hyprland, DMS, noctalia), DEs, launchers, file managers
 ├── dev/                # devenv, eve-frontier, git, helix, jujutsu, nvim (lazyvim), yaak, zed-editor
 ├── gaming/             # audiorelay, eve-online, gamemode, jackify, lutris, starcitizen(-lite), starsector, steam, vr
 ├── groups/             # developer.nix, gaming.nix, printing3d.nix (_3dp)
@@ -107,9 +107,28 @@ hardcode a shell; they inherit `$SHELL` from the login shell. Hosts import the
 hatch if a non-POSIX login shell trips a greeter or tool. See
 `docs/superpowers/specs/2026-07-10-default-shell-design.md`.
 
-Note: `ryk.defaultShell` and `ryk.username` are scalar **config-value** options
-(plain `mkOption`, not activation toggles) in the `ryk.*` namespace declared in
-`modules/base/meta-options.nix` and sibling NixOS modules.
+Note: `ryk.defaultShell`, `ryk.username`, and `ryk.desktop.compositor` are scalar
+**config-value** options (plain `mkOption`, not activation toggles) in the
+`ryk.*` namespace. `ryk.desktop.compositor` is set by the active compositor and
+lets bars declare only their matching home-manager integration.
+
+## Desktop compositor stack
+
+`modules/desktop/niri/default.nix` and `modules/desktop/hyprland.nix` each
+register NixOS + home-manager modules. The NixOS side owns compositor options
+and imports the available bars; the home-manager side owns keybinds, rules,
+packages, and compositor-native settings.
+
+`dank-material-shell/default.nix` and `noctalia.nix` also register both classes.
+The selected `ryk.<compositor>.bar` enables the matching system module.
+`ryk.desktop.compositor` prevents bar modules from referencing options belonging
+to a compositor that was not imported. Noctalia targets the upstream v5 TOML
+schema (`programs.noctalia`) and v5 `noctalia msg` IPC.
+
+Jezrien imports `self.modules.nixos.niri`; its dormant hyprland host profile can
+replace that one module import. Hyprland supports its built-in `master` layout
+and the packaged `hy3` plugin; the removed upstream scrolling plugin is no
+longer exposed.
 
 ## NFS automount
 
@@ -154,9 +173,10 @@ See dedicated [ai-agents.md](ai-agents.md).
 
 No central import list to edit. That's the point of dendritic.
 
-## Current state of migration
+## Migration status
 
-Many modules have been converted. Some legacy desktop WM stuff still lives in `legacy-modules/desktop` and is explicitly imported on jezrien. Full removal of legacy is tracked in the superpowers plans (see 2026-04-05-legacy-module-final-migration etc.).
+The migration is complete. The final desktop modules moved into `modules/desktop/`
+on 2026-08-12, and `legacy-modules/` was removed.
 
 ## Module naming & discoverability
 

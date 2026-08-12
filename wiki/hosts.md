@@ -1,7 +1,7 @@
 ---
 title: Hosts
 category: core
-date: 2026-06-03
+date: 2026-08-12
 tags: [hosts, jezrien, taln, nixy]
 sources: ["modules/hosts/jezrien/default.nix", "modules/hosts/taln/default.nix", "CLAUDE.md", "README.md"]
 related: ["overview.md", "architecture.md"]
@@ -15,7 +15,7 @@ The three (sometimes four) machines managed by Swoleflake.
 
 - **Platform**: x86_64-linux, NixOS
 - **Form factor**: Desktop
-- **Window managers**: Hyprland (primary) + niri (alternative)
+- **Window manager**: Niri is active; a dormant Hyprland profile remains available
 - **Workload**: Heavy dev + gaming (Star Citizen via starcitizen-lite, EVE Online, Steam, Lutris, VR, Starsector, etc.)
 - **Notable modules**:
   - Full AI agent suite (claude-code, codex, opencode, pi, ...)
@@ -24,7 +24,7 @@ The three (sometimes four) machines managed by Swoleflake.
   - Virtualization (docker, winboat, vfio?)
   - 1password, sops, btrfs maintenance, obs-studio, gamemode, appimage
   - Login shell is option-driven via `ryk.defaultShell` (default `nushell`; see [Modules → Default shell](modules.md))
-  - Legacy desktop modules still partially active (dankMaterialShell, hyprland/niri configs in legacy)
+  - Dendritic desktop stack: niri + DankMaterialShell active; Hyprland and noctalia selectable
 - **Secrets**: `modules/hosts/jezrien/secrets.yaml`
 - **Hardware config**: `_hardware-configuration.nix`
 - **Special WM configs**: `_hyprland-config.nix`, `_niri-config.nix`
@@ -80,14 +80,13 @@ nixy appears in CLAUDE.md but is less prominent in current host modules (may liv
 Each host `modules/hosts/<name>/default.nix` (or `_configuration.nix` + `default.nix`):
 
 - Declares the `flake.nixosConfigurations.<name>` (or darwin equivalent) using `nixpkgs.lib.nixosSystem` / darwin equivalent.
-- Pulls in legacy desktop modules where still needed.
 - Pulls base nixos/darwin modules.
 - Sets up home-manager with `extraSpecialArgs` containing `hostname`, `username`, `inputs`, `outputs`.
 - Imports the desired groups + individual home modules.
 - Wires per-host sops secrets.
 - Adds host-specific packages.
 
-During the dendritic transition, hosts were the main place that still had explicit lists; the goal is to push as much composition as possible into groups and the modules themselves.
+Hosts retain explicit lists only for deliberate host-level composition; reusable behavior and dependency composition live in modules and groups.
 
 ## Adding a new host (high level)
 

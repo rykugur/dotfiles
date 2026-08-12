@@ -89,6 +89,22 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Replaced personal identifiers, private DNS/IP details, concrete privileged-access commands, exact local service endpoints, and repository-owner references with role-oriented descriptions.
 - Preserved the durable architecture, operational safety boundaries, and internal cross-references.
 
+## [2026-08-12] refactor | Completed dendritic desktop migration
+
+- Converted hyprland, niri, DankMaterialShell, and noctalia into auto-discovered
+  cross-class modules under `modules/desktop/`.
+- Removed the last explicit legacy import from jezrien and deleted
+  `legacy-modules/`, including an unused desktop keybind helper.
+- Added `ryk.desktop.compositor` so bar modules declare only the active
+  compositor's home-manager options.
+- Dropped hyprland's unavailable scrolling plugin path; kept `master` + `hy3`.
+- Ported noctalia to its upstream v5 TOML option surface and `noctalia msg` IPC.
+  The upstream validator built successfully with `✓ Config is valid`.
+- Verified jezrien's active niri + DMS rendered config surface remained
+  byte-identical to the pre-migration baseline.
+- Updated [architecture.md](architecture.md), [modules.md](modules.md),
+  [overview.md](overview.md), [history.md](history.md), and [index.md](index.md).
+
 ---
 
 
