@@ -11,6 +11,7 @@
         yaak
 
         # terminal
+        helix
         ghostty
         kitty
         bat
@@ -20,7 +21,6 @@
         yazi
         zellij
         zoxide
-        helix
       ];
 
       home.packages =
@@ -41,12 +41,15 @@
           # terminal
           cmatrix
           dnsutils
+          duf
+          dust
           dysk
           fzf
-          jq
+          gdu
           glow
           ldns
           lsof
+          jq
           nmap
           p7zip
           ripgrep
@@ -56,9 +59,8 @@
           wget
           xz
           zip
-          duf
-          dust
-          gdu
+          zmx # testing lightweight zellij replacement
+          zsm # zmx-session-manager
         ]
         ++ lib.optionals pkgs.stdenv.isLinux [
           warp-terminal
