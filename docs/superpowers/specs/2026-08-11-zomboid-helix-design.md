@@ -31,9 +31,9 @@ Add the non-flake `umbrella` input at `github:PZ-Umbrella/Umbrella`. The lock fi
 Replace the local `lua-language-server` language-server entry with `emmylua-ls`:
 
 - `command = lib.getExe pkgs.emmylua-ls`
-- `config.workspace.library = [ "${inputs.umbrella}/library" ]`
+- `config.emmylua.workspace.library = [ "${inputs.umbrella}/library" ]`
 
-This is the documented EmmyLua library-path configuration and aligns with Umbrella's recommended EmmyLua integration.
+The nested `emmylua` key is required because EmmyLua requests the `emmylua` LSP configuration scope; this is the proven working Helix path and aligns with Umbrella's recommended EmmyLua integration.
 
 ### Lua language binding
 
