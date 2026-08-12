@@ -17,6 +17,7 @@
         bat
         carapace
         direnv
+        starship
         yazi
         zellij
         zmx

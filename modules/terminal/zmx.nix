@@ -3,7 +3,7 @@
   flake.modules.homeManager.zmx =
     { config, lib, pkgs, ... }:
     {
-      imports = [ self.modules.homeManager.starship ];
+      imports = [ self.modules.homeManager.starshipFormat ];
 
       home.packages = [ pkgs.zmx ] ++ lib.optionals pkgs.stdenv.isLinux [ pkgs.zsm ];
 
