@@ -3,7 +3,13 @@
   flake.modules.homeManager.starship =
     { config, lib, ... }:
     {
-      programs.starship = {
+      options.programs.starship.prependFormat = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        description = "Format fragments rendered before Starship's base prompt format.";
+      };
+
+      config.programs.starship = {
         enable = true;
 
         enableFishIntegration = config.programs.fish.enable;
@@ -11,7 +17,10 @@
         enableZshIntegration = config.programs.zsh.enable;
 
         settings = {
-          format = "$all$line_break$kubernetes$line_break$character";
+          format = lib.concatStrings (
+            config.programs.starship.prependFormat
+            ++ [ "$all$line_break$kubernetes$line_break$character" ]
+          );
           hostname = { ssh_symbol = ""; };
           nix_shell = {
             format = "[$name]($style)";
