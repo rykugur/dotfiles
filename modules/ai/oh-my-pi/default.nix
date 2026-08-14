@@ -96,25 +96,45 @@ in
     let
       ohMyPi = mkOhMyPi pkgs;
       modelRoles = {
-        default = "openai-codex/gpt-5.6-terra";
-        smol = "openai-codex/gpt-5.6-luna";
-        slow = "openai-codex/gpt-5.6-sol";
+        default = "anthropic/claude-sonnet-5";
+        smol = "anthropic/claude-haiku-4-5";
+        slow = "anthropic/claude-opus-5";
       };
 
       fallbackChains = {
         default = [
+          "openai-codex/gpt-5.6-terra"
           "xai-oauth/grok-4.5"
           "openrouter/deepseek/deepseek-v4-flash-0731"
         ];
         smol = [
+          "openai-codex/gpt-5.6-luna"
           "xai-oauth/grok-4.5"
           "openrouter/deepseek/deepseek-v4-flash-0731"
         ];
         slow = [
+          "openai-codex/gpt-5.6-sol"
           "xai-oauth/grok-4.5"
           "openrouter/deepseek/deepseek-v4-flash-0731"
         ];
       };
+
+      symbolPreset = "nerd";
+
+      theme = {
+        dark = "dark-catppuccin";
+      };
+
+      memory = {
+        backend = "mnemopi";
+      };
+      mnemopiScoping = "per-project-tagged";
+
+      cycleOrder = [
+        "smol"
+        "slow"
+        "default"
+      ];
     in
     lib.mkMerge [
       {
@@ -127,6 +147,21 @@ in
             }
             run ${ohMyPi}/bin/omp config set retry.fallbackChains ${
               lib.escapeShellArg (builtins.toJSON fallbackChains)
+            }
+            run ${ohMyPi}/bin/omp config set symbolPreset ${
+              lib.escapeShellArg (builtins.toJSON symbolPreset)
+            }
+            run ${ohMyPi}/bin/omp config set theme ${
+              lib.escapeShellArg (builtins.toJSON theme)
+            }
+            run ${ohMyPi}/bin/omp config set memory ${
+              lib.escapeShellArg (builtins.toJSON memory)
+            }
+            run ${ohMyPi}/bin/omp config set mnemopi.scoping ${
+              lib.escapeShellArg (builtins.toJSON mnemopiScoping)
+            }
+            run ${ohMyPi}/bin/omp config set cycleOrder ${
+              lib.escapeShellArg (builtins.toJSON cycleOrder)
             }
           '';
       }
