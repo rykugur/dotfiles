@@ -121,13 +121,9 @@ in
 
       symbolPreset = "nerd";
 
-      theme = {
-        dark = "dark-catppuccin";
-      };
+      themeDark = "dark-catppuccin";
 
-      memory = {
-        backend = "mnemopi";
-      };
+      memoryBackend = "mnemopi";
       mnemopiScoping = "per-project-tagged";
 
       cycleOrder = [
@@ -149,16 +145,16 @@ in
               lib.escapeShellArg (builtins.toJSON fallbackChains)
             }
             run ${ohMyPi}/bin/omp config set symbolPreset ${
-              lib.escapeShellArg (builtins.toJSON symbolPreset)
+              lib.escapeShellArg symbolPreset
             }
-            run ${ohMyPi}/bin/omp config set theme ${
-              lib.escapeShellArg (builtins.toJSON theme)
+            run ${ohMyPi}/bin/omp config set theme.dark ${
+              lib.escapeShellArg themeDark
             }
-            run ${ohMyPi}/bin/omp config set memory ${
-              lib.escapeShellArg (builtins.toJSON memory)
+            run ${ohMyPi}/bin/omp config set memory.backend ${
+              lib.escapeShellArg memoryBackend
             }
             run ${ohMyPi}/bin/omp config set mnemopi.scoping ${
-              lib.escapeShellArg (builtins.toJSON mnemopiScoping)
+              lib.escapeShellArg mnemopiScoping
             }
             run ${ohMyPi}/bin/omp config set cycleOrder ${
               lib.escapeShellArg (builtins.toJSON cycleOrder)

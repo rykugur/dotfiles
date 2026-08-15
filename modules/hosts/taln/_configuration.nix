@@ -55,6 +55,10 @@
   homebrew = {
     enable = true;
 
+    taps = [ { name = "solarphlare/airmute"; trusted = true; } ];
+
+    casks = [ "airmute" ];
+
     brews = [ { name = "lima"; } { name = "minikube"; } ];
     # { name = "kubectl"; }
     # { name = "kubecolor"; }

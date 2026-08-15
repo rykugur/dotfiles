@@ -1,11 +1,12 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   flake.modules.homeManager.helix =
     { lib, pkgs, ... }:
     {
-      home.packages = with pkgs; [
+      imports = with self.modules.homeManager; [
         television
         yazi
+        zmx
       ];
 
       programs.helix = {
