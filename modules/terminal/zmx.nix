@@ -10,7 +10,7 @@
     {
       imports = [ self.modules.homeManager.starshipFormat ];
 
-      home.packages = [ pkgs.zmx ] ++ lib.optionals pkgs.stdenv.isLinux [ pkgs.zsm ];
+      home.packages = [ pkgs.zmx ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.zsm ];
 
       programs.starship = lib.mkIf config.programs.starship.enable {
         prependFormat = lib.mkBefore [ "\${env_var.ZMX_SESSION}" ];

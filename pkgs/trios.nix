@@ -75,10 +75,10 @@ in
 stdenv.mkDerivation {
   inherit pname version src;
 
-  nativeBuildInputs = [ makeWrapper copyDesktopItems ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
-  buildInputs = lib.optionals stdenv.isLinux linuxRuntimeDeps;
-  desktopItems = lib.optionals stdenv.isLinux [ desktopItem ];
-  preFixup = lib.optionalString stdenv.isLinux ''
+  nativeBuildInputs = [ makeWrapper copyDesktopItems ] ++ lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
+  buildInputs = lib.optionals stdenv.hostPlatform.isLinux linuxRuntimeDeps;
+  desktopItems = lib.optionals stdenv.hostPlatform.isLinux [ desktopItem ];
+  preFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
     addAutoPatchelfSearchPath ${jre_headless}/lib/openjdk/lib/server
   '';
 
@@ -86,7 +86,7 @@ stdenv.mkDerivation {
   dontBuild = true;
 
   installPhase =
-    if stdenv.isLinux then
+    if stdenv.hostPlatform.isLinux then
       ''
         install -Dm755 TriOS $out/libexec/trios/TriOS
         cp -r lib data $out/libexec/trios/

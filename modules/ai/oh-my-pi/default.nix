@@ -30,16 +30,16 @@ let
       };
 
       dontUnpack = true;
-      dontStrip = pkgs.stdenv.isLinux;
-      dontPatchELF = pkgs.stdenv.isLinux;
+      dontStrip = pkgs.stdenv.hostPlatform.isLinux;
+      dontPatchELF = pkgs.stdenv.hostPlatform.isLinux;
 
-      nativeBuildInputs = lib.optionals pkgs.stdenv.isLinux [
+      nativeBuildInputs = lib.optionals pkgs.stdenv.hostPlatform.isLinux [
         pkgs.makeWrapper
         pkgs.patchelf
       ];
 
       installPhase =
-        if pkgs.stdenv.isLinux then
+        if pkgs.stdenv.hostPlatform.isLinux then
           ''
             runHook preInstall
 
@@ -59,7 +59,7 @@ let
             runHook postInstall
           '';
 
-      doInstallCheck = pkgs.stdenv.isLinux;
+      doInstallCheck = pkgs.stdenv.hostPlatform.isLinux;
       installCheckPhase = ''
         runHook preInstallCheck
 
