@@ -38,6 +38,11 @@ let
       command = "${pkgs.bun}/bin/bunx";
       args = [ "@upstash/context7-mcp" ];
     };
+
+    arcanum = {
+      type = "http";
+      url = "https://arcanum.k8s.local.ryk.sh/mcp";
+    };
   };
 
   pick = names: lib.getAttrs names servers;
@@ -70,6 +75,11 @@ let
   # Pi mcp.json schema is the canonical form unchanged.
   toPi = serverSet: serverSet;
 
+  # OMP (oh-my-pi) mcp.json schema is the canonical form unchanged, same
+  # shape as Pi's but named distinctly: modules/ai/pi.nix targets the
+  # unrelated lukasl-dev/pi.nix tool, not OMP.
+  toOhMyPi = serverSet: serverSet;
+
   # Grok (superagent-ai/grok-cli) mcp config in ~/.grok/user-settings.json
   # under mcp.servers (array of McpServerConfig).
   # See src/utils/settings.ts in grok-cli for the type:
@@ -95,6 +105,7 @@ in
     toClaudeCode
     toOpencode
     toPi
+    toOhMyPi
     toGrok
     ;
 }

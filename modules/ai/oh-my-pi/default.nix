@@ -95,6 +95,7 @@ in
     }:
     let
       ohMyPi = mkOhMyPi pkgs;
+      mcp = import ../_mcp.nix { inherit pkgs; };
       modelRoles = {
         default = "anthropic/claude-sonnet-5";
         smol = "anthropic/claude-haiku-4-5";
@@ -136,6 +137,9 @@ in
       {
         home.packages = [ ohMyPi ];
 
+        home.file.".omp/agent/mcp.json".text = builtins.toJSON {
+          mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
+        };
         home.activation.ohMyPiModelConfiguration =
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             run ${ohMyPi}/bin/omp config set modelRoles ${
