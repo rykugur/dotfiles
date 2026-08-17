@@ -17,7 +17,7 @@
             bufferline = "multiple";
             cursorcolumn = false;
             cursorline = true;
-            clipboard-provider = "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
+            clipboard-provider = "${if pkgs.stdenv.hostPlatform.isDarwin then "pasteboard" else "wayland"}";
             cursor-shape = {
               insert = "bar";
               normal = "block";
