@@ -1555,6 +1555,7 @@
         "pi-subagents": "pi-subagents",
         "ryze312-stackpkgs": "ryze312-stackpkgs",
         "skills-anthropic": "skills-anthropic",
+        "skills-simple-english": "skills-simple-english",
         "skills-vercel": "skills-vercel",
         "sops-nix": "sops-nix",
         "spt": "spt",
@@ -1641,6 +1642,22 @@
       "original": {
         "owner": "anthropics",
         "repo": "skills",
+        "type": "github"
+      }
+    },
+    "skills-simple-english": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786985639,
+        "narHash": "sha256-0YvDvgNOL9q+BOmIinyaxIbokdB6XFfwnq/BilBvsj0=",
+        "owner": "AminBlg",
+        "repo": "SimpleEnglish",
+        "rev": "63f5d57f0c56e24108f63655d40f1a2680bd4e6f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AminBlg",
+        "repo": "SimpleEnglish",
         "type": "github"
       }
     },

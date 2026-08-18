@@ -21,6 +21,10 @@ let
       src = "${inputs.karpathy-skills}/skills/karpathy-guidelines";
     }
     {
+      name = "simple-english";
+      src = "${inputs.skills-simple-english}/skills/simple-english";
+    }
+    {
       name = "sensitive-files";
       src = ./skills/sensitive-files;
     }
