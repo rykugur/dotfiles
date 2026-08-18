@@ -140,6 +140,8 @@ in
         home.file.".omp/agent/mcp.json".text = builtins.toJSON {
           mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
         };
+
+        home.file.".omp/agent/skills/arcanum/SKILL.md".source = ../skills/arcanum/SKILL.md;
         home.activation.ohMyPiModelConfiguration =
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             run ${ohMyPi}/bin/omp config set modelRoles ${
