@@ -81,6 +81,7 @@ let
                 claude-code
                 codex
                 herdr
+                hermes-agent
                 opencode
                 oh-my-pi
 
