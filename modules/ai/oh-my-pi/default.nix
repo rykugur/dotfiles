@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 let
   release = builtins.fromJSON (builtins.readFile ./release.json);
   inherit (release) version sources;
@@ -96,6 +96,16 @@ in
     let
       ohMyPi = mkOhMyPi pkgs;
       mcp = import ../_mcp.nix { inherit pkgs; };
+      commonSkills = (import ../_skills.nix { inherit inputs; }).commonSkills;
+      skillFiles = lib.listToAttrs (
+        map (s: {
+          name = ".omp/agent/skills/${s.name}";
+          value = {
+            source = s.src;
+            recursive = true;
+          };
+        }) commonSkills
+      );
       modelRoles = {
         default = "anthropic/claude-sonnet-5";
         smol = "anthropic/claude-haiku-4-5";
@@ -137,11 +147,13 @@ in
       {
         home.packages = [ ohMyPi ];
 
-        home.file.".omp/agent/mcp.json".text = builtins.toJSON {
-          mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
-        };
-
-        home.file.".omp/agent/skills/arcanum/SKILL.md".source = ../skills/arcanum/SKILL.md;
+        home.file =
+          {
+            ".omp/agent/mcp.json".text = builtins.toJSON {
+              mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
+            };
+          }
+          // skillFiles;
         home.activation.ohMyPiModelConfiguration =
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             run ${ohMyPi}/bin/omp config set modelRoles ${
