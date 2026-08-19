@@ -76,12 +76,7 @@ let
       // lib.optionalAttrs (s ? env) { environment = s.env; }
     ) serverSet;
 
-  # Pi mcp.json schema is the canonical form unchanged.
-  toPi = serverSet: serverSet;
-
-  # OMP (oh-my-pi) mcp.json schema is the canonical form unchanged, same
-  # shape as Pi's but named distinctly: modules/ai/pi.nix targets the
-  # unrelated lukasl-dev/pi.nix tool, not OMP.
+  # OMP (oh-my-pi) mcp.json schema is the canonical form unchanged.
   toOhMyPi = serverSet: serverSet;
 
   # Hermes Agent config.yaml `mcp_servers` schema:
@@ -121,7 +116,6 @@ in
     pick
     toClaudeCode
     toOpencode
-    toPi
     toOhMyPi
     toGrok
     toHermes

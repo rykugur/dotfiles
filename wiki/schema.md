@@ -185,7 +185,7 @@ The LLM is excellent at this bookkeeping.
 - They are complementary. When answering, you may use both (mempalace for fresh context or specific room facts; wiki for big-picture and "why").
 
 **Self-reference**:
-Because this repo *manages* the llm-wiki skill itself (see `modules/ai/skills/llm-wiki/`, `claude-code.nix`, `pi.nix` etc.), the wiki should eventually have a good page on "how the wiki skill is distributed and activated".
+Because this repo *manages* the llm-wiki skill itself (see `modules/ai/skills/llm-wiki/`, `claude-code.nix`, `oh-my-pi/default.nix` etc.), the wiki should eventually have a good page on "how the wiki skill is distributed and activated".
 
 ## File Hygiene & Git
 

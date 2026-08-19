@@ -2,8 +2,8 @@
 title: AI Agents
 category: ai
 date: 2026-06-03
-tags: [ai, agents, claude-code, codex, grok, opencode, pi, mempalace, llm-wiki, skills, mcp]
-sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/pi.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md"]
+tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, mempalace, llm-wiki, skills, mcp]
+sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
 
@@ -11,7 +11,7 @@ related: ["overview.md", "architecture.md", "modules.md"]
 
 One of the most distinctive parts of Swoleflake is that AI coding agents are treated as **first-class, declaratively managed software** — exactly like shells, editors, or window managers.
 
-The goal: identical (or as close as the host allows) agent experience on every machine, installed and configured purely through Nix, with no imperative `claude install ...` or `pi install npm:...` steps that leave state in `~/.claude/` or `~/.pi/`.
+The goal: identical (or as close as the host allows) agent experience on every machine, installed and configured purely through Nix, with no imperative `claude install ...` steps that leave state in `~/.claude/`.
 
 ## The agents
 
@@ -19,7 +19,9 @@ The goal: identical (or as close as the host allows) agent experience on every m
 - **codex** (OpenAI Codex / successor agent)
 - **grok** (superagent-ai/grok-cli, the Grok-powered coding agent; uses `~/.agents/skills/` (declarative via module) + `.grok/` (project state, gitignored) + `~/.grok/user-settings.json` (TUI-managed for API key etc.))
 - **opencode**
-- **pi** (lukasl-dev/pi.nix) — terminal-first agent
+- **oh-my-pi** (OMP, `can1357/oh-my-pi`) — terminal-first agent; the one actually used day-to-day (config at `~/.omp/agent/`)
+
+Note: `lukasl-dev/pi.nix` was evaluated (see the May 2026 pi module design doc) but never wired into any host and was removed — OMP is the only terminal agent in active use.
 
 Each has a home-manager module under `modules/ai/<name>.nix`.
 
@@ -55,7 +57,7 @@ Skills are loaded via the agent's extension/skill mechanism:
 
 The skill files (and companion assets) are passed as store paths (via `flake = false` inputs or direct paths) so no imperative install is needed. For superpowers we symlink entire skill dirs so extra docs are present.
 
-See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `pi.nix` consume skills (and for grok also sub-agents + MCPs) from the shared definitions. _skills.nix now centralizes the list.
+See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix` consume skills (and for grok also sub-agents + MCPs) from the shared definitions. _skills.nix now centralizes the list.
 
 ## Why this matters (self-referentiality)
 
@@ -89,11 +91,9 @@ Then `nix flake check` and deploy.
 
 ## Current gaps / evolution
 
-- Some agents still have slightly different MCP/skill sets (documented in the pi design doc).
+- Some agents still have slightly different MCP/skill sets.
 - Full parity and unified permission story is work in progress.
 - The `karpathy-skills` and other upstream skill flakes are pulled in.
-
-See the May 2026 pi module design doc for the most recent deep thinking on the shape.
 
 ## Using the agents with this wiki
 
