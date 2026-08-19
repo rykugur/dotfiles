@@ -145,6 +145,10 @@
       url = "github:vercel-labs/agent-skills";
       flake = false;
     };
+    skills-simple-english = {
+      url = "github:AminBlg/SimpleEnglish";
+      flake = false;
+    };
     ###
   };
 
