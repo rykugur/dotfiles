@@ -97,25 +97,9 @@
       flake = false;
     };
 
-    pi = {
-      url = "github:lukasl-dev/pi.nix";
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    pi-subagents = {
-      url = "github:nicobailon/pi-subagents";
-      flake = false;
-    };
-    pi-mcp-adapter = {
-      url = "github:nicobailon/pi-mcp-adapter";
-      flake = false;
-    };
-    pi-lens = {
-      url = "github:apmantza/pi-lens";
-      flake = false;
-    };
-    pi-permission-system = {
-      url = "github:MasuRii/pi-permission-system";
-      flake = false;
     };
 
     #  plugins
@@ -138,6 +122,10 @@
     };
     skills-vercel = {
       url = "github:vercel-labs/agent-skills";
+      flake = false;
+    };
+    skills-simple-english = {
+      url = "github:AminBlg/SimpleEnglish";
       flake = false;
     };
     ###

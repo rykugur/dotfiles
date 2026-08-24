@@ -1,11 +1,12 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   flake.modules.homeManager.helix =
     { lib, pkgs, ... }:
     {
-      home.packages = with pkgs; [
+      imports = with self.modules.homeManager; [
         television
         yazi
+        zmx
       ];
 
       programs.helix = {
@@ -16,7 +17,7 @@
             bufferline = "multiple";
             cursorcolumn = false;
             cursorline = true;
-            clipboard-provider = "${if pkgs.stdenv.isDarwin then "pasteboard" else "wayland"}";
+            clipboard-provider = "${if pkgs.stdenv.hostPlatform.isDarwin then "pasteboard" else "wayland"}";
             cursor-shape = {
               insert = "bar";
               normal = "block";

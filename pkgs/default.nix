@@ -20,6 +20,7 @@ in
   # misc
   jackify = pkgs.callPackage ./jackify.nix { };
   eve-wrench = pkgs.callPackage ./eve-wrench.nix { };
+  bambu-studio = pkgs.callPackage ./bambu-studio.nix { };
   rift-intel-tool = pkgs.callPackage ./rift-intel-tool.nix { };
 
   ### misc

@@ -42,8 +42,13 @@ def --env "nrd" [] {
   nix repl --expr $"builtins.getFlake \"($realDotsDir)\""
 }
 
-def "nrn" [] {
-  nix repl --file '<nixpkgs>'
+def "nrn" [pkg: string] {
+  let finalPkg = if ($pkg | str contains "#") {
+    $pkg
+  } else {
+    $"nixpkgs#($pkg)"
+  }
+  nix run $finalPkg
 }
 
 def nrf [--remote (-r)] {
@@ -54,10 +59,6 @@ def nrf [--remote (-r)] {
   }
 
   nix repl --expr $"builtins.getFlake \"($url)\""
-}
-
-def nrun [pkg: string] {
-  nix run $"nixpkgs#($pkg)"
 }
 
 def mkenvrc [] {

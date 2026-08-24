@@ -86,7 +86,8 @@
         };
         keepRoots = lib.mkOption {
           type = lib.types.int;
-          default = 5;
+          default = 1;
+          description = "Number of successful Jezrien closures to retain as GC roots. 1 keeps only the latest candidate.";
         };
       };
 

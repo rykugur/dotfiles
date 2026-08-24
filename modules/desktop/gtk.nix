@@ -3,7 +3,7 @@
   flake.modules.homeManager.gtk =
     { config, lib, pkgs, ... }:
     {
-      dconf = lib.mkIf pkgs.stdenv.isLinux {
+      dconf = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
         enable = true;
         # re-enable middle-click primary-selection paste (ships off by default)
         settings."org/gnome/desktop/interface".gtk-enable-primary-paste = true;

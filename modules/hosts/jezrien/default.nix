@@ -81,6 +81,7 @@ let
                 claude-code
                 codex
                 herdr
+                hermes-agent
                 opencode
                 oh-my-pi
 
@@ -205,10 +206,6 @@ in
 {
   flake.nixosConfigurations = {
     jezrien = mkJezrien [ ];
-    jezrien-prebuild = mkJezrien [
-      {
-        home-manager.users.${username}.ryk.printing3d.enableBambuStudio = false;
-      }
-    ];
+    jezrien-prebuild = mkJezrien [ ];
   };
 }

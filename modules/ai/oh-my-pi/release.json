@@ -1,21 +1,21 @@
 {
-  "version": "17.2.12",
+  "version": "17.3.5",
   "sources": {
     "x86_64-linux": {
       "asset": "omp-linux-x64",
-      "hash": "sha256-bHUzG/CdWp6UM71ZKz7pk9dRoV1bdFDBozTMBoSZbzA="
+      "hash": "sha256-YFtKijoTdImpHVnnAoxB86/yAWnzUpArQQifv9+KJTw="
     },
     "aarch64-linux": {
       "asset": "omp-linux-arm64",
-      "hash": "sha256-8Xbt+BdNslKr4apuhN8oThuDuN1+80rH+veISl4XKkw="
+      "hash": "sha256-x5q6SFnXHm6teXvtL1EKnel8nVdq+YQuf+Y9vJ9BV68="
     },
     "x86_64-darwin": {
       "asset": "omp-darwin-x64",
-      "hash": "sha256-7eUWJYc7t+WSAHEevkS3dZGaGLRv6SeZWkH5MVqclqo="
+      "hash": "sha256-yyCbDi6sLZdpgMyg6s4cJRPuEkDJgbfRP7Z035Lj/3o="
     },
     "aarch64-darwin": {
       "asset": "omp-darwin-arm64",
-      "hash": "sha256-q0/yTIujrm/Z1LVJaclPRAjMMWZ19VNHKa5QLYyX33Q="
+      "hash": "sha256-phVKSgS3j5FB4NMNUDUoRQPy+gNFILZN/aWFYVqM+0o="
     }
   }
 }

@@ -38,6 +38,15 @@ let
       command = "${pkgs.bun}/bin/bunx";
       args = [ "@upstash/context7-mcp" ];
     };
+
+    # N95 iGPU reranker still takes 30-90s even Vulkan-accelerated
+    # (see homelab wiki [[arcanum-mcp]]); default 30s client timeout
+    # is too tight.
+    arcanum = {
+      type = "http";
+      url = "https://arcanum.k8s.local.ryk.sh/mcp";
+      timeout = 90000;
+    };
   };
 
   pick = names: lib.getAttrs names servers;
@@ -67,8 +76,21 @@ let
       // lib.optionalAttrs (s ? env) { environment = s.env; }
     ) serverSet;
 
-  # Pi mcp.json schema is the canonical form unchanged.
-  toPi = serverSet: serverSet;
+  # OMP (oh-my-pi) mcp.json schema is the canonical form unchanged.
+  toOhMyPi = serverSet: serverSet;
+
+  # Hermes Agent config.yaml `mcp_servers` schema:
+  # stdio: { command; args; env?; }; HTTP: { url; headers?; timeout?; ... }.
+  # See https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
+  toHermes =
+    serverSet:
+    lib.mapAttrs (
+      _: s:
+      if s ? command then
+        { inherit (s) command args; } // lib.optionalAttrs (s ? env) { inherit (s) env; }
+      else
+        { inherit (s) url; } // lib.optionalAttrs (s ? timeout) { inherit (s) timeout; }
+    ) serverSet;
 
   # Grok (superagent-ai/grok-cli) mcp config in ~/.grok/user-settings.json
   # under mcp.servers (array of McpServerConfig).
@@ -94,7 +116,8 @@ in
     pick
     toClaudeCode
     toOpencode
-    toPi
+    toOhMyPi
     toGrok
+    toHermes
     ;
 }

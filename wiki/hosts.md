@@ -58,7 +58,7 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 - **Not a remote builder**: Jezrien only substitutes cache paths; it never delegates builds over SSH.
 - **Promotion**: on a clean `master` checkout, run `scripts/vasher-promote.sh`. It fast-forwards only to `origin/cache-bump`, pushes `master`, then runs the local NixOS switch.
 - **OMP updates**: only the nightly candidate runs `update-omp.sh`. A successful reduced-closure build publishes its tested `flake.lock` and `modules/ai/oh-my-pi/release.json` together on `cache-bump`; the normal promotion script advances both.
-- **Retention**: five successful closures are retained as Nix GC roots.
+- **Retention**: only the latest successful closure is retained as a Nix GC root; older roots are pruned and `nix-collect-garbage` runs after each success.
 - **Resources**: the LXC runs one derivation at a time with a fixed CPU and memory envelope.
 - **Deploy**: use the normal NixOS rebuild for the published flake's `vasher` host; activation does not start a candidate.
 - **Run/recover**: start a detached candidate with `systemctl start --no-block vasher-prebuild-candidate.service`; stop it through the container manager if resource pressure threatens the host.

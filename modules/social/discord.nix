@@ -5,8 +5,10 @@
     let
       mkDiscordWrapper = name:
         lib.hiPrio (pkgs.writeShellScriptBin name ''
-          export NIXOS_OZONE_WL=1
-          exec ${lib.getExe' pkgs.discord name} "$@"
+          exec ${lib.getExe' pkgs.discord name} \
+            --ozone-platform=wayland \
+            --enable-features=WaylandWindowDrag,WebRTCPipeWireCapturer \
+            "$@"
         '');
     in
     {
