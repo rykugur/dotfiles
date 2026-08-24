@@ -110,6 +110,10 @@
     }:
     let
       niriCfg = nixosConfig.ryk.niri;
+      discordMuteToggleDaemon = pkgs.writers.writePython3Bin "discord-mute-toggle-daemon" {
+        libraries = [ pkgs.python3Packages.pypresence ];
+        flakeIgnore = [ "E265" "E501" ];
+      } (builtins.readFile ./scripts/discord-mute-toggle-daemon.py);
     in
     {
       imports = [ self.modules.homeManager.nautilus ];
@@ -154,11 +158,28 @@
             text = builtins.readFile ./scripts/window-info.sh;
           })
           (pkgs.writers.writePython3Bin "discord-mute-toggle" {
-            libraries = [ pkgs.python3Packages.pypresence ];
-            flakeIgnore = [ "E265" ];
+            flakeIgnore = [ "E265" "E501" ];
           } (builtins.readFile ./scripts/discord-mute-toggle.py))
+          discordMuteToggleDaemon
         ];
 
+
+      systemd.user.services.discord-mute-toggle-daemon = {
+        Unit = {
+          Description = "Persistent Discord RPC connection for the F13 mute-toggle hotkey";
+          After = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = "${discordMuteToggleDaemon}/bin/discord-mute-toggle-daemon";
+          Environment = [
+            "DISCORD_CLIENT_ID_FILE=${config.sops.secrets.discord_client_id.path}"
+            "DISCORD_CLIENT_SECRET_FILE=${config.sops.secrets.discord_client_secret.path}"
+          ];
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
       programs.niri = {
         package = pkgs.niri;
 
@@ -369,12 +390,16 @@
 
                 # F13 mutes Discord. Discord's own hotkey capture only fires
                 # while an X11 surface has focus (Wayland focus-gates app
-                # input), so this toggles mute via Discord's local RPC socket
-                # instead — works regardless of focus. Disable the matching
-                # mute keybind in Discord's own Keybinds settings so the two
-                # don't double-toggle when Discord is focused.
+                # input), so this pings the discord-mute-toggle-daemon user
+                # service (holds one persistent RPC connection - Discord's
+                # IPC server throttles fresh connects by ~10-30s, so
+                # reconnecting per-keypress made this hotkey laggy) which
+                # toggles mute over that connection instead — works
+                # regardless of focus. Disable the matching mute keybind in
+                # Discord's own Keybinds settings so the two don't
+                # double-toggle when Discord is focused.
                 "F13" = {
-                  action = spawn-sh ''DISCORD_CLIENT_ID_FILE="${config.sops.secrets.discord_client_id.path}" DISCORD_CLIENT_SECRET_FILE="${config.sops.secrets.discord_client_secret.path}" discord-mute-toggle'';
+                  action = spawn [ "discord-mute-toggle" ];
                   repeat = false;
                 };
               }

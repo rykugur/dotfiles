@@ -7,6 +7,7 @@ source ./git.nu
 source ./linux.nu
 source ./misc.nu
 source ./nix.nu
+source ./steam.nu
 source ./zellij.nu
 
 source ./eve.nu
