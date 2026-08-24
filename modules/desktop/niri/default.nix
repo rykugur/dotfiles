@@ -155,6 +155,7 @@
           })
           (pkgs.writers.writePython3Bin "discord-mute-toggle" {
             libraries = [ pkgs.python3Packages.pypresence ];
+            flakeIgnore = [ "E265" ];
           } (builtins.readFile ./scripts/discord-mute-toggle.py))
         ];
 
