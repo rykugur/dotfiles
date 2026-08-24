@@ -114,6 +114,11 @@
     {
       imports = [ self.modules.homeManager.nautilus ];
 
+      sops.secrets = {
+        discord_client_id = { };
+        discord_client_secret = { };
+      };
+
       home.packages =
         with pkgs;
         [
@@ -148,6 +153,9 @@
             ];
             text = builtins.readFile ./scripts/window-info.sh;
           })
+          (pkgs.writers.writePython3Bin "discord-mute-toggle" {
+            libraries = [ pkgs.python3Packages.pypresence ];
+          } (builtins.readFile ./scripts/discord-mute-toggle.py))
         ];
 
       programs.niri = {
@@ -355,6 +363,17 @@
                 # F14 is emitted by a macro pad (F13 is already Discord mute).
                 "F14" = {
                   action = spawn-sh "dbus-send --session --type=method_call --dest=com.github.opentrack /com/github/opentrack/Tracker com.github.opentrack.Tracker.Center";
+                  repeat = false;
+                };
+
+                # F13 mutes Discord. Discord's own hotkey capture only fires
+                # while an X11 surface has focus (Wayland focus-gates app
+                # input), so this toggles mute via Discord's local RPC socket
+                # instead — works regardless of focus. Disable the matching
+                # mute keybind in Discord's own Keybinds settings so the two
+                # don't double-toggle when Discord is focused.
+                "F13" = {
+                  action = spawn-sh ''DISCORD_CLIENT_ID_FILE="${config.sops.secrets.discord_client_id.path}" DISCORD_CLIENT_SECRET_FILE="${config.sops.secrets.discord_client_secret.path}" discord-mute-toggle'';
                   repeat = false;
                 };
               }
