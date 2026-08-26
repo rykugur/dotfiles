@@ -66,6 +66,10 @@
               "S-h" = "goto_previous_buffer";
               "S-l" = "goto_next_buffer";
               "S-y" = ":echo test";
+              "C-h" = "jump_view_left";
+              "C-j" = "jump_view_down";
+              "C-k" = "jump_view_up";
+              "C-l" = "jump_view_right";
               # "S-y" = [
               #   ":sh rm -f /tmp/unique-file"
               #   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file"
