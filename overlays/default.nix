@@ -24,6 +24,12 @@
       rtk = prev.rtk.overrideAttrs (_: {
         doCheck = false;
       });
+      # 3.2.1 still calls obs_properties_add_button; OBS 32.2 deprecates it and the plugin's -Werror fails the build.
+      obs-studio-plugins = prev.obs-studio-plugins // {
+        obs-move-transition = prev.obs-studio-plugins.obs-move-transition.overrideAttrs (old: {
+          cmakeFlags = (old.cmakeFlags or [ ]) ++ [ "-DCMAKE_COMPILE_WARNING_AS_ERROR=OFF" ];
+        });
+      };
 
       audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
       hyprprop = inputs.hyprland-contrib.packages.${system}.hyprprop;
