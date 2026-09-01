@@ -20,7 +20,11 @@ daemon start/reconnect.
 import asyncio
 import json
 import os
+import re
 import sys
+import tempfile
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -31,6 +35,7 @@ REDIRECT_URI = "http://localhost:7878"
 TOKEN_FILE = Path.home() / ".cache" / "discord-mute-toggle-token.json"
 SOCK_PATH = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "discord-mute-toggle.sock"
 RECONNECT_DELAY_S = 5
+TOKEN_REQUEST_TIMEOUT_S = 30
 
 TOKEN_EXCHANGE_HEADERS = {
     "Content-Type": "application/x-www-form-urlencoded",
@@ -43,6 +48,28 @@ TOKEN_EXCHANGE_HEADERS = {
 }
 
 
+class RefreshTokenRejected(Exception):
+    pass
+
+
+def safe_error(error: BaseException) -> str:
+    return re.sub(
+        r"(?i)(invalid access token:)\s*\S+",
+        r"\1 <redacted>",
+        str(error),
+    )
+
+
+def log_asyncio_error(
+    _loop: asyncio.AbstractEventLoop, context: dict
+) -> None:
+    message = context.get("message", "asyncio error")
+    error = context.get("exception")
+    if error is not None:
+        message = f"{message}: {safe_error(error)}"
+    print(message, file=sys.stderr, flush=True)
+
+
 def read_secret(env_var: str) -> str:
     path = os.environ.get(env_var)
     if not path:
@@ -50,8 +77,26 @@ def read_secret(env_var: str) -> str:
     return Path(path).read_text().strip()
 
 
+def request_token(params: dict[str, str]) -> dict:
+    data = urllib.parse.urlencode(params).encode()
+    req = urllib.request.Request(
+        "https://discord.com/api/oauth2/token", data=data, headers=TOKEN_EXCHANGE_HEADERS
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=TOKEN_REQUEST_TIMEOUT_S) as resp:
+            return json.loads(resp.read())
+    except urllib.error.HTTPError as exc:
+        try:
+            error = json.loads(exc.read())
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            raise
+        if error.get("error") == "invalid_grant":
+            raise RefreshTokenRejected from None
+        raise
+
+
 def exchange_code(client_id: str, client_secret: str, code: str) -> dict:
-    data = urllib.parse.urlencode(
+    return request_token(
         {
             "client_id": client_id,
             "client_secret": client_secret,
@@ -59,27 +104,73 @@ def exchange_code(client_id: str, client_secret: str, code: str) -> dict:
             "code": code,
             "redirect_uri": REDIRECT_URI,
         }
-    ).encode()
-    req = urllib.request.Request(
-        "https://discord.com/api/oauth2/token", data=data, headers=TOKEN_EXCHANGE_HEADERS
     )
-    with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read())
+
+
+def refresh_token(client_id: str, client_secret: str, token: str) -> dict:
+    return request_token(
+        {
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "grant_type": "refresh_token",
+            "refresh_token": token,
+        }
+    )
+
+
+def save_token(token: dict) -> None:
+    token = token.copy()
+    token["expires_at"] = time.time() + token["expires_in"]
+    TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            dir=TOKEN_FILE.parent,
+            prefix=f".{TOKEN_FILE.name}.",
+            encoding="utf-8",
+            delete=False,
+        ) as temp_file:
+            temp_path = Path(temp_file.name)
+            json.dump(token, temp_file)
+            temp_file.flush()
+            os.fsync(temp_file.fileno())
+        os.replace(temp_path, TOKEN_FILE)
+    finally:
+        if temp_path is not None:
+            temp_path.unlink(missing_ok=True)
 
 
 async def get_token(client: AioClient, client_id: str, client_secret: str) -> str:
-    if TOKEN_FILE.exists():
-        return json.loads(TOKEN_FILE.read_text())["access_token"]
-
-    print("No cached token - waiting for the authorize click in Discord...", flush=True)
-    auth = await client.authorize(client_id, scopes=["rpc"])
     loop = asyncio.get_running_loop()
+    if TOKEN_FILE.exists():
+        token = json.loads(TOKEN_FILE.read_text())
+        if token.get("expires_at", 0) > time.time() + 60:
+            return token["access_token"]
+        try:
+            token = await loop.run_in_executor(
+                None,
+                refresh_token,
+                client_id,
+                client_secret,
+                token["refresh_token"],
+            )
+        except (KeyError, RefreshTokenRejected):
+            print(
+                "Cached Discord authorization expired; waiting for authorization...",
+                flush=True,
+            )
+        else:
+            save_token(token)
+            return token["access_token"]
+
+    else:
+        print("No cached token - waiting for authorization...", flush=True)
+    auth = await client.authorize(client_id, scopes=["rpc"])
     token = await loop.run_in_executor(
         None, exchange_code, client_id, client_secret, auth["data"]["code"]
     )
-    TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
-    TOKEN_FILE.write_text(json.dumps(token))
-    TOKEN_FILE.chmod(0o600)
+    save_token(token)
     return token["access_token"]
 
 
@@ -100,7 +191,7 @@ async def run_session(client_id: str, client_secret: str) -> None:
             await client.set_voice_settings(mute=not muted)
             writer.write(b"ok\n")
         except Exception as exc:  # noqa: BLE001 - reported to caller, then forces a reconnect
-            writer.write(f"error: {exc}\n".encode())
+            writer.write(f"error: {safe_error(exc)}\n".encode())
             broken.set()
         finally:
             await writer.drain()
@@ -121,12 +212,17 @@ async def run_session(client_id: str, client_secret: str) -> None:
 async def main() -> None:
     client_id = read_secret("DISCORD_CLIENT_ID_FILE")
     client_secret = read_secret("DISCORD_CLIENT_SECRET_FILE")
+    asyncio.get_running_loop().set_exception_handler(log_asyncio_error)
 
     while True:
         try:
             await run_session(client_id, client_secret)
         except Exception as exc:  # noqa: BLE001 - keep the daemon alive across Discord restarts
-            print(f"session ended: {exc!r}; reconnecting in {RECONNECT_DELAY_S}s", flush=True)
+            print(
+                f"session ended ({type(exc).__name__}): {safe_error(exc)}; "
+                f"reconnecting in {RECONNECT_DELAY_S}s",
+                flush=True,
+            )
             await asyncio.sleep(RECONNECT_DELAY_S)
 
 
