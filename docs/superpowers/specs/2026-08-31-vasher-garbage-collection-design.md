@@ -1,7 +1,7 @@
 # Vasher Garbage-Collection Design
 
 **Date:** 2026-08-31  
-**Status:** Approved design. Awaiting written-spec review.
+**Status:** Approved design. Awaiting token-addendum review.
 
 ## Purpose
 
@@ -18,6 +18,9 @@ A dry-run garbage collection found 30,011 dead store paths.
 
 The OBS overlay worked on 2026-08-27.
 The current error is a storage error, not the prior OBS API error.
+
+The first two recovered candidates then exhausted GitHub's unauthenticated IPv4 API quota.
+Each retry failed during `nix flake update` with HTTP status `403`.
 
 ## Decisions
 
@@ -52,6 +55,17 @@ This rule prevents command substitutions from recording the same error twice.
 Keep the existing garbage collection after a successful candidate push.
 The retained GC root continues to protect the latest successful Jezrien closure.
 
+### GitHub API authentication
+
+Declare `swoleflake/github_token` as a SOPS secret owned by `vasher` with mode `0400`.
+Pass only the secret file path to the prebuild wrapper.
+
+The runtime script reads the token immediately before Nix commands.
+It adds `access-tokens = github.com=<token>` through `NIX_CONFIG`.
+
+The token must not enter the Nix store, Git, process arguments, status files, or logs.
+The token needs access only to public GitHub repository metadata.
+
 ## Alternatives
 
 Failure-only cleanup does not repair state after a process kill or host restart.
@@ -61,9 +75,10 @@ A larger root disk delays the same accumulation and does not remove dead paths.
 ## Implementation scope
 
 1. Update `modules/nixos/vasher-prebuild.sh` with prebuild and failure cleanup.
-2. Preserve the existing success cleanup.
-3. Recover the live Vasher store and start the candidate service.
-4. Make sure that the service completes and updates `cache-bump`.
+2. Add a SOPS-backed GitHub token to the prebuild service.
+3. Preserve the existing success cleanup.
+4. Recover the live Vasher store and start the candidate service.
+5. Make sure that the service completes and updates `cache-bump`.
 
 ## Out of scope
 
@@ -72,11 +87,13 @@ A larger root disk delays the same accumulation and does not remove dead paths.
 - Change the number of retained successful closures.
 - Add a host-wide Nix GC timer.
 - Change package exclusions or build concurrency.
+- Add access to private GitHub repositories.
 
 ## Acceptance criteria
 
 - A candidate run performs garbage collection before update and build work.
 - A handled build error records its original status and log before garbage collection.
 - A garbage-collection error does not replace the original build exit code.
+- GitHub flake updates use the SOPS token without showing it in the store, arguments, status, or logs.
 - A successful run keeps the latest Jezrien closure as a GC root.
 - The recovered Vasher candidate completes and updates `cache-bump`.
