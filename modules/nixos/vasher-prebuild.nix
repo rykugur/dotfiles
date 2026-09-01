@@ -38,6 +38,7 @@
           export CACHE_BRANCH=${lib.escapeShellArg cfg.cacheBranch}
           export KEEP_ROOTS=${lib.escapeShellArg (toString cfg.keepRoots)}
           export EXCLUDED_PACKAGES=${lib.escapeShellArg (builtins.toJSON cfg.excludedPackages)}
+          export GITHUB_TOKEN_FILE=${lib.escapeShellArg config.sops.secrets."swoleflake/github_token".path}
           export OMP_UPDATER=${lib.escapeShellArg ../ai/oh-my-pi/update-omp.sh}
           exec ${pkgs.bash}/bin/bash ${runtime} "$@"
         '';
@@ -94,6 +95,12 @@
       config = lib.mkIf cfg.enable {
         sops.secrets."swoleflake/deploy_key" = {
           key = "swoleflake/deploy_key";
+          owner = "vasher";
+          group = "vasher";
+          mode = "0400";
+        };
+        sops.secrets."swoleflake/github_token" = {
+          key = "swoleflake/github_token";
           owner = "vasher";
           group = "vasher";
           mode = "0400";

@@ -174,7 +174,118 @@ git commit -m "fix(vasher): collect garbage around prebuilds"
 
 ---
 
-### Task 2: Recover and verify live Vasher
+### Task 2: Authenticate GitHub flake updates
+
+**Files:**
+- Modify: `modules/nixos/vasher-prebuild.nix:35-42,94-100`
+- Modify: `modules/nixos/vasher-prebuild.sh:137-143`
+- Modify: `scripts/tests/test-vasher-prebuild-gc.sh`
+
+**Interfaces:**
+- Consumes: the SOPS key `swoleflake/github_token`.
+- Produces: runtime-only Nix `access-tokens` configuration for public GitHub flake inputs.
+
+- [ ] **Step 1: Add the failing token regression**
+
+In the fake `nix` command, reject calls that do not contain the test token:
+
+```bash
+if [[ ${NIX_CONFIG-} != *'access-tokens = github.com=test-token'* ]]; then
+  printf 'missing GitHub access token\n' >&2
+  exit 99
+fi
+```
+
+Create a test token file:
+
+```bash
+token_file=$tmp/github-token
+printf 'test-token\n' > "$token_file"
+```
+
+Pass its path to the prebuild:
+
+```bash
+GITHUB_TOKEN_FILE="$token_file" \
+```
+
+- [ ] **Step 2: Run the test and observe missing authentication**
+
+Run:
+
+```bash
+bash scripts/tests/test-vasher-prebuild-gc.sh
+```
+
+Expected: the fake `nix` command reports `missing GitHub access token`.
+
+- [ ] **Step 3: Declare the SOPS secret and wrapper path**
+
+Add this secret beside the existing deploy-key secret:
+
+```nix
+sops.secrets."swoleflake/github_token" = {
+  owner = "vasher";
+  group = "vasher";
+  mode = "0400";
+};
+```
+
+Add this wrapper export beside the existing prebuild exports:
+
+```nix
+export GITHUB_TOKEN_FILE=${lib.escapeShellArg config.sops.secrets."swoleflake/github_token".path}
+```
+
+- [ ] **Step 4: Configure authenticated Nix commands**
+
+Immediately before `nix flake update`, add:
+
+```bash
+github_token=$(<"$GITHUB_TOKEN_FILE")
+if [[ -z $github_token ]]; then
+  printf 'vasher-prebuild: GitHub token is empty\n' >&2
+  exit 1
+fi
+nix_config="${NIX_CONFIG-}${NIX_CONFIG:+$'\n'}access-tokens = github.com=$github_token"
+unset github_token
+```
+
+Pass `NIX_CONFIG="$nix_config"` to `nix flake update`, the OMP updater, and `nix build`.
+Unset `nix_config` after the build command.
+
+- [ ] **Step 5: Run the token and cleanup regression**
+
+Run:
+
+```bash
+bash scripts/tests/test-vasher-prebuild-gc.sh
+```
+
+Expected: exit code `0`.
+The fake Nix commands receive the test token.
+The cleanup ordering and original exit code remain unchanged.
+
+- [ ] **Step 6: Build the Vasher system closure**
+
+Run:
+
+```bash
+nix build --no-link .#nixosConfigurations.vasher.config.system.build.toplevel
+```
+
+Expected: the secret declaration and generated service build without an evaluation error.
+
+- [ ] **Step 7: Commit the authentication wiring**
+
+```bash
+git add docs/superpowers/plans/2026-08-31-vasher-garbage-collection.md modules/nixos/vasher-prebuild.nix modules/nixos/vasher-prebuild.sh scripts/tests/test-vasher-prebuild-gc.sh
+git commit -m "fix(vasher): authenticate GitHub flake updates"
+```
+
+---
+
+### Task 3: Recover and verify live Vasher
 
 **Files:**
 - No repository file changes.

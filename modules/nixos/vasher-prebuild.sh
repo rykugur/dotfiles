@@ -137,13 +137,22 @@ if [[ ! -e $worktree/.git ]]; then
 fi
 git -C "$worktree" reset --hard "$base_revision"
 
-nix flake update --flake "$worktree"
+if [[ ! -s $GITHUB_TOKEN_FILE ]]; then
+  printf 'vasher-prebuild: GitHub token is missing or empty\n' >&2
+  exit 1
+fi
+github_token=$(<"$GITHUB_TOKEN_FILE")
+nix_config="${NIX_CONFIG-}${NIX_CONFIG:+$'\n'}access-tokens = github.com=$github_token"
+unset github_token
+
+NIX_CONFIG="$nix_config" nix flake update --flake "$worktree"
 (
   cd "$worktree"
-  bash "$OMP_UPDATER"
+  NIX_CONFIG="$nix_config" bash "$OMP_UPDATER"
 )
 
-out=$(nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
+out=$(NIX_CONFIG="$nix_config" nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
+unset nix_config
 git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
 if ! git -C "$worktree" diff --cached --quiet; then
   git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
