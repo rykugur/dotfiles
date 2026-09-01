@@ -44,6 +44,8 @@ Then run `nix-collect-garbage` as a best-effort cleanup.
 
 The script must preserve the original exit code.
 A garbage-collection error must not replace the build error or start the error trap again.
+Only the top-level shell records the error.
+This rule prevents command substitutions from recording the same error twice.
 
 ### Success cleanup
 

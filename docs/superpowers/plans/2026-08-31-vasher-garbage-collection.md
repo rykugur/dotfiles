@@ -20,24 +20,91 @@
 ### Task 1: Add workflow-local garbage collection
 
 **Files:**
+- Create: `scripts/tests/test-vasher-prebuild-gc.sh`
 - Modify: `modules/nixos/vasher-prebuild.sh:75-80,124-143`
 
 **Interfaces:**
 - Consumes: the existing prebuild lock, `write_status`, and `nix-collect-garbage`.
 - Produces: prebuild cleanup and best-effort error cleanup with the original exit code.
 
-- [ ] **Step 1: Record the failing behavior**
+- [ ] **Step 1: Write the failing regression test**
+
+Create `scripts/tests/test-vasher-prebuild-gc.sh`:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+state_root=$tmp/state
+events=$tmp/events
+mkdir -p "$state_root/repo/.git" "$state_root/worktrees/candidate/.git" "$tmp/bin"
+
+cat > "$tmp/bin/git" <<'EOF'
+#!/usr/bin/env bash
+if [[ $* == *"rev-parse origin/master"* ]]; then
+  printf 'base\n'
+fi
+EOF
+
+cat > "$tmp/bin/nix" <<'EOF'
+#!/usr/bin/env bash
+if [[ ${1-} == build ]]; then
+  printf 'build\n' >> "$EVENTS"
+  exit 42
+fi
+EOF
+
+cat > "$tmp/bin/nix-collect-garbage" <<'EOF'
+#!/usr/bin/env bash
+printf 'gc\n' >> "$EVENTS"
+EOF
+
+cat > "$tmp/bin/omp-updater" <<'EOF'
+#!/usr/bin/env bash
+exit 0
+EOF
+
+chmod +x "$tmp/bin/"*
+source_text=$(<"$repo_root/modules/nixos/vasher-prebuild.sh")
+printf '%s\n' "${source_text//\/var\/lib\/vasher/$state_root}" > "$tmp/prebuild.sh"
+
+set +e
+PATH="$tmp/bin:$PATH" \
+  EVENTS="$events" \
+  REPO_URL=unused \
+  TARGET_ATTR=unused \
+  CACHE_BRANCH=cache-bump \
+  KEEP_ROOTS=1 \
+  EXCLUDED_PACKAGES='[]' \
+  OMP_UPDATER="$tmp/bin/omp-updater" \
+  bash "$tmp/prebuild.sh" candidate
+exit_code=$?
+set -e
+
+[[ $exit_code -eq 42 ]]
+actual_events=$(<"$events")
+[[ $actual_events == $'gc\nbuild\ngc' ]] || {
+  printf 'expected cleanup/build/cleanup, got: %q\n' "$actual_events" >&2
+  exit 1
+}
+jq -e '.state == "failed" and .exitCode == 42' "$state_root/dashboard/status.json" >/dev/null
+```
+
+- [ ] **Step 2: Run the test and observe the missing cleanup**
 
 Run:
 
 ```bash
-ssh root@vasher 'df -h /; nix store gc --dry-run'
+bash scripts/tests/test-vasher-prebuild-gc.sh
 ```
 
-Expected: the root filesystem is 97% full, and Nix reports 30,011 dead store paths.
-This is the existing failing reproduction from the 2026-08-31 candidate.
+Expected: the event-order assertion fails because the current script records only `build`.
 
-- [ ] **Step 2: Add cleanup after a recorded error**
+- [ ] **Step 3: Add cleanup after a recorded error**
 
 Change `record_failure` to:
 
@@ -45,6 +112,7 @@ Change `record_failure` to:
 record_failure() {
   local exit_code=$?
   trap - ERR
+  ((BASH_SUBSHELL == 0)) || exit "$exit_code"
   [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
   [[ $lock_acquired == true ]] && nix-collect-garbage || true
   exit "$exit_code"
@@ -54,7 +122,7 @@ record_failure() {
 The status call copies the error log before garbage-collection output occurs.
 The disabled `ERR` trap and `|| true` preserve the original error.
 
-- [ ] **Step 3: Add cleanup before update and build work**
+- [ ] **Step 4: Add cleanup before update and build work**
 
 Insert this command after `write_status building null` and before worktree update operations:
 
@@ -64,31 +132,43 @@ nix-collect-garbage
 
 The process already owns the prebuild lock at this point.
 
-- [ ] **Step 4: Make sure that the Bash syntax is valid**
+- [ ] **Step 5: Run the regression test**
+
+Run:
+
+```bash
+bash scripts/tests/test-vasher-prebuild-gc.sh
+```
+
+Expected: exit code `0`.
+The test observes `gc`, `build`, and `gc` in that order.
+The final status keeps the simulated build exit code `42`.
+
+- [ ] **Step 6: Make sure that the Bash syntax is valid**
 
 Run:
 
 ```bash
 bash -n modules/nixos/vasher-prebuild.sh
+bash -n scripts/tests/test-vasher-prebuild-gc.sh
 ```
 
 Expected: exit code `0` and no output.
 
-- [ ] **Step 5: Build the generated prebuild application**
+- [ ] **Step 7: Build the Vasher system closure**
 
 Run:
 
 ```bash
-service=$(nix eval .#nixosConfigurations.vasher.config.systemd.services.vasher-prebuild-candidate.serviceConfig.ExecStart --raw)
-nix build --no-link "${service% candidate}"
+nix build --no-link .#nixosConfigurations.vasher.config.system.build.toplevel
 ```
 
-Expected: Nix builds the generated `vasher-prebuild` application without an evaluation or build error.
+Expected: Nix builds the generated prebuild application and the Vasher system closure.
 
-- [ ] **Step 6: Commit the workflow change**
+- [ ] **Step 8: Commit the workflow change**
 
 ```bash
-git add modules/nixos/vasher-prebuild.sh
+git add docs/superpowers/plans/2026-08-31-vasher-garbage-collection.md docs/superpowers/specs/2026-08-31-vasher-garbage-collection-design.md modules/nixos/vasher-prebuild.sh scripts/tests/test-vasher-prebuild-gc.sh
 git commit -m "fix(vasher): collect garbage around prebuilds"
 ```
 

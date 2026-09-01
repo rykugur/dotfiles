@@ -75,7 +75,9 @@ write_status() {
 record_failure() {
   local exit_code=$?
   trap - ERR
+  ((BASH_SUBSHELL == 0)) || exit "$exit_code"
   [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
+  [[ $lock_acquired == true ]] && nix-collect-garbage || true
   exit "$exit_code"
 }
 trap record_failure ERR
@@ -127,6 +129,7 @@ if [[ $mode == refresh ]] && candidate_covers_base; then
 fi
 
 write_status building null
+nix-collect-garbage
 worktree=/var/lib/vasher/worktrees/"$mode"
 if [[ ! -e $worktree/.git ]]; then
   mkdir -p "$(dirname "$worktree")"
