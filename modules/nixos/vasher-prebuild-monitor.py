@@ -2,9 +2,14 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+import os
+import re
+import subprocess
+import time
+import uuid
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
-from typing import Literal
+from typing import Callable, Literal
 
 MIB = 1024 * 1024
 GIB = 1024 * MIB
@@ -19,6 +24,23 @@ STALL_CPU_SECONDS = 10
 STATE_PATH = Path("/var/lib/vasher/monitor/state.json")
 EVENTS_PATH = Path("/var/lib/vasher/dashboard/events.json")
 RETRY_PATH = Path("/var/lib/vasher/monitor/retry.json")
+SYSTEMCTL = "/run/current-system/sw/bin/systemctl"
+STATUS_PATH = Path("/var/lib/vasher/dashboard/status.json")
+LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")
+PRESSURE_PATH = Path("/proc/pressure/memory")
+BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
+ACTIVE_UNITS = (
+    "vasher-prebuild-candidate.service",
+    "vasher-prebuild-retry.service",
+)
+STOP_UNITS = {
+    "vasher-prebuild-candidate.service",
+    "vasher-prebuild-retry.service",
+}
+REVISION_RE = re.compile(r"^[0-9a-f]{40}$")
+RECOVERY_PHASES = {"stopping", "cleaning", "retrying"}
+RETRY_WAIT_SECONDS = 600
+SAMPLE_INTERVAL = 30
 
 Action = Literal["stop", "stop-final"]
 
@@ -139,3 +161,412 @@ def append_event(path: Path, event: dict[str, object]) -> None:
     except (FileNotFoundError, json.JSONDecodeError):
         events = []
     atomic_json(path, [event, *events][:100], mode=0o644)
+
+
+class InvalidStatus(Exception):
+    pass
+
+
+class Runner:
+    def run(
+        self,
+        arguments: list[str],
+        *,
+        check: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            arguments,
+            check=check,
+            text=True,
+            capture_output=True,
+            shell=False,
+        )
+
+
+def read_meminfo(path: Path = Path("/proc/meminfo")) -> dict[str, int]:
+    values: dict[str, int] = {}
+    for line in path.read_text().splitlines():
+        name, raw = line.split(":", 1)
+        values[name] = int(raw.split()[0]) * 1024
+    return values
+
+
+def read_memory_pressure(path: Path = PRESSURE_PATH) -> float:
+    for line in path.read_text().splitlines():
+        fields = line.split()
+        if fields and fields[0] == "full":
+            values = dict(item.split("=", 1) for item in fields[1:])
+            return float(values["avg10"])
+    return 0.0
+
+
+def systemd_values(
+    runner: Runner, unit: str, properties: tuple[str, ...]
+) -> dict[str, str]:
+    result = runner.run(
+        [SYSTEMCTL, "show", unit, *[f"--property={item}" for item in properties]]
+    )
+    return dict(
+        line.split("=", 1) for line in result.stdout.splitlines() if "=" in line
+    )
+
+
+def _int_or_zero(value: str | None) -> int:
+    try:
+        return int(value or 0)
+    except ValueError:
+        return 0
+
+
+def _cpu_seconds(value: str | None) -> float:
+    return _int_or_zero(value) / 1_000_000_000
+
+
+class SystemReader:
+    def __init__(
+        self,
+        runner: Runner,
+        *,
+        meminfo_path: Path = Path("/proc/meminfo"),
+        pressure_path: Path = PRESSURE_PATH,
+        status_path: Path = STATUS_PATH,
+        log_path: Path = LOG_PATH,
+        statvfs: Callable[[str], os.statvfs_result] = os.statvfs,
+        now: Callable[[], float] = time.monotonic,
+        root: str = "/",
+    ) -> None:
+        self.runner = runner
+        self.meminfo_path = meminfo_path
+        self.pressure_path = pressure_path
+        self.status_path = status_path
+        self.log_path = log_path
+        self.statvfs = statvfs
+        self.now = now
+        self.root = root
+
+    def sample(self) -> Sample:
+        status = json.loads(self.status_path.read_text())
+        base_revision = str(status.get("baseRevision") or "")
+        revision = str(status.get("revision") or "")
+        if not REVISION_RE.fullmatch(base_revision) or not REVISION_RE.fullmatch(
+            revision
+        ):
+            raise InvalidStatus("status revisions must be 40-character hex")
+        status_state = str(status.get("state") or "")
+        meminfo = read_meminfo(self.meminfo_path)
+        vfs = self.statvfs(self.root)
+        try:
+            log_size = self.log_path.stat().st_size
+        except FileNotFoundError:
+            log_size = 0
+        nix = systemd_values(
+            self.runner, "nix-daemon.service", ("MemoryCurrent", "CPUUsageNSec")
+        )
+        active_unit = None
+        unit_cpu = 0.0
+        if status_state not in {"success", "failed"}:
+            for unit in ACTIVE_UNITS:
+                values = systemd_values(
+                    self.runner, unit, ("ActiveState", "CPUUsageNSec")
+                )
+                if values.get("ActiveState") == "active":
+                    active_unit = unit
+                    unit_cpu = _cpu_seconds(values.get("CPUUsageNSec"))
+                    break
+        exit_code = status.get("exitCode")
+        return Sample(
+            at=self.now(),
+            active_unit=active_unit,
+            mode=str(status.get("mode") or ""),
+            status_state=status_state,
+            status_updated_at=str(status.get("updatedAt") or ""),
+            exit_code=exit_code if isinstance(exit_code, int) else None,
+            base_revision=base_revision,
+            revision=revision,
+            mem_available=meminfo.get("MemAvailable", 0),
+            swap_free=meminfo.get("SwapFree", 0),
+            disk_free=vfs.f_bavail * vfs.f_frsize,
+            memory_pressure_full=read_memory_pressure(self.pressure_path),
+            nix_memory=_int_or_zero(nix.get("MemoryCurrent")),
+            combined_cpu_seconds=unit_cpu + _cpu_seconds(nix.get("CPUUsageNSec")),
+            log_size=log_size,
+        )
+
+
+class Controller:
+    def __init__(
+        self,
+        runner: Runner,
+        state_path: Path,
+        events_path: Path,
+        retry_path: Path,
+        boot_id: str | None = None,
+        reader: SystemReader | None = None,
+    ) -> None:
+        self.runner = runner
+        self.state_path = state_path
+        self.events_path = events_path
+        self.retry_path = retry_path
+        self.reader = reader
+        self.sleep = getattr(runner, "sleep", time.sleep)
+        self.boot_id = boot_id if boot_id is not None else BOOT_ID_PATH.read_text().strip()
+        self.state = self._load_existing()
+        if (
+            self.state.boot_id
+            and self.state.boot_id != self.boot_id
+            and self.state.phase in RECOVERY_PHASES
+        ):
+            self.state.phase = "needs-attention"
+            self.state.boot_id = self.boot_id
+            self._save()
+            self._event(
+                None,
+                "needs-attention",
+                reason="boot-id-changed",
+                action="none",
+                severity="error",
+            )
+        elif not self.state.boot_id:
+            self.state.boot_id = self.boot_id
+
+    def _load_existing(self) -> MonitorState:
+        try:
+            return MonitorState(**json.loads(self.state_path.read_text()))
+        except (FileNotFoundError, json.JSONDecodeError, TypeError):
+            return MonitorState.for_revision("", "")
+
+    def _save(self) -> None:
+        atomic_json(self.state_path, asdict(self.state))
+
+    def _event(
+        self,
+        sample: Sample | None,
+        event_type: str,
+        *,
+        reason: str = "",
+        action: str = "",
+        severity: str = "info",
+        extra: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        metrics: dict[str, object] = {}
+        revision = self.state.revision
+        if sample is not None:
+            revision = sample.revision
+            metrics = {
+                "mem_available": sample.mem_available,
+                "swap_free": sample.swap_free,
+                "disk_free": sample.disk_free,
+                "memory_pressure_full": sample.memory_pressure_full,
+                "nix_memory": sample.nix_memory,
+                "combined_cpu_seconds": sample.combined_cpu_seconds,
+                "log_size": sample.log_size,
+            }
+        event: dict[str, object] = {
+            "id": uuid.uuid4().hex,
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "revision": revision,
+            "type": event_type,
+            "severity": severity,
+            "reason": reason,
+            "metrics": metrics,
+            "action": action,
+            "summary": "",
+        }
+        if extra:
+            event.update(extra)
+        append_event(self.events_path, event)
+        return event
+
+    def record_error(self, message: str) -> None:
+        self._event(None, "error", reason=message, severity="error")
+
+    def _align_state(self, sample: Sample) -> None:
+        if (self.state.base_revision, self.state.revision) != (
+            sample.base_revision,
+            sample.revision,
+        ):
+            self.state = MonitorState.for_revision(
+                sample.base_revision, sample.revision
+            )
+        self.state.boot_id = self.boot_id
+
+    def _update_nix_safe(self, sample: Sample) -> None:
+        if sample.nix_memory < 2 * GIB:
+            self.state.nix_safe_since = (
+                sample.at if self.state.nix_safe_since is None else self.state.nix_safe_since
+            )
+        else:
+            self.state.nix_safe_since = None
+
+    def _retry_ready(self, sample: Sample) -> bool:
+        self._update_nix_safe(sample)
+        nix_memory_below_limit_for = (
+            0 if self.state.nix_safe_since is None else sample.at - self.state.nix_safe_since
+        )
+        return (
+            sample.mem_available >= 2 * GIB
+            and sample.swap_free >= GIB
+            and sample.disk_free >= 10 * GIB
+            and sample.nix_memory < 2 * GIB
+            and nix_memory_below_limit_for >= 60
+            and self.state.retry_count == 0
+        )
+
+    def _next_sample(self, current: Sample) -> Sample:
+        if self.reader is not None:
+            observed = self.reader.sample()
+            if observed is not None:
+                return observed
+        return replace(current, at=current.at + SAMPLE_INTERVAL)
+
+    def _needs_attention(self, sample: Sample | None, reason: str) -> None:
+        self.state.phase = "needs-attention"
+        self._save()
+        self._event(
+            sample,
+            "needs-attention",
+            reason=reason,
+            action="none",
+            severity="error",
+        )
+
+    def _start_retry(self, sample: Sample) -> None:
+        self.state.retry_count = 1
+        self.state.phase = "retrying"
+        self._save()
+        atomic_json(
+            self.retry_path,
+            {
+                "baseRevision": sample.base_revision,
+                "revision": sample.revision,
+            },
+            mode=0o644,
+        )
+        self.runner.run(
+            [SYSTEMCTL, "start", "--no-block", "vasher-prebuild-retry.service"],
+            check=True,
+        )
+
+    def recover(self, sample: Sample, decision: Decision) -> None:
+        self._align_state(sample)
+        unit = sample.active_unit
+        if decision.action == "stop-final":
+            if unit in STOP_UNITS:
+                self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+            self._needs_attention(sample, decision.reason)
+            return
+        if unit not in STOP_UNITS:
+            self._needs_attention(sample, "missing-stop-unit")
+            return
+        self.state.phase = "stopping"
+        self._save()
+        self._event(
+            sample,
+            "safety-stop",
+            reason=decision.reason,
+            action="stop",
+            severity="warning",
+        )
+        self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+        self.state.phase = "cleaning"
+        self._save()
+        try:
+            self.runner.run(
+                [SYSTEMCTL, "start", "vasher-prebuild-cleanup.service"],
+                check=True,
+            )
+        except subprocess.CalledProcessError:
+            self._needs_attention(sample, "cleanup-failed")
+            return
+        current = sample
+        started_at = sample.at
+        while True:
+            if self._retry_ready(current):
+                self._start_retry(current)
+                return
+            if current.at - started_at >= RETRY_WAIT_SECONDS:
+                self._needs_attention(current, "retry-precondition")
+                return
+            if (
+                current.mem_available < 2 * GIB
+                or current.swap_free < GIB
+                or current.disk_free < 10 * GIB
+                or self.state.retry_count != 0
+            ):
+                self._needs_attention(current, "retry-precondition")
+                return
+            self.sleep(SAMPLE_INTERVAL)
+            current = self._next_sample(current)
+
+    def observe(self, sample: Sample) -> None:
+        self._align_state(sample)
+        if sample.status_state == "building":
+            try:
+                events = json.loads(self.events_path.read_text())
+            except (FileNotFoundError, json.JSONDecodeError):
+                events = []
+            if not any(
+                event.get("type") == "build-observed"
+                and event.get("revision") == sample.revision
+                for event in events
+            ):
+                self._event(sample, "build-observed")
+                self._save()
+        if sample.status_state in {"success", "failed"}:
+            if sample.status_updated_at != self.state.last_terminal_at:
+                self.state.last_terminal_at = sample.status_updated_at
+                self.state.phase = "complete"
+                self._save()
+                event_type = (
+                    "build-succeeded"
+                    if sample.status_state == "success"
+                    else "build-failed"
+                )
+                self._event(
+                    sample,
+                    event_type,
+                    reason=sample.status_state,
+                    action="none",
+                    extra={"exitCode": sample.exit_code},
+                )
+            return
+        if sample.active_unit is None:
+            if self.state.phase == "cleaning":
+                if self._retry_ready(sample):
+                    self._start_retry(sample)
+                elif sample.at - (self.state.nix_safe_since or sample.at) >= RETRY_WAIT_SECONDS:
+                    self._needs_attention(sample, "retry-precondition")
+            return
+        if self.state.phase in {"needs-attention", "complete"}:
+            return
+        if self.state.phase == "cleaning":
+            if self._retry_ready(sample):
+                self._start_retry(sample)
+            return
+        state, decision = evaluate(self.state, sample)
+        self.state = state
+        self.state.boot_id = self.boot_id
+        self._save()
+        if decision is not None:
+            self.recover(sample, decision)
+
+
+def main() -> int:
+    runner = Runner()
+    reader = SystemReader(runner)
+    controller = Controller(runner, STATE_PATH, EVENTS_PATH, RETRY_PATH)
+    controller.reader = reader
+    while True:
+        try:
+            sample = reader.sample()
+            if sample is not None:
+                controller.observe(sample)
+        except InvalidStatus as error:
+            controller.record_error(str(error))
+        except Exception as error:
+            controller.record_error(f"monitor error: {type(error).__name__}: {error}")
+        time.sleep(30)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import dataclasses
 import importlib.util
+import json
+import os
 import stat
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -210,6 +214,294 @@ class DurableStateTests(unittest.TestCase):
             self.assertEqual(
                 [event["id"] for event in events], list(range(104, 4, -1))
             )
+
+class FakeRunner:
+    def __init__(
+        self,
+        active: dict[str, bool] | None = None,
+        cleanup_result: int = 0,
+        properties: dict[str, dict[str, str]] | None = None,
+    ) -> None:
+        self.calls: list[tuple[str, ...]] = []
+        self.active = dict(active or {})
+        self.cleanup_result = cleanup_result
+        self.properties = properties or {}
+
+    def sleep(self, _seconds: float) -> None:
+        return None
+
+    def run(
+        self,
+        arguments: list[str],
+        *,
+        check: bool = True,
+    ) -> subprocess.CompletedProcess[str]:
+        recorded = tuple(
+            Path(arguments[0]).name if index == 0 else argument
+            for index, argument in enumerate(arguments)
+        )
+        self.calls.append(recorded)
+        command = recorded[1:]
+        stdout = ""
+        returncode = 0
+        if command[:2] == ("stop",) or (len(command) >= 2 and command[0] == "stop"):
+            unit = command[1]
+            self.active[unit] = False
+        elif command == ("start", "vasher-prebuild-cleanup.service"):
+            returncode = self.cleanup_result
+        elif command[:1] == ("show",):
+            unit = command[1]
+            values = self.properties.get(unit, {})
+            stdout = "".join(f"{name}={value}\n" for name, value in values.items())
+        result = subprocess.CompletedProcess(arguments, returncode, stdout, "")
+        if check and returncode:
+            raise subprocess.CalledProcessError(returncode, arguments, stdout, "")
+        return result
+
+
+class RecoveryControllerTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        root = Path(self.directory.name)
+        self.state_path = root / "state.json"
+        self.events_path = root / "events.json"
+        self.retry_path = root / "retry.json"
+        self.unsafe_sample = sample(90, nix_memory=256 * monitor.MIB)
+
+    def tearDown(self):
+        self.directory.cleanup()
+
+    def test_recovery_stops_cleans_then_retries(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            cleanup_result=0,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        controller.recover(self.unsafe_sample, monitor.Decision("stop", "memory"))
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "stop", "vasher-prebuild-candidate.service"),
+                ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+
+    def test_failed_precondition_records_needs_attention(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            cleanup_result=0,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        controller.recover(
+            dataclasses.replace(self.unsafe_sample, disk_free=9 * monitor.GIB),
+            monitor.Decision("stop", "disk"),
+        )
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+        self.assertEqual(controller.state.phase, "needs-attention")
+
+    def test_retry_count_is_saved_before_retry_start(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            cleanup_result=0,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        controller.recover(self.unsafe_sample, monitor.Decision("stop", "memory"))
+        saved = json.loads(self.state_path.read_text())
+        self.assertEqual(saved["retry_count"], 1)
+        self.assertEqual(saved["phase"], "retrying")
+
+    def test_host_reboot_during_recovery_requires_attention(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "cleaning"
+        state.boot_id = "old-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="new-boot",
+        )
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+
+
+class SamplingConversionTests(unittest.TestCase):
+    def test_read_meminfo_converts_kib_to_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "meminfo"
+            path.write_text(
+                "MemTotal:        8388608 kB\n"
+                "MemAvailable:    2097152 kB\n"
+                "SwapFree:         1048576 kB\n"
+            )
+            values = monitor.read_meminfo(path)
+            self.assertEqual(values["MemAvailable"], 2097152 * 1024)
+            self.assertEqual(values["SwapFree"], 1048576 * 1024)
+
+    def test_read_memory_pressure_uses_full_avg10(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "pressure"
+            path.write_text(
+                "some avg10=0.12 avg60=0.08 avg300=0.04 total=10\n"
+                "full avg10=2.50 avg60=1.25 avg300=0.75 total=20\n"
+            )
+            self.assertEqual(monitor.read_memory_pressure(path), 2.50)
+
+    def test_system_reader_sample_conversions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            meminfo = root / "meminfo"
+            pressure = root / "pressure"
+            status = root / "status.json"
+            log_path = root / "current.log"
+            meminfo.write_text(
+                "MemAvailable:    3145728 kB\n"
+                "SwapFree:         1572864 kB\n"
+            )
+            pressure.write_text("full avg10=3.25 avg60=0.00 avg300=0.00 total=1\n")
+            status.write_text(
+                json.dumps(
+                    {
+                        "state": "building",
+                        "mode": "candidate",
+                        "updatedAt": "2026-09-02T22:00:00Z",
+                        "baseRevision": "1" * 40,
+                        "revision": "2" * 40,
+                    }
+                )
+            )
+            log_path.write_bytes(b"hello world")
+            runner = FakeRunner(
+                active={"vasher-prebuild-candidate.service": True},
+                properties={
+                    "vasher-prebuild-candidate.service": {
+                        "ActiveState": "active",
+                        "CPUUsageNSec": "4000000000",
+                    },
+                    "vasher-prebuild-retry.service": {
+                        "ActiveState": "inactive",
+                        "CPUUsageNSec": "0",
+                    },
+                    "nix-daemon.service": {
+                        "MemoryCurrent": str(512 * monitor.MIB),
+                        "CPUUsageNSec": "2500000000",
+                    },
+                },
+            )
+
+            def fake_statvfs(_path: str) -> os.statvfs_result:
+                return os.statvfs_result((4096, 4096, 0, 0, 5 * 1024 * 1024, 0, 0, 0, 0, 0))
+
+            reader = monitor.SystemReader(
+                runner,
+                meminfo_path=meminfo,
+                pressure_path=pressure,
+                status_path=status,
+                log_path=log_path,
+                statvfs=fake_statvfs,
+                now=lambda: 42.0,
+            )
+            observed = reader.sample()
+            self.assertIsNotNone(observed)
+            assert observed is not None
+            self.assertEqual(observed.at, 42.0)
+            self.assertEqual(
+                observed.active_unit, "vasher-prebuild-candidate.service"
+            )
+            self.assertEqual(observed.mode, "candidate")
+            self.assertEqual(observed.status_state, "building")
+            self.assertEqual(observed.status_updated_at, "2026-09-02T22:00:00Z")
+            self.assertEqual(observed.base_revision, "1" * 40)
+            self.assertEqual(observed.revision, "2" * 40)
+            self.assertEqual(observed.mem_available, 3145728 * 1024)
+            self.assertEqual(observed.swap_free, 1572864 * 1024)
+            self.assertEqual(observed.memory_pressure_full, 3.25)
+            self.assertEqual(observed.disk_free, 5 * 1024 * 1024 * 4096)
+            self.assertEqual(observed.nix_memory, 512 * monitor.MIB)
+            self.assertEqual(observed.combined_cpu_seconds, 6.5)
+            self.assertEqual(observed.log_size, 11)
+
+    def test_terminal_status_clears_active_unit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            meminfo = root / "meminfo"
+            pressure = root / "pressure"
+            status = root / "status.json"
+            meminfo.write_text("MemAvailable: 1024 kB\nSwapFree: 1024 kB\n")
+            pressure.write_text("full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n")
+            status.write_text(
+                json.dumps(
+                    {
+                        "state": "success",
+                        "mode": "candidate",
+                        "updatedAt": "2026-09-02T22:05:00Z",
+                        "baseRevision": "1" * 40,
+                        "revision": "2" * 40,
+                        "exitCode": 0,
+                    }
+                )
+            )
+            runner = FakeRunner(
+                properties={
+                    "vasher-prebuild-candidate.service": {"ActiveState": "active"},
+                    "vasher-prebuild-retry.service": {"ActiveState": "inactive"},
+                    "nix-daemon.service": {"MemoryCurrent": "0", "CPUUsageNSec": "0"},
+                }
+            )
+            reader = monitor.SystemReader(
+                runner,
+                meminfo_path=meminfo,
+                pressure_path=pressure,
+                status_path=status,
+                log_path=root / "missing.log",
+                statvfs=lambda _path: os.statvfs_result((4096, 4096, 0, 0, 1, 0, 0, 0, 0, 0)),
+                now=lambda: 1.0,
+            )
+            observed = reader.sample()
+            self.assertIsNotNone(observed)
+            assert observed is not None
+            self.assertIsNone(observed.active_unit)
+            self.assertEqual(observed.status_state, "success")
+            self.assertEqual(observed.log_size, 0)
+
+    def test_invalid_revision_raises_invalid_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            status = root / "status.json"
+            status.write_text(
+                json.dumps(
+                    {
+                        "state": "building",
+                        "mode": "candidate",
+                        "updatedAt": "2026-09-02T22:00:00Z",
+                        "baseRevision": "not-a-revision",
+                        "revision": "2" * 40,
+                    }
+                )
+            )
+            reader = monitor.SystemReader(
+                FakeRunner(),
+                status_path=status,
+                meminfo_path=root / "meminfo",
+                pressure_path=root / "pressure",
+            )
+            with self.assertRaises(monitor.InvalidStatus):
+                reader.sample()
 
 
 if __name__ == "__main__":
