@@ -1,36 +1,47 @@
 { ... }:
 {
   flake.modules.homeManager.git =
-    { config, lib, ... }:
+    { ... }:
     {
       programs = {
         git = {
           enable = true;
 
-          signing.format = null;
+          signing = {
+            key = "~/.ssh/id_ed25519";
+            format = "ssh";
+          };
 
           settings = {
+            alias = {
+              back = "reset HEAD~1";
+              undo = "reset --soft HEAD^";
+            };
+
+            commit.gpgSign = true;
+
             user = {
               name = "Dusty";
               email = "rollhax@gmail.com";
             };
           };
 
-          lfs = { enable = true; };
+          lfs = {
+            enable = true;
+          };
         };
 
-        diff-so-fancy = {
+        delta = {
           enable = true;
           enableGitIntegration = true;
         };
 
         gh = {
           enable = true;
-          settings = { git_protocol = "ssh"; };
+          settings = {
+            git_protocol = "ssh";
+          };
         };
-
       };
-
-      home.file.".gitconfig" = { source = ../../configs/gitconfig; };
     };
 }
