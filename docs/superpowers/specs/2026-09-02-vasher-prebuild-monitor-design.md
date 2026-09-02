@@ -87,6 +87,7 @@ The monitor stores events in `/var/lib/vasher/dashboard/events.json`. The file k
 
 Each event has these fields:
 
+- `id`
 - `timestamp`
 - `revision`
 - `type`
@@ -95,6 +96,7 @@ Each event has these fields:
 - `metrics`
 - `action`
 - `summary`
+- `inferenceError` when a summary request fails
 
 The ledger frontend shows the event timeline with the existing status and history views. The web server exposes the event file as read-only JSON.
 
