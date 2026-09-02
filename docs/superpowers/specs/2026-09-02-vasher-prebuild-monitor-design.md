@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-02
 
-**Status:** Approved design. Awaiting written-spec review.
+**Status:** Approved.
 
 ## Purpose
 
@@ -191,7 +191,7 @@ The service uses systemd hardening with a read-only system. It receives write ac
 
 The service has no Linux capabilities. It uses local systemd control for these allowlisted actions only:
 
-- Stop `vasher-prebuild-candidate.service`.
+- Stop `vasher-prebuild-candidate.service` or `vasher-prebuild-retry.service`.
 - Run the prebuild cleanup operation.
 - Start the prebuild retry operation for the recorded revision.
 
