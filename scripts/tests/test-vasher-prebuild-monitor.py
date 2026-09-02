@@ -157,6 +157,7 @@ class DurableStateTests(unittest.TestCase):
                 stall_since=36.0,
                 stall_cpu_start=48.0,
                 last_log_size=1234,
+                cleaning_since=90.0,
             )
             monitor.atomic_json(path, asdict(state))
 
@@ -259,6 +260,16 @@ class FakeRunner:
         return result
 
 
+class SequenceReader:
+    def __init__(self, samples: list[monitor.Sample]) -> None:
+        self._samples = list(samples)
+
+    def sample(self) -> monitor.Sample | None:
+        if not self._samples:
+            return None
+        return self._samples.pop(0)
+
+
 class RecoveryControllerTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
@@ -333,6 +344,153 @@ class RecoveryControllerTests(unittest.TestCase):
             self.retry_path,
             boot_id="new-boot",
         )
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+
+    def test_stop_final_stops_without_cleanup_or_retry(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-retry.service": True},
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        final_sample = sample(
+            90,
+            active_unit="vasher-prebuild-retry.service",
+            mode="retry",
+        )
+        controller.recover(final_sample, monitor.Decision("stop-final", "memory"))
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "stop", "vasher-prebuild-retry.service"),
+            ],
+        )
+        self.assertEqual(controller.state.phase, "needs-attention")
+
+    def test_recover_retries_after_low_memory_recovers(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+        )
+        low = sample(
+            90,
+            mem_available=500 * monitor.MIB,
+            nix_memory=256 * monitor.MIB,
+        )
+        self.assertLess(low.mem_available, monitor.MEMORY_LIMIT)
+        later = [
+            sample(
+                120,
+                mem_available=4 * monitor.GIB,
+                nix_memory=256 * monitor.MIB,
+                active_unit=None,
+            ),
+            sample(
+                150,
+                mem_available=4 * monitor.GIB,
+                nix_memory=256 * monitor.MIB,
+                active_unit=None,
+            ),
+            sample(
+                180,
+                mem_available=4 * monitor.GIB,
+                nix_memory=256 * monitor.MIB,
+                active_unit=None,
+            ),
+        ]
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            reader=SequenceReader(later),
+        )
+        controller.recover(low, monitor.Decision("stop", "memory"))
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "stop", "vasher-prebuild-candidate.service"),
+                ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+        self.assertEqual(controller.state.phase, "retrying")
+
+    def test_observe_resumes_stopping_without_active_unit(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "stopping"
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        idle = sample(90, active_unit=None, nix_memory=256 * monitor.MIB)
+        controller.observe(idle)
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+        self.assertEqual(controller.state.phase, "retrying")
+
+    def test_observe_resumes_retrying_without_active_unit(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.retry_count = 1
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        idle = sample(90, active_unit=None)
+        controller.observe(idle)
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+        self.assertEqual(controller.state.phase, "retrying")
+        saved = json.loads(self.retry_path.read_text())
+        self.assertEqual(saved["baseRevision"], "1" * 40)
+        self.assertEqual(saved["revision"], "2" * 40)
+
+    def test_cleaning_timeout_uses_persisted_start(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "cleaning"
+        state.boot_id = "same-boot"
+        state.nix_safe_since = None
+        state.cleaning_since = 0.0
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        still_high = sample(
+            600,
+            active_unit=None,
+            nix_memory=3 * monitor.GIB,
+        )
+        controller.observe(still_high)
         self.assertEqual(controller.state.phase, "needs-attention")
         self.assertNotIn(
             ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),

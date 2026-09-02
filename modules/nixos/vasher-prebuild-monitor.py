@@ -84,6 +84,7 @@ class MonitorState:
     stall_since: float | None = None
     stall_cpu_start: float = 0.0
     last_log_size: int = 0
+    cleaning_since: float | None = None
 
     @classmethod
     def for_revision(cls, base_revision: str, revision: str) -> "MonitorState":
@@ -447,28 +448,16 @@ class Controller:
             check=True,
         )
 
-    def recover(self, sample: Sample, decision: Decision) -> None:
-        self._align_state(sample)
-        unit = sample.active_unit
-        if decision.action == "stop-final":
-            if unit in STOP_UNITS:
-                self.runner.run([SYSTEMCTL, "stop", unit], check=True)
-            self._needs_attention(sample, decision.reason)
-            return
-        if unit not in STOP_UNITS:
-            self._needs_attention(sample, "missing-stop-unit")
-            return
-        self.state.phase = "stopping"
-        self._save()
-        self._event(
-            sample,
-            "safety-stop",
-            reason=decision.reason,
-            action="stop",
-            severity="warning",
-        )
-        self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+    def _cleaning_wait_elapsed(self, sample: Sample) -> float:
+        if self.state.cleaning_since is None:
+            self.state.cleaning_since = sample.at
+            self._save()
+        return sample.at - self.state.cleaning_since
+
+    def _cleanup_then_retry(self, sample: Sample) -> None:
         self.state.phase = "cleaning"
+        if self.state.cleaning_since is None:
+            self.state.cleaning_since = sample.at
         self._save()
         try:
             self.runner.run(
@@ -478,25 +467,46 @@ class Controller:
         except subprocess.CalledProcessError:
             self._needs_attention(sample, "cleanup-failed")
             return
-        current = sample
-        started_at = sample.at
+        current = self._next_sample(sample)
         while True:
             if self._retry_ready(current):
                 self._start_retry(current)
                 return
-            if current.at - started_at >= RETRY_WAIT_SECONDS:
-                self._needs_attention(current, "retry-precondition")
-                return
-            if (
-                current.mem_available < 2 * GIB
-                or current.swap_free < GIB
-                or current.disk_free < 10 * GIB
-                or self.state.retry_count != 0
-            ):
+            if self._cleaning_wait_elapsed(current) >= RETRY_WAIT_SECONDS:
                 self._needs_attention(current, "retry-precondition")
                 return
             self.sleep(SAMPLE_INTERVAL)
             current = self._next_sample(current)
+
+    def _resume_cleaning(self, sample: Sample) -> None:
+        if self._retry_ready(sample):
+            self._start_retry(sample)
+        elif self._cleaning_wait_elapsed(sample) >= RETRY_WAIT_SECONDS:
+            self._needs_attention(sample, "retry-precondition")
+
+    def recover(self, sample: Sample, decision: Decision) -> None:
+        self._align_state(sample)
+        unit = sample.active_unit
+        if decision.action == "stop-final":
+            if unit in STOP_UNITS:
+                self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+            self._needs_attention(sample, decision.reason)
+            return
+        if unit in STOP_UNITS:
+            self.state.phase = "stopping"
+            self._save()
+            self._event(
+                sample,
+                "safety-stop",
+                reason=decision.reason,
+                action="stop",
+                severity="warning",
+            )
+            self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+        elif self.state.phase != "stopping":
+            self._needs_attention(sample, "missing-stop-unit")
+            return
+        self._cleanup_then_retry(sample)
 
     def observe(self, sample: Sample) -> None:
         self._align_state(sample)
@@ -530,18 +540,22 @@ class Controller:
                     extra={"exitCode": sample.exit_code},
                 )
             return
+        if self.state.phase == "stopping":
+            unit = sample.active_unit
+            if unit in STOP_UNITS:
+                self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+            self._cleanup_then_retry(sample)
+            return
         if sample.active_unit is None:
             if self.state.phase == "cleaning":
-                if self._retry_ready(sample):
-                    self._start_retry(sample)
-                elif sample.at - (self.state.nix_safe_since or sample.at) >= RETRY_WAIT_SECONDS:
-                    self._needs_attention(sample, "retry-precondition")
+                self._resume_cleaning(sample)
+            elif self.state.phase == "retrying":
+                self._start_retry(sample)
             return
         if self.state.phase in {"needs-attention", "complete"}:
             return
         if self.state.phase == "cleaning":
-            if self._retry_ready(sample):
-                self._start_retry(sample)
+            self._resume_cleaning(sample)
             return
         state, decision = evaluate(self.state, sample)
         self.state = state
