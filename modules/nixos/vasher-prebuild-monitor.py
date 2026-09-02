@@ -6,6 +6,8 @@ import os
 import re
 import subprocess
 import time
+import urllib.error
+import urllib.request
 import uuid
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
@@ -41,6 +43,19 @@ REVISION_RE = re.compile(r"^[0-9a-f]{40}$")
 RECOVERY_PHASES = {"stopping", "cleaning", "retrying"}
 RETRY_WAIT_SECONDS = 600
 SAMPLE_INTERVAL = 30
+ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
+ANTHROPIC_MODEL = "claude-haiku-4-5"
+SUMMARY_EVENTS = {
+    "safety-stop",
+    "build-failed",
+    "build-succeeded",
+    "needs-attention",
+}
+SECRET_PATTERNS = (
+    re.compile(r"(?im)^(authorization:\s*(?:bearer|token)\s+)\S+"),
+    re.compile(r"(?im)^(x-api-key:\s*)\S+"),
+    re.compile(r"(?i)([?&](?:access_token|token|key)=)[^&\s]+"),
+)
 
 Action = Literal["stop", "stop-final"]
 
@@ -162,6 +177,119 @@ def append_event(path: Path, event: dict[str, object]) -> None:
     except (FileNotFoundError, json.JSONDecodeError):
         events = []
     atomic_json(path, [event, *events][:100], mode=0o644)
+
+
+def redact(text: str, secrets: list[str]) -> str:
+    value = text
+    for pattern in SECRET_PATTERNS:
+        value = pattern.sub(r"\1[REDACTED]", value)
+    for secret in secrets:
+        if secret:
+            value = value.replace(secret, "[REDACTED]")
+    return value
+
+
+def bounded_log(text: str) -> str:
+    lines = text.splitlines()[-200:]
+    value = "\n".join(lines)
+    encoded = value.encode()
+    if len(encoded) <= 30 * 1024:
+        return value
+    return encoded[-30 * 1024 :].decode(errors="replace")
+
+
+def build_evidence(event: dict[str, object], log_text: str, secrets: list[str]) -> str:
+    lines = redact(bounded_log(log_text), secrets).splitlines()
+    while True:
+        document = {
+            "revision": event.get("revision", ""),
+            "type": event.get("type", ""),
+            "reason": event.get("reason", ""),
+            "action": event.get("action", ""),
+            "metrics": event.get("metrics", {}),
+            "exitCode": event.get("exitCode"),
+            "timestamp": event.get("timestamp", ""),
+            "log": "\n".join(lines),
+        }
+        encoded = json.dumps(document, separators=(",", ":"))
+        if len(encoded.encode()) <= 32 * 1024 or not lines:
+            return redact(encoded, secrets)
+        lines = lines[1:]
+
+
+class InferenceError(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class ModelRequest:
+    url: str
+    timeout: int
+    body: dict[str, object]
+    headers: dict[str, str]
+
+
+class UrllibTransport:
+    def send(self, request: ModelRequest) -> dict[str, object]:
+        payload = json.dumps(request.body).encode()
+        http_request = urllib.request.Request(
+            request.url,
+            data=payload,
+            headers=request.headers,
+            method="POST",
+        )
+        with urllib.request.urlopen(http_request, timeout=request.timeout) as response:
+            return json.loads(response.read().decode())
+
+
+class AnthropicClient:
+    def __init__(self, key_path: Path, transport: object | None = None) -> None:
+        self.key_path = key_path
+        self.transport = transport or UrllibTransport()
+
+    def summarize(self, evidence: str) -> str:
+        key = self.key_path.read_text().strip()
+        body = {
+            "model": ANTHROPIC_MODEL,
+            "max_tokens": 512,
+            "system": (
+                "Summarize this Vasher prebuild event for its operator. "
+                "State the observed condition, automatic action, and final state. "
+                "Do not provide commands or request more access."
+            ),
+            "messages": [{"role": "user", "content": redact(evidence, [key])}],
+        }
+        headers = {
+            "content-type": "application/json",
+            "anthropic-version": "2023-06-01",
+            "x-api-key": key,
+        }
+        request = ModelRequest(
+            url=ANTHROPIC_URL,
+            timeout=30,
+            body=body,
+            headers=headers,
+        )
+        try:
+            payload = self.transport.send(request)
+        except urllib.error.HTTPError:
+            raise InferenceError("http-error") from None
+        except TimeoutError:
+            raise InferenceError("timeout") from None
+        except urllib.error.URLError:
+            raise InferenceError("url-error") from None
+        except json.JSONDecodeError:
+            raise InferenceError("invalid-json") from None
+        try:
+            item = payload["content"][0]
+            if item["type"] != "text":
+                raise InferenceError("invalid-response")
+            text = item["text"]
+        except (KeyError, IndexError, TypeError):
+            raise InferenceError("invalid-response") from None
+        if not isinstance(text, str):
+            raise InferenceError("invalid-response")
+        return text[:4096]
 
 
 class InvalidStatus(Exception):
@@ -303,12 +431,16 @@ class Controller:
         retry_path: Path,
         boot_id: str | None = None,
         reader: SystemReader | None = None,
+        model: object | None = None,
+        log_path: Path | None = None,
     ) -> None:
         self.runner = runner
         self.state_path = state_path
         self.events_path = events_path
         self.retry_path = retry_path
         self.reader = reader
+        self.model = model
+        self.log_path = LOG_PATH if log_path is None else log_path
         self.sleep = getattr(runner, "sleep", time.sleep)
         self.boot_id = boot_id if boot_id is not None else BOOT_ID_PATH.read_text().strip()
         self.state = self._load_existing()
@@ -376,10 +508,66 @@ class Controller:
         if extra:
             event.update(extra)
         append_event(self.events_path, event)
+        if event_type in SUMMARY_EVENTS and event_type != "safety-stop":
+            self.summarize(event)
         return event
 
     def record_error(self, message: str) -> None:
         self._event(None, "error", reason=message, severity="error")
+
+    def _update_event(self, event_id: str, changes: dict[str, object]) -> None:
+        try:
+            events = json.loads(self.events_path.read_text())
+        except (FileNotFoundError, json.JSONDecodeError):
+            return
+        updated = False
+        for item in events:
+            if item.get("id") == event_id:
+                item.update(changes)
+                updated = True
+                break
+        if updated:
+            atomic_json(self.events_path, events, mode=0o644)
+
+    def summarize(self, event: dict[str, object]) -> None:
+        if self.model is None:
+            return
+        if event.get("type") not in SUMMARY_EVENTS:
+            return
+        if event.get("summary") or event.get("inferenceError"):
+            return
+        event_id = event.get("id")
+        if not isinstance(event_id, str) or not event_id:
+            return
+        try:
+            try:
+                log_text = self.log_path.read_text()
+            except OSError:
+                log_text = ""
+            secrets: list[str] = []
+            key_path = getattr(self.model, "key_path", None)
+            if key_path is not None:
+                try:
+                    secret = Path(key_path).read_text().strip()
+                except OSError:
+                    secret = ""
+                if secret:
+                    secrets.append(secret)
+            evidence = build_evidence(event, log_text, secrets)
+            summary = self.model.summarize(evidence)
+            if not isinstance(summary, str):
+                raise InferenceError("invalid-response")
+            stored = summary[:4096]
+            self._update_event(event_id, {"summary": stored})
+            event["summary"] = stored
+        except Exception as error:
+            message = (
+                str(error)
+                if isinstance(error, InferenceError)
+                else type(error).__name__
+            )
+            self._update_event(event_id, {"inferenceError": message})
+            event["inferenceError"] = message
 
     def _align_state(self, sample: Sample) -> None:
         if (self.state.base_revision, self.state.revision) != (
@@ -492,10 +680,11 @@ class Controller:
                 self.runner.run([SYSTEMCTL, "stop", unit], check=True)
             self._needs_attention(sample, decision.reason)
             return
+        event = None
         if unit in STOP_UNITS:
             self.state.phase = "stopping"
             self._save()
-            self._event(
+            event = self._event(
                 sample,
                 "safety-stop",
                 reason=decision.reason,
@@ -507,6 +696,8 @@ class Controller:
             self._needs_attention(sample, "missing-stop-unit")
             return
         self._cleanup_then_retry(sample)
+        if event is not None:
+            self.summarize(event)
 
     def observe(self, sample: Sample) -> None:
         self._align_state(sample)
@@ -568,7 +759,11 @@ class Controller:
 def main() -> int:
     runner = Runner()
     reader = SystemReader(runner)
-    controller = Controller(runner, STATE_PATH, EVENTS_PATH, RETRY_PATH)
+    key_file = os.environ.get("ANTHROPIC_API_KEY_FILE")
+    model = AnthropicClient(Path(key_file)) if key_file else None
+    controller = Controller(
+        runner, STATE_PATH, EVENTS_PATH, RETRY_PATH, model=model
+    )
     controller.reader = reader
     while True:
         try:

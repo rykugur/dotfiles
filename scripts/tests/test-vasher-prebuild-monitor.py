@@ -662,5 +662,119 @@ class SamplingConversionTests(unittest.TestCase):
                 reader.sample()
 
 
+class FakeTransport:
+    def __init__(self, payload: dict[str, object]) -> None:
+        self.payload = payload
+        self.requests: list[object] = []
+
+    def send(self, request: object) -> dict[str, object]:
+        self.requests.append(request)
+        return self.payload
+
+
+class FakeModel:
+    def __init__(self, text: str) -> None:
+        self.text = text
+        self.runner_calls_at_request: list[tuple[str, ...]] | None = None
+        self._runner: FakeRunner | None = None
+
+    def summarize(self, evidence: str) -> str:
+        if self._runner is not None:
+            self.runner_calls_at_request = list(self._runner.calls)
+        return self.text
+
+
+class HaikuSummaryTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        root = Path(self.directory.name)
+        self.state_path = root / "state.json"
+        self.events_path = root / "events.json"
+        self.retry_path = root / "retry.json"
+        self.key_path = root / "anthropic_key"
+        self.key_path.write_text("test-key\n")
+        self.event = {
+            "id": "evt-1",
+            "timestamp": "2026-09-02T22:00:00Z",
+            "revision": "2" * 40,
+            "type": "safety-stop",
+            "severity": "warning",
+            "reason": "memory",
+            "metrics": {"mem_available": 1},
+            "action": "stop",
+            "summary": "",
+        }
+
+    def tearDown(self):
+        self.directory.cleanup()
+
+    def test_redaction_removes_credentials(self):
+        text = "Authorization: Bearer abc123\nx-api-key: secret\n?access_token=query-secret"
+        redacted = monitor.redact(text, ["secret"])
+        self.assertNotIn("abc123", redacted)
+        self.assertNotIn("secret", redacted)
+        self.assertIn("[REDACTED]", redacted)
+
+    def test_evidence_is_bounded(self):
+        evidence = monitor.build_evidence(self.event, "line\n" * 10000, [])
+        self.assertLessEqual(len(evidence.encode()), 32 * 1024)
+        self.assertLessEqual(evidence.count("\n"), 200)
+
+    def test_anthropic_request_has_no_tools(self):
+        transport = FakeTransport({"content": [{"type": "text", "text": "summary"}]})
+        client = monitor.AnthropicClient(self.key_path, transport)
+        self.assertEqual(client.summarize("evidence"), "summary")
+        request = transport.requests[0]
+        self.assertEqual(request.url, "https://api.anthropic.com/v1/messages")
+        self.assertEqual(request.timeout, 30)
+        self.assertEqual(request.body["model"], "claude-haiku-4-5")
+        self.assertEqual(request.body["max_tokens"], 512)
+        self.assertNotIn("tools", request.body)
+
+    def test_model_text_never_changes_actions(self):
+        runner = FakeRunner()
+        client = FakeModel("systemctl start arbitrary.service")
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            model=client,
+        )
+        monitor.append_event(self.events_path, self.event)
+        controller.summarize(self.event)
+        self.assertEqual(runner.calls, [])
+        self.assertEqual(
+            json.loads(self.events_path.read_text())[0]["summary"],
+            "systemctl start arbitrary.service",
+        )
+
+    def test_recovery_completes_before_model_request(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+        )
+        client = FakeModel("summary")
+        client._runner = runner
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            model=client,
+        )
+        controller.recover(sample(90, nix_memory=256 * monitor.MIB), monitor.Decision("stop", "memory"))
+        self.assertEqual(
+            client.runner_calls_at_request,
+            [
+                ("systemctl", "stop", "vasher-prebuild-candidate.service"),
+                ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+        self.assertEqual(runner.calls, client.runner_calls_at_request)
+        events = json.loads(self.events_path.read_text())
+        safety = next(event for event in events if event["type"] == "safety-stop")
+        self.assertEqual(safety["summary"], "summary")
+
 if __name__ == "__main__":
     unittest.main()
