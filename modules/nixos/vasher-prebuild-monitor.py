@@ -442,6 +442,7 @@ class Controller:
         self.model = model
         self.log_path = LOG_PATH if log_path is None else log_path
         self.sleep = getattr(runner, "sleep", time.sleep)
+        self._recovering = False
         self.boot_id = boot_id if boot_id is not None else BOOT_ID_PATH.read_text().strip()
         self.state = self._load_existing()
         if (
@@ -508,7 +509,11 @@ class Controller:
         if extra:
             event.update(extra)
         append_event(self.events_path, event)
-        if event_type in SUMMARY_EVENTS and event_type != "safety-stop":
+        if (
+            event_type in SUMMARY_EVENTS
+            and event_type != "safety-stop"
+            and not self._recovering
+        ):
             self.summarize(event)
         return event
 
@@ -672,6 +677,15 @@ class Controller:
         elif self._cleaning_wait_elapsed(sample) >= RETRY_WAIT_SECONDS:
             self._needs_attention(sample, "retry-precondition")
 
+    def _summarize_pending(self) -> None:
+        try:
+            events = json.loads(self.events_path.read_text())
+        except (FileNotFoundError, json.JSONDecodeError):
+            return
+        for event in events:
+            if event.get("type") in SUMMARY_EVENTS:
+                self.summarize(event)
+
     def recover(self, sample: Sample, decision: Decision) -> None:
         self._align_state(sample)
         unit = sample.active_unit
@@ -680,11 +694,10 @@ class Controller:
                 self.runner.run([SYSTEMCTL, "stop", unit], check=True)
             self._needs_attention(sample, decision.reason)
             return
-        event = None
         if unit in STOP_UNITS:
             self.state.phase = "stopping"
             self._save()
-            event = self._event(
+            self._event(
                 sample,
                 "safety-stop",
                 reason=decision.reason,
@@ -695,9 +708,12 @@ class Controller:
         elif self.state.phase != "stopping":
             self._needs_attention(sample, "missing-stop-unit")
             return
-        self._cleanup_then_retry(sample)
-        if event is not None:
-            self.summarize(event)
+        self._recovering = True
+        try:
+            self._cleanup_then_retry(sample)
+        finally:
+            self._recovering = False
+        self._summarize_pending()
 
     def observe(self, sample: Sample) -> None:
         self._align_state(sample)
@@ -735,18 +751,34 @@ class Controller:
             unit = sample.active_unit
             if unit in STOP_UNITS:
                 self.runner.run([SYSTEMCTL, "stop", unit], check=True)
-            self._cleanup_then_retry(sample)
+            self._recovering = True
+            try:
+                self._cleanup_then_retry(sample)
+            finally:
+                self._recovering = False
+            self._summarize_pending()
             return
         if sample.active_unit is None:
             if self.state.phase == "cleaning":
-                self._resume_cleaning(sample)
+                self._recovering = True
+                try:
+                    self._resume_cleaning(sample)
+                finally:
+                    self._recovering = False
+                self._summarize_pending()
             elif self.state.phase == "retrying":
                 self._start_retry(sample)
+                self._summarize_pending()
             return
         if self.state.phase in {"needs-attention", "complete"}:
             return
         if self.state.phase == "cleaning":
-            self._resume_cleaning(sample)
+            self._recovering = True
+            try:
+                self._resume_cleaning(sample)
+            finally:
+                self._recovering = False
+            self._summarize_pending()
             return
         state, decision = evaluate(self.state, sample)
         self.state = state

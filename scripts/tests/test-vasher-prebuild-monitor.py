@@ -676,11 +676,19 @@ class FakeModel:
     def __init__(self, text: str) -> None:
         self.text = text
         self.runner_calls_at_request: list[tuple[str, ...]] | None = None
+        self.requests = 0
+        self.recovery_in_progress_at_request: list[bool] = []
         self._runner: FakeRunner | None = None
+        self._controller: object | None = None
 
     def summarize(self, evidence: str) -> str:
+        self.requests += 1
         if self._runner is not None:
             self.runner_calls_at_request = list(self._runner.calls)
+        if self._controller is not None:
+            self.recovery_in_progress_at_request.append(
+                bool(getattr(self._controller, "_recovering", True))
+            )
         return self.text
 
 
@@ -775,6 +783,165 @@ class HaikuSummaryTests(unittest.TestCase):
         events = json.loads(self.events_path.read_text())
         safety = next(event for event in events if event["type"] == "safety-stop")
         self.assertEqual(safety["summary"], "summary")
+
+    def test_no_model_request_while_recovery_in_progress(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            cleanup_result=1,
+        )
+        client = FakeModel("summary")
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            model=client,
+        )
+        client._controller = controller
+        controller.recover(
+            sample(90, nix_memory=256 * monitor.MIB),
+            monitor.Decision("stop", "memory"),
+        )
+        self.assertEqual(client.recovery_in_progress_at_request, [False, False])
+        events = json.loads(self.events_path.read_text())
+        attention = next(event for event in events if event["type"] == "needs-attention")
+        safety = next(event for event in events if event["type"] == "safety-stop")
+        self.assertEqual(attention["summary"], "summary")
+        self.assertEqual(safety["summary"], "summary")
+
+    def test_recovery_leafs_summarized_after_transition_completes(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            cleanup_result=1,
+        )
+        client = FakeModel("summary")
+        client._runner = runner
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            model=client,
+        )
+        controller.recover(
+            sample(90, nix_memory=256 * monitor.MIB),
+            monitor.Decision("stop", "memory"),
+        )
+        self.assertEqual(
+            client.runner_calls_at_request,
+            [
+                ("systemctl", "stop", "vasher-prebuild-candidate.service"),
+                ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+            ],
+        )
+        events = json.loads(self.events_path.read_text())
+        attention = next(event for event in events if event["type"] == "needs-attention")
+        safety = next(event for event in events if event["type"] == "safety-stop")
+        self.assertEqual(attention["summary"], "summary")
+        self.assertEqual(safety["summary"], "summary")
+
+    def test_observe_resume_summarizes_existing_safety_stop(self):
+        runner = FakeRunner()
+        client = FakeModel("summary")
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "stopping"
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        monitor.append_event(self.events_path, dict(self.event))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+            model=client,
+        )
+        idle = sample(90, active_unit=None, nix_memory=256 * monitor.MIB)
+        controller.observe(idle)
+        self.assertEqual(client.requests, 1)
+        events = json.loads(self.events_path.read_text())
+        safety = next(event for event in events if event["type"] == "safety-stop")
+        self.assertEqual(safety["summary"], "summary")
+
+    def test_observe_resume_cleaning_summarizes_existing_safety_stop(self):
+        runner = FakeRunner()
+        client = FakeModel("summary")
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "cleaning"
+        state.boot_id = "same-boot"
+        state.cleaning_since = 0.0
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        monitor.append_event(self.events_path, dict(self.event))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+            model=client,
+        )
+        idle = sample(90, active_unit=None, nix_memory=256 * monitor.MIB)
+        controller.observe(idle)
+        self.assertEqual(client.requests, 1)
+        events = json.loads(self.events_path.read_text())
+        safety = next(event for event in events if event["type"] == "safety-stop")
+        self.assertEqual(safety["summary"], "summary")
+
+    def test_observe_resume_retrying_summarizes_existing_safety_stop(self):
+        runner = FakeRunner()
+        client = FakeModel("summary")
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.retry_count = 1
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        monitor.append_event(self.events_path, dict(self.event))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+            model=client,
+        )
+        idle = sample(90, active_unit=None, nix_memory=256 * monitor.MIB)
+        controller.observe(idle)
+        self.assertEqual(client.requests, 1)
+        events = json.loads(self.events_path.read_text())
+        safety = next(event for event in events if event["type"] == "safety-stop")
+        self.assertEqual(safety["summary"], "summary")
+
+    def test_resume_never_resummarizes_completed_events(self):
+        runner = FakeRunner()
+        client = FakeModel("summary")
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.retry_count = 1
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        summarized = dict(self.event)
+        summarized["id"] = "evt-summarized"
+        summarized["summary"] = "already explained"
+        failed = dict(self.event)
+        failed["id"] = "evt-inference-error"
+        failed["inferenceError"] = "timeout"
+        monitor.append_event(self.events_path, summarized)
+        monitor.append_event(self.events_path, failed)
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+            model=client,
+        )
+        idle = sample(90, active_unit=None, nix_memory=256 * monitor.MIB)
+        controller.observe(idle)
+        self.assertEqual(client.requests, 0)
+        events = json.loads(self.events_path.read_text())
+        for event in events:
+            if event.get("type") in monitor.SUMMARY_EVENTS:
+                self.assertTrue(event.get("summary") or event.get("inferenceError"))
 
 if __name__ == "__main__":
     unittest.main()
