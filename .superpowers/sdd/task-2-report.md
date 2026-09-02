@@ -1,193 +1,111 @@
-# Task 2 Report: ZMX Home Manager module
+# Task 2 Report: Vasher prebuild monitor state machine
+
+## Status
+
+Task 2 is complete.
+
+The commit is `540e5295ec40c464f566a5172f89509aa9d31488`.
 
 ## Changed files
 
-- `modules/terminal/zmx.nix` (new)
-  - Exports `flake.modules.homeManager.zmx`.
-  - Adds `pkgs.zmx` on all platforms and `pkgs.zsm` only on Linux.
-  - Imports the existing `starship` module so the Task 1 `prependFormat` option is available when the ZMX module is evaluated independently.
-  - Prepends `$env_var.ZMX_SESSION` with `lib.mkBefore` and configures its requested Starship `env_var` metadata.
-- `modules/groups/developer.nix`
-  - Imports `zmx` and removes direct `zmx`/`zsm` package entries.
-  - Removes the direct `starship` import because `zmx` imports it; retaining both imports makes Nix reject the Task 1 option as declared twice.
+- `modules/nixos/vasher-prebuild-monitor.py` defines the state types, thresholds, evaluation function, paths, and JSON helpers.
+- `scripts/tests/test-vasher-prebuild-monitor.py` contains 13 focused unit tests.
 
-`overlays/default.nix` was inspected and not modified; it retains `zsm = inputs.zmx-session-manager.packages.${system}.default;`. `modules/shell/starship.nix` was included in the required `git add` command but had no Task 2 diff.
+The commit contains these two files. The report file is an ignored Superpowers work file.
 
-## Commit
+## TDD evidence
 
-- `4352cf9abc21e867cf59b7a6dd1e0ea8e56196c1` — `feat(terminal): add zmx home module`
+### RED
 
-## Commands and results
+The workstation did not have `python3` on `PATH`. The first command stopped with exit code 127.
 
-### RED — required module-export assertion
+I resolved the existing Nix store path for Python 3.14.7. I prepended that path for each required Python command.
+
+I then ran:
 
 ```bash
-nix eval .#modules.homeManager.zmx --apply 'module: true'
+python3 -m unittest scripts/tests/test-vasher-prebuild-monitor.py -v
 ```
 
-Exit 1 before implementation, with the expected missing `modules.homeManager.zmx` attribute error.
-
-### Targeted evaluations after implementation
-
-```bash
-nix eval --raw .#nixosConfigurations.jezrien.config.home-manager.users.dusty.programs.starship.settings.format
-```
-
-Exit 0; output:
+The command stopped with exit code 1 before implementation. The expected error was:
 
 ```text
-$env_var.ZMX_SESSION$all$line_break$kubernetes$line_break$character
+FileNotFoundError: [Errno 2] No such file or directory: 'modules/nixos/vasher-prebuild-monitor.py'
 ```
+
+### GREEN
+
+The first implementation run exposed an import-harness error. `dataclass` could not resolve the dynamic module because it was absent from `sys.modules`.
+
+The test harness now registers the module before `exec_module`. This is the required importlib loading sequence for annotated dataclasses.
+
+I ran the focused command again after implementation:
 
 ```bash
-nix eval --json .#nixosConfigurations.jezrien.config.home-manager.users.dusty.programs.starship.settings.env_var.ZMX_SESSION
+python3 -m unittest scripts/tests/test-vasher-prebuild-monitor.py -v
 ```
 
-Exit 0; output:
+The command exited with code 0. The result was:
 
-```json
-{"description":"zmx session name","format":"[$symbol$env_value]($style) ","style":"bold magenta","symbol":" "}
+```text
+Ran 13 tests in 0.022s
+
+OK
 ```
+
+The 13 tests cover these contracts:
+
+- The memory threshold persists for 120 seconds.
+- A safe sample clears the memory timer.
+- The disk threshold persists for 60 seconds.
+- Log activity resets the stall timer.
+- Ten CPU seconds reset the stall timer.
+- An idle build stops after 30 minutes.
+- A second unsafe condition returns `stop-final` after one retry.
+- A threshold timer survives a durable reload.
+- Durable reload preserves the retry count, terminal-event marker, boot ID, and Nix safe timer.
+- A revision change resets all monitor state.
+- State and retry JSON files use mode `0600`.
+- Ledger JSON uses mode `0644`.
+- The ledger retains the 100 newest events in newest-first order.
+
+I also ran:
 
 ```bash
-nix eval .#modules.homeManager.zmx --apply 'module: true'
+python3 -m py_compile modules/nixos/vasher-prebuild-monitor.py
 ```
 
-Exit 0; output: `true`.
+The command exited with code 0 and produced no output.
+
+## Commit evidence
+
+I ran:
 
 ```bash
-nix eval --json .#nixosConfigurations.jezrien.config.home-manager.users.dusty.home.packages --apply 'packages: map (package: package.name) (builtins.filter (package: builtins.match "^(zmx|zsm).*" package.name != null) packages)'
+git add modules/nixos/vasher-prebuild-monitor.py scripts/tests/test-vasher-prebuild-monitor.py
+git commit -m "feat(vasher): add prebuild safety state machine"
 ```
 
-Exit 0; output:
-
-```json
-["zmx-0.7.0","zsm-unstable-20260807215757"]
-```
-
-```bash
-nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "aarch64-darwin"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.zmx { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; } ]; }; in toString (builtins.length configuration.config.home.packages)'
-```
-
-Exit 0; output: `5`. This proves the Darwin configuration evaluates without forcing `pkgs.zsm`.
-
-### Formatting and final targeted evaluation
-
-```bash
-nixfmt modules/terminal/zmx.nix modules/groups/developer.nix modules/shell/starship.nix
-```
-
-Exit 127: `nixfmt` is not installed on `PATH` (`error: command not found: nixfmt`). No substitute formatter was run, per the task restriction.
-
-```bash
-nix eval .#nixosConfigurations.jezrien.config.home-manager.users.dusty.programs.starship.settings.format
-```
-
-Exit 0; output:
-
-```nix
-"$env_var.ZMX_SESSION$all$line_break$kubernetes$line_break$character"
-```
-
-```bash
-git add modules/terminal/zmx.nix modules/groups/developer.nix modules/shell/starship.nix
-git commit -m "feat(terminal): add zmx home module"
-```
-
-Both commands exited 0; commit created as recorded above.
+Git created commit `540e5295ec40c464f566a5172f89509aa9d31488`.
 
 ## Self-review
 
-- The Linux package evaluation contains exactly one `zmx-*` and one `zsm-*` package; direct developer-group duplicates are removed.
-- The Darwin evaluation succeeds and does not force the Linux-only `zsm` reference.
-- The prompt format and all requested `ZMX_SESSION` values match the brief exactly.
-- The literal brief module body cannot pass its standalone Darwin evaluation: its `mkIf false` definition still references the Task 1-only `prependFormat` option, which Home Manager validates even when disabled. Importing `starship` inside `zmx` supplies that option; the developer group then must not import `starship` separately, because duplicate imports redeclare the option. This is the minimal dependency cutover that satisfies every required evaluation.
-- No overlays or plan/design documents were changed.
-- Concern: the required `nixfmt` executable was unavailable, so formatter execution could not be verified.
+- `Sample`, `Decision`, and `MonitorState` match the brief.
+- The memory, swap, disk, stall, and CPU values match the brief.
+- `evaluate` depends only on the supplied state, sample, and monotonic timestamp.
+- The threshold order is memory, disk, then stall.
+- Safe memory and disk samples clear their timers.
+- Log changes and sufficient CPU activity reset stall tracking.
+- A nonzero retry count changes `stop` to `stop-final`.
+- The durable state includes `retry_count`, `last_terminal_at`, `boot_id`, and `nix_safe_since`.
+- Revision mismatch discards stale state and creates the default state.
+- `atomic_json` writes a sibling temporary file, sets its mode, and replaces the destination.
+- `append_event` writes mode `0644` and keeps exactly 100 newest entries.
+- The implementation adds no live sampling, subprocess action, or model call.
+- No design or plan document changed.
 
-## P1 review fix: decouple ZMX from Starship enablement
+## Concerns
 
-### Changed files
+The workstation does not expose `python3` on its default `PATH`. Verification required a temporary `PATH` prefix for the existing Nix store interpreter.
 
-- `modules/shell/starship-format.nix` (new) — owns the enable-neutral `programs.starship.prependFormat` declaration. Its stable module key deduplicates the shared module when both Starship and ZMX import it.
-- `modules/shell/starship.nix` — imports the shared format-option module and retains Starship enablement plus all Task 1 format composition behavior.
-- `modules/terminal/zmx.nix` — imports only the enable-neutral shared format-option module; it no longer imports Starship and never sets `programs.starship.enable`.
-- `modules/groups/developer.nix` — restores the developer group’s explicit `starship` import alongside `zmx`.
-
-### Fix commit
-
-- `3e1c1cd8` — `fix(zmx): decouple Starship enablement`
-
-### Commands and results
-
-Before the fix, the standalone Linux ZMX configuration evaluated `programs.starship.enable` to `true`, reproducing the review finding:
-
-```sh
-nix eval --impure --json --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.zmx { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; } ]; }; in configuration.config.programs.starship.enable'
-```
-
-Exit 0; output: `true`.
-
-After the fix, the Task 2 targeted evaluations all exited 0:
-
-```sh
-nix eval --raw .#nixosConfigurations.jezrien.config.home-manager.users.dusty.programs.starship.settings.format
-```
-
-Output: `$env_var.ZMX_SESSION$all$line_break$kubernetes$line_break$character`.
-
-```sh
-nix eval --json .#nixosConfigurations.jezrien.config.home-manager.users.dusty.programs.starship.settings.env_var.ZMX_SESSION
-```
-
-Output:
-
-```json
-{"description":"zmx session name","format":"[$symbol$env_value]($style) ","style":"bold magenta","symbol":" "}
-```
-
-```sh
-nix eval .#modules.homeManager.zmx --apply 'module: true'
-```
-
-Output: `true`.
-
-```sh
-nix eval --json .#nixosConfigurations.jezrien.config.home-manager.users.dusty.home.packages --apply 'packages: map (package: package.name) (builtins.filter (package: builtins.match "^(zmx|zsm).*" package.name != null) packages)'
-```
-
-Output:
-
-```json
-["zmx-0.7.0","zsm-unstable-20260807215757"]
-```
-
-```sh
-nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "aarch64-darwin"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.zmx { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; } ]; }; in toString (builtins.length configuration.config.home.packages)'
-```
-
-Output: `4`.
-
-The required standalone Linux check also exited 0:
-
-```sh
-nix eval --impure --json --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.zmx { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; } ]; }; in configuration.config.programs.starship.enable'
-```
-
-Output: `false`.
-
-Task 1's standalone format interface was also retained:
-
-```sh
-nix eval --impure --raw --expr 'let flake = builtins.getFlake (toString ./.); pkgs = import flake.inputs.nixpkgs { system = "x86_64-linux"; }; configuration = flake.inputs.home-manager.lib.homeManagerConfiguration { inherit pkgs; modules = [ flake.modules.homeManager.starship { home.username = "test"; home.homeDirectory = "/tmp/test"; home.stateVersion = "23.11"; programs.starship.prependFormat = [ "$env_var.ZMX_SESSION" ]; } ]; }; in configuration.config.programs.starship.settings.format'
-```
-
-Output: `$env_var.ZMX_SESSION$all$line_break$kubernetes$line_break$character`.
-
-### Self-review
-
-- `modules/terminal/zmx.nix` has no `programs.starship.enable` definition and imports no module that enables Starship.
-- The shared option declaration is owned by one module. Its stable key means the developer configuration, which imports both `starship` and `zmx`, evaluates that declaration exactly once.
-- The merged Linux configuration keeps the required ZMX prompt prefix and metadata, and still installs one each of `zmx` and Linux-only `zsm`.
-- Standalone ZMX evaluates on Darwin and leaves Starship disabled in the synthetic Linux configuration.
-- No formatter, linter, or broad suite was run.
+The Nix safe timer is durable state only. Task 2 intentionally adds no update or action behavior for this later-task field.
