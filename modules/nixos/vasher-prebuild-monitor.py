@@ -763,10 +763,11 @@ class Controller:
             ):
                 self._event(sample, "build-observed")
                 self._save()
-        if sample.status_state in {"success", "failed"} and self.state.phase not in {
-            "stopping",
-            "cleaning",
-        }:
+        if (
+            sample.status_state in {"success", "failed"}
+            and self.state.phase not in {"stopping", "cleaning"}
+            and (self.state.phase != "retrying" or sample.mode == "retry")
+        ):
             if sample.status_updated_at != self.state.last_terminal_at:
                 self.state.last_terminal_at = sample.status_updated_at
                 self.state.phase = "complete"

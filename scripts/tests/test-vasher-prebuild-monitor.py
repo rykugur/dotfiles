@@ -615,6 +615,38 @@ class RecoveryControllerTests(unittest.TestCase):
         failed = next(event for event in events if event["type"] == "build-failed")
         self.assertEqual(failed["exitCode"], 1)
 
+    def test_observe_retrying_leftover_candidate_sigterm_resumes_retry(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.retry_count = 1
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        leftover = sample(
+            90,
+            active_unit=None,
+            status_state="failed",
+            status_updated_at="2026-09-02T22:03:00+00:00",
+            exit_code=143,
+            mode="candidate",
+        )
+        controller.observe(leftover)
+        self.assertNotEqual(controller.state.phase, "complete")
+        self.assertEqual(controller.state.phase, "retrying")
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+
     def test_mismatched_worktree_does_not_consume_retry(self):
         self._patch_worktree("3" * 40)
         runner = FakeRunner(
