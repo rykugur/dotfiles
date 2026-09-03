@@ -31,6 +31,8 @@ STATUS_PATH = Path("/var/lib/vasher/dashboard/status.json")
 LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")
 PRESSURE_PATH = Path("/proc/pressure/memory")
 BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
+CANDIDATE_WORKTREE = "/var/lib/vasher/worktrees/candidate"
+GIT = "/run/current-system/sw/bin/git"
 ACTIVE_UNITS = (
     "vasher-prebuild-candidate.service",
     "vasher-prebuild-retry.service",
@@ -398,7 +400,7 @@ class SystemReader:
                 values = systemd_values(
                     self.runner, unit, ("ActiveState", "CPUUsageNSec")
                 )
-                if values.get("ActiveState") == "active":
+                if values.get("ActiveState") in {"active", "activating"}:
                     active_unit = unit
                     unit_cpu = _cpu_seconds(values.get("CPUUsageNSec"))
                     break
@@ -624,7 +626,17 @@ class Controller:
             severity="error",
         )
 
+    def _worktree_matches(self, sample: Sample) -> bool:
+        result = self.runner.run(
+            [GIT, "-C", CANDIDATE_WORKTREE, "rev-parse", "HEAD"],
+            check=False,
+        )
+        return result.returncode == 0 and result.stdout.strip() == sample.revision
+
     def _start_retry(self, sample: Sample) -> None:
+        if not self._worktree_matches(sample):
+            self._needs_attention(sample, "worktree-mismatch")
+            return
         self.state.retry_count = 1
         self.state.phase = "retrying"
         self._save()
@@ -729,7 +741,10 @@ class Controller:
             ):
                 self._event(sample, "build-observed")
                 self._save()
-        if sample.status_state in {"success", "failed"}:
+        if (
+            sample.status_state in {"success", "failed"}
+            and self.state.phase not in RECOVERY_PHASES
+        ):
             if sample.status_updated_at != self.state.last_terminal_at:
                 self.state.last_terminal_at = sample.status_updated_at
                 self.state.phase = "complete"

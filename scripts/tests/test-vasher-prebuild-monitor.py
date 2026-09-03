@@ -222,11 +222,13 @@ class FakeRunner:
         active: dict[str, bool] | None = None,
         cleanup_result: int = 0,
         properties: dict[str, dict[str, str]] | None = None,
+        worktree_head: str | None = "2" * 40,
     ) -> None:
         self.calls: list[tuple[str, ...]] = []
         self.active = dict(active or {})
         self.cleanup_result = cleanup_result
         self.properties = properties or {}
+        self.worktree_head = worktree_head
 
     def sleep(self, _seconds: float) -> None:
         return None
@@ -254,6 +256,11 @@ class FakeRunner:
             unit = command[1]
             values = self.properties.get(unit, {})
             stdout = "".join(f"{name}={value}\n" for name, value in values.items())
+        elif recorded[:1] == ("git",) and recorded[-2:] == ("rev-parse", "HEAD"):
+            if self.worktree_head is None:
+                returncode = 128
+            else:
+                stdout = f"{self.worktree_head}\n"
         result = subprocess.CompletedProcess(arguments, returncode, stdout, "")
         if check and returncode:
             raise subprocess.CalledProcessError(returncode, arguments, stdout, "")
@@ -296,6 +303,7 @@ class RecoveryControllerTests(unittest.TestCase):
             [
                 ("systemctl", "stop", "vasher-prebuild-candidate.service"),
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -414,6 +422,7 @@ class RecoveryControllerTests(unittest.TestCase):
             [
                 ("systemctl", "stop", "vasher-prebuild-candidate.service"),
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -438,6 +447,7 @@ class RecoveryControllerTests(unittest.TestCase):
             runner.calls,
             [
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -462,6 +472,7 @@ class RecoveryControllerTests(unittest.TestCase):
         self.assertEqual(
             runner.calls,
             [
+                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -469,6 +480,63 @@ class RecoveryControllerTests(unittest.TestCase):
         saved = json.loads(self.retry_path.read_text())
         self.assertEqual(saved["baseRevision"], "1" * 40)
         self.assertEqual(saved["revision"], "2" * 40)
+
+
+    def test_observe_skips_sigterm_failed_status_during_recovery(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "stopping"
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        sigterm_failed = sample(
+            90,
+            active_unit=None,
+            status_state="failed",
+            status_updated_at="2026-09-02T22:03:00+00:00",
+            exit_code=143,
+            nix_memory=256 * monitor.MIB,
+        )
+        controller.observe(sigterm_failed)
+        self.assertNotEqual(controller.state.phase, "complete")
+        self.assertEqual(controller.state.phase, "retrying")
+        self.assertEqual(
+            runner.calls,
+            [
+                ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
+                ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            ],
+        )
+        try:
+            events = json.loads(self.events_path.read_text())
+        except FileNotFoundError:
+            events = []
+        self.assertFalse(any(event["type"] == "build-failed" for event in events))
+
+    def test_mismatched_worktree_does_not_consume_retry(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            worktree_head="3" * 40,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        controller.recover(self.unsafe_sample, monitor.Decision("stop", "memory"))
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertEqual(controller.state.retry_count, 0)
+        saved = json.loads(self.state_path.read_text())
+        self.assertEqual(saved["retry_count"], 0)
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
 
     def test_cleaning_timeout_uses_persisted_start(self):
         runner = FakeRunner()
@@ -593,6 +661,61 @@ class SamplingConversionTests(unittest.TestCase):
             self.assertEqual(observed.nix_memory, 512 * monitor.MIB)
             self.assertEqual(observed.combined_cpu_seconds, 6.5)
             self.assertEqual(observed.log_size, 11)
+
+
+    def test_system_reader_treats_activating_as_running(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            meminfo = root / "meminfo"
+            pressure = root / "pressure"
+            status = root / "status.json"
+            meminfo.write_text("MemAvailable: 1024 kB\nSwapFree: 1024 kB\n")
+            pressure.write_text("full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n")
+            status.write_text(
+                json.dumps(
+                    {
+                        "state": "building",
+                        "mode": "candidate",
+                        "updatedAt": "2026-09-02T22:00:00Z",
+                        "baseRevision": "1" * 40,
+                        "revision": "2" * 40,
+                    }
+                )
+            )
+            runner = FakeRunner(
+                properties={
+                    "vasher-prebuild-candidate.service": {
+                        "ActiveState": "activating",
+                        "CPUUsageNSec": "1000000000",
+                    },
+                    "vasher-prebuild-retry.service": {
+                        "ActiveState": "inactive",
+                        "CPUUsageNSec": "0",
+                    },
+                    "nix-daemon.service": {
+                        "MemoryCurrent": "0",
+                        "CPUUsageNSec": "0",
+                    },
+                }
+            )
+            reader = monitor.SystemReader(
+                runner,
+                meminfo_path=meminfo,
+                pressure_path=pressure,
+                status_path=status,
+                log_path=root / "missing.log",
+                statvfs=lambda _path: os.statvfs_result(
+                    (4096, 4096, 0, 0, 1, 0, 0, 0, 0, 0)
+                ),
+                now=lambda: 1.0,
+            )
+            observed = reader.sample()
+            self.assertIsNotNone(observed)
+            assert observed is not None
+            self.assertEqual(
+                observed.active_unit, "vasher-prebuild-candidate.service"
+            )
+            self.assertEqual(observed.combined_cpu_seconds, 1.0)
 
     def test_terminal_status_clears_active_unit(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -776,6 +899,7 @@ class HaikuSummaryTests(unittest.TestCase):
             [
                 ("systemctl", "stop", "vasher-prebuild-candidate.service"),
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
