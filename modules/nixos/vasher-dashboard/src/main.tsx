@@ -1,10 +1,11 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { formatTimestamp } from "./date-format.ts";
+import { type MonitorEvent, renderEventText } from "./event-text.ts";
 import "./dashboard.css";
 
-type State = "idle" | "building" | "success" | "failed" | "stale";
-type Mode = "refresh" | "candidate";
+type State = "idle" | "preparing" | "building" | "success" | "failed" | "stale";
+type Mode = "refresh" | "candidate" | "retry";
 
 type Status = {
   state: State;
@@ -22,10 +23,11 @@ type Snapshot = {
   status: Status | null;
   history: Status[];
   log: string;
+  events: MonitorEvent[];
   error: string | null;
 };
 
-const emptySnapshot: Snapshot = { status: null, history: [], log: "", error: null };
+const emptySnapshot: Snapshot = { status: null, history: [], log: "", events: [], error: null };
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path, { cache: "no-store" });
@@ -34,15 +36,16 @@ async function fetchJson<T>(path: string): Promise<T> {
 }
 
 async function loadSnapshot(): Promise<Snapshot> {
-  const [status, history, log] = await Promise.all([
+  const [status, history, log, events] = await Promise.all([
     fetchJson<Status>("/api/status.json"),
     fetchJson<Status[]>("/api/history.json"),
     fetch("/api/log.txt", { cache: "no-store" }).then(async (response) => {
       if (!response.ok) throw new Error(`/api/log.txt: ${response.status}`);
       return response.text();
     }),
+    fetchJson<MonitorEvent[]>("/api/events.json"),
   ]);
-  return { status, history, log, error: null };
+  return { status, history, log, events, error: null };
 }
 
 function useSnapshot(): Snapshot {
@@ -73,6 +76,7 @@ function shortRevision(revision: string): string {
 }
 
 function statusCopy(status: Status): string {
+  if (status.state === "preparing") return "Updating candidate inputs before the build.";
   if (status.state === "stale") return "Candidate discarded because master advanced.";
   if (status.state === "building") return "Refreshing package inputs and warming Jezrien’s reduced closure.";
   if (status.state === "success") return "Published to cache-bump and retained as a cache root.";
@@ -81,7 +85,7 @@ function statusCopy(status: Status): string {
 }
 
 function App() {
-  const { status, history, log, error } = useSnapshot();
+  const { status, history, log, events, error } = useSnapshot();
 
   return (
     <main>
@@ -115,6 +119,27 @@ function App() {
             <div><p className="eyebrow">Refresh probe</p><p className="clock">15m</p><p className="sub">after the previous run</p></div>
             <div><p className="eyebrow">Nightly candidate</p><p className="clock">03:00</p><p className="sub">randomized delay ≤ 10m</p></div>
           </div></aside>
+          <article className="panel full">
+            <h2>Monitor events</h2>
+            <ol className="events">
+              {events.length === 0 ? (
+                <li>No monitor events recorded yet.</li>
+              ) : events.map((event) => {
+                const text = renderEventText(event);
+                return (
+                  <li key={event.id} className={`event ${event.severity}`}>
+                    <time>{formatTimestamp(event.timestamp)}</time>
+                    <div>
+                      <p className="event-title">{text.title}</p>
+                      <p className="event-detail">{text.detail}</p>
+                      {text.summary ? <p className="event-summary">{text.summary}</p> : null}
+                      {event.inferenceError ? <p className="event-error">Inference error: {event.inferenceError}</p> : null}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </article>
           <article className="panel full"><h2>Recent runs</h2><ol className="runs">
             {history.length === 0 ? <li>No terminal builds recorded yet.</li> : history.map((run) => <li key={`${run.updatedAt}-${run.state}`}><time>{formatTimestamp(run.updatedAt)}</time><span className={`badge ${run.state}`}>{run.state.toUpperCase()}</span><span>{shortRevision(run.revision || run.baseRevision)}</span></li>)}
           </ol></article>
