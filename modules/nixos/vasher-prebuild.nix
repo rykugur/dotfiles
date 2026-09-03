@@ -119,8 +119,8 @@
           group = "vasher";
           mode = "0400";
         };
-        sops.secrets."swoleflake/anthropic_api_key" = {
-          key = "swoleflake/anthropic_api_key";
+        sops.secrets."swoleflake/openrouter_api_key" = {
+          key = "swoleflake/openrouter_api_key";
           owner = "root";
           group = "root";
           mode = "0400";
@@ -147,7 +147,7 @@
             after = [ "network-online.target" ];
             wants = [ "network-online.target" ];
             environment = {
-              ANTHROPIC_API_KEY_FILE = config.sops.secrets."swoleflake/anthropic_api_key".path;
+              OPENROUTER_API_KEY_FILE = config.sops.secrets."swoleflake/openrouter_api_key".path;
             };
             serviceConfig = {
               Type = "simple";
@@ -175,7 +175,7 @@
                 "/var/lib/vasher/monitor"
               ];
               ReadOnlyPaths = [
-                config.sops.secrets."swoleflake/anthropic_api_key".path
+                config.sops.secrets."swoleflake/openrouter_api_key".path
               ];
               InaccessiblePaths = [
                 "/home"

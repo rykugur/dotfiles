@@ -1026,16 +1026,25 @@ class HaikuSummaryTests(unittest.TestCase):
         self.assertLessEqual(len(evidence.encode()), 32 * 1024)
         self.assertLessEqual(evidence.count("\n"), 200)
 
-    def test_anthropic_request_has_no_tools(self):
-        transport = FakeTransport({"content": [{"type": "text", "text": "summary"}]})
-        client = monitor.AnthropicClient(self.key_path, transport)
+    def test_openrouter_request_has_no_tools(self):
+        transport = FakeTransport(
+            {"choices": [{"message": {"content": "summary"}}]}
+        )
+        client = monitor.OpenRouterClient(self.key_path, transport)
         self.assertEqual(client.summarize("evidence"), "summary")
         request = transport.requests[0]
-        self.assertEqual(request.url, "https://api.anthropic.com/v1/messages")
+        self.assertEqual(
+            request.url, "https://openrouter.ai/api/v1/chat/completions"
+        )
         self.assertEqual(request.timeout, 30)
-        self.assertEqual(request.body["model"], "claude-haiku-4-5")
+        self.assertEqual(request.body["model"], "deepseek/deepseek-v4-flash")
         self.assertEqual(request.body["max_tokens"], 512)
         self.assertNotIn("tools", request.body)
+        self.assertEqual(
+            request.headers["Authorization"], "Bearer test-key"
+        )
+        self.assertNotIn("x-api-key", request.headers)
+        self.assertEqual(request.body["messages"][0]["role"], "system")
 
     def test_model_text_never_changes_actions(self):
         runner = FakeRunner()

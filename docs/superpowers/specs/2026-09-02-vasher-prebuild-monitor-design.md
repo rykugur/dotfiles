@@ -73,11 +73,11 @@ The monitor writes `/var/lib/vasher/monitor/state.json` with atomic replacement.
 
 ### Model client
 
-The monitor uses a fixed HTTPS client for the Anthropic Messages API. The client uses `claude-haiku-4-5` with a maximum output of 512 tokens.
+The monitor uses a fixed HTTPS client for the OpenRouter Chat Completions API. The client uses `deepseek/deepseek-v4-flash` with a maximum output of 512 tokens.
 
-The API key uses the SOPS secret `swoleflake/anthropic_api_key`. The monitor reads the key from its secret file into process memory.
+The API key uses the SOPS secret `swoleflake/openrouter_api_key`. The monitor reads the key from its secret file into process memory.
 
-The client sends requests only to `https://api.anthropic.com/v1/messages`. Each request has a 30-second timeout and no tool definitions.
+The client sends requests only to `https://openrouter.ai/api/v1/chat/completions`. Each request has a 30-second timeout and no tool definitions.
 
 The model client cannot select a URL from configuration, log text, or model output. An inference error never blocks deterministic recovery.
 
@@ -187,7 +187,7 @@ The systemd service denies access to home directories and SSH sockets. It cannot
 
 The monitor does not scan the network. It does not connect to any private network address.
 
-The only remote operation is the fixed HTTPS request to the Anthropic API. All systemd and Nix actions target the local Vasher host.
+The only remote operation is the fixed HTTPS request to the OpenRouter API. All systemd and Nix actions target the local Vasher host.
 
 The service uses systemd hardening with a read-only system. It receives write access only to the monitor and dashboard state directories.
 
@@ -211,7 +211,7 @@ If Vasher reboots during recovery, the monitor does not restart a candidate auto
 
 ## Tests
 
-The tests use fake systemd, cgroup, filesystem, clock, and model interfaces. They do not contact Anthropic or start a real Nix build.
+The tests use fake systemd, cgroup, filesystem, clock, and model interfaces. They do not contact OpenRouter or start a real Nix build.
 
 The tests must make sure that:
 

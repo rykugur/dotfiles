@@ -45,8 +45,8 @@ REVISION_RE = re.compile(r"^[0-9a-f]{40}$")
 RECOVERY_PHASES = {"stopping", "cleaning", "retrying"}
 RETRY_WAIT_SECONDS = 600
 SAMPLE_INTERVAL = 30
-ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
-ANTHROPIC_MODEL = "claude-haiku-4-5"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_MODEL = "deepseek/deepseek-v4-flash"
 SUMMARY_EVENTS = {
     "safety-stop",
     "build-failed",
@@ -270,7 +270,7 @@ class UrllibTransport:
             return json.loads(response.read().decode())
 
 
-class AnthropicClient:
+class OpenRouterClient:
     def __init__(self, key_path: Path, transport: object | None = None) -> None:
         self.key_path = key_path
         self.transport = transport or UrllibTransport()
@@ -278,22 +278,26 @@ class AnthropicClient:
     def summarize(self, evidence: str) -> str:
         key = self.key_path.read_text().strip()
         body = {
-            "model": ANTHROPIC_MODEL,
+            "model": OPENROUTER_MODEL,
             "max_tokens": 512,
-            "system": (
-                "Summarize this Vasher prebuild event for its operator. "
-                "State the observed condition, automatic action, and final state. "
-                "Do not provide commands or request more access."
-            ),
-            "messages": [{"role": "user", "content": redact(evidence, [key])}],
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "Summarize this Vasher prebuild event for its operator. "
+                        "State the observed condition, automatic action, and final state. "
+                        "Do not provide commands or request more access."
+                    ),
+                },
+                {"role": "user", "content": redact(evidence, [key])},
+            ],
         }
         headers = {
             "content-type": "application/json",
-            "anthropic-version": "2023-06-01",
-            "x-api-key": key,
+            "Authorization": f"Bearer {key}",
         }
         request = ModelRequest(
-            url=ANTHROPIC_URL,
+            url=OPENROUTER_URL,
             timeout=30,
             body=body,
             headers=headers,
@@ -309,10 +313,7 @@ class AnthropicClient:
         except json.JSONDecodeError:
             raise InferenceError("invalid-json") from None
         try:
-            item = payload["content"][0]
-            if item["type"] != "text":
-                raise InferenceError("invalid-response")
-            text = item["text"]
+            text = payload["choices"][0]["message"]["content"]
         except (KeyError, IndexError, TypeError):
             raise InferenceError("invalid-response") from None
         if not isinstance(text, str):
@@ -829,8 +830,8 @@ class Controller:
 def main() -> int:
     runner = Runner()
     reader = SystemReader(runner)
-    key_file = os.environ.get("ANTHROPIC_API_KEY_FILE")
-    model = AnthropicClient(Path(key_file)) if key_file else None
+    key_file = os.environ.get("OPENROUTER_API_KEY_FILE")
+    model = OpenRouterClient(Path(key_file)) if key_file else None
     controller = Controller(
         runner, STATE_PATH, EVENTS_PATH, RETRY_PATH, model=model
     )
