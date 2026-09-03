@@ -406,8 +406,8 @@ class SystemReader:
         status = json.loads(self.status_path.read_text())
         base_revision = str(status.get("baseRevision") or "")
         revision = str(status.get("revision") or "")
-        if not REVISION_RE.fullmatch(base_revision) or not REVISION_RE.fullmatch(
-            revision
+        if not REVISION_RE.fullmatch(base_revision) or (
+            revision and not REVISION_RE.fullmatch(revision)
         ):
             raise InvalidStatus("status revisions must be 40-character hex")
         status_state = str(status.get("state") or "")
@@ -547,7 +547,10 @@ class Controller:
         return event
 
     def record_error(self, message: str) -> None:
-        self._event(None, "error", reason=message, severity="error")
+        try:
+            self._event(None, "error", reason=message, severity="error")
+        except OSError:
+            return
 
     def _update_event(self, event_id: str, changes: dict[str, object]) -> None:
         try:

@@ -952,6 +952,73 @@ class SamplingConversionTests(unittest.TestCase):
             with self.assertRaises(monitor.InvalidStatus):
                 reader.sample()
 
+    def test_empty_candidate_revision_is_pending(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            meminfo = root / "meminfo"
+            pressure = root / "pressure"
+            status = root / "status.json"
+            meminfo.write_text(
+                "MemAvailable:    3145728 kB\n"
+                "SwapFree:         1572864 kB\n"
+            )
+            pressure.write_text("full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n")
+            status.write_text(
+                json.dumps(
+                    {
+                        "state": "building",
+                        "mode": "candidate",
+                        "updatedAt": "2026-09-02T16:19:07-05:00",
+                        "baseRevision": "1" * 40,
+                        "revision": "",
+                    }
+                )
+            )
+            runner = FakeRunner(
+                properties={
+                    "vasher-prebuild-candidate.service": {"ActiveState": "inactive"},
+                    "vasher-prebuild-retry.service": {"ActiveState": "inactive"},
+                    "nix-daemon.service": {
+                        "MemoryCurrent": "0",
+                        "CPUUsageNSec": "0",
+                    },
+                }
+            )
+            reader = monitor.SystemReader(
+                runner,
+                meminfo_path=meminfo,
+                pressure_path=pressure,
+                status_path=status,
+                log_path=root / "missing.log",
+                statvfs=lambda _path: os.statvfs_result(
+                    (4096, 4096, 0, 0, 1, 0, 0, 0, 0, 0)
+                ),
+                now=lambda: 1.0,
+            )
+            observed = reader.sample()
+            self.assertIsNotNone(observed)
+            assert observed is not None
+            self.assertEqual(observed.revision, "")
+            self.assertEqual(observed.base_revision, "1" * 40)
+
+    def test_record_error_survives_unwritable_events(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            events = root / "events.json"
+            events.write_text("[]\n")
+            controller = monitor.Controller(
+                FakeRunner(),
+                root / "state.json",
+                events,
+                root / "retry.json",
+                boot_id="boot",
+            )
+            root.chmod(0o555)
+            try:
+                controller.record_error("status revisions must be 40-character hex")
+            finally:
+                root.chmod(0o700)
+
 
 class FakeTransport:
     def __init__(self, payload: dict[str, object]) -> None:

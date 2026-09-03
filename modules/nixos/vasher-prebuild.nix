@@ -155,7 +155,7 @@
               Restart = "always";
               RestartSec = "10s";
               User = "root";
-              Group = "root";
+              Group = "vasher";
               UMask = "0077";
               NoNewPrivileges = true;
               PrivateDevices = true;
@@ -217,7 +217,7 @@
           };
         };
         systemd.tmpfiles.rules = [
-          "d /var/lib/vasher/dashboard 0755 vasher vasher -"
+          "d /var/lib/vasher/dashboard 0775 vasher vasher -"
           "d /var/lib/vasher/monitor 0755 root root -"
           "f /var/lib/vasher/dashboard/events.json 0644 root root - []"
         ];
