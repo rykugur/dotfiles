@@ -43,6 +43,20 @@
           exec ${pkgs.bash}/bin/bash ${runtime} "$@"
         '';
       };
+      monitor = pkgs.writers.writePython3Bin "vasher-prebuild-monitor" {
+        flakeIgnore = [ "E203" "E265" "E501" "W503" ];
+      } (builtins.readFile ./vasher-prebuild-monitor.py);
+
+      retry = pkgs.writeShellApplication {
+        name = "vasher-prebuild-retry";
+        runtimeInputs = [ pkgs.jq ];
+        text = ''
+          request=/var/lib/vasher/monitor/retry.json
+          base=$(jq -er '.baseRevision | select(test("^[0-9a-f]{40}$"))' "$request")
+          revision=$(jq -er '.revision | select(test("^[0-9a-f]{40}$"))' "$request")
+          exec ${prebuild}/bin/vasher-prebuild retry "$base" "$revision"
+        '';
+      };
       serviceConfig = {
         Type = "oneshot";
         User = "vasher";
@@ -105,10 +119,85 @@
           group = "vasher";
           mode = "0400";
         };
+        sops.secrets."swoleflake/anthropic_api_key" = {
+          key = "swoleflake/anthropic_api_key";
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
 
         systemd.services = {
           vasher-prebuild-refresh = service "refresh";
           vasher-prebuild-candidate = service "candidate";
+          vasher-prebuild-cleanup = service "cleanup" // {
+            description = "Collect garbage before a Vasher prebuild retry";
+            serviceConfig = serviceConfig // {
+              ExecStart = "${pkgs.nix}/bin/nix-collect-garbage";
+            };
+          };
+          vasher-prebuild-retry = service "retry" // {
+            description = "Retry the recorded Vasher candidate";
+            serviceConfig = serviceConfig // {
+              ExecStart = "${retry}/bin/vasher-prebuild-retry";
+            };
+          };
+          vasher-prebuild-monitor = {
+            description = "Monitor Vasher prebuild resource safety";
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network-online.target" ];
+            wants = [ "network-online.target" ];
+            environment = {
+              ANTHROPIC_API_KEY_FILE = config.sops.secrets."swoleflake/anthropic_api_key".path;
+            };
+            serviceConfig = {
+              Type = "simple";
+              ExecStart = "${monitor}/bin/vasher-prebuild-monitor";
+              Restart = "always";
+              RestartSec = "10s";
+              User = "root";
+              Group = "root";
+              UMask = "0077";
+              NoNewPrivileges = true;
+              PrivateDevices = true;
+              PrivateTmp = true;
+              ProtectHome = true;
+              ProtectSystem = "strict";
+              ProtectControlGroups = true;
+              ProtectKernelModules = true;
+              ProtectKernelTunables = true;
+              RestrictSUIDSGID = true;
+              LockPersonality = true;
+              MemoryDenyWriteExecute = true;
+              RestrictRealtime = true;
+              CapabilityBoundingSet = "";
+              ReadWritePaths = [
+                "/var/lib/vasher/dashboard"
+                "/var/lib/vasher/monitor"
+              ];
+              ReadOnlyPaths = [
+                config.sops.secrets."swoleflake/anthropic_api_key".path
+              ];
+              InaccessiblePaths = [
+                "/home"
+                "/root/.ssh"
+                config.sops.secrets."swoleflake/deploy_key".path
+                config.sops.secrets."swoleflake/github_token".path
+                "/run/current-system/sw/bin/ssh"
+                "/run/current-system/sw/bin/scp"
+                "/run/current-system/sw/bin/sftp"
+                "/run/current-system/sw/bin/ssh-add"
+                "/run/current-system/sw/bin/ssh-agent"
+              ];
+              IPAddressDeny = [
+                "10.0.0.0/8"
+                "172.16.0.0/12"
+                "192.168.0.0/16"
+                "169.254.0.0/16"
+                "fc00::/7"
+                "fe80::/10"
+              ];
+            };
+          };
         };
 
         systemd.timers.vasher-prebuild-refresh = {
@@ -127,6 +216,11 @@
             RandomizedDelaySec = "10m";
           };
         };
+        systemd.tmpfiles.rules = [
+          "d /var/lib/vasher/dashboard 0755 vasher vasher -"
+          "d /var/lib/vasher/monitor 0755 root root -"
+          "f /var/lib/vasher/dashboard/events.json 0644 root root - []"
+        ];
         services.caddy = {
           enable = true;
           virtualHosts."http://:5080".extraConfig = ''
@@ -142,6 +236,11 @@
             }
             handle /api/log.txt {
               rewrite * /log.txt
+              root * /var/lib/vasher/dashboard
+              file_server
+            }
+            handle /api/events.json {
+              rewrite * /events.json
               root * /var/lib/vasher/dashboard
               file_server
             }
