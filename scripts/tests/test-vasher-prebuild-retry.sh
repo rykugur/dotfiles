@@ -8,15 +8,15 @@ trap 'rm -rf "$tmp"' EXIT
 state_root=$tmp/state
 events=$tmp/events
 token_file=$tmp/github-token
+base=1111111111111111111111111111111111111111
+candidate=2222222222222222222222222222222222222222
 printf 'test-token\n' > "$token_file"
 mkdir -p "$state_root/repo/.git" "$state_root/worktrees/candidate/.git" "$tmp/bin"
 
 cat > "$tmp/bin/git" <<'EOF'
 #!/usr/bin/env bash
 case "$*" in
-  *"rev-parse origin/master"*) printf '1111111111111111111111111111111111111111\n' ;;
   *"rev-parse HEAD"*) printf '2222222222222222222222222222222222222222\n' ;;
-  *"diff --cached --quiet"*) exit 1 ;;
 esac
 EOF
 
@@ -26,10 +26,13 @@ if [[ ${NIX_CONFIG-} != *'access-tokens = github.com=test-token'* ]]; then
   printf 'missing GitHub access token\n' >&2
   exit 99
 fi
-if [[ ${1-} == build ]]; then
-  printf 'build\n' >> "$EVENTS"
-  exit 42
-fi
+case "${1-} ${2-}" in
+  'flake update') printf 'flake update\n' >> "$EVENTS" ;;
+  'build '*)
+    printf 'build\n' >> "$EVENTS"
+    exit 42
+    ;;
+esac
 EOF
 
 cat > "$tmp/bin/nix-collect-garbage" <<'EOF'
@@ -39,7 +42,7 @@ EOF
 
 cat > "$tmp/bin/omp-updater" <<'EOF'
 #!/usr/bin/env bash
-exit 0
+printf 'omp update\n' >> "$EVENTS"
 EOF
 
 source_text=$(<"$repo_root/modules/nixos/vasher-prebuild.sh")
@@ -56,7 +59,7 @@ PATH="$tmp/bin:$PATH" \
   EXCLUDED_PACKAGES='[]' \
   GITHUB_TOKEN_FILE="$token_file" \
   OMP_UPDATER="$tmp/bin/omp-updater" \
-  bash "$tmp/prebuild.sh" candidate
+  bash "$tmp/prebuild.sh" retry "$base" "$candidate"
 exit_code=$?
 set -e
 
@@ -66,12 +69,13 @@ set -e
 }
 actual_events=$(<"$events")
 [[ $actual_events == $'gc\nbuild\ngc' ]] || {
-  printf 'expected cleanup/build/cleanup, got: %q\n' "$actual_events" >&2
+  printf 'expected cleanup/build/cleanup without updates, got: %q\n' "$actual_events" >&2
   exit 1
 }
-jq -e '
+jq -e --arg base "$base" --arg candidate "$candidate" '
   .state == "failed" and
-  .baseRevision == "1111111111111111111111111111111111111111" and
-  .revision == "2222222222222222222222222222222222222222" and
+  .mode == "retry" and
+  .baseRevision == $base and
+  .revision == $candidate and
   .exitCode == 42
 ' "$state_root/dashboard/status.json" >/dev/null
