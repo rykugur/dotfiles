@@ -32,7 +32,7 @@ LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")
 PRESSURE_PATH = Path("/proc/pressure/memory")
 BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
 CANDIDATE_WORKTREE = "/var/lib/vasher/worktrees/candidate"
-GIT = "/run/current-system/sw/bin/git"
+
 ACTIVE_UNITS = (
     "vasher-prebuild-candidate.service",
     "vasher-prebuild-retry.service",
@@ -160,6 +160,32 @@ def atomic_json(path: Path, value: object, mode: int = 0o600) -> None:
     temporary.write_text(json.dumps(value, separators=(",", ":")) + "\n")
     temporary.chmod(mode)
     temporary.replace(path)
+
+
+def read_worktree_head(worktree: Path) -> str | None:
+    git_entry = worktree / ".git"
+    try:
+        if git_entry.is_file():
+            gitdir = None
+            for line in git_entry.read_text(encoding="utf-8").splitlines():
+                stripped = line.strip()
+                if stripped.lower().startswith("gitdir:"):
+                    gitdir = Path(stripped.split(":", 1)[1].strip())
+                    if not gitdir.is_absolute():
+                        gitdir = git_entry.parent / gitdir
+                    break
+            if gitdir is None:
+                return None
+        elif git_entry.is_dir():
+            gitdir = git_entry
+        else:
+            return None
+        head = (gitdir / "HEAD").read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if REVISION_RE.fullmatch(head):
+        return head
+    return None
 
 
 def load_state(path: Path, base_revision: str, revision: str) -> MonitorState:
@@ -627,11 +653,7 @@ class Controller:
         )
 
     def _worktree_matches(self, sample: Sample) -> bool:
-        result = self.runner.run(
-            [GIT, "-C", CANDIDATE_WORKTREE, "rev-parse", "HEAD"],
-            check=False,
-        )
-        return result.returncode == 0 and result.stdout.strip() == sample.revision
+        return read_worktree_head(Path(CANDIDATE_WORKTREE)) == sample.revision
 
     def _start_retry(self, sample: Sample) -> None:
         if not self._worktree_matches(sample):
@@ -741,10 +763,10 @@ class Controller:
             ):
                 self._event(sample, "build-observed")
                 self._save()
-        if (
-            sample.status_state in {"success", "failed"}
-            and self.state.phase not in RECOVERY_PHASES
-        ):
+        if sample.status_state in {"success", "failed"} and self.state.phase not in {
+            "stopping",
+            "cleaning",
+        }:
             if sample.status_updated_at != self.state.last_terminal_at:
                 self.state.last_terminal_at = sample.status_updated_at
                 self.state.phase = "complete"

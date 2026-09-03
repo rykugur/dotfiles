@@ -216,6 +216,31 @@ class DurableStateTests(unittest.TestCase):
                 [event["id"] for event in events], list(range(104, 4, -1))
             )
 
+def write_detached_worktree(
+    root: Path, revision: str | None, *, via_gitdir: bool = True
+) -> Path:
+    worktree = root / "candidate"
+    worktree.mkdir(parents=True, exist_ok=True)
+    if via_gitdir:
+        gitdir = root / "gitdir"
+        gitdir.mkdir(parents=True, exist_ok=True)
+        if revision is not None:
+            (gitdir / "HEAD").write_text(f"{revision}\n")
+        else:
+            (gitdir / "HEAD").unlink(missing_ok=True)
+
+        (worktree / ".git").write_text(f"gitdir: {gitdir}\n")
+    else:
+        git = worktree / ".git"
+        git.mkdir(parents=True, exist_ok=True)
+        if revision is not None:
+            (git / "HEAD").write_text(f"{revision}\n")
+        else:
+            (git / "HEAD").unlink(missing_ok=True)
+
+    return worktree
+
+
 class FakeRunner:
     def __init__(
         self,
@@ -285,6 +310,17 @@ class RecoveryControllerTests(unittest.TestCase):
         self.events_path = root / "events.json"
         self.retry_path = root / "retry.json"
         self.unsafe_sample = sample(90, nix_memory=256 * monitor.MIB)
+        self._patch_worktree("2" * 40)
+
+    def _patch_worktree(self, revision: str | None, *, via_gitdir: bool = True) -> Path:
+        worktree = write_detached_worktree(
+            Path(self.directory.name), revision, via_gitdir=via_gitdir
+        )
+        original = monitor.CANDIDATE_WORKTREE
+        self.addCleanup(setattr, monitor, "CANDIDATE_WORKTREE", original)
+        monitor.CANDIDATE_WORKTREE = str(worktree)
+        return worktree
+
 
     def tearDown(self):
         self.directory.cleanup()
@@ -303,7 +339,6 @@ class RecoveryControllerTests(unittest.TestCase):
             [
                 ("systemctl", "stop", "vasher-prebuild-candidate.service"),
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
-                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -422,7 +457,6 @@ class RecoveryControllerTests(unittest.TestCase):
             [
                 ("systemctl", "stop", "vasher-prebuild-candidate.service"),
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
-                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -447,7 +481,6 @@ class RecoveryControllerTests(unittest.TestCase):
             runner.calls,
             [
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
-                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -472,7 +505,6 @@ class RecoveryControllerTests(unittest.TestCase):
         self.assertEqual(
             runner.calls,
             [
-                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -510,7 +542,6 @@ class RecoveryControllerTests(unittest.TestCase):
             runner.calls,
             [
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
-                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
@@ -520,10 +551,75 @@ class RecoveryControllerTests(unittest.TestCase):
             events = []
         self.assertFalse(any(event["type"] == "build-failed" for event in events))
 
+
+    def test_observe_retrying_success_marks_complete(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.retry_count = 1
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        finished = sample(
+            90,
+            active_unit=None,
+            status_state="success",
+            status_updated_at="2026-09-02T22:10:00+00:00",
+            exit_code=0,
+            mode="retry",
+        )
+        controller.observe(finished)
+        self.assertEqual(controller.state.phase, "complete")
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+        events = json.loads(self.events_path.read_text())
+        self.assertTrue(any(event["type"] == "build-succeeded" for event in events))
+
+    def test_observe_retrying_failed_records_failure(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.retry_count = 1
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            boot_id="same-boot",
+        )
+        finished = sample(
+            90,
+            active_unit=None,
+            status_state="failed",
+            status_updated_at="2026-09-02T22:10:00+00:00",
+            exit_code=1,
+            mode="retry",
+        )
+        controller.observe(finished)
+        self.assertEqual(controller.state.phase, "complete")
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+        events = json.loads(self.events_path.read_text())
+        failed = next(event for event in events if event["type"] == "build-failed")
+        self.assertEqual(failed["exitCode"], 1)
+
     def test_mismatched_worktree_does_not_consume_retry(self):
+        self._patch_worktree("3" * 40)
         runner = FakeRunner(
             active={"vasher-prebuild-candidate.service": True},
-            worktree_head="3" * 40,
+            worktree_head="2" * 40,
         )
         controller = monitor.Controller(
             runner, self.state_path, self.events_path, self.retry_path
@@ -537,6 +633,46 @@ class RecoveryControllerTests(unittest.TestCase):
             ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             runner.calls,
         )
+        self.assertFalse(any(call[:1] == ("git",) for call in runner.calls))
+
+    def test_unreadable_worktree_head_does_not_consume_retry(self):
+        self._patch_worktree(None)
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            worktree_head="2" * 40,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        controller.recover(self.unsafe_sample, monitor.Decision("stop", "memory"))
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertEqual(controller.state.retry_count, 0)
+        saved = json.loads(self.state_path.read_text())
+        self.assertEqual(saved["retry_count"], 0)
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+        self.assertFalse(any(call[:1] == ("git",) for call in runner.calls))
+
+    def test_matching_detached_head_file_allows_retry(self):
+        self._patch_worktree("2" * 40)
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            worktree_head="3" * 40,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        controller.recover(self.unsafe_sample, monitor.Decision("stop", "memory"))
+        self.assertEqual(controller.state.phase, "retrying")
+        self.assertEqual(controller.state.retry_count, 1)
+        self.assertIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+        self.assertFalse(any(call[:1] == ("git",) for call in runner.calls))
+
 
     def test_cleaning_timeout_uses_persisted_start(self):
         runner = FakeRunner()
@@ -835,9 +971,16 @@ class HaikuSummaryTests(unittest.TestCase):
             "action": "stop",
             "summary": "",
         }
+        self._original_worktree = monitor.CANDIDATE_WORKTREE
+        monitor.CANDIDATE_WORKTREE = str(
+            write_detached_worktree(root, "2" * 40)
+        )
+
 
     def tearDown(self):
         self.directory.cleanup()
+        monitor.CANDIDATE_WORKTREE = self._original_worktree
+
 
     def test_redaction_removes_credentials(self):
         text = "Authorization: Bearer abc123\nx-api-key: secret\n?access_token=query-secret"
@@ -899,7 +1042,6 @@ class HaikuSummaryTests(unittest.TestCase):
             [
                 ("systemctl", "stop", "vasher-prebuild-candidate.service"),
                 ("systemctl", "start", "vasher-prebuild-cleanup.service"),
-                ("git", "-C", monitor.CANDIDATE_WORKTREE, "rev-parse", "HEAD"),
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
