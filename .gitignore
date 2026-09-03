@@ -9,3 +9,6 @@
 # modules/ai/grok.nix home-manager module, including mcp + sub-agents).
 # Never commit this; similar to .claude/, .opencode/, .pi/, etc.
 .grok/
+
+__pycache__/
+*.py[cod]
