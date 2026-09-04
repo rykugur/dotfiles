@@ -22,7 +22,7 @@
 
             user = {
               name = "Dusty";
-              email = "rollhax@gmail.com";
+              email = "dusty@ryk.sh";
             };
           };
 
