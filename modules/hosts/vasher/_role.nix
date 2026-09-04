@@ -35,6 +35,11 @@
     };
   };
 
+  systemd.services.nix-daemon.serviceConfig = {
+    MemoryHigh = "8G";
+    MemoryMax = "10G";
+  };
+
   users.groups.vasher = { };
   users.users.vasher = {
     isSystemUser = true;
