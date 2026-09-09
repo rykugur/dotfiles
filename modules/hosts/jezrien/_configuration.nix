@@ -23,7 +23,6 @@
   ]);
   ryk.vasherCache.enable = true;
 
-  # TODO: find a better spot for this
   nix.settings = {
     trusted-users = [
       "root"
