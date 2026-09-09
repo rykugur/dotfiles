@@ -47,7 +47,6 @@ in
                 claude-code
                 codex
                 herdr
-                hermes-agent
                 espanso
                 homelab
                 shell
