@@ -147,6 +147,7 @@ in
         home.packages = [ ohMyPi ];
 
         home.file = {
+          ".omp/agent/AGENTS.md".source = ./AGENTS.md;
           ".omp/agent/mcp.json".text = builtins.toJSON {
             mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
           };

@@ -31,7 +31,7 @@
         });
       };
 
-      audiorelay = inputs.ryze312-stackpkgs.packages.${system}.audiorelay;
+      audiorelay = prev.callPackage "${inputs.ryze312-stackpkgs}/packages/audiorelay.nix" { };
       hyprprop = inputs.hyprland-contrib.packages.${system}.hyprprop;
       hyprland-qtutils = inputs.hyprland-qtutils.packages."${system}".default;
 
