@@ -67,7 +67,6 @@
 
   networking = {
     hostName = hostname;
-    enableIPv6 = false;
   };
 
   environment = {
