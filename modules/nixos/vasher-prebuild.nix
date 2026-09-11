@@ -66,6 +66,11 @@
         PrivateTmp = true;
         NoNewPrivileges = true;
         ReadWritePaths = [ "/var/lib/vasher" "/nix/var/nix" ];
+        # nix has intermittently segfaulted under this LXC; without this, each
+        # crash leaves a 100-350MB core dump in WorkingDirectory (cwd), and
+        # nothing ever cleans them up. 369 accumulated dumps filled the disk
+        # to 100% on 2026-09-11 and starved the flake-lock write itself.
+        LimitCORE = 0;
       };
       environment = {
         HOME = "/var/lib/vasher";
