@@ -20,6 +20,13 @@
         ui = {
           pane_borders = true;
           pane_gaps = true;
+          show_agent_labels_on_pane_borders = true;
+          status_indicators = "symbols";
+          toast = {
+            delivery = "herdr";
+            delay_seconds = 1;
+            herdr.position = "bottom-right";
+          };
         };
         keys = {
           previous_tab = "prefix+h";
