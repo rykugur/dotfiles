@@ -16,6 +16,7 @@
       imports = with self.modules.homeManager; [
         discord
         lutris
+        moonlight
       ];
 
       home.packages = with pkgs; [
@@ -31,7 +32,6 @@
         gamescope
         heroic
         mangohud
-        moonlight-qt
         unixtools.xxd
         vkd3d
         xdelta

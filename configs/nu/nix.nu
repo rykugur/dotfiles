@@ -42,13 +42,26 @@ def --env "nrd" [] {
   nix repl --expr $"builtins.getFlake \"($realDotsDir)\""
 }
 
-def "nrn" [pkg: string] {
-  let finalPkg = if ($pkg | str contains "#") {
-    $pkg
-  } else {
-    $"nixpkgs#($pkg)"
+def --wrapped nrn [...args] {
+  let idx = $args
+    | enumerate
+    | where {|x| not ($x.item | str starts-with "-")}
+    | get --optional 0.index
+  if $idx == null {
+    error make {msg: "nrn: missing package"}
   }
-  nix run $finalPkg
+
+  let rewritten = $args | update $idx {|a|
+    if ($a | str contains "#") { $a } else { $"nixpkgs#($a)" }
+  }
+  let allow_unfree = ($env.NIXPKGS_ALLOW_UNFREE? | default 0 | into string) == "1"
+  let run_args = if $allow_unfree and not ($rewritten | any {|a| $a == "--impure"}) {
+    $rewritten | prepend "--impure"
+  } else {
+    $rewritten
+  }
+
+  nix run ...$run_args
 }
 
 def nrf [--remote (-r)] {
