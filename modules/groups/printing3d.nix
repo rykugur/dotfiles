@@ -5,9 +5,17 @@
     {
       home.packages = [
         pkgs.freecad-wayland
-        pkgs.orca-slicer
-        pkgs.qidi-slicer-bin
+
         self.packages.${pkgs.stdenv.hostPlatform.system}.bambu-studio
+        pkgs.qidi-slicer-bin
       ];
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "model/3mf" = [ "bambu-studio.desktop" ];
+          "application/vnd.ms-3mfdocument" = [ "bambu-studio.desktop" ];
+        };
+      };
     };
 }

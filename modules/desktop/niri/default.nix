@@ -218,6 +218,8 @@
               XDG_SESSION_DESKTOP = "Niri";
             };
 
+            gestures.hot-corners.enable = false;
+
             input = {
               keyboard = {
                 repeat-delay = 200;
