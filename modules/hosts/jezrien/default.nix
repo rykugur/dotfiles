@@ -133,6 +133,8 @@ let
                   # misc gaming
                   cataclysm-dda
                   dolphin-emu
+                  faugus-launcher # lutris alternative
+                  wowup-cf
 
                   affine
                   baobab

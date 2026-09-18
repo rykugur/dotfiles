@@ -14,6 +14,7 @@
     { pkgs, ... }:
     {
       imports = with self.modules.homeManager; [
+        depotdownloader
         discord
         lutris
         moonlight
