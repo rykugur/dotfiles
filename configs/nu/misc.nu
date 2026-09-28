@@ -55,36 +55,51 @@ def "cmd.paste" [] {
   }
 }
 
-def replace-multiline [] {
-  use std/log
-
-  let content = $in | default (cmd.paste)
-  if ($content | is-empty) {
-    log error "No content passed in nor in clipboard, returning."
-    return
-  }
-
-  $content | str replace --all --regex '\\[\r\n]+\s*' ''
+def "nu-complete run-shell shells" [] {
+  [
+    {value: bash, description: "Bash syntax (default)"}
+    {value: zsh, description: "Zsh syntax"}
+    {value: sh, description: "POSIX shell syntax"}
+  ]
 }
 
-def paste-multiline-nu [] {
-  let cmd = cmd.paste | replace-multiline
-  nu -c $cmd
-}
-
-def "curl multiline" [] {
-  use std/log
-
-  let content = (edit-multiline)
-  if ($content | is-empty) {
-    log error "No content passed in nor in clipboard, returning."
-    return
+# Run shell text from the pipeline or clipboard without changing its syntax.
+def run-shell [
+  --shell (-s): string@"nu-complete run-shell shells" = "bash" # Interpreter: bash, zsh, or sh.
+  --file (-f): path # Read a script instead of the clipboard; completes file paths.
+  --yes (-y) # Skip confirmation for trusted commands.
+] {
+  let content = $in
+  if $shell not-in [bash zsh sh] {
+    error make {msg: "Unsupported shell. Choose bash, zsh, or sh."}
+  }
+  if $file != null and $content != null {
+    error make {msg: "Use either --file or pipeline input, not both."}
+  }
+  let command = if $file != null {
+    open --raw $file
+  } else if $content == null {
+    cmd.paste
+  } else {
+    $content
   }
 
-  let finalContent = $content | replace-multiline | str replace --regex "curl\\s" ""
-  let cmd = $"curl ($finalContent)"
+  if ($command | describe) != "string" {
+    error make {msg: "Expected shell commands as text."}
+  }
+  if ($command | str trim | is-empty) {
+    error make {msg: "No shell commands in the input or clipboard."}
+  }
 
-  nu -c $cmd
+  if not $yes {
+    print --stderr $command
+    let answer = input $"Run this with ($shell)? [y/N] " | str trim | str lowercase
+    if $answer not-in [y yes] {
+      return
+    }
+  }
+
+  ^($shell) -c $command
 }
 
 def "edit-multiline" [] {
