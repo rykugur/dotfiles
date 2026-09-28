@@ -21,7 +21,7 @@ modules/
 ├── browser/            # firefox, zen-browser
 ├── desktop/            # compositors/bars (niri, hyprland, DMS, noctalia), DEs, launchers, file managers
 ├── dev/                # devenv, eve-frontier, git, helix, jujutsu, nvim (lazyvim), yaak, zed-editor
-├── gaming/             # audiorelay, eve-online, gamemode, jackify, lutris, starcitizen(-lite), starsector, steam, vr
+├── gaming/             # audiorelay, eve-online, gamemode, jackify, lutris, moonlight, starcitizen(-lite), starsector, steam, vr
 ├── groups/             # developer.nix, gaming.nix, printing3d.nix (_3dp)
 ├── hosts/              # jezrien/, taln/  (the composition roots)
 ├── misc/               # appimage, distrobox, homelab, keebs, sops, ssh
@@ -61,7 +61,7 @@ Home-manager modules are the majority for user environment.
 `modules/groups/` are the "I want this experience" bundles:
 
 - `developer` — git, helix, nvim, zed, direnv, carapace, atuin, jujutsu?, yaak, etc. + common dev conveniences.
-- `gaming` — steam, lutris, starcitizen-lite, eve-online, starsector, gamemode, jackify, ...
+- `gaming` — steam, lutris, moonlight, starcitizen-lite, eve-online, starsector, gamemode, jackify, ...
 - `_3dp` (printing3d) — presumably 3d printing related (prusa, orca, etc. not deeply surveyed yet).
 
 Inside a host's home-manager users section you see:

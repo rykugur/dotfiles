@@ -1,15 +1,27 @@
-{ inputs, outputs, hostname, username, ... }: {
+{
+  inputs,
+  outputs,
+  hostname,
+  username,
+  ...
+}:
+{
   ### system config
 
   nixpkgs = {
-    overlays = [ outputs.overlays.additions outputs.overlays.modifications ];
+    overlays = [
+      outputs.overlays.additions
+      outputs.overlays.modifications
+    ];
     config = {
       allowUnfree = true;
       allowUnfreePredicate = _: true;
     };
   };
 
-  users.users.${username} = { home = "/Users/${username}"; };
+  users.users.${username} = {
+    home = "/Users/${username}";
+  };
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
@@ -23,7 +35,11 @@
 
     settings = {
       experimental-features = "nix-command flakes pipe-operators";
-      trusted-users = [ "root" "@wheel" "dusty" ];
+      trusted-users = [
+        "root"
+        "@wheel"
+        "dusty"
+      ];
     };
   };
 
@@ -55,11 +71,10 @@
   homebrew = {
     enable = true;
 
-    taps = [ { name = "solarphlare/tap"; trusted = true; } ];
-
-    casks = [ "solarphlare/tap/airmute" ];
-
-    brews = [ { name = "lima"; } { name = "minikube"; } ];
+    brews = [
+      { name = "lima"; }
+      { name = "minikube"; }
+    ];
     # { name = "kubectl"; }
     # { name = "kubecolor"; }
     # { name = "kubectx"; }
@@ -79,8 +94,7 @@
   ### stuff to mostly ignore
 
   # Set Git commit hash for darwin-version.
-  system.configurationRevision =
-    inputs.self.rev or inputs.self.dirtyRev or null;
+  system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

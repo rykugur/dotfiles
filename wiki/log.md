@@ -105,6 +105,9 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Updated [architecture.md](architecture.md), [modules.md](modules.md),
   [overview.md](overview.md), [history.md](history.md), and [index.md](index.md).
 
----
+## [2026-09-13] update | Moonlight home-manager module
 
-
+- Added `modules/gaming/moonlight.nix` (`flake.modules.homeManager.moonlight`): `moonlight-qt` plus Xbox One Elite 2 `SDL_GAMECONTROLLERCONFIG`.
+- Gaming group imports that module instead of listing `moonlight-qt` as a raw package.
+- Updated [modules.md](modules.md).
+- Mapping later moved onto a `moonlight` wrapper (`wrapProgram`); not a session variable.

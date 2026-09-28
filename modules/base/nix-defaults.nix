@@ -43,7 +43,7 @@
           (lib.filterAttrs (_: lib.isType "flake")) inputs
         );
         settings = {
-          experimental-features = "nix-command flakes pipe-operators";
+          experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
           auto-optimise-store = true;
         };
       };

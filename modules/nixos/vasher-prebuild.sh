@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-mode=$1
+mode=${1-}
+expected_base=${2-}
+expected_candidate=${3-}
 state_dir=/var/lib/vasher/dashboard
 status="$state_dir/status.json"
 history="$state_dir/history.json"
@@ -102,16 +104,16 @@ trap cleanup_tmp EXIT
 exec 9>/var/lib/vasher/prebuild.lock
 case $mode in
   refresh) flock -n 9 || exit 0; lock_acquired=true ;;
-  candidate) flock 9; lock_acquired=true ;;
+  candidate | retry) flock 9; lock_acquired=true ;;
   *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
 esac
 
 repo=/var/lib/vasher/repo
 roots=/var/lib/vasher/gcroots
+worktree=/var/lib/vasher/worktrees/"$mode"
+[[ $mode == retry ]] && worktree=/var/lib/vasher/worktrees/candidate
 mkdir -p "$roots"
 [[ -d $repo/.git ]] || git clone "$REPO_URL" "$repo"
-git -C "$repo" fetch --prune origin
-base_revision=$(git -C "$repo" rev-parse origin/master)
 
 candidate_covers_base() {
   git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$CACHE_BRANCH" &&
@@ -123,42 +125,79 @@ prune_roots() {
   for root in "${stale[@]}"; do rm -f "$roots/$root"; done
 }
 
-if [[ $mode == refresh ]] && candidate_covers_base; then
-  write_status idle null
-  exit 0
+validate_revision() {
+  [[ $1 =~ ^[0-9a-f]{40}$ ]] || {
+    printf 'vasher-prebuild: invalid revision: %s\n' "$1" >&2
+    exit 2
+  }
+}
+
+load_github_token() {
+  [[ -s $GITHUB_TOKEN_FILE ]] || {
+    printf 'vasher-prebuild: GitHub token is missing or empty\n' >&2
+    exit 1
+  }
+  github_token=$(<"$GITHUB_TOKEN_FILE")
+  nix_config="${NIX_CONFIG-}${NIX_CONFIG:+$'\n'}access-tokens = github.com=$github_token"
+  unset github_token
+}
+
+prepare_updated_candidate() {
+  write_status preparing null
+  nix-collect-garbage
+  if [[ ! -e $worktree/.git ]]; then
+    mkdir -p "$(dirname "$worktree")"
+    git -C "$repo" worktree add --detach "$worktree" "$base_revision"
+  fi
+  git -C "$worktree" reset --hard "$base_revision"
+  NIX_CONFIG="$nix_config" nix flake update --flake "$worktree"
+  (
+    cd "$worktree"
+    NIX_CONFIG="$nix_config" bash "$OMP_UPDATER"
+  )
+  git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
+  if ! git -C "$worktree" diff --cached --quiet; then
+    git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
+      commit -m "chore: refreshed flake.lock and OMP update ($(date -I))"
+  fi
+  candidate_revision=$(git -C "$worktree" rev-parse HEAD)
+}
+
+prepare_exact_retry() {
+  validate_revision "$expected_base"
+  validate_revision "$expected_candidate"
+  base_revision=$expected_base
+  candidate_revision=$expected_candidate
+  [[ -e $worktree/.git ]] || {
+    printf 'vasher-prebuild: retry worktree is missing\n' >&2
+    exit 1
+  }
+  [[ $(git -C "$worktree" rev-parse HEAD) == "$candidate_revision" ]] || {
+    printf 'vasher-prebuild: retry worktree does not match %s\n' "$candidate_revision" >&2
+    exit 1
+  }
+  git -C "$worktree" merge-base --is-ancestor "$base_revision" "$candidate_revision"
+  write_status preparing null
+  nix-collect-garbage
+}
+
+if [[ $mode == retry ]]; then
+  load_github_token
+  prepare_exact_retry
+else
+  git -C "$repo" fetch --prune origin
+  base_revision=$(git -C "$repo" rev-parse origin/master)
+  if [[ $mode == refresh ]] && candidate_covers_base; then
+    write_status idle null
+    exit 0
+  fi
+  load_github_token
+  prepare_updated_candidate
 fi
 
 write_status building null
-nix-collect-garbage
-worktree=/var/lib/vasher/worktrees/"$mode"
-if [[ ! -e $worktree/.git ]]; then
-  mkdir -p "$(dirname "$worktree")"
-  git -C "$repo" worktree add --detach "$worktree" "$base_revision"
-fi
-git -C "$worktree" reset --hard "$base_revision"
-
-if [[ ! -s $GITHUB_TOKEN_FILE ]]; then
-  printf 'vasher-prebuild: GitHub token is missing or empty\n' >&2
-  exit 1
-fi
-github_token=$(<"$GITHUB_TOKEN_FILE")
-nix_config="${NIX_CONFIG-}${NIX_CONFIG:+$'\n'}access-tokens = github.com=$github_token"
-unset github_token
-
-NIX_CONFIG="$nix_config" nix flake update --flake "$worktree"
-(
-  cd "$worktree"
-  NIX_CONFIG="$nix_config" bash "$OMP_UPDATER"
-)
-
 out=$(NIX_CONFIG="$nix_config" nix build "$worktree#$TARGET_ATTR" --no-link --print-out-paths)
 unset nix_config
-git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
-if ! git -C "$worktree" diff --cached --quiet; then
-  git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
-    commit -m "chore: refreshed flake.lock and OMP update ($(date -I))"
-fi
-candidate_revision=$(git -C "$worktree" rev-parse HEAD)
 
 root_path="$roots/${out##*/}"
 if [[ ! -e $root_path ]]; then

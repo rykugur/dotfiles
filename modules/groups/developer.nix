@@ -18,7 +18,6 @@
         carapace
         direnv
         starship
-        zellij
         zoxide
       ];
 

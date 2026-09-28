@@ -31,7 +31,7 @@ export def get_menus [] {
 export def get_keybinds [] {
   return [
     {
-      name: abbr_menu
+      name: abbr_menu_enter
       modifier: none
       keycode: enter
       mode: [emacs, vi_normal, vi_insert]
@@ -41,7 +41,7 @@ export def get_keybinds [] {
       ]
     }
     {
-      name: abbr_menu
+      name: abbr_menu_space
       modifier: none
       keycode: space
       mode: [emacs, vi_normal, vi_insert]

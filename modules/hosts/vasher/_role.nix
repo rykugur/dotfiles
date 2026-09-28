@@ -11,7 +11,7 @@
 
   nix = {
     settings = {
-      experimental-features = "nix-command flakes pipe-operators";
+      experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
       trusted-users = [ "root" "vasher" ];
       auto-optimise-store = true;
       max-jobs = 1;
@@ -33,6 +33,11 @@
         "pi.cachix.org-1:lGeoGJaZ5ZDabuRzkcD5EBTNnDM4HJ1vqeOxlWk1Flk="
       ];
     };
+  };
+
+  systemd.services.nix-daemon.serviceConfig = {
+    MemoryHigh = "8G";
+    MemoryMax = "10G";
   };
 
   users.groups.vasher = { };

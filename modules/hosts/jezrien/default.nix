@@ -47,6 +47,7 @@ let
         self.modules.nixos.docker
         self.modules.nixos.winboat
 
+        self.modules.nixos.audiorelay
         self.modules.nixos.appimage
         self.modules.nixos.gamemode
         self.modules.nixos.ntsync
@@ -132,6 +133,8 @@ let
                   # misc gaming
                   cataclysm-dda
                   dolphin-emu
+                  faugus-launcher # lutris alternative
+                  wowup-cf
 
                   affine
                   baobab
