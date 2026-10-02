@@ -101,6 +101,7 @@ let
                   # sesh
                   sops
                   starsector
+                  wow
                   eve-frontier
                   swappy
                   television
@@ -134,7 +135,6 @@ let
                   cataclysm-dda
                   dolphin-emu
                   faugus-launcher # lutris alternative
-                  wowup-cf
 
                   affine
                   baobab
