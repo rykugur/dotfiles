@@ -121,19 +121,27 @@ def "depot-fill" [
     --dir: string                            # install dir override (default: steamapps/common/<installdir>)
     --username (-u): string                  # default: $env.STEAM_USERNAME, else Steam's own logged-in account
     --steam-root: string                     # default: ~/.local/share/Steam
+    --qr                                     # re-auth by QR instead of -username (after a depotdownloader update)
     --dry-run                                # print the DepotDownloader invocation instead of running it
 ] {
     let steam_root = ($steam_root | default (steam-root default))
+
+    if $qr and ($username | is-not-empty) {
+        error make {msg: "DepotDownloader rejects -qr together with -username. Drop --username when using --qr."}
+    }
+
     # `default` only substitutes null, so empty strings need explicit fallthrough.
     let env_username = ($env.STEAM_USERNAME? | default "")
-    let username = if ($username | is-not-empty) {
+    let username = if $qr {
+        ""
+    } else if ($username | is-not-empty) {
         $username
     } else if ($env_username | is-not-empty) {
         $env_username
     } else {
         steam-username default $steam_root
     }
-    if ($username | is-empty) {
+    if (not $qr) and ($username | is-empty) {
         error make {msg: $"Could not determine a Steam username. Pass --username <you>, export $env.STEAM_USERNAME, or log in once via the Steam client so ($steam_root)/config/loginusers.vdf exists."}
     }
 
@@ -167,12 +175,22 @@ def "depot-fill" [
         print $"App ($appid) -> depot ($depot_id), manifest ($manifest_id | default 'current for branch')"
     }
     print $"Install dir: ($target_dir)"
-    print $"Account: ($username)"
+    if $qr {
+        print "Account: QR login — scan the code with the Steam mobile app"
+    } else {
+        print $"Account: ($username)"
+    }
+
+    # -qr and -username are mutually exclusive in DepotDownloader; both paths
+    # keep -remember-password so the refresh token is persisted for next time.
+    let auth_args = if $qr { ["-qr"] } else { ["-username" $username] }
 
     let args = (
         ["-app" $appid]
         | append $pin_args
-        | append ["-os" $os_type "-dir" $target_dir "-username" $username "-remember-password"]
+        | append ["-os" $os_type "-dir" $target_dir]
+        | append $auth_args
+        | append ["-remember-password"]
     )
 
     if $dry_run {
