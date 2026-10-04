@@ -7,11 +7,17 @@
 # idle-timeout. Keeps the system responsive when the server is unreachable.
 #
 # Darwin (taln) is supported via autofs: `flake.modules.darwin.dusty-nfs`
-# writes a direct map and splices /etc/auto_master via `extraActivation`
-# (nix-darwin's fixed pipeline runs this before homebrew/mas/fonts, all of
-# which can abort the whole `set -e` activation script on failure), then
-# symlinks ~/Documents/dusty-nfs to a neutral data-volume mountpoint. On-demand
-# autofs keeps taln responsive when off-LAN (truenas.local.ryk.sh won't resolve).
+# writes a direct map and splices /etc/auto_master. The splice itself also
+# runs from a LaunchDaemon (RunAtLoad + hourly), not just activation:
+# macOS has been observed to strip the appended line from /etc/auto_master
+# on its own (independent of reboots/updates), so relying solely on
+# `darwin-rebuild switch` to re-apply it leaves the mount dead until the
+# next manual rebuild. `extraActivation` still runs the same splice so a
+# rebuild fixes it immediately without waiting for the daemon; it runs
+# before homebrew/mas/fonts, all of which can abort the whole `set -e`
+# activation script on failure. Then symlinks ~/Documents/dusty-nfs to a
+# neutral data-volume mountpoint. On-demand autofs keeps taln responsive
+# when off-LAN (truenas.local.ryk.sh won't resolve).
 { ... }:
 {
   flake.modules.nixos.dusty-nfs =
@@ -39,6 +45,18 @@
     { lib, username, ... }:
     let
       mountPoint = "/System/Volumes/Data/mnt/dusty-nfs";
+      syncAutoMaster = ''
+        /bin/mkdir -p "$(/usr/bin/dirname ${mountPoint})"
+
+        # idempotently register the direct map with macOS's auto_master;
+        # macOS has been observed to strip this line on its own, so this
+        # must be safe to re-run, not just run once at activation time.
+        if ! /usr/bin/grep -q '/etc/auto_dusty_nfs' /etc/auto_master; then
+          printf '/-\t\t\t/etc/auto_dusty_nfs\n' >> /etc/auto_master
+        fi
+
+        /usr/sbin/automount -vc || true
+      '';
     in
     {
       # Direct autofs map. soft+timeo mirror jezrien so I/O errors instead of
@@ -54,23 +72,21 @@
       # be skipped by an unrelated failure later in the script (the whole
       # thing runs under `set -e`; e.g. a flaky `brew bundle` used to abort
       # before reaching this when it lived in postActivation).
-      system.activationScripts.extraActivation.text = lib.mkAfter ''
-        # neutral mountpoint parent lives on the writable data volume
-        /bin/mkdir -p "$(/usr/bin/dirname ${mountPoint})"
+      system.activationScripts.extraActivation.text = lib.mkAfter syncAutoMaster;
 
-        # idempotently register the direct map with macOS's auto_master
-        if ! /usr/bin/grep -q '/etc/auto_dusty_nfs' /etc/auto_master; then
-          printf '/-\t\t\t/etc/auto_dusty_nfs\n' >> /etc/auto_master
-        fi
-      '';
-
-      # etc.text (which writes /etc/auto_dusty_nfs) runs after
-      # extraActivation, so the reload has to happen later; postActivation
-      # (mkBefore to precede home-manager's own contribution there) is the
-      # earliest point where the map file is guaranteed to exist.
-      system.activationScripts.postActivation.text = lib.mkBefore ''
-        /usr/sbin/automount -vc || true
-      '';
+      # Belt-and-suspenders: macOS has been observed to strip the splice
+      # from /etc/auto_master without any reboot or rebuild, so a daemon
+      # re-applies it at boot and hourly rather than relying solely on the
+      # next manual `darwin-rebuild switch`.
+      launchd.daemons.dusty-nfs-automaster = {
+        script = syncAutoMaster;
+        serviceConfig = {
+          RunAtLoad = true;
+          StartInterval = 3600;
+          StandardOutPath = "/var/log/dusty-nfs-automaster.log";
+          StandardErrorPath = "/var/log/dusty-nfs-automaster.log";
+        };
+      };
 
       # ~/Documents/dusty-nfs -> mountpoint, declarative via home-manager
       home-manager.users.${username} =
