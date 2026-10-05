@@ -452,7 +452,7 @@
               in
               [
                 (
-                  (mkFloatingAppRule [ { app-id = "1password"; } ])
+                  (mkFloatingAppRule [ { app-id = "com.onepassword.OnePassword"; } ])
                   // {
                     block-out-from = "screen-capture";
                   }
