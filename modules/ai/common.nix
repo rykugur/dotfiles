@@ -11,6 +11,7 @@
       home.packages = [
         pkgs.llmfit
         pkgs.rtk
+        pkgs.openrig
 
         mempalace
       ];

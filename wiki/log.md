@@ -111,3 +111,10 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Gaming group imports that module instead of listing `moonlight-qt` as a raw package.
 - Updated [modules.md](modules.md).
 - Mapping later moved onto a `moonlight` wrapper (`wrapProgram`); not a session variable.
+
+## [2026-10-06] update | Declarative OpenRig package
+
+- Added a reproducible local package for the published `@openrig/cli` artifact, pinned to OpenRig 0.6.5 and Node.js 22.
+- Exposed `rig` and `openrig-tui` through the additions overlay and installed them through the shared `ai-common` Home Manager module on Jezrien and Taln.
+- Kept setup and runtime state imperative: Home Manager installs the binaries but does not run `rig setup` or start the daemon.
+- Updated [ai-agents.md](ai-agents.md), [modules.md](modules.md), and [index.md](index.md).

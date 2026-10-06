@@ -25,6 +25,7 @@ in
 
   ### misc
   tpm = pkgs.callPackage ./tpm.nix { };
+  openrig = pkgs.callPackage ./openrig.nix { };
 
   ### sui/move (eve frontier)
   sui = pkgs.callPackage ./sui.nix { version = suiVersion; };

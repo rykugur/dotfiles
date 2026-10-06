@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-08-12 (dendritic desktop migration completed; legacy tree removed)
+Last major update: 2026-10-06 (OpenRig packaged and installed through the shared AI module)
 
 ---
 
@@ -24,7 +24,7 @@ Last major update: 2026-08-12 (dendritic desktop migration completed; legacy tre
 - [Hosts](hosts.md) — jezrien, taln, nixy details, common wiring pattern, how to add a host.
 - [Modules](modules.md) — Current modules tree, registration pattern, groups, compositor/bar composition, and how to add a module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
-- [AI Agents](ai-agents.md) — First-class declarative provisioning of Claude Code, Codex, opencode, Pi, Hermes. MCP centralization, skills (including this llm-wiki), mempalace relationship, self-referentiality.
+- [AI Agents](ai-agents.md) — Declarative provisioning of coding agents plus OpenRig orchestration, centralized MCPs and skills, mempalace, and the self-referential wiki.
 
 ## Entities
 

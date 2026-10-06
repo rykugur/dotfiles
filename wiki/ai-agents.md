@@ -2,8 +2,8 @@
 title: AI Agents
 category: ai
 date: 2026-06-03
-tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, mempalace, llm-wiki, skills, mcp]
-sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md"]
+tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, openrig, mempalace, llm-wiki, skills, mcp]
+sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/openrig.nix"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
 
@@ -25,6 +25,10 @@ Note: `lukasl-dev/pi.nix` was evaluated (see the May 2026 pi module design doc) 
 
 Each has a home-manager module under `modules/ai/<name>.nix`.
 
+## Agent orchestration
+
+**OpenRig** is installed declaratively through `ai-common` on Jezrien and Taln. The local `pkgs.openrig` derivation pins the published `@openrig/cli` npm artifact and its dependency closure, uses Node.js 22, exposes `rig` and `openrig-tui`, and supplies `tmux` on their runtime `PATH`. Installation does not run `rig setup`, start the daemon, or create OpenRig state during Home Manager activation.
+
 ## Shared infrastructure (the key to DRY)
 
 Two underscore modules provide single source of truth:
@@ -32,7 +36,7 @@ Two underscore modules provide single source of truth:
 - `modules/ai/_agents.nix` — common agent definitions / settings.
 - `modules/ai/_mcp.nix` — canonical MCP server list + serializers for each agent's config schema.
 
-`common.nix` provides a `mempalace` wrapper script (using `uvx`) and pulls in `rtk` (Rust Token Killer, a token-saving proxy for Claude Code).
+`common.nix` provides a `mempalace` wrapper script and installs `rtk`, `llmfit`, and the locally packaged OpenRig CLI.
 
 ## MCP servers (centralized)
 

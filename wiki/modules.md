@@ -153,7 +153,7 @@ source of truth.
 - Shared agent definitions in `_agents.nix`
 - Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, context7)
 - Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix`
-- `common.nix` (provides mempalace wrapper bin, rtk, etc.)
+- `common.nix` (installs the mempalace wrapper, rtk, llmfit, and the local OpenRig package)
 - `skills/llm-wiki/` and `skills/sensitive-files/` — the skills this very wiki pattern comes from
 - Permission policies per agent
 
