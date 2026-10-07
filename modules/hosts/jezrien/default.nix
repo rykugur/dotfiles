@@ -152,6 +152,7 @@ let
                   playerctl
                   rcon-cli
                   seahorse
+                  spotifast
                   spotify
                   sshfs
                   tigervnc
