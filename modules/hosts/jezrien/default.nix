@@ -90,6 +90,8 @@ let
 
                   # individual modules
                   btop
+                  bottom
+                  htop
                   espanso
                   gtk
                   eve-online
@@ -101,6 +103,7 @@ let
                   # sesh
                   sops
                   starsector
+                  superfile
                   wow
                   eve-frontier
                   swappy

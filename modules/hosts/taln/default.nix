@@ -57,6 +57,7 @@ in
                 ssh
                 eve-frontier
                 starsector
+                superfile
                 television
               ];
 
