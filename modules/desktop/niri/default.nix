@@ -112,11 +112,14 @@
       niriCfg = nixosConfig.ryk.niri;
       discordMuteToggleDaemon = pkgs.writers.writePython3Bin "discord-mute-toggle-daemon" {
         libraries = [ pkgs.python3Packages.pypresence ];
-        flakeIgnore = [ "E265" "E501" ];
+        flakeIgnore = [
+          "E265"
+          "E501"
+        ];
       } (builtins.readFile ./scripts/discord-mute-toggle-daemon.py);
     in
     {
-      imports = [ self.modules.homeManager.nautilus ];
+      imports = [ self.modules.homeManager.dolphin ];
 
       sops.secrets = {
         discord_client_id = { };
@@ -158,11 +161,13 @@
             text = builtins.readFile ./scripts/window-info.sh;
           })
           (pkgs.writers.writePython3Bin "discord-mute-toggle" {
-            flakeIgnore = [ "E265" "E501" ];
+            flakeIgnore = [
+              "E265"
+              "E501"
+            ];
           } (builtins.readFile ./scripts/discord-mute-toggle.py))
           discordMuteToggleDaemon
         ];
-
 
       systemd.user.services.discord-mute-toggle-daemon = {
         Unit = {
@@ -211,6 +216,7 @@
               # DISPLAY = null;
 
               QT_QPA_PLATFORM = "wayland";
+              QT_QPA_PLATFORMTHEME = "qt6ct";
               GDK_BACKEND = "wayland";
 
               XDG_SESSION_TYPE = "wayland";
@@ -326,7 +332,8 @@
                 };
                 "Mod+e" = {
                   action = lib.mkDefault (spawn [
-                    "nemo"
+                    "dolphin"
+                    "--new-window"
                   ]);
                   repeat = false;
                 };
@@ -538,12 +545,8 @@
               ++ (mkFloatingAppRules [
                 { app-id = "galculator"; }
                 { app-id = "neovide"; }
-                { app-id = "nemo"; }
                 { app-id = "obsidian"; }
                 # { app-id = "opentrack"; }
-                { app-id = "org.gnome.Nautilus"; }
-                { app-id = "nemo"; }
-                { app-id = "thunar"; }
                 { app-id = "org.pulseaudio.pavucontrol"; }
                 { app-id = "pavucontrol"; }
                 { app-id = "ristretto"; }

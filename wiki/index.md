@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-10-06 (OpenRig packaged and installed through the shared AI module)
+Last major update: 2026-10-07 (Dolphin standardized as the shared desktop file manager)
 
 ---
 
@@ -22,7 +22,7 @@ Last major update: 2026-10-06 (OpenRig packaged and installed through the shared
 - [Overview](overview.md) — High-level description of Swoleflake, hosts, quick-start commands, philosophy. (sources: README, CLAUDE.md, flake.nix)
 - [Architecture](architecture.md) — Complete dendritic loading model: flake-parts + import-tree, groups, special args, home-manager integration, and migration status. (sources: CLAUDE, design docs, host wiring)
 - [Hosts](hosts.md) — jezrien, taln, nixy details, common wiring pattern, how to add a host.
-- [Modules](modules.md) — Current modules tree, registration pattern, groups, compositor/bar composition, and how to add a module.
+- [Modules](modules.md) — Current modules tree, registration pattern, groups, compositor/bar composition, shared Dolphin integration, and how to add a module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
 - [AI Agents](ai-agents.md) — Declarative provisioning of coding agents plus OpenRig orchestration, centralized MCPs and skills, mempalace, and the self-referential wiki.
 

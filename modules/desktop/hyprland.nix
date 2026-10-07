@@ -97,7 +97,7 @@
       hyprCfg = nixosConfig.ryk.hyprland;
     in
     {
-      imports = [ self.modules.homeManager.nautilus ];
+      imports = [ self.modules.homeManager.dolphin ];
 
       home.packages = with pkgs; [
         hyprprop
@@ -201,7 +201,7 @@
               "XDG_SESSION_DESKTOP,Hyprland"
               "QT_QPA_PLATFORM,wayland"
               "GDK_BACKEND,wayland"
-              "QT_QPA_PLATFORMTHEME,qt5ct # change to qt6ct if you have that"
+              "QT_QPA_PLATFORMTHEME,qt6ct"
               "COPYCMD,wl-copy"
               "PASTECMD,wl-paste"
             ];
@@ -209,7 +209,7 @@
             "$mainMod" = lib.mkDefault "SUPER";
             "$terminal" = lib.mkDefault "ghostty --gtk-single-instance=true";
             "$browser" = lib.mkDefault "zen";
-            "$fileManager" = lib.mkDefault "nautilus --new-window";
+            "$fileManager" = lib.mkDefault "dolphin --new-window";
             "$music" = lib.mkDefault "spotify";
             "$passwordManager" = lib.mkDefault "1password";
             "$messenger" = lib.mkDefault "signal-desktop";
@@ -402,15 +402,11 @@
               "float, title:(Select what to share)" # OBS screen/window selector popup
               "float, class:(galculator)"
               "float, class:(neovide)"
-              "float, class:(nemo)"
               "float, class:(obsidian)"
               "float, class:(opentrack)"
               "float, class:(org.gnome.baobab)"
-              "float, class:(org.gnome.Nautilus)"
               "float, class:(org.pulseaudio.pavucontrol)"
               "float, class:(org.telegram.desktop)"
-              "float, class:(nemo)"
-              "float, class:(thunar)"
               "float, class:(pavucontrol)"
               "float, class:(ristretto)"
               "float, class:(Spotify)"

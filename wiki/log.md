@@ -118,3 +118,20 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Exposed `rig` and `openrig-tui` through the additions overlay and installed them through the shared `ai-common` Home Manager module on Jezrien and Taln.
 - Kept setup and runtime state imperative: Home Manager installs the binaries but does not run `rig setup` or start the daemon.
 - Updated [ai-agents.md](ai-agents.md), [modules.md](modules.md), and [index.md](index.md).
+
+## [2026-10-07] update | Unified desktop file management on Dolphin
+
+- Replaced the mixed Nautilus/Nemo/File Roller setup with a shared Dolphin
+  home-manager module used by Niri and Hyprland.
+- Added Ark file actions and archive defaults, KIO remote/FUSE support, VCS
+  plugins, and image/video/document thumbnail providers.
+- Set both compositor environments to the Qt 6 platform theme so Stylix's
+  generated Kvantum palette is applied consistently.
+
+## [2026-10-07] fix | Preserved Stylix palette discovery in Dolphin
+
+- Diagnosed mixed white/dark Dolphin rows as a split theme: Kvantum loaded, but
+  the graphical session's `XDG_CONFIG_DIRS` omitted `stylix-kde-config`.
+- Wrapped Dolphin to prepend Home Manager's evaluated XDG config directories
+  while retaining the inherited path, so KDE discovers Stylix's generated
+  `CatppuccinMocha` color scheme without a hard-coded application palette.

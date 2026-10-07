@@ -1,7 +1,7 @@
 ---
 title: Modules
 category: core
-date: 2026-08-12
+date: 2026-10-07
 tags: [modules, dendritic, groups, import-tree]
 sources: ["modules/", "CLAUDE.md", "architecture.md", "docs/superpowers/plans/2026-03-25-roles-to-groups.md"]
 related: ["architecture.md", "groups.md", "ai-agents.md"]
@@ -129,6 +129,17 @@ Jezrien imports `self.modules.nixos.niri`; its dormant hyprland host profile can
 replace that one module import. Hyprland supports its built-in `master` layout
 and the packaged `hy3` plugin; the removed upstream scrolling plugin is no
 longer exposed.
+
+## Desktop file manager stack
+
+Niri and Hyprland both import `modules/desktop/dolphin.nix`, which is the single
+owner of graphical file management. The home-manager module installs Dolphin,
+Ark, KIO extras/FUSE, VCS plugins, and thumbnail providers; it also owns
+directory and archive MIME defaults. Both compositors launch Dolphin from their
+file-manager binding and select `qt6ct`. Dolphin is wrapped to prepend Home
+Manager's evaluated `xdg.systemDirs.config`, preserving Stylix's generated KDE
+palette when a non-Plasma session resets `XDG_CONFIG_DIRS`; Kvantum remains the
+Stylix-managed Qt 6 widget style.
 
 ## NFS automount
 

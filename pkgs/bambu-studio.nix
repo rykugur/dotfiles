@@ -17,7 +17,7 @@ let
 in
 appimageTools.wrapType2 {
   inherit pname version src;
-  # Nautilus launches file handlers as children; closing it must not kill Bambu Studio.
+  # Dolphin launches file handlers as children; closing it must not kill Bambu Studio.
   dieWithParent = false;
 
   extraPkgs = pkgs: [

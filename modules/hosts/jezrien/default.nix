@@ -145,11 +145,9 @@ let
                   fastfetch
                   fd
                   file
-                  file-roller
                   kalker
                   minder
                   mousai
-                  nemo
                   nitch
                   pavucontrol
                   playerctl
