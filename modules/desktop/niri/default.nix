@@ -547,6 +547,7 @@
                 { app-id = "neovide"; }
                 { app-id = "obsidian"; }
                 # { app-id = "opentrack"; }
+                { app-id = "org.kde.dolphin"; }
                 { app-id = "org.pulseaudio.pavucontrol"; }
                 { app-id = "pavucontrol"; }
                 { app-id = "ristretto"; }

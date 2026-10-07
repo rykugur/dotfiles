@@ -129,6 +129,10 @@
               weatherCoordinates = "44.747998,-93.133574";
             };
           };
+
+          xdg.mimeApps.defaultApplications = {
+            "text/plain" = [ "com.danklinux.dms.notepad.desktop" ];
+          };
         }
 
         (lib.optionalAttrs isNiri {
