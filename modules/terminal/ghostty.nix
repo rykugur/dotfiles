@@ -1,12 +1,6 @@
 { ... }:
 let
   font = "CaskaydiaCove NFM";
-  # catppuccin-ghostty = pkgs.fetchFromGitHub {
-  #   owner = "catppuccin";
-  #   repo = "ghostty";
-  #   rev = "10b3c5f56f2aa519b0e12255346a97d71a8bfeaf";
-  #   sha256 = "sha256-4seUhPr6nv0ld9XMrQS4Ko9QnC1ZOEiRjENSfgHIvR0=";
-  # };
 in
 {
   flake.modules.homeManager.ghostty =
@@ -26,7 +20,7 @@ in
         enable = true;
         package = if pkgs.stdenv.hostPlatform.isDarwin then null else pkgs.ghostty;
         settings = {
-          font-family = "${font}";
+          font-family = font;
           font-family-bold = "${font} Bold";
           font-family-italic = "${font} Italic";
           font-family-bold-italic = "${font} Bold Italic";
