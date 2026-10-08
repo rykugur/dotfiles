@@ -95,7 +95,7 @@ in
     let
       ohMyPi = mkOhMyPi pkgs;
       mcp = import ../_mcp.nix { inherit pkgs; };
-      commonSkills = (import ../_skills.nix { inherit inputs; }).commonSkills;
+      commonSkills = (import ../_skills.nix { inherit inputs pkgs; }).commonSkills;
       skillFiles = lib.listToAttrs (
         map (s: {
           name = ".omp/agent/skills/${s.name}";

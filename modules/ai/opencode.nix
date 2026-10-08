@@ -2,9 +2,6 @@
 let
   inherit (import ./_agents.nix) resolveAgents toOpencodeAgent;
 
-  inherit ((import ./_skills.nix { inherit inputs; })) commonSkills;
-  skills = commonSkills;
-
   opencodeModelMap = {
     # OpenCode Zen
     sonnet = "opencode/claude-sonnet-4-6";
@@ -68,16 +65,22 @@ let
       let
         mcp = import ./_mcp.nix { inherit pkgs; };
       in
-      mcp.toOpencode (mcp.pick [
-        "jcodemunch"
-        "context-mode"
-        "context7"
-      ]);
+      mcp.toOpencode (
+        mcp.pick [
+          "jcodemunch"
+          "context-mode"
+          "context7"
+        ]
+      );
   };
 in
 {
   flake.modules.homeManager.opencode =
     { pkgs, ... }:
+    let
+      inherit ((import ./_skills.nix { inherit inputs pkgs; })) commonSkills;
+      skills = commonSkills;
+    in
     {
       programs.opencode = {
         enable = true;

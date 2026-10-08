@@ -1,14 +1,24 @@
 { ... }:
 {
   flake.modules.homeManager.herdr =
-    { config, lib, osConfig, ... }:
+    {
+      config,
+      lib,
+      osConfig,
+      pkgs,
+      ...
+    }:
     let
       # herdr's default_shell wants a command name; ryk.defaultShell uses "nushell".
-      shellCmd = {
-        fish = "fish";
-        nushell = "nu";
-        bash = "bash";
-      }.${osConfig.ryk.defaultShell or "nushell"};
+      shellCmd =
+        {
+          fish = "fish";
+          nushell = "nu";
+          bash = "bash";
+        }
+        .${osConfig.ryk.defaultShell or "nushell"};
+
+      herdrNavigatorPlugin = "${pkgs.herdr-navigator}/share/herdr/plugins/herdr-navigator";
     in
     {
       # herdr's home-manager module ships with home-manager upstream
@@ -29,12 +39,28 @@
           };
         };
         keys = {
-          previous_tab = "prefix+h";
-          next_tab = "prefix+l";
+          previous_tab = [
+            "prefix+h"
+            "alt+h"
+          ];
+          next_tab = [
+            "prefix+l"
+            "alt+l"
+          ];
+          move_tab_previous = "alt+shift+h";
+          move_tab_next = "alt+shift+l";
           focus_pane_left = "prefix+shift+h";
           focus_pane_down = "prefix+shift+j";
           focus_pane_up = "prefix+shift+k";
           focus_pane_right = "prefix+shift+l";
+          command = [
+            {
+              key = "prefix+t";
+              type = "plugin_action";
+              command = "herdr-navigator.open";
+              description = "jump to anything";
+            }
+          ];
         };
       };
 
@@ -45,6 +71,12 @@
       home.activation.installHerdrOmpIntegration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         run mkdir -p ${config.home.homeDirectory}/.omp/agent/extensions
         run ${config.programs.herdr.package}/bin/herdr integration install omp
+      '';
+
+      # Build the navigator with Nix, then register its immutable plugin root.
+      # `plugin link` is idempotent and updates the registered store path.
+      home.activation.installHerdrNavigatorPlugin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run ${config.programs.herdr.package}/bin/herdr plugin link ${herdrNavigatorPlugin} --enabled
       '';
     };
 }

@@ -26,6 +26,7 @@ in
   ### misc
   tpm = pkgs.callPackage ./tpm.nix { };
   openrig = pkgs.callPackage ./openrig.nix { };
+  herdr-navigator = pkgs.callPackage ./herdr-navigator.nix { };
 
   ### sui/move (eve frontier)
   sui = pkgs.callPackage ./sui.nix { version = suiVersion; };

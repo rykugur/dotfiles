@@ -23,9 +23,6 @@ let
     "rtk kubectl"
   ];
 
-  inherit ((import ./_skills.nix { inherit inputs; })) commonSkills;
-  skills = commonSkills;
-
   tierModels = {
     reference = "claude-haiku-4-5";
     technical = "claude-sonnet-4-6";
@@ -40,11 +37,13 @@ let
     let
       mcp = import ./_mcp.nix { inherit pkgs; };
     in
-    mcp.toClaudeCode (mcp.pick [
-      "jcodemunch"
-      "context-mode"
-      "mempalace"
-    ]);
+    mcp.toClaudeCode (
+      mcp.pick [
+        "jcodemunch"
+        "context-mode"
+        "mempalace"
+      ]
+    );
 
   mkPluginDirs = pkgs: [
     "${inputs.superpowers}"
@@ -97,6 +96,8 @@ in
   flake.modules.homeManager.claude-code =
     { config, pkgs, ... }:
     let
+      inherit ((import ./_skills.nix { inherit inputs pkgs; })) commonSkills;
+      skills = commonSkills;
       configFile = "${config.home.homeDirectory}/.dotfiles/configs/ccstatusline/settings.json";
       ccstatusline = pkgs.writeShellScriptBin "ccstatusline" ''
         exec ${pkgs.bun}/bin/bun x -y ccstatusline@latest --config "${configFile}" "$@"

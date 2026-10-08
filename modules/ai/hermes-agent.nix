@@ -4,24 +4,31 @@ let
   # skills — compatible with the agentskills.io standard, same progressive-
   # disclosure SKILL.md format used elsewhere. Installed via the shared
   # .agents-style skill set (includes superpowers) same as codex/grok/pi.
-  inherit ((import ./_skills.nix { inherit inputs; })) skillsForDotAgents;
-  skills = skillsForDotAgents;
 
   mkHermesMcpConfig =
     pkgs:
     let
       mcp = import ./_mcp.nix { inherit pkgs; };
     in
-    mcp.toHermes (mcp.pick [
-      "jcodemunch"
-      "context-mode"
-      "context7"
-    ]);
+    mcp.toHermes (
+      mcp.pick [
+        "jcodemunch"
+        "context-mode"
+        "context7"
+      ]
+    );
 in
 {
   flake.modules.homeManager.hermes-agent =
-    { config, lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
+      inherit ((import ./_skills.nix { inherit inputs pkgs; })) skillsForDotAgents;
+      skills = skillsForDotAgents;
       mcpServersFile = pkgs.writeText "hermes-mcp-servers.yaml" (
         lib.generators.toYAML { } { mcp_servers = mkHermesMcpConfig pkgs; }
       );

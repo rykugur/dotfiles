@@ -135,3 +135,19 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Wrapped Dolphin to prepend Home Manager's evaluated XDG config directories
   while retaining the inherited path, so KDE discovers Stylix's generated
   `CatppuccinMocha` color scheme without a hard-coded application palette.
+
+## [2026-10-07] update | Declarative Herdr tab workflow and navigator
+
+- Moved `Alt+H/L` and `Alt+Shift+H/L` tab navigation from Ghostty to Herdr on
+  both Jezrien and Taln, with explicit macOS Option-to-Alt forwarding. AeroSpace
+  window focus and movement use `Ctrl+Alt+H/J/K/L` on Taln so the Herdr chords
+  reach the terminal.
+- Added Herdr's official agent skill to the shared declarative skill registry
+  used by Claude Code, `.agents/skills` consumers, OpenCode, OMP, and Hermes.
+  The skill comes directly from the configured Herdr package, so it remains
+  release-matched without a second source pin.
+- Added `pkgs.herdr-navigator`, a reproducible Nix build of version 0.3.3,
+  linked its immutable plugin root during Home Manager activation, and bound
+  its picker to `prefix+t`.
+- Updated [ai-agents.md](ai-agents.md), [modules.md](modules.md), and
+  [index.md](index.md).

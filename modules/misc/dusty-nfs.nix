@@ -35,8 +35,20 @@
           "x-systemd.mount-timeout=10s"
           "x-systemd.device-timeout=10s"
           "nfsvers=4"
+          # `soft` returns EIO to the app after retrans retransmissions
+          # instead of hanging forever — needed so apps don't lock up when
+          # truenas is down. But kernel default timeo for NFS/TCP is 600
+          # (60s, linear backoff); overriding it down to 5s x 2 retrans (a
+          # ~30s budget) is too tight for real transfers: a Dolphin move of
+          # a few MB to this share hit that ceiling mid-write, the kernel
+          # returned EIO, and KIO surfaced it as "the source file does not
+          # exist" while leaving the move half-finished (data on the NFS
+          # side, original stuck undeletable in Downloads until Retry).
+          # 10s x 3 retrans (~100s worst case) stays well short of `hard`'s
+          # indefinite hang but gives real writes enough room.
           "soft"
-          "timeo=50"
+          "timeo=100"
+          "retrans=3"
         ];
       };
     };

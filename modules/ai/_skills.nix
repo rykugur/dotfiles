@@ -1,4 +1,4 @@
-{ inputs }:
+{ inputs, pkgs }:
 let
   # Skills installed for agents that consume the shared .agents/skills/ layout
   # (and equivalent for other harnesses).
@@ -19,6 +19,10 @@ let
     {
       name = "karpathy-guidelines";
       src = "${inputs.karpathy-skills}/skills/karpathy-guidelines";
+    }
+    {
+      name = "herdr";
+      src = "${pkgs.herdr}/share/skills/herdr/herdr";
     }
     {
       name = "simple-english";

@@ -164,8 +164,10 @@ source of truth.
 - Shared agent definitions in `_agents.nix`
 - Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, context7)
 - Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix`
+- `herdr.nix` — shared terminal workspace configuration, OMP integration, and declarative `herdr-navigator` registration
 - `common.nix` (installs the mempalace wrapper, rtk, llmfit, and the local OpenRig package)
-- `skills/llm-wiki/` and `skills/sensitive-files/` — the skills this very wiki pattern comes from
+- `pkgs/herdr-navigator.nix` — reproducible Rust build whose patched plugin manifest invokes Nix-store binaries
+- `_skills.nix` plus local `skills/` — declarative skill registry distributed to each supported agent layout
 - Permission policies per agent
 
 Because the agents can edit the repo that defines how they are installed, this is delightfully self-referential.

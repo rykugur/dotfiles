@@ -1,11 +1,11 @@
 { inputs, ... }:
-let
-  inherit ((import ./_skills.nix { inherit inputs; })) skillsForDotAgents;
-  skills = skillsForDotAgents;
-in
 {
   flake.modules.homeManager.codex =
-    { ... }:
+    { pkgs, ... }:
+    let
+      inherit ((import ./_skills.nix { inherit inputs pkgs; })) skillsForDotAgents;
+      skills = skillsForDotAgents;
+    in
     {
       programs.codex.enable = true;
 

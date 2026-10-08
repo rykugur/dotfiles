@@ -1,9 +1,9 @@
 ---
 title: AI Agents
 category: ai
-date: 2026-06-03
-tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, openrig, mempalace, llm-wiki, skills, mcp]
-sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/openrig.nix"]
+date: 2026-10-07
+tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, openrig, mempalace, llm-wiki, skills, mcp]
+sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
 
@@ -28,6 +28,13 @@ Each has a home-manager module under `modules/ai/<name>.nix`.
 ## Agent orchestration
 
 **OpenRig** is installed declaratively through `ai-common` on Jezrien and Taln. The local `pkgs.openrig` derivation pins the published `@openrig/cli` npm artifact and its dependency closure, uses Node.js 22, exposes `rig` and `openrig-tui`, and supplies `tmux` on their runtime `PATH`. Installation does not run `rig setup`, start the daemon, or create OpenRig state during Home Manager activation.
+
+**Herdr** is the shared terminal workspace runtime on Jezrien and Taln. Its
+Home Manager module owns tab and pane navigation and installs the OMP lifecycle
+integration. The local `pkgs.herdr-navigator` package builds version 0.3.3
+reproducibly; activation links its immutable plugin root into Herdr, while
+`prefix+t` opens its cross-workspace picker. `Alt+H/L` and `Alt+Shift+H/L`
+navigate and reorder Herdr tabs on both hosts; Ghostty no longer consumes those chords.
 
 ## Shared infrastructure (the key to DRY)
 
@@ -58,10 +65,11 @@ Skills are loaded via the agent's extension/skill mechanism:
 - `llm-wiki` (this very pattern — vendored at `modules/ai/skills/llm-wiki/SKILL.md`)
 - `sensitive-files`
 - Superpowers skills (https://github.com/obra/superpowers) — the full TDD / planning / subagent / review methodology. Installed wholesale for `.agents/skills/` consumers (codex, grok) via `_skills.nix`; loaded as plugins for claude-code and opencode.
+- Herdr's official `herdr` skill, sourced directly from the configured Herdr package, teaches agents to operate Herdr only when running in a Herdr-managed pane. Package and skill therefore update in lockstep.
 
 The skill files (and companion assets) are passed as store paths (via `flake = false` inputs or direct paths) so no imperative install is needed. For superpowers we symlink entire skill dirs so extra docs are present.
 
-See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix` consume skills (and for grok also sub-agents + MCPs) from the shared definitions. _skills.nix now centralizes the list.
+See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix`, and `herdr.nix` consume or extend the shared skill infrastructure. `_skills.nix` is the central skill registry.
 
 ## Why this matters (self-referentiality)
 

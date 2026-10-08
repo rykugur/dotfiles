@@ -11,8 +11,12 @@
       # };
       system = {
         defaults = {
-          dock = { expose-group-apps = true; };
-          spaces = { spans-displays = true; };
+          dock = {
+            expose-group-apps = true;
+          };
+          spaces = {
+            spans-displays = true;
+          };
         };
       };
 
@@ -46,15 +50,15 @@
 
                 alt-tab = "workspace-back-and-forth";
 
-                alt-h = "focus left";
-                alt-j = "focus down";
-                alt-k = "focus up";
-                alt-l = "focus right";
+                ctrl-alt-h = "focus left";
+                ctrl-alt-j = "focus down";
+                ctrl-alt-k = "focus up";
+                ctrl-alt-l = "focus right";
 
-                alt-shift-h = "move left";
-                alt-shift-j = "move down";
-                alt-shift-k = "move up";
-                alt-shift-l = "move right";
+                ctrl-alt-shift-h = "move left";
+                ctrl-alt-shift-j = "move down";
+                ctrl-alt-shift-k = "move up";
+                ctrl-alt-shift-l = "move right";
 
                 alt-f = "fullscreen";
 
