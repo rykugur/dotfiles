@@ -34,7 +34,9 @@ Home Manager module owns tab and pane navigation and installs the OMP lifecycle
 integration. The local `pkgs.herdr-navigator` package builds version 0.3.3
 reproducibly; activation links its immutable plugin root into Herdr, while
 `prefix+t` opens its cross-workspace picker. `Alt+H/L` and `Alt+Shift+H/L`
-navigate and reorder Herdr tabs on both hosts; Ghostty no longer consumes those chords.
+navigate and reorder Herdr tabs on both hosts; Ghostty no longer consumes those
+chords. Herdr's implicit Catppuccin default is named explicitly so Navigator's
+theme inheritance selects its matching Catppuccin Mocha palette.
 
 ## Shared infrastructure (the key to DRY)
 

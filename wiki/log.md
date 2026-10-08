@@ -151,3 +151,11 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   its picker to `prefix+t`.
 - Updated [ai-agents.md](ai-agents.md), [modules.md](modules.md), and
   [index.md](index.md).
+
+## [2026-10-07] update | Matched Herdr Navigator theme
+
+- Declared Herdr's implicit `catppuccin` theme name explicitly because
+  herdr-navigator 0.3.3 cannot inherit an unnamed default and otherwise falls
+  back to One Light.
+- Kept Navigator's existing theme inheritance rather than duplicating palette
+  colors; its `catppuccin` mapping selects Catppuccin Mocha.

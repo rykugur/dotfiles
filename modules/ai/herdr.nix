@@ -27,6 +27,9 @@
       programs.herdr.enable = true;
       programs.herdr.settings = {
         terminal.default_shell = shellCmd;
+        # Herdr defaults to Catppuccin implicitly, but plugins can only inherit
+        # a theme named in config. Navigator maps this name to Catppuccin Mocha.
+        theme.name = "catppuccin";
         ui = {
           pane_borders = true;
           pane_gaps = true;
