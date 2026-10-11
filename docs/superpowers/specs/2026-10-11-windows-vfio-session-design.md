@@ -2,7 +2,7 @@
 
 Date: 2026-10-11
 
-Status: Ready for review
+Status: Approved
 
 ## Goal
 
@@ -74,7 +74,7 @@ A separate one-time install command accepts an official Windows 11 ISO. It creat
 
 ## Linux module structure
 
-Replace the unused legacy VFIO module with one opt-in NixOS module. The module owns the complete Windows session feature:
+Replace the unused legacy VFIO module with one opt-in dendritic NixOS module. `modules/virtualization/vfio.nix` will export `flake.modules.nixos.vfio`. The module owns the complete Windows session feature:
 
 - The libvirt and QEMU configuration.
 - OVMF firmware with Secure Boot.
@@ -85,9 +85,11 @@ Replace the unused legacy VFIO module with one opt-in NixOS module. The module o
 - Polkit authorization for the primary user.
 - USB attachment rules.
 
+Runtime code, tests, and the domain template will live under `modules/virtualization/_vfio/`. The underscore keeps import-tree from loading those support files as modules.
+
 Remove the unused `virtman.nix` module after its current QEMU, OVMF, and TPM configuration moves into the VFIO module. This prevents two libvirt configurations from diverging.
 
-Jezrien will import the VFIO module and set host-specific PCI addresses and USB identities. Other hosts will not enable it.
+Jezrien will import `self.modules.nixos.vfio` and set host-specific PCI addresses and USB identities. Other hosts will not import it.
 
 ## Virtual machine
 
