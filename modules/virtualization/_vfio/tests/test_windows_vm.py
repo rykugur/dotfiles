@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import subprocess
 import tempfile
 import unittest
 from contextlib import redirect_stderr
@@ -12,6 +13,7 @@ from modules.virtualization._vfio.windows_vm import (
     Config,
     Controller,
     PreflightError,
+    RealSystem,
     Session,
     System,
     UsbDevice,
@@ -39,6 +41,7 @@ class FakeSystem(System):
         self.domain_xml = "<domain><devices /></domain>"
         self.fail_start = False
         self.fail_wait = False
+        self.fail_bind_addresses: set[str] = set()
         self.owner_responses: list[dict[Path, tuple[str, ...]]] = []
 
     def graphical_sessions(self, username: str) -> list[Session]:
@@ -78,6 +81,8 @@ class FakeSystem(System):
 
     def bind_pci(self, address: str, driver: str) -> None:
         self.operations.append(f"pci:bind:{driver}:{address}")
+        if address in self.fail_bind_addresses:
+            raise RuntimeError(f"VFIO probe failed for {address}")
 
     def release_pci(self, address: str) -> None:
         self.operations.append(f"pci:release:{address}")
@@ -293,6 +298,27 @@ class LifecycleTests(ControllerTestCase):
             [operation for operation in self.expected_handoff if operation != "vm:wait:windows"],
         )
 
+    def test_partial_vfio_bind_failure_clears_override(self) -> None:
+        self.system.fail_bind_addresses.add(GPU)
+
+        with self.assertRaisesRegex(RuntimeError, "VFIO probe failed"):
+            self.controller.run()
+
+        self.assertEqual(
+            self.system.operations,
+            [
+                "console:unbind:vtcon0",
+                f"pci:unbind:{AUDIO}",
+                f"pci:unbind:{GPU}",
+                f"pci:bind:vfio-pci:{GPU}",
+                f"pci:release:{GPU}",
+                f"pci:reset:{GPU}",
+                f"pci:probe:{GPU}",
+                f"pci:probe:{AUDIO}",
+                "console:bind:vtcon0",
+            ],
+        )
+
     def test_restore_is_idempotent(self) -> None:
         self.controller.run()
         operations_after_run = list(self.system.operations)
@@ -323,6 +349,25 @@ class LifecycleTests(ControllerTestCase):
             ["console:unbind:vtcon0", "console:bind:vtcon0"],
         )
         self.assertEqual(self.system.saved_consoles, ())
+
+
+class RealSystemTests(unittest.TestCase):
+    def test_wait_domain_retries_failed_status_queries_until_stopped(self) -> None:
+        system = RealSystem()
+        responses = [
+            subprocess.CompletedProcess([], 1, "", "libvirt connection reset"),
+            subprocess.CompletedProcess([], 0, "running\n", ""),
+            subprocess.CompletedProcess([], 0, "shut off\n", ""),
+        ]
+
+        with (
+            patch.object(system, "_run", side_effect=responses) as run,
+            patch("modules.virtualization._vfio.windows_vm.time.sleep") as sleep,
+        ):
+            system.wait_domain("windows")
+
+        self.assertEqual(run.call_count, 3)
+        self.assertEqual(sleep.call_count, 2)
 
 
 class InstallTests(ControllerTestCase):

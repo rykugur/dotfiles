@@ -376,9 +376,10 @@ class RealSystem(System):
                 ["virsh", "domstate", domain_name],
                 check=False,
             )
-            if state.returncode != 0:
-                return
-            if state.stdout.strip().lower() in {"shut off", "crashed", "no state"}:
+            if state.returncode == 0 and state.stdout.strip().lower() in {
+                "shut off",
+                "crashed",
+            }:
                 return
             time.sleep(1)
 
@@ -527,10 +528,10 @@ class Controller:
             self.system.unbind_pci(self.config.gpu)
             self._gpu_unbound = True
 
-            self.system.bind_pci(self.config.gpu, "vfio-pci")
             self._vfio_bound.append(self.config.gpu)
-            self.system.bind_pci(self.config.audio, "vfio-pci")
+            self.system.bind_pci(self.config.gpu, "vfio-pci")
             self._vfio_bound.append(self.config.audio)
+            self.system.bind_pci(self.config.audio, "vfio-pci")
 
             install_marker = self.config.state_directory / INSTALL_MARKER
             install_mode = self.system.path_exists(install_marker)
