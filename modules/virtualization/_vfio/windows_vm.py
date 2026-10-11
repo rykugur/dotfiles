@@ -565,6 +565,7 @@ class Controller:
                 errors.append(error)
                 failed_releases.append(address)
         self._vfio_bound = list(reversed(failed_releases))
+        pending_releases = set(self._vfio_bound)
 
         if self._gpu_unbound:
             try:
@@ -576,14 +577,14 @@ class Controller:
             except Exception as error:
                 errors.append(error)
             else:
-                self._gpu_unbound = False
+                self._gpu_unbound = self.config.gpu in pending_releases
         if self._audio_unbound:
             try:
                 self.system.probe_pci(self.config.audio)
             except Exception as error:
                 errors.append(error)
             else:
-                self._audio_unbound = False
+                self._audio_unbound = self.config.audio in pending_releases
 
         consoles = list(self._unbound_consoles)
         if self._state_saved:

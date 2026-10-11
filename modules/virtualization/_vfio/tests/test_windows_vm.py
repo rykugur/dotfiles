@@ -80,6 +80,7 @@ class FakeSystem(System):
 
     def unbind_pci(self, address: str) -> None:
         self.operations.append(f"pci:unbind:{address}")
+        self.drivers[address] = None
 
     def bind_pci(self, address: str, driver: str) -> None:
         if address in self.fail_bind_before_mutation_addresses:
@@ -87,14 +88,17 @@ class FakeSystem(System):
         self.operations.append(f"pci:bind:{driver}:{address}")
         if address in self.fail_bind_addresses:
             raise RuntimeError(f"VFIO probe failed for {address}")
+        self.drivers[address] = driver
 
     def release_pci(self, address: str) -> None:
         self.operations.append(f"pci:release:{address}")
         if address in self.fail_release_addresses:
             raise RuntimeError(f"driver_override clear failed for {address}")
+        self.drivers[address] = None
 
     def probe_pci(self, address: str) -> None:
         self.operations.append(f"pci:probe:{address}")
+        self.drivers[address] = "amdgpu" if address == GPU else "snd_hda_intel"
 
     def reset_pci(self, address: str) -> None:
         self.operations.append(f"pci:reset:{address}")
@@ -343,6 +347,27 @@ class LifecycleTests(ControllerTestCase):
                 f"pci:probe:{GPU}",
                 f"pci:probe:{AUDIO}",
                 "console:bind:vtcon0",
+            ],
+        )
+
+    def test_restore_retry_reprobes_after_retained_release(self) -> None:
+        self.system.fail_bind_before_mutation_addresses.add(GPU)
+        self.system.fail_release_addresses.add(GPU)
+
+        with self.assertRaisesRegex(RuntimeError, "driver_override write failed"):
+            self.controller.run()
+
+        self.system.fail_release_addresses.clear()
+        self.controller._restore()
+
+        self.assertEqual(self.system.drivers[GPU], "amdgpu")
+        self.assertEqual(self.system.drivers[AUDIO], "snd_hda_intel")
+        self.assertEqual(
+            self.system.operations[-3:],
+            [
+                f"pci:release:{GPU}",
+                f"pci:reset:{GPU}",
+                f"pci:probe:{GPU}",
             ],
         )
 
