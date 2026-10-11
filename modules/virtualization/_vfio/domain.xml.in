@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<domain type='kvm'>
+  <name>@domainName@</name>
+  <memory unit='MiB'>@memoryMiB@</memory>
+  <currentMemory unit='MiB'>@memoryMiB@</currentMemory>
+  <vcpu placement='static'>@vcpus@</vcpu>
+
+  <os>
+    <type arch='x86_64' machine='q35'>hvm</type>
+    <loader readonly='yes' secure='yes' type='pflash'>@ovmfCode@</loader>
+    <nvram>@ovmfVars@</nvram>
+    <boot dev='hd'/>
+  </os>
+
+  <features>
+    <acpi/>
+    <apic/>
+    <smm state='on'/>
+  </features>
+  <cpu mode='host-passthrough' check='none' migratable='on'/>
+  <clock offset='localtime'>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <pm>
+    <suspend-to-mem enabled='no'/>
+    <suspend-to-disk enabled='no'/>
+  </pm>
+
+  <devices>
+    <controller type='scsi' index='0' model='virtio-scsi'/>
+    <controller type='sata' index='0'/>
+    <controller type='usb' index='0' model='qemu-xhci'/>
+
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' discard='unmap'/>
+      <source file='@diskPath@'/>
+      <target dev='sda' bus='scsi'/>
+    </disk>
+
+    <interface type='user'>
+      <model type='virtio'/>
+    </interface>
+
+    <hostdev mode='subsystem' type='pci' managed='yes' display='on'>
+      <driver name='vfio'/>
+      <source>
+        <address domain='0x@gpuDomain@' bus='0x@gpuBus@' slot='0x@gpuSlot@' function='0x@gpuFunction@'/>
+      </source>
+      <rom bar='on'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <driver name='vfio'/>
+      <source>
+        <address domain='0x@audioDomain@' bus='0x@audioBus@' slot='0x@audioSlot@' function='0x@audioFunction@'/>
+      </source>
+    </hostdev>
+
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source startupPolicy='optional'>
+        <vendor id='0x@usb1Vendor@'/>
+        <product id='0x@usb1Product@'/>
+      </source>
+    </hostdev>
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source startupPolicy='optional'>
+        <vendor id='0x@usb2Vendor@'/>
+        <product id='0x@usb2Product@'/>
+      </source>
+    </hostdev>
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source startupPolicy='optional'>
+        <vendor id='0x@usb3Vendor@'/>
+        <product id='0x@usb3Product@'/>
+      </source>
+    </hostdev>
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source startupPolicy='optional'>
+        <vendor id='0x@usb4Vendor@'/>
+        <product id='0x@usb4Product@'/>
+      </source>
+    </hostdev>
+    <hostdev mode='subsystem' type='usb' managed='yes'>
+      <source startupPolicy='optional'>
+        <vendor id='0x@usb5Vendor@'/>
+        <product id='0x@usb5Product@'/>
+      </source>
+    </hostdev>
+
+    <serial type='pty'>
+      <target type='isa-serial' port='0'>
+        <model name='isa-serial'/>
+      </target>
+    </serial>
+    <console type='pty'>
+      <target type='serial' port='0'/>
+    </console>
+    <video>
+      <model type='none'/>
+    </video>
+    <tpm model='tpm-crb'>
+      <backend type='emulator' version='2.0'/>
+    </tpm>
+  </devices>
+</domain>
