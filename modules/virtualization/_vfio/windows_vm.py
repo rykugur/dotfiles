@@ -183,6 +183,10 @@ class System(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def stop_domain(self, domain_name: str) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
     def path_exists(self, path: Path) -> bool:
         raise NotImplementedError
 
@@ -383,6 +387,37 @@ class RealSystem(System):
                 return
             time.sleep(1)
 
+    def stop_domain(self, domain_name: str) -> None:
+        terminal_states = {"shut off", "crashed"}
+        state = self._run(
+            ["virsh", "domstate", domain_name],
+            check=False,
+        )
+        if state.returncode != 0:
+            raise RuntimeError(
+                state.stderr.strip()
+                or f"failed to determine whether domain {domain_name} is active"
+            )
+        if state.stdout.strip().lower() in terminal_states:
+            return
+
+        stopped = self._run(["virsh", "destroy", domain_name], check=False)
+        if stopped.returncode != 0:
+            final_state = self._run(
+                ["virsh", "domstate", domain_name],
+                check=False,
+            )
+            if (
+                final_state.returncode != 0
+                or final_state.stdout.strip().lower() not in terminal_states
+            ):
+                raise RuntimeError(
+                    stopped.stderr.strip()
+                    or f"failed to stop active domain {domain_name}"
+                )
+            return
+        self.wait_domain(domain_name)
+
     def path_exists(self, path: Path) -> bool:
         return path.exists()
 
@@ -544,7 +579,15 @@ class Controller:
         except BaseException as error:
             failure = error
 
-        if mutated:
+        should_restore = mutated
+        if mutated and isinstance(failure, KeyboardInterrupt):
+            try:
+                self.system.stop_domain(self.config.domain_name)
+            except Exception as stop_error:
+                should_restore = False
+                failure.add_note(f"domain stop before restore failed: {stop_error}")
+
+        if should_restore:
             try:
                 self._restore()
             except Exception as restore_error:

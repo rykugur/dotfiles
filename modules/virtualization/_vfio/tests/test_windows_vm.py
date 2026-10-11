@@ -41,6 +41,8 @@ class FakeSystem(System):
         self.domain_xml = "<domain><devices /></domain>"
         self.fail_start = False
         self.fail_wait = False
+        self.interrupt_wait = False
+        self.fail_stop = False
         self.fail_bind_addresses: set[str] = set()
         self.fail_bind_before_mutation_addresses: set[str] = set()
         self.fail_release_addresses: set[str] = set()
@@ -112,6 +114,14 @@ class FakeSystem(System):
         self.operations.append(f"vm:wait:{domain_name}")
         if self.fail_wait:
             raise RuntimeError("domain crashed")
+        if self.interrupt_wait:
+            raise KeyboardInterrupt
+
+    def stop_domain(self, domain_name: str) -> None:
+        self.operations.append(f"vm:stop:{domain_name}")
+        if self.fail_stop:
+            raise RuntimeError("failed to stop domain")
+        self.domain_is_active = False
 
     def path_exists(self, path: Path) -> bool:
         return path in self.files
@@ -386,6 +396,38 @@ class LifecycleTests(ControllerTestCase):
             self.controller.run()
 
         self.assertEqual(self.system.operations, self.expected_handoff)
+
+    def test_interrupt_stops_domain_before_restoring_gpu(self) -> None:
+        self.system.interrupt_wait = True
+
+        with self.assertRaises(KeyboardInterrupt):
+            self.controller.run()
+
+        self.assertEqual(
+            self.system.operations,
+            self.expected_handoff[:7]
+            + ["vm:stop:windows"]
+            + self.expected_handoff[7:],
+        )
+        self.assertFalse(self.system.domain_is_active)
+
+    def test_interrupt_stop_failure_keeps_gpu_on_vfio(self) -> None:
+        self.system.interrupt_wait = True
+        self.system.fail_stop = True
+
+        with self.assertRaises(KeyboardInterrupt) as raised:
+            self.controller.run()
+
+        self.assertEqual(
+            self.system.operations,
+            self.expected_handoff[:7] + ["vm:stop:windows"],
+        )
+        self.assertEqual(self.system.drivers[GPU], "vfio-pci")
+        self.assertEqual(self.system.drivers[AUDIO], "vfio-pci")
+        self.assertIn(
+            "domain stop before restore failed: failed to stop domain",
+            raised.exception.__notes__,
+        )
 
     def test_drm_race_restores_linux_ownership(self) -> None:
         self.system.owner_responses = [

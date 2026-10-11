@@ -220,7 +220,7 @@
             description = "Full PCI address of the graphics function.";
           };
           linuxDriver = lib.mkOption {
-            type = lib.types.nonEmptyStr;
+            type = lib.types.enum [ "amdgpu" ];
             default = "amdgpu";
             description = "Linux driver restored for the graphics function.";
           };
@@ -232,7 +232,7 @@
             description = "Full PCI address of the display-audio function.";
           };
           linuxDriver = lib.mkOption {
-            type = lib.types.nonEmptyStr;
+            type = lib.types.enum [ "snd_hda_intel" ];
             default = "snd_hda_intel";
             description = "Linux driver restored for the display-audio function.";
           };
@@ -351,6 +351,8 @@
               User = "root";
               ExecStart = "${windowsVmControl}/bin/windows-vm-control --config ${controllerConfig} run";
               TimeoutStartSec = "infinity";
+              KillSignal = "SIGINT";
+              TimeoutStopSec = "5min";
               StateDirectory = "windows-vm";
               StateDirectoryMode = "0700";
             };
