@@ -42,6 +42,8 @@ class FakeSystem(System):
         self.fail_start = False
         self.fail_wait = False
         self.fail_bind_addresses: set[str] = set()
+        self.fail_bind_before_mutation_addresses: set[str] = set()
+        self.fail_release_addresses: set[str] = set()
         self.owner_responses: list[dict[Path, tuple[str, ...]]] = []
 
     def graphical_sessions(self, username: str) -> list[Session]:
@@ -80,12 +82,16 @@ class FakeSystem(System):
         self.operations.append(f"pci:unbind:{address}")
 
     def bind_pci(self, address: str, driver: str) -> None:
+        if address in self.fail_bind_before_mutation_addresses:
+            raise RuntimeError(f"driver_override write failed for {address}")
         self.operations.append(f"pci:bind:{driver}:{address}")
         if address in self.fail_bind_addresses:
             raise RuntimeError(f"VFIO probe failed for {address}")
 
     def release_pci(self, address: str) -> None:
         self.operations.append(f"pci:release:{address}")
+        if address in self.fail_release_addresses:
+            raise RuntimeError(f"driver_override clear failed for {address}")
 
     def probe_pci(self, address: str) -> None:
         self.operations.append(f"pci:probe:{address}")
@@ -311,6 +317,27 @@ class LifecycleTests(ControllerTestCase):
                 f"pci:unbind:{AUDIO}",
                 f"pci:unbind:{GPU}",
                 f"pci:bind:vfio-pci:{GPU}",
+                f"pci:release:{GPU}",
+                f"pci:reset:{GPU}",
+                f"pci:probe:{GPU}",
+                f"pci:probe:{AUDIO}",
+                "console:bind:vtcon0",
+            ],
+        )
+
+    def test_bind_override_failure_still_reprobes_and_restores_console(self) -> None:
+        self.system.fail_bind_before_mutation_addresses.add(GPU)
+        self.system.fail_release_addresses.add(GPU)
+
+        with self.assertRaisesRegex(RuntimeError, "driver_override write failed"):
+            self.controller.run()
+
+        self.assertEqual(
+            self.system.operations,
+            [
+                "console:unbind:vtcon0",
+                f"pci:unbind:{AUDIO}",
+                f"pci:unbind:{GPU}",
                 f"pci:release:{GPU}",
                 f"pci:reset:{GPU}",
                 f"pci:probe:{GPU}",

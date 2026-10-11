@@ -510,6 +510,7 @@ class Controller:
 
         consoles = self.system.bound_consoles()
         mutated = False
+        failure: BaseException | None = None
         try:
             self.system.save_consoles(self.config.state_directory, consoles)
             self._state_saved = True
@@ -540,36 +541,79 @@ class Controller:
             if install_mode:
                 self.system.remove_file(install_marker)
             self.system.wait_domain(self.config.domain_name)
-        finally:
-            if mutated:
+        except BaseException as error:
+            failure = error
+
+        if mutated:
+            try:
                 self._restore()
+            except Exception as restore_error:
+                if failure is None:
+                    raise
+                failure.add_note(f"rollback also failed: {restore_error}")
+        if failure is not None:
+            raise failure
 
     def _restore(self) -> None:
+        errors: list[Exception] = []
+
+        failed_releases = []
         for address in reversed(self._vfio_bound):
-            self.system.release_pci(address)
-        self._vfio_bound.clear()
+            try:
+                self.system.release_pci(address)
+            except Exception as error:
+                errors.append(error)
+                failed_releases.append(address)
+        self._vfio_bound = list(reversed(failed_releases))
 
         if self._gpu_unbound:
-            self.system.reset_pci(self.config.gpu)
-            self.system.probe_pci(self.config.gpu)
-            self._gpu_unbound = False
+            try:
+                self.system.reset_pci(self.config.gpu)
+            except Exception as error:
+                errors.append(error)
+            try:
+                self.system.probe_pci(self.config.gpu)
+            except Exception as error:
+                errors.append(error)
+            else:
+                self._gpu_unbound = False
         if self._audio_unbound:
-            self.system.probe_pci(self.config.audio)
-            self._audio_unbound = False
+            try:
+                self.system.probe_pci(self.config.audio)
+            except Exception as error:
+                errors.append(error)
+            else:
+                self._audio_unbound = False
 
-        consoles = (
-            self.system.load_consoles(self.config.state_directory)
-            if self._state_saved
-            else list(self._unbound_consoles)
-        )
-        unbound = set(self._unbound_consoles)
-        for console in reversed(consoles):
-            if console in unbound:
-                self.system.bind_console(console)
-        self._unbound_consoles.clear()
+        consoles = list(self._unbound_consoles)
         if self._state_saved:
-            self.system.clear_consoles(self.config.state_directory)
-            self._state_saved = False
+            try:
+                consoles = self.system.load_consoles(self.config.state_directory)
+            except Exception as error:
+                errors.append(error)
+        unbound = set(self._unbound_consoles)
+        failed_consoles = []
+        for console in reversed(consoles):
+            if console not in unbound:
+                continue
+            try:
+                self.system.bind_console(console)
+            except Exception as error:
+                errors.append(error)
+                failed_consoles.append(console)
+        self._unbound_consoles = list(reversed(failed_consoles))
+
+        if self._state_saved and not self._unbound_consoles:
+            try:
+                self.system.clear_consoles(self.config.state_directory)
+            except Exception as error:
+                errors.append(error)
+            else:
+                self._state_saved = False
+
+        if errors:
+            details = "; ".join(str(error) for error in errors)
+            raise RuntimeError(f"VFIO restore failed: {details}") from errors[0]
 
     def prepare_install(self, iso: Path) -> None:
         if not self.system.is_readable_file(iso):
