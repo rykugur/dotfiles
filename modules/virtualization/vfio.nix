@@ -1,7 +1,10 @@
-{ ... }:
+{ inputs, ... }:
 {
   perSystem =
-    { pkgs, ... }:
+    { system, ... }:
+    let
+      pkgs = import inputs.nixpkgs { inherit system; };
+    in
     pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
       checks.windows-vfio = pkgs.runCommand "windows-vfio-check" {
         nativeBuildInputs = [
