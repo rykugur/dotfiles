@@ -12,7 +12,10 @@
           {
             nixpkgs.config.allowUnfree = true;
             boot.isContainer = true;
-            fileSystems."/".device = "none";
+            fileSystems."/" = {
+              device = "none";
+              fsType = "tmpfs";
+            };
             system.stateVersion = "25.11";
             ryk.vfio = {
               enable = true;
