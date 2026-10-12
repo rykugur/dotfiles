@@ -105,7 +105,7 @@ trap cleanup_tmp EXIT
 exec 9>/var/lib/vasher/prebuild.lock
 case $mode in
   refresh) flock -n 9 || exit 0; lock_acquired=true ;;
-  candidate | retry) flock 9; lock_acquired=true ;;
+  candidate | retry | narrow) flock 9; lock_acquired=true ;;
   *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
 esac
 
@@ -197,6 +197,79 @@ prepare_updated_candidate() {
   candidate_revision=$(git -C "$worktree" rev-parse HEAD)
 }
 
+# Updates only the inputs the request names, after dropping the held ones.
+# Unlike the candidate flow an empty selection is an error here: the caller
+# asked for inputs that cannot be updated.
+prepare_narrow_candidate() {
+  local request=/var/lib/vasher/agent/narrow-request.json
+  local inputs_text today held want metadata keep
+  local -a requested=() update_inputs=()
+  [[ -r $request ]] || {
+    printf 'vasher-prebuild: narrow request %s is missing\n' "$request" >&2
+    exit 2
+  }
+  base_revision=$(jq -er '.base // empty' "$request" 2> /dev/null) || {
+    printf 'vasher-prebuild: narrow request has no base revision\n' >&2
+    exit 2
+  }
+  inputs_text=$(jq -er '
+    if (.inputs | type) != "array" then error("inputs must be an array")
+    elif (.inputs | length) < 1 or (.inputs | length) > 8 then error("inputs must name 1 to 8 flake inputs")
+    elif any(.inputs[]; type != "string") then error("input names must be strings")
+    else .inputs[] end' "$request" 2> /dev/null) || {
+    printf 'vasher-prebuild: narrow request has no usable input list\n' >&2
+    exit 2
+  }
+  validate_revision "$base_revision"
+  mapfile -t requested <<< "$inputs_text"
+
+  git -C "$repo" fetch origin master
+  [[ $(git -C "$repo" rev-parse origin/master) == "$base_revision" ]] || {
+    printf 'vasher-prebuild: narrow base %s is not origin/master\n' "$base_revision" >&2
+    return 1
+  }
+  load_github_token
+  write_status preparing null
+  nix-collect-garbage
+  if [[ ! -e $worktree/.git ]]; then
+    mkdir -p "$(dirname "$worktree")"
+    git -C "$repo" worktree add --detach "$worktree" "$base_revision"
+  fi
+  git -C "$worktree" reset --hard "$base_revision"
+
+  today=$(date +%F)
+  held='[]'
+  if [[ -r $HOLDS_FILE ]]; then
+    held=$(jq -c --arg today "$today" \
+      '[to_entries[] | select((.value.expires // "") >= $today) | .key]' \
+      "$HOLDS_FILE" 2> /dev/null) || held='[]'
+  fi
+  want=$(jq -nc '$ARGS.positional' --args "${requested[@]}")
+  metadata=$(NIX_CONFIG="$nix_config" nix flake metadata --json --no-write-lock-file "$worktree")
+  keep=$(jq -r --argjson held "$held" --argjson want "$want" '
+    (.locks.nodes.root.inputs | keys) as $all
+    | ($want - $all) as $unknown
+    | if ($unknown | length) > 0
+      then error("unknown flake inputs: \($unknown | join(", "))")
+      else ($want - $held | unique)[] end
+  ' <<< "$metadata" 2> /dev/null) || {
+    printf 'vasher-prebuild: narrow request names inputs this flake does not have\n' >&2
+    return 1
+  }
+  [[ -n $keep ]] || {
+    printf 'vasher-prebuild: every requested input is held\n' >&2
+    return 1
+  }
+  mapfile -t update_inputs <<< "$keep"
+  NIX_CONFIG="$nix_config" nix flake update --flake "$worktree" "${update_inputs[@]}"
+  git -C "$worktree" add flake.lock
+  if ! git -C "$worktree" diff --cached --quiet; then
+    git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
+      commit -m "chore: narrow flake.lock update: ${update_inputs[*]} ($(date -I))"
+  fi
+  candidate_revision=$(git -C "$worktree" rev-parse HEAD)
+}
+
 prepare_exact_retry() {
   validate_revision "$expected_base"
   validate_revision "$expected_candidate"
@@ -218,6 +291,8 @@ prepare_exact_retry() {
 if [[ $mode == retry ]]; then
   load_github_token
   prepare_exact_retry
+elif [[ $mode == narrow ]]; then
+  prepare_narrow_candidate
 else
   git -C "$repo" fetch --prune origin
   base_revision=$(git -C "$repo" rev-parse origin/master)

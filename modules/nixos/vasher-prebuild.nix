@@ -132,6 +132,7 @@
         systemd.services = {
           vasher-prebuild-refresh = service "refresh";
           vasher-prebuild-candidate = service "candidate";
+          vasher-prebuild-narrow = service "narrow";
           vasher-prebuild-cleanup = service "cleanup" // {
             description = "Collect garbage before a Vasher prebuild retry";
             serviceConfig = serviceConfig // {
