@@ -45,53 +45,53 @@ let
         self.modules.nixos.zsa
 
         self.modules.nixos.docker
-        # self.modules.nixos.vfio
         self.modules.nixos.winboat
 
-        {
-          ryk.vfio = {
-            enable = true;
-            domainName = "windows-vm";
-            gpu = {
-              pciAddress = "0000:2f:00.0";
-              linuxDriver = "amdgpu";
-            };
-            audio = {
-              pciAddress = "0000:2f:00.1";
-              linuxDriver = "snd_hda_intel";
-            };
-            memoryMiB = 32768;
-            vcpus = 16;
-            diskSizeGiB = 500;
-            usbDevices = [
-              {
-                name = "Xbox Wireless Adapter";
-                vendorId = "045e";
-                productId = "02fe";
-              }
-              {
-                name = "VIRPIL left stick";
-                vendorId = "3344";
-                productId = "8384";
-              }
-              {
-                name = "VIRPIL right stick";
-                vendorId = "3344";
-                productId = "4384";
-              }
-              {
-                name = "ZSA Moonlander";
-                vendorId = "3297";
-                productId = "1969";
-              }
-              {
-                name = "Razer Naga V2 Pro";
-                vendorId = "1532";
-                productId = "00a8";
-              }
-            ];
-          };
-        }
+        # self.modules.nixos.vfio
+        # {
+        #   ryk.vfio = {
+        #     enable = true;
+        #     domainName = "windows-vm";
+        #     gpu = {
+        #       pciAddress = "0000:2f:00.0";
+        #       linuxDriver = "amdgpu";
+        #     };
+        #     audio = {
+        #       pciAddress = "0000:2f:00.1";
+        #       linuxDriver = "snd_hda_intel";
+        #     };
+        #     memoryMiB = 32768;
+        #     vcpus = 16;
+        #     diskSizeGiB = 500;
+        #     usbDevices = [
+        #       {
+        #         name = "Xbox Wireless Adapter";
+        #         vendorId = "045e";
+        #         productId = "02fe";
+        #       }
+        #       {
+        #         name = "VIRPIL left stick";
+        #         vendorId = "3344";
+        #         productId = "8384";
+        #       }
+        #       {
+        #         name = "VIRPIL right stick";
+        #         vendorId = "3344";
+        #         productId = "4384";
+        #       }
+        #       {
+        #         name = "ZSA Moonlander";
+        #         vendorId = "3297";
+        #         productId = "1969";
+        #       }
+        #       {
+        #         name = "Razer Naga V2 Pro";
+        #         vendorId = "1532";
+        #         productId = "00a8";
+        #       }
+        #     ];
+        #   };
+        # }
 
         self.modules.nixos.audiorelay
         self.modules.nixos.appimage

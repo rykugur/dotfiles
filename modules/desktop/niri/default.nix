@@ -117,6 +117,11 @@
           "E501"
         ];
       } (builtins.readFile ./scripts/discord-mute-toggle-daemon.py);
+      clipboardPrimaryMirror = pkgs.writeShellApplication {
+        name = "clipboard-primary-mirror";
+        runtimeInputs = [ pkgs.wl-clipboard ];
+        text = builtins.readFile ./scripts/clipboard-primary-mirror.sh;
+      };
     in
     {
       imports = [ self.modules.homeManager.dolphin ];
@@ -167,6 +172,7 @@
             ];
           } (builtins.readFile ./scripts/discord-mute-toggle.py))
           discordMuteToggleDaemon
+          clipboardPrimaryMirror
         ];
 
       systemd.user.services.discord-mute-toggle-daemon = {
@@ -180,6 +186,19 @@
             "DISCORD_CLIENT_ID_FILE=${config.sops.secrets.discord_client_id.path}"
             "DISCORD_CLIENT_SECRET_FILE=${config.sops.secrets.discord_client_secret.path}"
           ];
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
+
+      systemd.user.services.clipboard-primary-mirror = {
+        Unit = {
+          Description = "Mirror CLIPBOARD into PRIMARY so middle-click paste sees Herdr/other CLIPBOARD-only copies";
+          After = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${clipboardPrimaryMirror}/bin/clipboard-primary-mirror";
           Restart = "on-failure";
           RestartSec = 5;
         };
@@ -289,6 +308,9 @@
               {
                 # Also watch primary selection so that middle-click paste (and
                 # cliphist history) can see primary selections from other apps.
+                # (The clipboard-primary-mirror systemd service, defined
+                # above, handles the opposite direction: CLIPBOARD-only
+                # writers like Herdr mirrored into PRIMARY.)
                 argv = [
                   "wl-paste"
                   "--primary"
