@@ -15,6 +15,7 @@ SUBSTITUTIONS = {
     "diskPath": "/var/lib/libvirt/images/windows-vm.qcow2",
     "ovmfCode": "/run/libvirt/nix-ovmf/OVMF_CODE.secboot.fd",
     "ovmfVars": "/var/lib/libvirt/qemu/nvram/windows-vm_VARS.fd",
+    "ovmfVarsTemplate": "/run/libvirt/nix-ovmf/OVMF_VARS.secboot.fd",
     "virtioIso": "/run/current-system/sw/share/virtio-win/virtio-win.iso",
     "windowsIso": "/var/lib/libvirt/images/windows-vm-install.iso",
     "gpuDomain": "0000",
@@ -97,7 +98,10 @@ class DomainTemplateTests(unittest.TestCase):
         self.assertEqual(loader.get("readonly"), "yes")
         self.assertEqual(loader.get("secure"), "yes")
         self.assertEqual(loader.text, SUBSTITUTIONS["ovmfCode"])
-        self.assertEqual(root.findtext("./os/nvram"), SUBSTITUTIONS["ovmfVars"])
+        nvram = root.find("./os/nvram")
+        self.assertIsNotNone(nvram)
+        self.assertEqual(nvram.text, SUBSTITUTIONS["ovmfVars"])
+        self.assertEqual(nvram.get("template"), SUBSTITUTIONS["ovmfVarsTemplate"])
 
         tpm = root.find("./devices/tpm")
         self.assertIsNotNone(tpm)

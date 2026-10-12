@@ -1,12 +1,57 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   perSystem =
     { system, ... }:
     let
       pkgs = import inputs.nixpkgs { inherit system; };
+      enabledNixos = inputs.nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          self.modules.nixos.meta
+          self.modules.nixos.vfio
+          {
+            nixpkgs.config.allowUnfree = true;
+            system.stateVersion = "25.11";
+            ryk.vfio = {
+              enable = true;
+              domainName = "windows-vm-check";
+              gpu.pciAddress = "0000:01:00.0";
+              audio.pciAddress = "0000:01:00.1";
+              usbDevices = [
+                {
+                  name = "check-1";
+                  vendorId = "0001";
+                  productId = "0001";
+                }
+                {
+                  name = "check-2";
+                  vendorId = "0002";
+                  productId = "0002";
+                }
+                {
+                  name = "check-3";
+                  vendorId = "0003";
+                  productId = "0003";
+                }
+                {
+                  name = "check-4";
+                  vendorId = "0004";
+                  productId = "0004";
+                }
+                {
+                  name = "check-5";
+                  vendorId = "0005";
+                  productId = "0005";
+                }
+              ];
+            };
+          }
+        ];
+      };
     in
     pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
       checks.windows-vfio = pkgs.runCommand "windows-vfio-check" {
+        enabledSystem = enabledNixos.config.system.build.toplevel;
         nativeBuildInputs = [
           pkgs.libvirt
           pkgs.python3
@@ -24,6 +69,8 @@
           modules/virtualization/_vfio/tests/test_domain.py
         python -m unittest discover -s modules/virtualization/_vfio/tests -v
 
+        test -e "$enabledSystem"
+
         touch "$out"
       '';
     };
@@ -39,10 +86,32 @@
       cfg = config.ryk.vfio;
       username = config.ryk.username;
 
-      ovmf = pkgs.OVMF.override {
-        secureBoot = true;
-        tpmSupport = true;
-      };
+      windowsFirmware = pkgs.runCommand "windows-vm-firmware" {
+        nativeBuildInputs = [ pkgs.jq ];
+      } ''
+        mapfile -t firmware_pairs < <(
+          jq -r '
+            select(any(.targets[]?; .architecture == "x86_64"))
+            | select(any(.features[]?; . == "secure-boot"))
+            | select(any(.features[]?; . == "enrolled-keys"))
+            | [.mapping.executable.filename, .mapping."nvram-template".filename]
+            | @tsv
+          ' ${pkgs.qemu_kvm}/share/qemu/firmware/*.json | sort -u
+        )
+
+        if (( ''${#firmware_pairs[@]} != 1 )); then
+          echo "expected exactly one x86_64 Secure Boot firmware pair" >&2
+          printf '%s\n' "''${firmware_pairs[@]}" >&2
+          exit 1
+        fi
+
+        IFS=$'\t' read -r code vars <<< "''${firmware_pairs[0]}"
+        test -f "$code"
+        test -f "$vars"
+        mkdir -p "$out"
+        ln -s "$code" "$out/code.fd"
+        ln -s "$vars" "$out/vars.fd"
+      '';
 
       parsePciAddress =
         address:
@@ -73,8 +142,9 @@
         memoryMiB = toString cfg.memoryMiB;
         vcpus = toString cfg.vcpus;
         diskPath = "/var/lib/libvirt/images/${cfg.domainName}.qcow2";
-        ovmfCode = "/run/libvirt/nix-ovmf/OVMF_CODE.secboot.fd";
+        ovmfCode = "${windowsFirmware}/code.fd";
         ovmfVars = "/var/lib/libvirt/qemu/nvram/${cfg.domainName}_VARS.fd";
+        ovmfVarsTemplate = "${windowsFirmware}/vars.fd";
         virtioIso = "${pkgs.virtio-win}/share/virtio-win/virtio-win.iso";
         windowsIso = "/var/lib/libvirt/images/${cfg.domainName}-install.iso";
         gpuDomain = builtins.elemAt gpuAddress 0;
@@ -310,10 +380,6 @@
             package = pkgs.qemu_kvm;
             runAsRoot = true;
             swtpm.enable = true;
-            ovmf = {
-              enable = true;
-              packages = [ ovmf.fd ];
-            };
           };
         };
 

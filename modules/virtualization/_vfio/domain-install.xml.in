@@ -8,7 +8,7 @@
   <os>
     <type arch='x86_64' machine='q35'>hvm</type>
     <loader readonly='yes' secure='yes' type='pflash'>@ovmfCode@</loader>
-    <nvram>@ovmfVars@</nvram>
+    <nvram template='@ovmfVarsTemplate@'>@ovmfVars@</nvram>
     <boot dev='cdrom'/>
     <boot dev='hd'/>
   </os>
