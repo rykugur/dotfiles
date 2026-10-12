@@ -157,8 +157,6 @@
         ovmfCode = "${windowsFirmware}/code.fd";
         ovmfVars = "/var/lib/libvirt/qemu/nvram/${cfg.domainName}_VARS.fd";
         ovmfVarsTemplate = "${windowsFirmware}/vars.fd";
-        virtioIso = "${pkgs.virtio-win}/share/virtio-win/virtio-win.iso";
-        windowsIso = "/var/lib/libvirt/images/${cfg.domainName}-install.iso";
         gpuDomain = builtins.elemAt gpuAddress 0;
         gpuBus = builtins.elemAt gpuAddress 1;
         gpuSlot = builtins.elemAt gpuAddress 2;
@@ -178,9 +176,13 @@
         usb5Vendor = lib.toLower (usbDevice 4).vendorId;
         usb5Product = lib.toLower (usbDevice 4).productId;
       };
+      installXmlSubstitutions = xmlSubstitutions // {
+        virtioIso = "${pkgs.virtio-win}/share/virtio-win/virtio-win.iso";
+        windowsIso = "/var/lib/libvirt/images/${cfg.domainName}-install.iso";
+      };
 
       normalXml = pkgs.replaceVars ./_vfio/domain.xml.in xmlSubstitutions;
-      installXml = pkgs.replaceVars ./_vfio/domain-install.xml.in xmlSubstitutions;
+      installXml = pkgs.replaceVars ./_vfio/domain-install.xml.in installXmlSubstitutions;
 
       controllerConfig = pkgs.writeText "${cfg.domainName}-controller.json" (
         builtins.toJSON {
@@ -196,7 +198,7 @@
           diskSizeGiB = cfg.diskSizeGiB;
           normalXml = normalXml;
           installXml = installXml;
-          installIsoPath = xmlSubstitutions.windowsIso;
+          installIsoPath = installXmlSubstitutions.windowsIso;
           stateDirectory = "/var/lib/windows-vm";
         }
       );
