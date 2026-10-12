@@ -45,7 +45,7 @@ let
         self.modules.nixos.zsa
 
         self.modules.nixos.docker
-        self.modules.nixos.vfio
+        # self.modules.nixos.vfio
         self.modules.nixos.winboat
 
         {
