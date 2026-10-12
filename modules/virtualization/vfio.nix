@@ -92,30 +92,37 @@
       username = config.ryk.username;
 
       windowsFirmware = pkgs.runCommand "windows-vm-firmware" {
-        nativeBuildInputs = [ pkgs.jq ];
+        nativeBuildInputs = [
+          pkgs.jq
+          pkgs.python3Packages.virt-firmware
+        ];
       } ''
-        mapfile -t firmware_pairs < <(
-          jq -r '
-            select(any(.targets[]?; .architecture == "x86_64"))
-            | select(any(.features[]?; . == "secure-boot"))
-            | select(any(.features[]?; . == "enrolled-keys"))
-            | [.mapping.executable.filename, .mapping."nvram-template".filename]
-            | @tsv
-          ' ${pkgs.qemu_kvm}/share/qemu/firmware/*.json | sort -u
-        )
+        descriptor=${pkgs.qemu_kvm}/share/qemu/firmware/50-edk2-x86_64-secure.json
+        jq -e '
+          .mapping.device == "flash"
+          and any(.targets[]?; (
+            .architecture == "x86_64"
+            and any(.machines[]?; . == "pc-q35-*")
+          ))
+          and any(.features[]?; . == "secure-boot")
+          and any(.features[]?; . == "requires-smm")
+        ' "$descriptor" >/dev/null
 
-        if (( ''${#firmware_pairs[@]} != 1 )); then
-          echo "expected exactly one x86_64 Secure Boot firmware pair" >&2
-          printf '%s\n' "''${firmware_pairs[@]}" >&2
-          exit 1
-        fi
+        code=$(jq -er '.mapping.executable.filename' "$descriptor")
+        vars=$(jq -er '.mapping."nvram-template".filename' "$descriptor")
+        test -s "$code"
+        test -s "$vars"
 
-        IFS=$'\t' read -r code vars <<< "''${firmware_pairs[0]}"
-        test -f "$code"
-        test -f "$vars"
         mkdir -p "$out"
         ln -s "$code" "$out/code.fd"
-        ln -s "$vars" "$out/vars.fd"
+        virt-fw-vars \
+          --input "$vars" \
+          --output "$out/vars.fd" \
+          --enroll-redhat \
+          --secure-boot
+
+        test -s "$out/code.fd"
+        test -s "$out/vars.fd"
       '';
 
       parsePciAddress =
