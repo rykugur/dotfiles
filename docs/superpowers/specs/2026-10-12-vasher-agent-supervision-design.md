@@ -52,9 +52,9 @@ This design adds no public endpoint. All new network paths stay inside the trust
 
 The hold list is a single file at `/var/lib/vasher/agent/holds.json`. It maps a flake input name to a hold record. Each record contains `revision`, `expires`, `reason`, and `createdAt`.
 
-The action channel program is the only writer of this file. The prebuild script reads the file. The monitor reads the file. This keeps one writer and avoids a lock.
+The action channel program is the only writer of this file. The prebuild script reads the file. This keeps one writer and avoids a lock.
 
-A hold expires at most 30 days after creation. The prebuild script ignores an expired hold and an unknown input name. The monitor records one event when it first observes an expired hold.
+A hold expires at most 30 days after creation. The prebuild script ignores an expired hold and an unknown input name. The dashboard shows an expired hold as expired, so no separate expiry event is needed.
 
 The directory `/var/lib/vasher/agent` is mode 0755 and owned by `vasher-agent`. Both `holds.json` and `narrow-request.json` are mode 0644, so the `vasher` user can read them without a group membership. The file `verbs.json` is mode 0600, because only the channel program reads it.
 
