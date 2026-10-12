@@ -106,10 +106,4 @@
         })
       ];
     };
-
-  perSystem =
-    { pkgs, ... }:
-    {
-      packages.oh-my-pi = inputs.oh-my-pi.packages.${pkgs.system}.default;
-    };
 }
