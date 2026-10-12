@@ -159,3 +159,14 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   back to One Light.
 - Kept Navigator's existing theme inheritance rather than duplicating palette
   colors; its `catppuccin` mapping selects Catppuccin Mocha.
+
+## [2026-10-11] update | Documented the Windows VFIO session
+
+- Documented the dendritic `flake.modules.nixos.vfio` module and its private
+  `_vfio` runtime files.
+- Added the Jezrien installation, TTY, optional USB, KVM reconnect, safe
+  refusal, and reboot recovery workflows.
+- Recorded the repository verification results and their limits. The Jezrien
+  closure was built but not activated. Live GPU handoff and game anti-cheat
+  acceptance remain untested.
+- Updated [modules.md](modules.md), [hosts.md](hosts.md), and [index.md](index.md).
