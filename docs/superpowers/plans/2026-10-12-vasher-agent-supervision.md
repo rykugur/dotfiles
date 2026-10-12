@@ -67,7 +67,7 @@ Expected: FAIL, because `prepare_updated_candidate` always calls `nix flake upda
 
 - [ ] **Step 3: Implement `selected_inputs` in `modules/nixos/vasher-prebuild.sh`**
 
-Add `HOLDS_FILE=/var/lib/vasher/agent/holds.json` beside the other path variables at the top of the script. Add `selected_inputs()` above `prepare_updated_candidate`. It prints nothing when the hold file is absent, unreadable, not valid JSON, or has no active hold. Otherwise it prints every root input name from `nix flake metadata --json --flake "$worktree"` that has no active hold. An active hold is one whose `expires` date is not before today, compared as `YYYY-MM-DD` strings. Use `jq` for both documents. Root input names come from `.locks.nodes.root.inputs | keys[]`.
+Add `HOLDS_FILE=/var/lib/vasher/agent/holds.json` beside the other path variables at the top of the script. Add `selected_inputs()` above `prepare_updated_candidate`. It prints nothing when the hold file is absent, unreadable, not valid JSON, or has no active hold. Otherwise it prints every root input name from `nix flake metadata --json --no-write-lock-file "$worktree"` that has no active hold. Nix 2.34 rejects `--flake` on `nix flake metadata`, and `--no-write-lock-file` keeps the probe from locking a held input before the hold is applied. An active hold is one whose `expires` date is not before today, compared as `YYYY-MM-DD` strings. Use `jq` for both documents. Root input names come from `.locks.nodes.root.inputs | keys[]`.
 
 Change the update call in `prepare_updated_candidate` to read the names into an array and pass them after `--flake "$worktree"`. An empty array yields the current command unchanged.
 
