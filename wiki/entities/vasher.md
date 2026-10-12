@@ -23,7 +23,7 @@ Vasher is the LAN-only NixOS build-cache host for Jezrien. It runs in a dedicate
 
 `vasher-prebuild-refresh` runs 15 minutes after its prior completion. It fetches `origin/master`; when `cache-bump` already covers that revision it records `idle`, otherwise it creates a serialized candidate build. `vasher-prebuild-candidate` forces the same flow nightly at 03:00 with up to 10 minutes randomized delay.
 
-Each run works from a detached Git worktree. It refreshes flake inputs, updates Oh My Pi only in the candidate flow, builds the reduced Jezrien closure, retains the output as a GC root, then checks that `origin/master` is still exactly the revision it began from. If master advanced, the candidate is marked `stale`, its newly created root is discarded, and nothing is published. Only a successful, current candidate force-with-lease updates the disposable `cache-bump` branch. A small set of successful closure roots is retained.
+Each run works from a detached Git worktree. It refreshes flake inputs (including `oh-my-pi`), builds the reduced Jezrien closure, retains the output as a GC root, then checks that `origin/master` is still exactly the revision it began from. If master advanced, the candidate is marked `stale`, its newly created root is discarded, and nothing is published. Only a successful, current candidate force-with-lease updates the disposable `cache-bump` branch. A small set of successful closure roots is retained.
 
 ## Promotion
 

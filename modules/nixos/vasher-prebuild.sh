@@ -151,14 +151,10 @@ prepare_updated_candidate() {
   fi
   git -C "$worktree" reset --hard "$base_revision"
   NIX_CONFIG="$nix_config" nix flake update --flake "$worktree"
-  (
-    cd "$worktree"
-    NIX_CONFIG="$nix_config" bash "$OMP_UPDATER"
-  )
-  git -C "$worktree" add flake.lock modules/ai/oh-my-pi/release.json
+  git -C "$worktree" add flake.lock
   if ! git -C "$worktree" diff --cached --quiet; then
     git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
-      commit -m "chore: refreshed flake.lock and OMP update ($(date -I))"
+      commit -m "chore: refreshed flake.lock ($(date -I))"
   fi
   candidate_revision=$(git -C "$worktree" rev-parse HEAD)
 }

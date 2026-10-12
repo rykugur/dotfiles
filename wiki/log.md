@@ -189,3 +189,15 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   primary-colored `motion_sensor_active`, and `idleInhibited` /
   `idleInhibitedUntil` persisted to `~/.local/state/DankMaterialShell/session.json`.
 - Updated [modules.md](modules.md).
+
+## [2026-10-12] update | OMP consumes the official flake
+
+- Replaced the local GitHub-release binary pin (`release.json` / `update-omp.sh`)
+  with the `can1357/oh-my-pi` flake: `programs.omp.enable` installs the
+  upstream package; personal AGENTS.md, MCP, skills, completions, and
+  `omp config set` stay in `modules/ai/oh-my-pi/default.nix`.
+- Vasher's candidate now only stages `flake.lock`; `oh-my-pi` advances with
+  the other flake inputs.
+- Updated [ai-agents.md](ai-agents.md), [hosts.md](hosts.md),
+  [entities/vasher.md](entities/vasher.md), [modules.md](modules.md), and
+  [index.md](index.md).

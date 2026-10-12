@@ -40,11 +40,6 @@ cat > "$tmp/bin/nix-collect-garbage" <<'EOF'
 printf 'gc\n' >> "$EVENTS"
 EOF
 
-cat > "$tmp/bin/omp-updater" <<'EOF'
-#!/usr/bin/env bash
-printf 'omp update\n' >> "$EVENTS"
-EOF
-
 source_text=$(<"$repo_root/modules/nixos/vasher-prebuild.sh")
 printf '%s\n' "${source_text//\/var\/lib\/vasher/$state_root}" > "$tmp/prebuild.sh"
 chmod +x "$tmp/bin/"*
@@ -58,7 +53,6 @@ PATH="$tmp/bin:$PATH" \
   KEEP_ROOTS=1 \
   EXCLUDED_PACKAGES='[]' \
   GITHUB_TOKEN_FILE="$token_file" \
-  OMP_UPDATER="$tmp/bin/omp-updater" \
   bash "$tmp/prebuild.sh" retry "$base" "$candidate"
 exit_code=$?
 set -e
