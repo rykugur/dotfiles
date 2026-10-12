@@ -12,6 +12,7 @@ from unittest.mock import patch
 from modules.virtualization._vfio.windows_vm import (
     Config,
     Controller,
+    DomainNotFoundError,
     PreflightError,
     RealSystem,
     Session,
@@ -42,12 +43,14 @@ class FakeSystem(System):
         self.fail_start = False
         self.fail_wait = False
         self.interrupt_wait = False
+        self.interrupt_start_before_definition = False
         self.fail_stop = False
         self.fail_bind_addresses: set[str] = set()
         self.fail_bind_before_mutation_addresses: set[str] = set()
         self.fail_release_addresses: set[str] = set()
         self.interrupt_bind_addresses: set[str] = set()
         self.unbound_probe_addresses: set[str] = set()
+        self.domain_exists = False
         self.owner_responses: list[dict[Path, tuple[str, ...]]] = []
 
     def graphical_sessions(self, username: str) -> list[Session]:
@@ -114,6 +117,9 @@ class FakeSystem(System):
 
     def start_domain(self, domain_name: str, xml_path: Path) -> None:
         self.operations.append(f"vm:start:{domain_name}:{xml_path.name}")
+        if self.interrupt_start_before_definition:
+            raise KeyboardInterrupt
+        self.domain_exists = True
         if self.fail_start:
             raise RuntimeError("qemu failed to start")
 
@@ -126,6 +132,8 @@ class FakeSystem(System):
 
     def stop_domain(self, domain_name: str) -> None:
         self.operations.append(f"vm:stop:{domain_name}")
+        if not self.domain_exists:
+            raise DomainNotFoundError(f"domain {domain_name} does not exist")
         if self.fail_stop:
             raise RuntimeError("failed to stop domain")
         self.domain_is_active = False
@@ -429,6 +437,24 @@ class LifecycleTests(ControllerTestCase):
         self.assertEqual(self.system.drivers[AUDIO], "snd_hda_intel")
         self.assertEqual(self.system.saved_consoles, ())
 
+    def test_interrupt_during_define_restores_host_when_domain_is_missing(
+        self,
+    ) -> None:
+        self.system.interrupt_start_before_definition = True
+
+        with self.assertRaises(KeyboardInterrupt):
+            self.controller.run()
+
+        self.assertEqual(
+            self.system.operations,
+            self.expected_handoff[:6]
+            + ["vm:stop:windows"]
+            + self.expected_handoff[7:],
+        )
+        self.assertEqual(self.system.drivers[GPU], "amdgpu")
+        self.assertEqual(self.system.drivers[AUDIO], "snd_hda_intel")
+        self.assertEqual(self.system.saved_consoles, ())
+
     def test_interrupt_stops_domain_before_restoring_gpu(self) -> None:
         self.system.interrupt_wait = True
 
@@ -543,6 +569,38 @@ class RealSystemTests(unittest.TestCase):
 
         self.assertEqual(run.call_count, 3)
         self.assertEqual(sleep.call_count, 2)
+
+    def test_stop_domain_distinguishes_a_missing_domain(self) -> None:
+        system = RealSystem()
+        responses = [
+            subprocess.CompletedProcess(
+                [],
+                1,
+                "",
+                "error: Domain not found: no domain with matching name 'windows'",
+            ),
+            subprocess.CompletedProcess([], 0, "\n", ""),
+        ]
+
+        with patch.object(system, "_run", side_effect=responses) as run:
+            with self.assertRaisesRegex(
+                DomainNotFoundError,
+                "domain windows does not exist",
+            ):
+                system.stop_domain("windows")
+
+        self.assertEqual(run.call_count, 2)
+
+    def test_stop_domain_keeps_failed_inventory_indeterminate(self) -> None:
+        system = RealSystem()
+        responses = [
+            subprocess.CompletedProcess([], 1, "", "libvirt connection reset"),
+            subprocess.CompletedProcess([], 1, "", "libvirt connection reset"),
+        ]
+
+        with patch.object(system, "_run", side_effect=responses):
+            with self.assertRaisesRegex(RuntimeError, "libvirt connection reset"):
+                system.stop_domain("windows")
 
 
 class InstallTests(ControllerTestCase):

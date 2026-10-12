@@ -88,6 +88,10 @@ class PreflightError(RuntimeError):
         super().__init__("; ".join(self.diagnostics))
 
 
+class DomainNotFoundError(RuntimeError):
+    pass
+
+
 class System(ABC):
     def __init__(
         self,
@@ -387,30 +391,38 @@ class RealSystem(System):
                 return
             time.sleep(1)
 
-    def stop_domain(self, domain_name: str) -> None:
-        terminal_states = {"shut off", "crashed"}
+    def _domain_state(self, domain_name: str) -> str:
         state = self._run(
             ["virsh", "domstate", domain_name],
             check=False,
         )
-        if state.returncode != 0:
-            raise RuntimeError(
-                state.stderr.strip()
-                or f"failed to determine whether domain {domain_name} is active"
-            )
-        if state.stdout.strip().lower() in terminal_states:
+        if state.returncode == 0:
+            return state.stdout.strip().lower()
+
+        domains = self._run(
+            ["virsh", "list", "--all", "--name"],
+            check=False,
+        )
+        if domains.returncode == 0 and domain_name not in {
+            name.strip() for name in domains.stdout.splitlines()
+        }:
+            raise DomainNotFoundError(f"domain {domain_name} does not exist")
+        raise RuntimeError(
+            state.stderr.strip()
+            or domains.stderr.strip()
+            or f"failed to determine whether domain {domain_name} is active"
+        )
+
+    def stop_domain(self, domain_name: str) -> None:
+        terminal_states = {"shut off", "crashed"}
+        state = self._domain_state(domain_name)
+        if state in terminal_states:
             return
 
         stopped = self._run(["virsh", "destroy", domain_name], check=False)
         if stopped.returncode != 0:
-            final_state = self._run(
-                ["virsh", "domstate", domain_name],
-                check=False,
-            )
-            if (
-                final_state.returncode != 0
-                or final_state.stdout.strip().lower() not in terminal_states
-            ):
+            final_state = self._domain_state(domain_name)
+            if final_state not in terminal_states:
                 raise RuntimeError(
                     stopped.stderr.strip()
                     or f"failed to stop active domain {domain_name}"
@@ -589,6 +601,8 @@ class Controller:
         ):
             try:
                 self.system.stop_domain(self.config.domain_name)
+            except DomainNotFoundError:
+                pass
             except Exception as stop_error:
                 should_restore = False
                 failure.add_note(f"domain stop before restore failed: {stop_error}")
