@@ -546,6 +546,7 @@ class Controller:
         consoles = self.system.bound_consoles()
         mutated = False
         failure: BaseException | None = None
+        domain_launch_attempted = False
         try:
             self.system.save_consoles(self.config.state_directory, consoles)
             self._state_saved = True
@@ -572,6 +573,7 @@ class Controller:
             install_marker = self.config.state_directory / INSTALL_MARKER
             install_mode = self.system.path_exists(install_marker)
             xml_path = self.config.install_xml if install_mode else self.config.normal_xml
+            domain_launch_attempted = True
             self.system.start_domain(self.config.domain_name, xml_path)
             if install_mode:
                 self.system.remove_file(install_marker)
@@ -580,7 +582,11 @@ class Controller:
             failure = error
 
         should_restore = mutated
-        if mutated and isinstance(failure, KeyboardInterrupt):
+        if (
+            mutated
+            and isinstance(failure, KeyboardInterrupt)
+            and domain_launch_attempted
+        ):
             try:
                 self.system.stop_domain(self.config.domain_name)
             except Exception as stop_error:
@@ -599,6 +605,7 @@ class Controller:
 
     def _restore(self) -> None:
         errors: list[Exception] = []
+        linux_drivers_ready = True
 
         failed_releases = []
         for address in reversed(self._vfio_bound):
@@ -617,43 +624,58 @@ class Controller:
                 errors.append(error)
             try:
                 self.system.probe_pci(self.config.gpu)
+                driver = self.system.pci_driver(self.config.gpu)
+                if driver != "amdgpu":
+                    raise RuntimeError(
+                        f"GPU {self.config.gpu} failed to bind to amdgpu after probe "
+                        f"(found {driver or 'no driver'})"
+                    )
             except Exception as error:
                 errors.append(error)
+                linux_drivers_ready = False
             else:
                 self._gpu_unbound = self.config.gpu in pending_releases
         if self._audio_unbound:
             try:
                 self.system.probe_pci(self.config.audio)
+                driver = self.system.pci_driver(self.config.audio)
+                if driver != "snd_hda_intel":
+                    raise RuntimeError(
+                        f"audio {self.config.audio} failed to bind to snd_hda_intel "
+                        f"after probe (found {driver or 'no driver'})"
+                    )
             except Exception as error:
                 errors.append(error)
+                linux_drivers_ready = False
             else:
                 self._audio_unbound = self.config.audio in pending_releases
 
-        consoles = list(self._unbound_consoles)
-        if self._state_saved:
-            try:
-                consoles = self.system.load_consoles(self.config.state_directory)
-            except Exception as error:
-                errors.append(error)
-        unbound = set(self._unbound_consoles)
-        failed_consoles = []
-        for console in reversed(consoles):
-            if console not in unbound:
-                continue
-            try:
-                self.system.bind_console(console)
-            except Exception as error:
-                errors.append(error)
-                failed_consoles.append(console)
-        self._unbound_consoles = list(reversed(failed_consoles))
+        if linux_drivers_ready:
+            consoles = list(self._unbound_consoles)
+            if self._state_saved:
+                try:
+                    consoles = self.system.load_consoles(self.config.state_directory)
+                except Exception as error:
+                    errors.append(error)
+            unbound = set(self._unbound_consoles)
+            failed_consoles = []
+            for console in reversed(consoles):
+                if console not in unbound:
+                    continue
+                try:
+                    self.system.bind_console(console)
+                except Exception as error:
+                    errors.append(error)
+                    failed_consoles.append(console)
+            self._unbound_consoles = list(reversed(failed_consoles))
 
-        if self._state_saved and not self._unbound_consoles:
-            try:
-                self.system.clear_consoles(self.config.state_directory)
-            except Exception as error:
-                errors.append(error)
-            else:
-                self._state_saved = False
+            if self._state_saved and not self._unbound_consoles:
+                try:
+                    self.system.clear_consoles(self.config.state_directory)
+                except Exception as error:
+                    errors.append(error)
+                else:
+                    self._state_saved = False
 
         if errors:
             details = "; ".join(str(error) for error in errors)

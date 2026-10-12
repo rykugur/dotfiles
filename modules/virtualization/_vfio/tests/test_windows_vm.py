@@ -46,6 +46,8 @@ class FakeSystem(System):
         self.fail_bind_addresses: set[str] = set()
         self.fail_bind_before_mutation_addresses: set[str] = set()
         self.fail_release_addresses: set[str] = set()
+        self.interrupt_bind_addresses: set[str] = set()
+        self.unbound_probe_addresses: set[str] = set()
         self.owner_responses: list[dict[Path, tuple[str, ...]]] = []
 
     def graphical_sessions(self, username: str) -> list[Session]:
@@ -88,6 +90,8 @@ class FakeSystem(System):
         if address in self.fail_bind_before_mutation_addresses:
             raise RuntimeError(f"driver_override write failed for {address}")
         self.operations.append(f"pci:bind:{driver}:{address}")
+        if address in self.interrupt_bind_addresses:
+            raise KeyboardInterrupt
         if address in self.fail_bind_addresses:
             raise RuntimeError(f"VFIO probe failed for {address}")
         self.drivers[address] = driver
@@ -100,6 +104,9 @@ class FakeSystem(System):
 
     def probe_pci(self, address: str) -> None:
         self.operations.append(f"pci:probe:{address}")
+        if address in self.unbound_probe_addresses:
+            self.drivers[address] = None
+            return
         self.drivers[address] = "amdgpu" if address == GPU else "snd_hda_intel"
 
     def reset_pci(self, address: str) -> None:
@@ -397,6 +404,31 @@ class LifecycleTests(ControllerTestCase):
 
         self.assertEqual(self.system.operations, self.expected_handoff)
 
+    def test_interrupt_before_domain_launch_restores_host_directly(self) -> None:
+        self.system.interrupt_bind_addresses.add(GPU)
+        self.system.fail_stop = True
+
+        with self.assertRaises(KeyboardInterrupt):
+            self.controller.run()
+
+        self.assertEqual(
+            self.system.operations,
+            [
+                "console:unbind:vtcon0",
+                f"pci:unbind:{AUDIO}",
+                f"pci:unbind:{GPU}",
+                f"pci:bind:vfio-pci:{GPU}",
+                f"pci:release:{GPU}",
+                f"pci:reset:{GPU}",
+                f"pci:probe:{GPU}",
+                f"pci:probe:{AUDIO}",
+                "console:bind:vtcon0",
+            ],
+        )
+        self.assertEqual(self.system.drivers[GPU], "amdgpu")
+        self.assertEqual(self.system.drivers[AUDIO], "snd_hda_intel")
+        self.assertEqual(self.system.saved_consoles, ())
+
     def test_interrupt_stops_domain_before_restoring_gpu(self) -> None:
         self.system.interrupt_wait = True
 
@@ -428,6 +460,55 @@ class LifecycleTests(ControllerTestCase):
             "domain stop before restore failed: failed to stop domain",
             raised.exception.__notes__,
         )
+
+    def test_restore_rejects_missing_gpu_driver_and_defers_consoles(self) -> None:
+        self.system.unbound_probe_addresses.add(GPU)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            rf"GPU {GPU} failed to bind to amdgpu after probe \(found no driver\)",
+        ):
+            self.controller.run()
+
+        self.assertNotIn("console:bind:vtcon0", self.system.operations)
+        self.assertEqual(self.system.saved_consoles, ("vtcon0",))
+
+        self.system.unbound_probe_addresses.clear()
+        self.controller._restore()
+
+        self.assertEqual(self.system.drivers[GPU], "amdgpu")
+        self.assertEqual(
+            self.system.operations[-3:],
+            [
+                f"pci:reset:{GPU}",
+                f"pci:probe:{GPU}",
+                "console:bind:vtcon0",
+            ],
+        )
+        self.assertEqual(self.system.saved_consoles, ())
+
+    def test_restore_rejects_missing_audio_driver_and_defers_consoles(self) -> None:
+        self.system.unbound_probe_addresses.add(AUDIO)
+
+        with self.assertRaisesRegex(
+            RuntimeError,
+            rf"audio {AUDIO} failed to bind to snd_hda_intel after probe "
+            r"\(found no driver\)",
+        ):
+            self.controller.run()
+
+        self.assertNotIn("console:bind:vtcon0", self.system.operations)
+        self.assertEqual(self.system.saved_consoles, ("vtcon0",))
+
+        self.system.unbound_probe_addresses.clear()
+        self.controller._restore()
+
+        self.assertEqual(self.system.drivers[AUDIO], "snd_hda_intel")
+        self.assertEqual(
+            self.system.operations[-2:],
+            [f"pci:probe:{AUDIO}", "console:bind:vtcon0"],
+        )
+        self.assertEqual(self.system.saved_consoles, ())
 
     def test_drm_race_restores_linux_ownership(self) -> None:
         self.system.owner_responses = [
