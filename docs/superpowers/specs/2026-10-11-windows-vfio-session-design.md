@@ -2,25 +2,34 @@
 
 Date: 2026-10-11
 
-Status: Approved
+Status: Implemented in the repository. Built but not activated or live-tested.
 
 ## Goal
 
-Add a `windows-vm` command for Jezrien. The command starts a Windows 11 virtual machine from a Linux TTY. The virtual machine receives the RX 9070 XT, both monitors, and selected USB devices.
+The repository defines a `windows-vm` command for Jezrien. After activation,
+the command starts a Windows 11 virtual machine from a Linux TTY. The domain
+receives the RX 9070 XT, both monitors, and selected USB devices.
 
-When Windows shuts down, Linux takes the GPU back. The command returns to the TTY. The user can then run `niri-session` without a reboot.
-
-The normal Linux session keeps the RX 9070 XT. The design does not require the Quadro P600.
+The controller waits for Windows to stop and then attempts to return the GPU to
+Linux. The normal boot configuration leaves the RX 9070 XT on its Linux
+drivers. The design does not require the Quadro P600.
 
 ## Supported games
 
-The first targets are WARDOGS and Escape from Tarkov. Both games use anti-cheat software.
+The first targets are WARDOGS and Escape from Tarkov. Both games use anti-cheat
+software.
 
-The virtual machine will expose normal KVM/QEMU virtualization. It will not hide the hypervisor or bypass anti-cheat checks. WARDOGS does not publish a virtual-machine policy. Escape from Tarkov confirms that it uses BattlEye but does not publish a clear virtual-machine policy.
+The generated domain exposes normal KVM/QEMU virtualization. It does not hide
+the hypervisor or bypass anti-cheat checks. WARDOGS does not publish a
+virtual-machine policy. Escape from Tarkov confirms that it uses BattlEye but
+does not publish a clear virtual-machine policy.
 
-The implementation can prove that the virtual machine starts. Only a live game launch can prove that each anti-cheat system accepts it.
+Repository checks can inspect and build the domain. Only a live game launch
+after activation can show whether each anti-cheat system accepts it.
 
-Battlefield 6 is not a target. EA states that its anti-cheat detects virtual machines and emulation. Star Citizen remains a Linux game for this use case. Epic states that Easy Anti-Cheat does not support virtual machines.
+Battlefield 6 is not a target. EA states that its anti-cheat detects virtual
+machines and emulation. Star Citizen remains a Linux game for this use case.
+Epic states that Easy Anti-Cheat does not support virtual machines.
 
 Sources:
 
@@ -45,60 +54,65 @@ Jezrien has 62 GiB of memory and a Ryzen 9 5900X with 12 cores and 24 threads. T
 
 ## User flow
 
-The normal Linux flow is:
+After activation, use this exact sequence from a local TTY:
 
 ```text
-TTY
-  -> niri-session
-  -> Linux owns the RX 9070 XT
-  -> log out of Niri
-  -> TTY
+niri-session
+log out
+windows-vm --check
+windows-vm
+shut down Windows
+niri-session
 ```
 
-The Windows flow is:
+`windows-vm --check` performs the unprivileged preflight. `windows-vm` asks
+systemd to start one approved service through Polkit. The Polkit rule permits
+only the configured user in an active local session to start
+`windows-vm.service`.
+
+For the first installation, replace `windows-vm` with:
 
 ```text
-TTY
-  -> windows-vm
-  -> preflight checks
-  -> Linux releases the RX 9070 XT
-  -> Windows starts on both monitors
-  -> Windows shuts down
-  -> Linux takes the RX 9070 XT back
-  -> TTY
+windows-vm-install <windows-iso>
 ```
 
-The user runs both commands as `dusty`. The `windows-vm` command starts one approved system service through Polkit. It does not grant general root access.
-
-A separate one-time install command accepts an official Windows 11 ISO. It creates the virtual disk and starts the same passthrough session with installation media attached.
+The user supplies a readable official Windows 11 ISO. The install command
+prepares the disk and installation media, then starts the same passthrough
+service.
 
 ## Linux module structure
 
-Replace the unused legacy VFIO module with one opt-in dendritic NixOS module. `modules/virtualization/vfio.nix` will export `flake.modules.nixos.vfio`. The module owns the complete Windows session feature:
+`modules/virtualization/vfio.nix` exports the opt-in dendritic NixOS module
+`flake.modules.nixos.vfio`. All NixOS changes are behind `ryk.vfio.enable`.
+The module owns:
 
-- The libvirt and QEMU configuration.
-- OVMF firmware with Secure Boot.
+- The libvirt and QEMU/KVM configuration.
+- OVMF firmware with enrolled Secure Boot keys.
 - A software TPM 2.0 device.
-- The virtual-machine definition.
-- The system service for GPU handoff.
-- The `windows-vm` and install commands.
-- Polkit authorization for the primary user.
-- USB attachment rules.
+- The normal and installation domain definitions.
+- `windows-vm.service`.
+- The `windows-vm` and `windows-vm-install` commands.
+- The narrow Polkit authorization for the primary user.
+- The allowlisted USB attachment service and udev rules.
 
-Runtime code, tests, and the domain template will live under `modules/virtualization/_vfio/`. The underscore keeps import-tree from loading those support files as modules.
+`modules/virtualization/_vfio/` contains the private support files. The
+directory contains `windows_vm.py`, both domain templates, and their tests.
+The leading underscore prevents `import-tree` from loading these files as
+modules.
 
-Remove the unused `virtman.nix` module after its current QEMU, OVMF, and TPM configuration moves into the VFIO module. This prevents two libvirt configurations from diverging.
-
-Jezrien will import `self.modules.nixos.vfio` and set host-specific PCI addresses and USB identities. Other hosts will not import it.
+The implementation removed the unused `virtman.nix` module after moving its
+required configuration into the VFIO module. Jezrien imports
+`self.modules.nixos.vfio` and supplies its PCI addresses and USB identities.
+Other hosts do not import this module.
 
 ## Virtual machine
 
-The virtual machine will use these resources:
+The generated virtual machine uses these resources:
 
 | Resource | Value |
 |---|---|
 | Firmware | UEFI through OVMF |
-| Secure Boot | Enabled |
+| Secure Boot | Enabled with enrolled default Microsoft certificates |
 | TPM | Software TPM 2.0 |
 | Machine type | Q35 |
 | CPU mode | Host passthrough |
@@ -106,73 +120,86 @@ The virtual machine will use these resources:
 | Memory | 32 GiB |
 | System disk | 500 GiB thin-provisioned qcow2 |
 | Disk interface | VirtIO SCSI with discard support |
-| Network | Libvirt NAT with a VirtIO adapter |
+| Network | QEMU user networking with a VirtIO adapter |
 | Graphics | RX 9070 XT and its display-audio function |
 
-The disk will live under `/var/lib/libvirt/images`. Thin provisioning means that the file grows as Windows writes data. The maximum virtual size is 500 GiB.
+The disk path is `/var/lib/libvirt/images/windows-vm.qcow2`. The file grows as
+Windows writes data and has a maximum virtual size of 500 GiB. The domain keeps
+its UEFI variables in `/var/lib/libvirt/qemu/nvram/windows-vm_VARS.fd`.
 
-The virtual machine will keep persistent UEFI variables. Windows therefore keeps its Secure Boot and boot settings across sessions.
-
-The design does not use huge pages or CPU pinning in the first implementation. These settings complicate host memory management and CPU topology. Performance measurements can justify them later.
+The implementation does not use huge pages or CPU pinning. Performance
+measurements can justify these settings later.
 
 ## Windows installation
 
-The repository will not download or store a Windows ISO. The user supplies an official ISO to the install command.
+The repository does not download or store a Windows ISO. The user supplies an
+official ISO to `windows-vm-install <windows-iso>`.
 
-The install command will:
+The install command:
 
-1. Make sure that the ISO exists and is readable.
-2. Create the 500 GiB disk if it does not exist.
-3. Define the persistent libvirt domain.
-4. Attach the Windows ISO and the VirtIO driver ISO.
-5. Start the normal GPU passthrough session.
+1. Makes sure that the ISO exists and is readable.
+2. Creates `/var/lib/libvirt/images/windows-vm.qcow2` if it does not exist.
+3. Gives the new thin-provisioned qcow2 disk a 500 GiB virtual size.
+4. Copies the ISO atomically to
+   `/var/lib/libvirt/images/windows-vm-install.iso`.
+5. Writes an installation marker and starts `windows-vm.service`.
 
-The command is idempotent. It will not replace an existing virtual disk or UEFI variable store.
+The service defines the persistent libvirt domain from the installation
+template. That template attaches the Windows ISO and the VirtIO driver ISO.
+The controller removes the marker only after the domain starts.
 
-After Windows installation, the normal `windows-vm` command starts the installed system without installation media.
+The command preserves an existing virtual disk and UEFI variable store. After
+Windows installation, `windows-vm` starts the normal domain without the
+installation media.
 
 ## GPU handoff
 
-The system service will use PCI addresses, not vendor and product IDs. Address-based selection prevents accidental capture of another AMD device.
+The controller uses PCI addresses, not vendor and product IDs. Address-based
+selection prevents accidental capture of another AMD device.
 
-Before detachment, the service must make sure that:
+Before detachment, the controller makes sure that:
 
-- No graphical login session is active.
-- Niri and Xwayland are not running.
-- No process has the GPU DRM nodes open.
-- The Windows domain is not already running.
-- Both GPU PCI functions use their expected Linux drivers.
+- No active or online graphical login session exists for the configured user.
+- No listed graphical process remains.
+- No process has a DRM node for the configured GPU open.
+- The GPU uses `amdgpu`.
+- The display-audio function uses `snd_hda_intel`.
 
-If a preflight condition fails, the service will stop before it changes a driver.
+If a preflight condition fails, the controller reports every diagnostic and
+exits before it changes a driver. `windows-vm --check` calls this same
+preflight without privileges.
 
 The handoff sequence is:
 
 1. Save the state of each bound virtual terminal console.
 2. Unbind the virtual terminal consoles from the GPU.
-3. Unbind display audio from `snd_hda_intel`.
-4. Unbind graphics from `amdgpu`.
-5. Set `vfio-pci` as the driver override for both functions.
+3. Make sure that no process opened a GPU DRM node during the first steps.
+4. Unbind display audio from `snd_hda_intel`.
+5. Unbind graphics from `amdgpu`.
 6. Bind both functions to `vfio-pci`.
-7. Start the libvirt domain.
-8. Wait until the domain stops.
+7. Define and start the selected libvirt domain.
+8. Wait until libvirt reports `shut off` or `crashed`.
 
 The return sequence is:
 
-1. Detach optional USB devices from the stopped domain.
-2. Remove both GPU functions from `vfio-pci`.
-3. Clear both driver overrides.
-4. Reset the GPU through its supported PCI bus reset.
-5. Probe the GPU and audio functions with their Linux drivers.
-6. Restore the saved virtual terminal console state.
-7. Make sure that the expected DRM nodes return.
+1. Remove both GPU functions from `vfio-pci`.
+2. Clear both driver overrides.
+3. Reset the GPU through its PCI reset file.
+4. Probe the GPU and audio functions with their Linux drivers.
+5. Restore the saved virtual terminal console state.
 
-The service will run cleanup after every failure that occurs after detachment. Cleanup operations will be idempotent, which means that they are safe to run more than once.
+The controller continues through every independent cleanup step and reports
+combined restore errors. If service shutdown cannot stop an active domain, the
+controller leaves both PCI functions on `vfio-pci` instead of racing QEMU for
+the hardware.
 
-If Linux cannot reclaim the GPU, the service will print a clear error. The supported recovery action is a normal reboot. The service will not loop through unsafe reset attempts.
+If Linux cannot reclaim the GPU, the service reports the restore errors. The
+supported recovery action is a normal reboot. Do not loop through unsafe reset
+attempts.
 
 ## USB devices and KVM behavior
 
-The first implementation will pass these runtime USB identities:
+Jezrien passes these runtime USB identities:
 
 | Device | USB identity |
 |---|---|
@@ -182,62 +209,95 @@ The first implementation will pass these runtime USB identities:
 | ZSA Moonlander | `3297:1969` |
 | Razer Naga V2 Pro | `1532:00a8` |
 
-The devices can remain behind their current hubs and KVM. The module will not pass an entire USB controller.
+The devices can remain behind their current hubs and KVM. The module does not
+pass an entire USB controller. Each domain template marks all five devices as
+optional, so a missing device does not prevent Windows from starting.
 
-The domain definition will treat each USB device as optional. A missing device will not prevent Windows from starting.
+A udev rule reacts when a configured device appears. If the Windows domain is
+running, the allowlisted helper inspects the live domain and attaches the
+device once. This supports a keyboard or mouse that reconnects after the KVM
+switches back from the MacBook. Linux keeps the device when the domain is
+stopped.
 
-A udev rule will react when a configured device appears. If the Windows domain is running, a narrow helper will attach that device to the domain. This handles a keyboard or mouse that reconnects after the KVM switches back from the MacBook.
-
-The helper will be idempotent. It will not attach a device twice. When the domain is not running, Linux keeps the device.
-
-Firmware flashing is outside this design. The module will recognize only the normal runtime identities above.
+Firmware flashing remains outside this design. The module recognizes only the
+normal runtime identities above.
 
 ## Files and sharing
 
-The host session uses the existing `dusty` account. The Windows guest does not receive direct access to `/home/dusty`.
+The host session uses the existing `dusty` account. The Windows guest does not
+receive direct access to `/home/dusty`.
 
-The first implementation will not share a host directory. A later change can add one explicit shared directory after the VM path works. This avoids exposing browser data, source trees, SSH files, and agent credentials to Windows.
+The implementation does not share a host directory. This boundary avoids
+exposing browser data, source trees, SSH files, and agent credentials to
+Windows.
 
 ## Failure handling
 
-The command must keep the GPU attached to Linux when a preflight check fails.
+A failed preflight keeps the GPU on its Linux drivers.
 
-If QEMU fails to start after GPU detachment, the service must run the full return sequence.
+If QEMU fails after GPU detachment, the service runs the return sequence. If a
+USB device is absent, the optional domain entry does not block startup.
 
-If a USB device is absent, Windows must still start.
+If a configured USB device reconnects through the KVM, the helper attaches it
+only while the Windows domain runs. When libvirt reports that Windows stopped
+or crashed, the service runs the return sequence.
 
-If a USB device reconnects through the KVM, the udev helper must attach it only when the Windows domain is running.
-
-If Windows crashes, libvirt must report that the domain stopped. The system service must then run the normal return sequence.
-
-A power loss cannot run cleanup. Linux must still bind the RX 9070 XT normally on the next boot because the configuration does not bind it to VFIO during boot.
+A power loss cannot run cleanup. Linux binds the RX 9070 XT normally on the
+next boot because the configuration does not bind it to VFIO during boot.
 
 ## Security boundary
 
-The `dusty` user can start and inspect only the Windows VM session service. Polkit will not grant permission to manage arbitrary system services.
+The `dusty` user can start only `windows-vm.service` through the added Polkit
+rule. The rule does not grant permission to manage arbitrary system services.
 
-The udev helper accepts only the configured USB identities and the fixed Windows domain name.
+The udev helper accepts only the configured USB identities and the fixed
+Windows domain name. The VM runs through the system libvirt instance. Windows
+receives no host disk and no host home directory.
 
-The VM runs through the system libvirt instance. Windows receives no host disk and no host home directory.
-
-The implementation will not add hypervisor concealment, anti-cheat bypasses, spoofed hardware identities, or similar measures.
+The implementation does not add hypervisor concealment, anti-cheat bypasses,
+spoofed hardware identities, or similar measures.
 
 ## Verification
 
-Repository verification will not activate the NixOS configuration.
+Repository verification does not activate the NixOS configuration.
 
-The implementation will run:
+The following checks completed before this documentation update:
 
-- `nix flake check`.
-- A build of the Jezrien system closure or the smallest equivalent closure that contains the service and commands.
-- Static checks for generated shell scripts.
-- A safe `windows-vm --check` command that performs preflight checks without changing GPU ownership.
+- The controller unittest suite passed with 25 tests after its final Task 1
+  fixes.
+- The domain contract suite passed all five tests, including
+  `virt-xml-validate` for both rendered XML files.
+- `nix build .#checks.x86_64-linux.windows-vfio` completed successfully. This
+  check compiles the controller and tests, runs the suites, validates the XML,
+  and builds an enabled synthetic NixOS closure.
+- `nix build .#nixosConfigurations.jezrien.config.system.build.toplevel`
+  completed successfully.
+- Evaluation returned Jezrien's exact VFIO values and all five USB identities.
+- `./result/sw/bin/windows-vm --check` exited with status 1 while Niri was
+  active. It reported the active Wayland session, Xwayland, and DRM owners. It
+  did not request privileges or interrupt the display.
 
-The real GPU handoff cannot run until the user activates the built configuration. After activation, the live acceptance sequence is:
+These checks prove that the repository builds the module and Jezrien closure.
+They do not prove that Jezrien activated the module or handed the GPU to
+Windows. `nix flake check` also remains unobserved in the recorded task
+evidence.
 
-1. Start Niri and then log out.
-2. Run `windows-vm --check` from the TTY.
-3. Run the install command with a Windows 11 ISO.
+Run these final commands after the documentation commit. This documentation
+task did not run them:
+
+```bash
+nix flake check
+nix build .#checks.x86_64-linux.windows-vfio
+nix build .#nixosConfigurations.jezrien.config.system.build.toplevel
+./result/sw/bin/windows-vm --check
+```
+
+Do not run an activation command as part of repository verification. After a
+later activation, the live acceptance sequence is:
+
+1. Start Niri and log out to a local TTY.
+2. Run `windows-vm --check`.
+3. Run `windows-vm-install <windows-iso>`.
 4. Complete Windows installation on both monitors.
 5. Shut down Windows and make sure that the Linux TTY returns.
 6. Run `niri-session` and make sure that both monitors work.
@@ -246,7 +306,7 @@ The real GPU handoff cannot run until the user activates the built configuration
 9. Make sure that the ZSA and Razer devices return to Windows.
 10. Launch WARDOGS and Escape from Tarkov without virtualization concealment.
 
-The feature is complete only after the repeated GPU handoff succeeds. Game acceptance remains controlled by each publisher.
+Repeated live GPU handoff and game anti-cheat acceptance remain untested.
 
 ## Out of scope
 

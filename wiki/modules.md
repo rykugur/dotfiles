@@ -1,9 +1,9 @@
 ---
 title: Modules
 category: core
-date: 2026-10-07
-tags: [modules, dendritic, groups, import-tree]
-sources: ["modules/", "CLAUDE.md", "architecture.md", "docs/superpowers/plans/2026-03-25-roles-to-groups.md"]
+date: 2026-10-11
+tags: [modules, dendritic, groups, import-tree, vfio]
+sources: ["modules/", "CLAUDE.md", "architecture.md", "docs/superpowers/plans/2026-03-25-roles-to-groups.md", "docs/superpowers/specs/2026-10-11-windows-vfio-session-design.md"]
 related: ["architecture.md", "groups.md", "ai-agents.md"]
 ---
 
@@ -32,11 +32,11 @@ modules/
 ├── terminal/           # bat, btop, espanso, ghostty, kitty, ranger, sesh, television, tmux, wezterm, yazi, zellij
 #                       # (see long NOTE in modules/terminal/television.nix
 #                       #  about the custom files channel `source.display`)
-├── virtualization/     # docker, vfio, virtman, winboat
+├── virtualization/     # docker, vfio, winboat
 └── (any .nix at this level or new category dirs are auto-picked up)
 ```
 
-Underscore-prefixed files/dirs (`_configuration.nix`, `_mcp.nix`, `_agents.nix`, `_hardware-configuration.nix`) are **private** — import-tree skips anything with `/_` in the path.
+Underscore-prefixed files and directories are private. For example, `import-tree` skips `_configuration.nix`, `_mcp.nix`, and `_vfio/`.
 
 ## Registration pattern (dendritic)
 
@@ -89,6 +89,76 @@ See the plan "roles-to-groups".
 - `base/nix-defaults.nix`, `base/meta-options.nix`
 - `nixos/` category for system-only concerns (even if some could be home)
 - Many "terminal" and "shell" modules are actually home-manager (they configure user programs)
+
+## Windows VFIO session
+
+`modules/virtualization/vfio.nix` exports the opt-in dendritic module
+`flake.modules.nixos.vfio`. All NixOS configuration is behind
+`ryk.vfio.enable`. The module replaces the removed `virtman.nix` module and
+owns libvirt, QEMU/KVM, Secure Boot firmware, TPM 2.0, GPU handoff, commands,
+and USB reconnect rules.
+
+The module provides these configuration options:
+
+- `ryk.vfio.enable`
+- `ryk.vfio.domainName`
+- `ryk.vfio.gpu.pciAddress`
+- `ryk.vfio.gpu.linuxDriver`
+- `ryk.vfio.audio.pciAddress`
+- `ryk.vfio.audio.linuxDriver`
+- `ryk.vfio.memoryMiB`
+- `ryk.vfio.vcpus`
+- `ryk.vfio.diskSizeGiB`
+- `ryk.vfio.usbDevices`
+
+`modules/virtualization/_vfio/` contains private runtime support. It contains
+`windows_vm.py`, `domain.xml.in`, `domain-install.xml.in`, and the tests
+directory. The leading underscore prevents `import-tree` from treating these
+files as modules.
+
+The module installs these user-facing command forms:
+
+- `windows-vm --check` runs the preflight without privileges or hardware
+  changes. It refuses handoff if a graphical session, a graphical process, a
+  DRM owner, or an unexpected Linux driver is present.
+- `windows-vm` starts `windows-vm.service`. A narrow Polkit rule permits only
+  the configured local active user to start this unit.
+- `windows-vm-install <windows-iso>` prepares installation data and starts the
+  same service. It requires the user to supply a readable Windows ISO.
+
+For the `windows-vm` domain, installation creates
+`/var/lib/libvirt/images/windows-vm.qcow2` when it does not exist. This qcow2
+disk has a 500 GiB virtual size and grows as Windows writes data. The command
+copies the installer to `/var/lib/libvirt/images/windows-vm-install.iso`. It
+does not replace an existing guest disk or UEFI variable store.
+
+The domain uses normal KVM/QEMU virtualization. It does not conceal the
+hypervisor. Its five configured USB identities are optional, so an absent
+device does not block startup. If a configured device returns through the KVM
+while Windows runs, udev asks the allowlisted helper to attach it once. Linux
+keeps the device when the domain is stopped.
+
+Use this TTY workflow after activation:
+
+```text
+niri-session
+log out
+windows-vm --check
+windows-vm
+shut down Windows
+niri-session
+```
+
+When Windows stops, the service releases both PCI functions, resets and
+reprobes the GPU, and restores the saved virtual consoles. If Linux cannot
+reclaim the GPU, read the service error and reboot normally. Do not repeat
+unsafe reset attempts.
+
+Repository checks built the module check and the Jezrien system closure. The
+safe built-command smoke test refused handoff while Niri was active and did not
+request privileges or interrupt the display. These checks did not activate the
+module. Repeated live GPU handoff and game anti-cheat acceptance remain
+post-activation checks.
 
 ## Default shell (`ryk.defaultShell`)
 
