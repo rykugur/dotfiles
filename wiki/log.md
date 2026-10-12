@@ -170,3 +170,22 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   closure was built but not activated. Live GPU handoff and game anti-cheat
   acceptance remain untested.
 - Updated [modules.md](modules.md), [hosts.md](hosts.md), and [index.md](index.md).
+
+## [2026-10-12] update | Declared the DMS bar layout to expose the idle inhibitor
+
+- Added `barConfigs` to `programs.dank-material-shell.settings` in
+  `modules/desktop/dank-material-shell/default.nix` so the bar's right section
+  carries DMS's built-in `idleInhibitor` widget between `notificationButton`
+  and `battery`.
+- The widget gates the module's own `acMonitorTimeout`, `acLockTimeout`, and
+  `acSuspendTimeout` through `SessionService.idleInhibited`, replacing the
+  habit of launching a gamemode-wrapped launcher just to hold off suspend.
+- The layout had to move into Nix because `~/.config/DankMaterialShell/settings.json`
+  is a read-only store symlink, so the DMS settings GUI cannot persist widget
+  changes. Only identity, `position`, and the three widget lists are declared;
+  every omitted field falls back to `SettingsSpec.js` at the call site.
+- Verified by running the real DMS instance against the generated settings
+  file: the widget rendered, its icon switched from `motion_sensor_idle` to a
+  primary-colored `motion_sensor_active`, and `idleInhibited` /
+  `idleInhibitedUntil` persisted to `~/.local/state/DankMaterialShell/session.json`.
+- Updated [modules.md](modules.md).

@@ -200,6 +200,28 @@ replace that one module import. Hyprland supports its built-in `master` layout
 and the packaged `hy3` plugin; the removed upstream scrolling plugin is no
 longer exposed.
 
+### DankMaterialShell bar layout and idle inhibit
+
+`programs.dank-material-shell.settings` writes
+`~/.config/DankMaterialShell/settings.json` as a read-only store symlink, so the
+DMS settings GUI cannot persist bar changes. Anything that must stick belongs in
+the module's `settings` block.
+
+The declared `barConfigs` entry carries only `id`, `name`, `enabled`,
+`position`, `screenPreferences`, and the three widget lists. `position` is
+compared strictly in DMS's `SettingsData.qml` and must be present; every omitted
+field falls back to `SettingsSpec.js` at its call site, so appearance options
+stay with upstream.
+
+The right section includes the `idleInhibitor` widget. Clicking it toggles idle
+inhibit indefinitely, and `dms ipc call inhibit {toggle,enable,enableFor,disable,status}`
+drives the same state. It gates the module's `acMonitorTimeout`,
+`acLockTimeout`, and `acSuspendTimeout` through `SessionService.idleInhibited`,
+which is the same switch that gamemode-wrapped launchers flip through the
+external screensaver inhibit path. Duration presets live on the Control Center
+tile. State persists in `~/.local/state/DankMaterialShell/session.json`, which is
+not Nix-managed, so a toggle survives a shell restart.
+
 ## Desktop file manager stack
 
 Niri and Hyprland both import `modules/desktop/dolphin.nix`, which is the single

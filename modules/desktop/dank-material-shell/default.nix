@@ -123,6 +123,47 @@
               acSuspendTimeout = 3600; # 60 min
               lockBeforeSuspend = true;
 
+              # settings.json is a read-only store symlink, so the DMS settings
+              # GUI cannot persist bar layout changes — the widget list has to
+              # live here. Only identity, position and the widget lists are
+              # declared; every omitted field (spacing, transparency, borders,
+              # autoHide, ...) falls back to the SettingsSpec.js default at the
+              # call site. `position` is compared strictly in SettingsData.qml,
+              # so it must be present.
+              barConfigs = [
+                {
+                  id = "default";
+                  name = "Main Bar";
+                  enabled = true;
+                  position = 0; # top
+                  screenPreferences = [ "all" ];
+
+                  leftWidgets = [
+                    "launcherButton"
+                    "workspaceSwitcher"
+                    "focusedWindow"
+                  ];
+                  centerWidgets = [
+                    "music"
+                    "clock"
+                    "weather"
+                  ];
+                  rightWidgets = [
+                    "systemTray"
+                    "clipboard"
+                    "cpuUsage"
+                    "memUsage"
+                    "notificationButton"
+                    # Click toggles idle inhibit indefinitely; duration presets
+                    # live on the control center tile. Blocks the three ac*
+                    # timeouts above via SessionService.idleInhibited.
+                    "idleInhibitor"
+                    "battery"
+                    "controlCenterButton"
+                  ];
+                }
+              ];
+
               showWeather = true;
               useFahrenheit = true;
               weatherLocation = "Rosemount, MN";
