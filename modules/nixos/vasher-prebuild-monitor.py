@@ -32,6 +32,15 @@ LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")
 PRESSURE_PATH = Path("/proc/pressure/memory")
 BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
 CANDIDATE_WORKTREE = "/var/lib/vasher/worktrees/candidate"
+FAULT_PATH = Path("/var/lib/vasher/monitor/storage-fault.json")
+BTRFS_ROOT = Path("/sys/fs/btrfs")
+STORAGE_PATTERNS = (
+    "Input/output error",
+    "I/O error",
+    "csum failed",
+    "failed to read block",
+    "blk_update_request",
+)
 
 ACTIVE_UNITS = (
     "vasher-prebuild-candidate.service",
@@ -102,6 +111,7 @@ class MonitorState:
     stall_cpu_start: float = 0.0
     last_log_size: int = 0
     cleaning_since: float | None = None
+    btrfs_errors: int | None = None
 
     @classmethod
     def for_revision(cls, base_revision: str, revision: str) -> "MonitorState":
@@ -160,6 +170,33 @@ def atomic_json(path: Path, value: object, mode: int = 0o600) -> None:
     temporary.write_text(json.dumps(value, separators=(",", ":")) + "\n")
     temporary.chmod(mode)
     temporary.replace(path)
+
+
+def scan_storage_fault(text: str) -> str | None:
+    for pattern in STORAGE_PATTERNS:
+        if pattern in text:
+            return pattern
+    return None
+
+
+def read_btrfs_errors(root: Path = BTRFS_ROOT) -> int:
+    total = 0
+    try:
+        filesystems = sorted(root.iterdir())
+    except OSError:
+        return 0
+    for filesystem in filesystems:
+        try:
+            devices = sorted((filesystem / "devinfo").iterdir())
+        except OSError:
+            continue
+        for device in devices:
+            try:
+                text = (device / "error_stats").read_text()
+            except OSError:
+                continue
+            total += sum(int(value) for value in re.findall(r"\d+", text))
+    return total
 
 
 def read_worktree_head(worktree: Path) -> str | None:
@@ -462,6 +499,8 @@ class Controller:
         reader: SystemReader | None = None,
         model: object | None = None,
         log_path: Path | None = None,
+        fault_path: Path | None = None,
+        btrfs_root: Path | None = None,
     ) -> None:
         self.runner = runner
         self.state_path = state_path
@@ -470,6 +509,8 @@ class Controller:
         self.reader = reader
         self.model = model
         self.log_path = LOG_PATH if log_path is None else log_path
+        self.fault_path = FAULT_PATH if fault_path is None else fault_path
+        self.btrfs_root = BTRFS_ROOT if btrfs_root is None else btrfs_root
         self.sleep = getattr(runner, "sleep", time.sleep)
         self._recovering = False
         self.boot_id = boot_id if boot_id is not None else BOOT_ID_PATH.read_text().strip()
@@ -656,10 +697,47 @@ class Controller:
             severity="error",
         )
 
+    def _storage_fault(self, sample: Sample) -> str | None:
+        try:
+            log_text = self.log_path.read_text()
+        except OSError:
+            log_text = ""
+        pattern = scan_storage_fault(bounded_log(log_text))
+        errors = read_btrfs_errors(self.btrfs_root)
+        previous = self.state.btrfs_errors
+        self.state.btrfs_errors = errors
+        if pattern is None and previous is not None and errors > previous:
+            pattern = "btrfs-error-stats"
+        return pattern
+
+    def _record_storage_fault(self, sample: Sample, pattern: str) -> None:
+        atomic_json(
+            self.fault_path,
+            {
+                "revision": sample.revision,
+                "pattern": pattern,
+                "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            },
+            mode=0o644,
+        )
+        self.state.phase = "needs-attention"
+        self._save()
+        self._event(
+            sample,
+            "needs-attention",
+            reason="storage-fault",
+            action="none",
+            severity="critical",
+            extra={"pattern": pattern, "exitCode": sample.exit_code},
+        )
+
     def _worktree_matches(self, sample: Sample) -> bool:
         return read_worktree_head(Path(CANDIDATE_WORKTREE)) == sample.revision
 
     def _start_retry(self, sample: Sample) -> None:
+        if self.fault_path.exists():
+            self._needs_attention(sample, "storage-fault")
+            return
         if not self._worktree_matches(sample):
             self._needs_attention(sample, "worktree-mismatch")
             return
@@ -774,6 +852,14 @@ class Controller:
         ):
             if sample.status_updated_at != self.state.last_terminal_at:
                 self.state.last_terminal_at = sample.status_updated_at
+                pattern = (
+                    self._storage_fault(sample)
+                    if sample.status_state == "failed"
+                    else None
+                )
+                if pattern is not None:
+                    self._record_storage_fault(sample, pattern)
+                    return
                 self.state.phase = "complete"
                 self._save()
                 event_type = (

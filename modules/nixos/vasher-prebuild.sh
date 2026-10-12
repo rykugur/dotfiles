@@ -109,6 +109,17 @@ case $mode in
   *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
 esac
 
+# A storage fault means the disk under the Nix store is suspect. Building again
+# would only add writes, so the pipeline halts until an operator removes the
+# file the monitor wrote; this script never removes it.
+storage_fault=/var/lib/vasher/monitor/storage-fault.json
+if [[ -e $storage_fault ]]; then
+  printf 'vasher-prebuild: storage fault recorded in %s; refusing to build\n' \
+    "$storage_fault" >&2
+  write_status blocked null
+  exit 0
+fi
+
 repo=/var/lib/vasher/repo
 roots=/var/lib/vasher/gcroots
 worktree=/var/lib/vasher/worktrees/"$mode"

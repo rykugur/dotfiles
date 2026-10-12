@@ -1317,5 +1317,186 @@ class HaikuSummaryTests(unittest.TestCase):
             if event.get("type") in monitor.SUMMARY_EVENTS:
                 self.assertTrue(event.get("summary") or event.get("inferenceError"))
 
+class StorageFaultTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        root = Path(self.directory.name)
+        self.state_path = root / "state.json"
+        self.events_path = root / "events.json"
+        self.retry_path = root / "retry.json"
+        self.fault_path = root / "storage-fault.json"
+        self.log_path = root / "current.log"
+        self.btrfs_root = root / "btrfs"
+        self.log_path.write_text("nix: error: builder failed\n")
+        worktree = write_detached_worktree(root, "2" * 40)
+        original = monitor.CANDIDATE_WORKTREE
+        self.addCleanup(setattr, monitor, "CANDIDATE_WORKTREE", original)
+        monitor.CANDIDATE_WORKTREE = str(worktree)
+
+    def make_controller(self, runner: FakeRunner, **changes: object):
+        return monitor.Controller(
+            runner,
+            self.state_path,
+            self.events_path,
+            self.retry_path,
+            log_path=self.log_path,
+            fault_path=self.fault_path,
+            btrfs_root=self.btrfs_root,
+            **changes,
+        )
+
+    def failed_sample(self, at: float = 90, **changes: object) -> monitor.Sample:
+        values: dict[str, object] = {
+            "status_state": "failed",
+            "status_updated_at": "2026-09-02T23:00:00Z",
+            "exit_code": 1,
+            "active_unit": None,
+            "nix_memory": 256 * monitor.MIB,
+        }
+        values.update(changes)
+        return sample(at, **values)
+
+    def write_btrfs_errors(self, read_errs: int) -> None:
+        devinfo = self.btrfs_root / "fsid" / "devinfo" / "sda1"
+        devinfo.mkdir(parents=True, exist_ok=True)
+        (devinfo / "error_stats").write_text(
+            "write_errs 0\n"
+            f"read_errs {read_errs}\n"
+            "flush_errs 0\n"
+            "corruption_errs 0\n"
+            "generation_errs 0\n"
+        )
+
+    def test_storage_patterns_are_fixed(self):
+        self.assertEqual(
+            monitor.STORAGE_PATTERNS,
+            (
+                "Input/output error",
+                "I/O error",
+                "csum failed",
+                "failed to read block",
+                "blk_update_request",
+            ),
+        )
+        self.assertEqual(
+            monitor.FAULT_PATH,
+            Path("/var/lib/vasher/monitor/storage-fault.json"),
+        )
+
+    def test_every_pattern_records_a_critical_fault(self):
+        for pattern in monitor.STORAGE_PATTERNS:
+            with self.subTest(pattern=pattern):
+                for path in (self.fault_path, self.events_path, self.state_path):
+                    path.unlink(missing_ok=True)
+                self.log_path.write_text(
+                    f"copying path\nnix: error: {pattern} on /dev/sda2\n"
+                )
+                runner = FakeRunner()
+                controller = self.make_controller(runner)
+                controller.observe(self.failed_sample())
+
+                fault = json.loads(self.fault_path.read_text())
+                self.assertEqual(fault["pattern"], pattern)
+                self.assertEqual(fault["revision"], "2" * 40)
+                self.assertRegex(
+                    str(fault["at"]), r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$"
+                )
+                self.assertEqual(
+                    stat.S_IMODE(self.fault_path.stat().st_mode), 0o644
+                )
+                event = json.loads(self.events_path.read_text())[0]
+                self.assertEqual(event["severity"], "critical")
+                self.assertEqual(event["reason"], "storage-fault")
+                self.assertEqual(controller.state.phase, "needs-attention")
+                self.assertEqual(
+                    json.loads(self.state_path.read_text())["phase"],
+                    "needs-attention",
+                )
+                self.assertEqual(runner.calls, [])
+
+    def test_failed_build_without_pattern_keeps_existing_behavior(self):
+        self.log_path.write_text("error: builder for drv failed with exit code 1\n")
+        controller = self.make_controller(FakeRunner())
+        controller.observe(self.failed_sample())
+
+        self.assertFalse(self.fault_path.exists())
+        event = json.loads(self.events_path.read_text())[0]
+        self.assertEqual(event["type"], "build-failed")
+        self.assertEqual(event["severity"], "info")
+        self.assertEqual(controller.state.phase, "complete")
+
+    def test_fault_never_triggers_a_retry(self):
+        self.log_path.write_text("nix: error: Input/output error\n")
+        runner = FakeRunner(active={"vasher-prebuild-candidate.service": True})
+        controller = self.make_controller(runner)
+        controller.observe(self.failed_sample())
+
+        self.assertTrue(self.fault_path.exists())
+        self.assertFalse(self.retry_path.exists())
+        self.assertEqual(runner.calls, [])
+
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "retrying"
+        state.boot_id = "same-boot"
+        state.nix_safe_since = 0.0
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        self.events_path.unlink(missing_ok=True)
+        resumed = self.make_controller(FakeRunner(), boot_id="same-boot")
+        ready = sample(
+            600,
+            active_unit=None,
+            status_state="building",
+            nix_memory=256 * monitor.MIB,
+        )
+        self.assertTrue(resumed._retry_ready(ready))
+        resumed.observe(ready)
+
+        self.assertEqual(resumed.runner.calls, [])
+        self.assertFalse(self.retry_path.exists())
+        self.assertEqual(resumed.state.phase, "needs-attention")
+
+    def test_increasing_btrfs_error_stats_records_a_fault(self):
+        self.log_path.write_text("error: builder for drv failed with exit code 1\n")
+        self.write_btrfs_errors(0)
+        controller = self.make_controller(FakeRunner())
+        controller.observe(self.failed_sample())
+
+        self.assertFalse(self.fault_path.exists())
+        self.assertEqual(controller.state.btrfs_errors, 0)
+
+        self.write_btrfs_errors(3)
+        controller.observe(
+            self.failed_sample(120, status_updated_at="2026-09-02T23:30:00Z")
+        )
+
+        fault = json.loads(self.fault_path.read_text())
+        self.assertEqual(fault["pattern"], "btrfs-error-stats")
+        event = json.loads(self.events_path.read_text())[0]
+        self.assertEqual(event["severity"], "critical")
+        self.assertEqual(event["reason"], "storage-fault")
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertEqual(controller.state.btrfs_errors, 3)
+
+    def test_absent_btrfs_path_is_not_an_error(self):
+        self.assertEqual(
+            monitor.read_btrfs_errors(self.btrfs_root / "missing"), 0
+        )
+        self.write_btrfs_errors(2)
+        self.assertEqual(monitor.read_btrfs_errors(self.btrfs_root), 2)
+
+    def test_older_state_file_loads_without_the_new_field(self):
+        legacy = {
+            "base_revision": "1" * 40,
+            "revision": "2" * 40,
+            "phase": "observing",
+            "retry_count": 0,
+        }
+        monitor.atomic_json(self.state_path, legacy)
+        controller = self.make_controller(FakeRunner())
+        self.assertEqual(controller.state.revision, "2" * 40)
+        self.assertIsNone(controller.state.btrfs_errors)
+
+
 if __name__ == "__main__":
     unittest.main()
