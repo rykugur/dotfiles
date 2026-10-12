@@ -51,11 +51,16 @@ fi
 if [[ ${1-} == flake ]]; then
   printf '%s\n' "$*" >> "$EVENTS"
   if [[ ${2-} == metadata ]]; then
+    if [[ "$*" != "flake metadata --json --no-write-lock-file $WORKTREE" ]]; then
+      printf 'unexpected flake metadata argv: %s\n' "$*" >&2
+      exit 1
+    fi
     cat "$METADATA_JSON"
   fi
   exit 0
 fi
 if [[ ${1-} == build ]]; then
+  printf 'build\n' >> "$EVENTS"
   exit 42
 fi
 EOF
@@ -77,6 +82,21 @@ chmod +x "$tmp/bin/"*
 hold() {
   printf '{"%s":{"revision":"3333333333333333333333333333333333333333","expires":"%s","reason":"pinned for test","createdAt":"2026-10-12T00:00:00+00:00"}}\n' \
     "$1" "$2"
+}
+
+hold_all() {
+  jq -n --arg e "$1" '
+    ["nixpkgs", "home-manager", "stylix", "oh-my-pi"]
+    | map({
+        key: .,
+        value: {
+          revision: "3333333333333333333333333333333333333333",
+          expires: $e,
+          reason: "pinned for test",
+          createdAt: "2026-10-12T00:00:00+00:00"
+        }
+      })
+    | from_entries'
 }
 
 # Prints the recorded `nix flake update` arguments with the input names sorted,
@@ -121,6 +141,7 @@ run_case() {
     EXCLUDED_PACKAGES='[]' \
     GITHUB_TOKEN_FILE="$token_file" \
     OMP_UPDATER="$tmp/bin/omp-updater" \
+    WORKTREE="$worktree" \
     bash "$tmp/prebuild.sh" candidate > /dev/null 2>&1
   exit_code=$?
   set -e
@@ -129,14 +150,31 @@ run_case() {
     printf 'expected build exit 42, got: %s\n' "$exit_code" >&2
     return 1
   }
-  update_call
+  grep -qx build "$events" || {
+    printf 'script did not reach nix build\n' >&2
+    return 1
+  }
 }
 
 assert_case() {
   local label=$1 holds_json=$2 expected=$3 actual
-  actual=$(run_case "$holds_json")
+  run_case "$holds_json"
+  actual=$(update_call)
   [[ $actual == "$expected" ]] || {
     printf '%s: expected %q, got %q\n' "$label" "$expected" "$actual" >&2
+    exit 1
+  }
+}
+
+assert_no_update() {
+  local label=$1 holds_json=$2
+  run_case "$holds_json"
+  grep -q '^flake metadata' "$events" || {
+    printf '%s: hold list was not consulted\n' "$label" >&2
+    exit 1
+  }
+  ! grep -qE '^flake update( |$)' "$events" || {
+    printf '%s: expected no flake update call, got %q\n' "$label" "$(<"$events")" >&2
     exit 1
   }
 }
@@ -151,3 +189,4 @@ assert_case 'active hold (today)' "$(hold nixpkgs "$today")" "$without_nixpkgs"
 assert_case 'expired hold' "$(hold nixpkgs "$yesterday")" "$all_inputs"
 assert_case 'unknown input held' "$(hold not-an-input "$tomorrow")" "$all_inputs"
 assert_case 'malformed json' '{"nixpkgs": ' "$all_inputs"
+assert_no_update 'every input held' "$(hold_all "$tomorrow")"

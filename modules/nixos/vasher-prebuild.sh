@@ -144,10 +144,13 @@ load_github_token() {
 }
 
 # Prints the root flake inputs that no active hold covers, one per line.
-# Prints nothing when the hold list is absent, unreadable, malformed, or holds
-# nothing that the flake still declares: an empty list means "update everything".
+# Prints nothing and returns 0 when the hold list is absent, unreadable,
+# malformed, or holds nothing that the flake still declares: update everything.
+# Returns 3 when every root input is held, which the caller cannot tell apart
+# from the empty list: there is nothing left to update.
 selected_inputs() {
-  local today held metadata
+  local today held metadata report total kept
+  local -a lines
   [[ -r $HOLDS_FILE ]] || return 0
   today=$(date +%F)
   held=$(jq -c --arg today "$today" \
@@ -155,15 +158,23 @@ selected_inputs() {
     "$HOLDS_FILE" 2> /dev/null) || return 0
   [[ -n $held && $held != '[]' ]] || return 0
   metadata=$(NIX_CONFIG="$nix_config" nix flake metadata --json --no-write-lock-file "$worktree" 2> /dev/null) || return 0
-  jq -r --argjson held "$held" '
+  report=$(jq -r --argjson held "$held" '
     .locks.nodes.root.inputs | keys as $all
     | ($all - $held) as $keep
-    | if ($keep | length) == ($all | length) then empty else $keep[] end
-  ' <<< "$metadata" 2> /dev/null || return 0
+    | ($all | length), ($keep | length), $keep[]
+  ' <<< "$metadata" 2> /dev/null) || return 0
+  mapfile -t lines <<< "$report"
+  ((${#lines[@]} >= 2)) || return 0
+  total=${lines[0]}
+  kept=${lines[1]}
+  if ((kept == total)); then return 0; fi
+  if ((kept == 0)); then return 3; fi
+  printf '%s\n' "${lines[@]:2}"
 }
 
 prepare_updated_candidate() {
   local -a update_inputs=()
+  local selection= selection_status=0
   write_status preparing null
   nix-collect-garbage
   if [[ ! -e $worktree/.git ]]; then
@@ -171,8 +182,13 @@ prepare_updated_candidate() {
     git -C "$repo" worktree add --detach "$worktree" "$base_revision"
   fi
   git -C "$worktree" reset --hard "$base_revision"
-  mapfile -t update_inputs < <(selected_inputs)
-  NIX_CONFIG="$nix_config" nix flake update --flake "$worktree" "${update_inputs[@]}"
+  selection=$(selected_inputs) || selection_status=$?
+  if ((selection_status == 3)); then
+    printf 'vasher-prebuild: every flake input is held; skipping flake update\n'
+  else
+    [[ -z $selection ]] || mapfile -t update_inputs <<< "$selection"
+    NIX_CONFIG="$nix_config" nix flake update --flake "$worktree" "${update_inputs[@]}"
+  fi
   git -C "$worktree" add flake.lock
   if ! git -C "$worktree" diff --cached --quiet; then
     git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
