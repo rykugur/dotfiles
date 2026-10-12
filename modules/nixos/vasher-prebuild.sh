@@ -10,6 +10,7 @@ history="$state_dir/history.json"
 log="$state_dir/log.txt"
 raw_log="$state_dir/current.log"
 legacy_status=/var/lib/vasher/last-build.json
+HOLDS_FILE=/var/lib/vasher/agent/holds.json
 base_revision=
 candidate_revision=
 out=
@@ -142,7 +143,27 @@ load_github_token() {
   unset github_token
 }
 
+# Prints the root flake inputs that no active hold covers, one per line.
+# Prints nothing when the hold list is absent, unreadable, malformed, or holds
+# nothing that the flake still declares: an empty list means "update everything".
+selected_inputs() {
+  local today held metadata
+  [[ -r $HOLDS_FILE ]] || return 0
+  today=$(date +%F)
+  held=$(jq -c --arg today "$today" \
+    '[to_entries[] | select((.value.expires // "") >= $today) | .key]' \
+    "$HOLDS_FILE" 2> /dev/null) || return 0
+  [[ -n $held && $held != '[]' ]] || return 0
+  metadata=$(NIX_CONFIG="$nix_config" nix flake metadata --json --no-write-lock-file "$worktree" 2> /dev/null) || return 0
+  jq -r --argjson held "$held" '
+    .locks.nodes.root.inputs | keys as $all
+    | ($all - $held) as $keep
+    | if ($keep | length) == ($all | length) then empty else $keep[] end
+  ' <<< "$metadata" 2> /dev/null || return 0
+}
+
 prepare_updated_candidate() {
+  local -a update_inputs=()
   write_status preparing null
   nix-collect-garbage
   if [[ ! -e $worktree/.git ]]; then
@@ -150,7 +171,8 @@ prepare_updated_candidate() {
     git -C "$repo" worktree add --detach "$worktree" "$base_revision"
   fi
   git -C "$worktree" reset --hard "$base_revision"
-  NIX_CONFIG="$nix_config" nix flake update --flake "$worktree"
+  mapfile -t update_inputs < <(selected_inputs)
+  NIX_CONFIG="$nix_config" nix flake update --flake "$worktree" "${update_inputs[@]}"
   git -C "$worktree" add flake.lock
   if ! git -C "$worktree" diff --cached --quiet; then
     git -C "$worktree" -c user.name=vasher -c user.email=vasher@localhost \
