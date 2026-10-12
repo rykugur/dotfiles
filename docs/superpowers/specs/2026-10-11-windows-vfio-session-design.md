@@ -261,8 +261,10 @@ spoofed hardware identities, or similar measures.
 
 Repository verification does not activate the NixOS configuration.
 
-The following checks completed before this documentation update:
+The following checks completed on the final implementation and documentation
+branch:
 
+- `nix flake check` completed successfully.
 - The controller unittest suite passed with 25 tests after its final Task 1
   fixes.
 - The domain contract suite passed all five tests, including
@@ -279,11 +281,10 @@ The following checks completed before this documentation update:
 
 These checks prove that the repository builds the module and Jezrien closure.
 They do not prove that Jezrien activated the module or handed the GPU to
-Windows. `nix flake check` also remains unobserved in the recorded task
-evidence.
+Windows.
 
-Run these final commands after the documentation commit. This documentation
-task did not run them:
+The documentation worker did not run the final commands. The main agent ran
+them after the documentation commit:
 
 ```bash
 nix flake check
