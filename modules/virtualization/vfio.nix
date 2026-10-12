@@ -172,20 +172,8 @@
         usb5Product = lib.toLower (usbDevice 4).productId;
       };
 
-      normalXml = pkgs.substituteAll (
-        xmlSubstitutions
-        // {
-          name = "${cfg.domainName}-domain.xml";
-          src = ./_vfio/domain.xml.in;
-        }
-      );
-      installXml = pkgs.substituteAll (
-        xmlSubstitutions
-        // {
-          name = "${cfg.domainName}-domain-install.xml";
-          src = ./_vfio/domain-install.xml.in;
-        }
-      );
+      normalXml = pkgs.replaceVars ./_vfio/domain.xml.in xmlSubstitutions;
+      installXml = pkgs.replaceVars ./_vfio/domain-install.xml.in xmlSubstitutions;
 
       controllerConfig = pkgs.writeText "${cfg.domainName}-controller.json" (
         builtins.toJSON {
