@@ -54,8 +54,9 @@
         ];
       };
     in
-    pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-      checks.windows-vfio = pkgs.runCommand "windows-vfio-check" {
+    {
+      checks = pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+        windows-vfio = pkgs.runCommand "windows-vfio-check" {
         enabledSystem = enabledNixos.config.system.build.toplevel;
         nativeBuildInputs = [
           pkgs.libvirt
@@ -79,6 +80,7 @@
         touch "$out"
       '';
     };
+      };
 
   flake.modules.nixos.vfio =
     {
