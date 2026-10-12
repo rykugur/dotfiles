@@ -1,9 +1,9 @@
 ---
 title: AI Agents
 category: ai
-date: 2026-10-07
+date: 2026-10-12
 tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, openrig, mempalace, llm-wiki, skills, mcp]
-sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix"]
+sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix", "flake.nix"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
 
@@ -37,6 +37,13 @@ reproducibly; activation links its immutable plugin root into Herdr, while
 navigate and reorder Herdr tabs on both hosts; Ghostty no longer consumes those
 chords. Herdr's implicit Catppuccin default is named explicitly so Navigator's
 theme inheritance selects its matching Catppuccin Mocha palette.
+
+**Oh My Pi** comes from the official `can1357/oh-my-pi` flake via
+`programs.omp.enable`. The local Home Manager module still owns `AGENTS.md`,
+MCP, skills, shell completions, and `omp config set` for model roles / theme /
+mnemopi. `programs.omp.settings` is intentionally unset: upstream copies a
+generated YAML over `~/.omp/agent/config.yml` and would wipe oauth and
+runtime state.
 
 ## Shared infrastructure (the key to DRY)
 

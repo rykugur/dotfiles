@@ -233,7 +233,7 @@ source of truth.
 
 - Shared agent definitions in `_agents.nix`
 - Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, context7)
-- Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix`
+- Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix` (official `oh-my-pi` flake for the package; local files/activation for config)
 - `herdr.nix` — shared terminal workspace configuration, OMP integration, and declarative `herdr-navigator` registration
 - `common.nix` (installs the mempalace wrapper, rtk, llmfit, and the local OpenRig package)
 - `pkgs/herdr-navigator.nix` — reproducible Rust build whose patched plugin manifest invokes Nix-store binaries

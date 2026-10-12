@@ -109,11 +109,11 @@ Taln demonstrates that the dendritic + groups approach gives near-identical expe
 ## vasher (LAN binary cache)
 
 - **Platform**: `x86_64-linux`, NixOS, initially an LXC
-- **Purpose**: prebuild Jezrien's current `master` closure and a nightly candidate that updates both flake inputs and OMP; serve retained signed paths through a LAN-only cache endpoint.
+- **Purpose**: prebuild Jezrien's current `master` closure and a nightly candidate that updates flake inputs (including `oh-my-pi`); serve retained signed paths through a LAN-only cache endpoint.
 - **Status**: [Vasher work ledger](entities/vasher.md#status-dashboard) is a LAN-only Catppuccin Mocha dashboard that polls curated prebuild state, bounded history, and a 200-line log tail every five seconds.
 - **Not a remote builder**: Jezrien only substitutes cache paths; it never delegates builds over SSH.
 - **Promotion**: on a clean `master` checkout, run `scripts/vasher-promote.sh`. It fast-forwards only to `origin/cache-bump`, pushes `master`, then runs the local NixOS switch.
-- **OMP updates**: only the nightly candidate runs `update-omp.sh`. A successful reduced-closure build publishes its tested `flake.lock` and `modules/ai/oh-my-pi/release.json` together on `cache-bump`; the normal promotion script advances both.
+- **OMP updates**: `oh-my-pi` is a flake input. The nightly candidate's `nix flake update` advances it with the rest of `flake.lock`; a successful reduced-closure build publishes that lock on `cache-bump`.
 - **Retention**: only the latest successful closure is retained as a Nix GC root; older roots are pruned and `nix-collect-garbage` runs after each success.
 - **Resources**: the LXC runs one derivation at a time with a fixed CPU and memory envelope.
 - **Deploy**: use the normal NixOS rebuild for the published flake's `vasher` host; activation does not start a candidate.

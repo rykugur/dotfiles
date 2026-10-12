@@ -25,7 +25,6 @@
         runtimeInputs = with pkgs; [
           bash
           coreutils
-          curl
           git
           jq
           nix
@@ -39,7 +38,6 @@
           export KEEP_ROOTS=${lib.escapeShellArg (toString cfg.keepRoots)}
           export EXCLUDED_PACKAGES=${lib.escapeShellArg (builtins.toJSON cfg.excludedPackages)}
           export GITHUB_TOKEN_FILE=${lib.escapeShellArg config.sops.secrets."swoleflake/github_token".path}
-          export OMP_UPDATER=${lib.escapeShellArg ../ai/oh-my-pi/update-omp.sh}
           exec ${pkgs.bash}/bin/bash ${runtime} "$@"
         '';
       };
