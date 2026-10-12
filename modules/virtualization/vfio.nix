@@ -11,6 +11,8 @@
           self.modules.nixos.vfio
           {
             nixpkgs.config.allowUnfree = true;
+            boot.isContainer = true;
+            fileSystems."/".device = "none";
             system.stateVersion = "25.11";
             ryk.vfio = {
               enable = true;
