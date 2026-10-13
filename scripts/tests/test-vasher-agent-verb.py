@@ -549,13 +549,17 @@ class BudgetTests(ChannelCase):
         self.now = NOW + 24 * 60 * 60 + 1
         self.assertAccepted(self.call(hold_request()))
 
-    def test_rejection_lockout_does_not_extend_itself(self):
+    def test_rejection_lockout_does_not_mutate_ledgers(self):
         for _ in range(32):
             self.assertRejected(self.call(hold_request(expires="soon")), "hold")
-        # These probes answer budget but do not create newer rejection entries.
+        verbs_before = self.verbs_path.read_bytes()
+        events_before = self.events_path.read_bytes()
         for _ in range(4):
-            self.assertRejected(self.call(hold_request(expires="soon")), "budget")
-        self.assertEqual(len(self.ledger()["rejected"]), 32)
+            response = self.call(hold_request(expires="soon"))
+            self.assertRejected(response, "budget")
+            self.assertIsNone(response.event_id)
+            self.assertEqual(self.verbs_path.read_bytes(), verbs_before)
+            self.assertEqual(self.events_path.read_bytes(), events_before)
         self.now = NOW + 24 * 60 * 60 + 1
         self.assertAccepted(self.call(hold_request()))
 

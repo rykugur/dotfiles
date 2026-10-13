@@ -56,8 +56,9 @@ if [[ -z $status || -z $events ]] || ! jq -e 'type == "object"' <<<"$status" >/d
   state=$(jq -c --argjson count "$unreachable" '.unreachable = $count' <<<"$state")
   write_state "$state" || exit 0
   if (( unreachable == 2 )) && [[ $(jq -r '.unreachable' "$state_file") == 2 ]] && [[ ! -e "$state_dir/.unreachable-notified" ]]; then
-    notify-send --urgency=critical 'Vasher is unreachable' 'Two consecutive supervisor polls failed.' || true
-    : > "$state_dir/.unreachable-notified"
+    if notify-send --urgency=critical 'Vasher is unreachable' 'Two consecutive supervisor polls failed.'; then
+      : > "$state_dir/.unreachable-notified"
+    fi
   fi
   exit 0
 fi
@@ -113,7 +114,9 @@ EOF
 
 model_error=
 error_file="$state_dir/.hermes-error"
-if output=$(timeout 300 hermes --skills vasher-supervisor --oneshot "$prompt" 2>"$error_file"); then
+# Untrusted build and event text enters the prompt; Hermes gets no shell,
+# file, or network toolset.
+if output=$(timeout 300 hermes --toolsets todo --ignore-rules --skills vasher-supervisor --oneshot "$prompt" 2>"$error_file"); then
   if ! write_digest "$output"; then
     rm -f "$error_file"
     exit 0
@@ -181,7 +184,7 @@ if [[ ! -f $key ]]; then
   exit 0
 fi
 set +e
-response=$(printf '%s\n' "$proposal" | ssh -i "$key" vasher-agent@vasher.local.ryk.sh)
+response=$(printf '%s\n' "$proposal" | ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=yes -i "$key" vasher-agent@vasher.local.ryk.sh)
 ssh_status=$?
 set -e
 printf '\nChannel response (exit %s): %s\n' "$ssh_status" "$response" >> "$digest_file"

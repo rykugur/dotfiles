@@ -22,10 +22,15 @@ export function isHoldExpired(expires: string, today = localToday()): boolean {
 
 type HoldsPanelProps = {
   holds: HoldMap;
+  degraded?: boolean;
   today?: string;
 };
 
-export function HoldsPanel({ holds, today = localToday() }: HoldsPanelProps) {
+export function HoldsPanel({
+  holds,
+  degraded = false,
+  today = localToday(),
+}: HoldsPanelProps) {
   const entries = Object.entries(holds);
   return createElement(
     "article",
@@ -34,9 +39,11 @@ export function HoldsPanel({ holds, today = localToday() }: HoldsPanelProps) {
     createElement(
       "ol",
       { className: "holds" },
-      entries.length === 0
-        ? createElement("li", null, "No input holds recorded.")
-        : entries.map(([input, hold]) => {
+      degraded
+        ? createElement("li", null, "Hold list unavailable.")
+        : entries.length === 0
+          ? createElement("li", null, "No input holds recorded.")
+          : entries.map(([input, hold]) => {
             const expired = isHoldExpired(hold.expires, today);
             return createElement(
               "li",

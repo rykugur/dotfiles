@@ -225,3 +225,14 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Recorded the separate read-only event endpoints and the dedicated key prerequisite for action transport.
 - Updated the wiki for branch `feat/vasher-agent-supervision` and design document `docs/superpowers/specs/2026-10-12-vasher-agent-supervision-design.md`.
 - Updated [entities/vasher.md](entities/vasher.md) and [index.md](index.md).
+
+## [2026-10-12] update | Hardened Vasher supervision
+
+- Brought narrow builds under the deterministic monitor and removed the generic
+  storage-log signature that could halt builds on quoted diagnostic text.
+- Constrained unattended Hermes to a harmless toolset, hardened SSH transport,
+  and documented the host-key and live hold/release deployment checks.
+- Distinguished unavailable optional agent data from valid empty ledgers in the
+  dashboard and corrected hold, skill ownership, and btrfs sampling details.
+- Updated [entities/vasher.md](entities/vasher.md),
+  [ai-agents.md](ai-agents.md), and [index.md](index.md).

@@ -110,6 +110,18 @@ class ThresholdEvaluationTests(unittest.TestCase):
         )
         self.assertEqual(decision, monitor.Decision("stop", "stall"))
 
+    def test_sustained_low_memory_stops_a_narrow_build(self):
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        narrow = {"active_unit": "vasher-prebuild-narrow.service", "mode": "narrow"}
+        state, _ = monitor.evaluate(
+            state, sample(0, mem_available=700 * monitor.MIB, **narrow)
+        )
+        state, decision = monitor.evaluate(
+            state, sample(120, mem_available=700 * monitor.MIB, **narrow)
+        )
+        self.assertEqual(decision, monitor.Decision("stop", "memory"))
+
+
     def test_second_unsafe_condition_never_retries(self):
         state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
         state.retry_count = 1
@@ -365,6 +377,30 @@ class RecoveryControllerTests(unittest.TestCase):
                 ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
             ],
         )
+
+    def test_narrow_recovery_stops_and_fails_safe_without_candidate_retry(self):
+        self._patch_worktree("3" * 40)
+        runner = FakeRunner(active={"vasher-prebuild-narrow.service": True})
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        narrow = dataclasses.replace(
+            self.unsafe_sample,
+            active_unit="vasher-prebuild-narrow.service",
+            mode="narrow",
+        )
+
+        controller.recover(narrow, monitor.Decision("stop", "memory"))
+
+        self.assertIn(
+            ("systemctl", "stop", "vasher-prebuild-narrow.service"), runner.calls
+        )
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertNotIn(
+            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+            runner.calls,
+        )
+
 
     def test_failed_precondition_records_needs_attention(self):
         runner = FakeRunner(
@@ -854,6 +890,57 @@ class SamplingConversionTests(unittest.TestCase):
             self.assertEqual(observed.nix_memory, 512 * monitor.MIB)
             self.assertEqual(observed.combined_cpu_seconds, 6.5)
             self.assertEqual(observed.log_size, 11)
+
+    def test_system_reader_identifies_narrow_unit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            meminfo = root / "meminfo"
+            pressure = root / "pressure"
+            status = root / "status.json"
+            meminfo.write_text("MemAvailable: 1024 kB\nSwapFree: 1024 kB\n")
+            pressure.write_text("full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n")
+            status.write_text(
+                json.dumps(
+                    {
+                        "state": "building",
+                        "mode": "narrow",
+                        "updatedAt": "2026-10-12T08:00:00Z",
+                        "baseRevision": "1" * 40,
+                        "revision": "2" * 40,
+                    }
+                )
+            )
+            runner = FakeRunner(
+                properties={
+                    "vasher-prebuild-candidate.service": {"ActiveState": "inactive"},
+                    "vasher-prebuild-narrow.service": {
+                        "ActiveState": "active",
+                        "CPUUsageNSec": "1000000000",
+                    },
+                    "vasher-prebuild-retry.service": {"ActiveState": "inactive"},
+                    "nix-daemon.service": {
+                        "MemoryCurrent": "0",
+                        "CPUUsageNSec": "0",
+                    },
+                }
+            )
+            reader = monitor.SystemReader(
+                runner,
+                meminfo_path=meminfo,
+                pressure_path=pressure,
+                status_path=status,
+                log_path=root / "missing.log",
+                statvfs=lambda _path: os.statvfs_result(
+                    (4096, 4096, 0, 0, 1024, 0, 0, 0, 0, 0)
+                ),
+            )
+
+            observed = reader.sample()
+
+            self.assertEqual(
+                observed.active_unit, "vasher-prebuild-narrow.service"
+            )
+
 
 
     def test_system_reader_treats_activating_as_running(self):
@@ -1398,7 +1485,6 @@ class StorageFaultTests(unittest.TestCase):
             monitor.STORAGE_PATTERNS,
             (
                 "Input/output error",
-                "I/O error",
                 "csum failed",
                 "failed to read block",
                 "blk_update_request",
@@ -1408,6 +1494,15 @@ class StorageFaultTests(unittest.TestCase):
             monitor.FAULT_PATH,
             Path("/var/lib/vasher/monitor/storage-fault.json"),
         )
+
+    def test_generic_io_error_diagnostic_does_not_record_a_fault(self):
+        self.log_path.write_text('diagnostic: expected text "I/O error" was absent\n')
+        controller = self.make_controller(FakeRunner())
+
+        controller.observe(self.failed_sample())
+
+        self.assertFalse(self.fault_path.exists())
+        self.assertEqual(controller.state.phase, "complete")
 
     def test_every_pattern_records_a_critical_fault(self):
         for pattern in monitor.STORAGE_PATTERNS:

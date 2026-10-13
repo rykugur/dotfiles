@@ -164,14 +164,14 @@ git commit -m "feat(vasher): add narrow candidate mode for a chosen input set"
 In `scripts/tests/test-vasher-prebuild-monitor.py`, add a test class covering:
 
 ```python
-STORAGE_PATTERNS == ("Input/output error", "I/O error", "csum failed",
+STORAGE_PATTERNS == ("Input/output error", "csum failed",
                      "failed to read block", "blk_update_request")
 ```
 
 - A failed build whose log tail contains each pattern writes `FAULT_PATH` and records an event with `severity == "critical"` and `reason == "storage-fault"`.
 - A failed build with no pattern writes no fault file and keeps the existing behavior.
 - A fault never triggers a retry, even when every retry precondition holds.
-- A btrfs `error_stats` file whose counters increased since the previous sample writes the fault file. An absent `error_stats` path is not an error.
+- After a failed build, a btrfs `error_stats` file whose counters increased since the previous readable failed-build sample writes the fault file. An absent `error_stats` path is not an error.
 
 - [ ] **Step 2: Run the monitor tests to confirm the new ones fail**
 
@@ -182,7 +182,7 @@ Expected: FAIL with `AttributeError` on `STORAGE_PATTERNS`
 
 Add `STORAGE_PATTERNS` and `FAULT_PATH` beside the other constants. Add `scan_storage_fault(text: str) -> str | None` that returns the first matching pattern or `None`, matched case-sensitively as a substring. Add `read_btrfs_errors(root: Path = Path("/sys/fs/btrfs")) -> int` that sums every integer in every `devinfo/*/error_stats` file it can read and returns 0 when the path is absent.
 
-In the failure branch of `Controller.observe`, call the scan on the bounded log text. On a match, write the fault file, record the event with severity `critical` and reason `storage-fault`, set the durable state to `needs-attention`, and skip the retry path. Compare the btrfs sum against the value stored in `MonitorState`; an increase triggers the same handling with the pattern string `btrfs-error-stats`.
+In the failure branch of `Controller.observe`, call the scan on the bounded log text. On a match, write the fault file, record the event with severity `critical` and reason `storage-fault`, set the durable state to `needs-attention`, and skip the retry path. After each failed build, compare the readable btrfs sum against the value stored from the previous readable failed-build sample; an increase triggers the same handling with the pattern string `btrfs-error-stats`.
 
 - [ ] **Step 4: Write the failing blocked-mode test** `scripts/tests/test-vasher-prebuild-blocked.sh`
 

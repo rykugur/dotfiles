@@ -2,7 +2,7 @@ import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { formatTimestamp } from "./date-format.ts";
 import { loadSnapshot, type Snapshot, type Status } from "./dashboard-data.ts";
-import { eventSource, renderEventText } from "./event-text.ts";
+import { EventsPanel } from "./events-panel.ts";
 import { HoldsPanel } from "./holds.ts";
 import "./dashboard.css";
 
@@ -17,6 +17,8 @@ const emptySnapshot: DashboardState = {
   log: "",
   events: [],
   holds: {},
+  agentEventsDegraded: false,
+  holdsDegraded: false,
   error: null,
 };
 
@@ -59,7 +61,16 @@ function statusCopy(status: Status): string {
 }
 
 function App() {
-  const { status, history, log, events, holds, error } = useSnapshot();
+  const {
+    status,
+    history,
+    log,
+    events,
+    holds,
+    agentEventsDegraded,
+    holdsDegraded,
+    error,
+  } = useSnapshot();
 
   return (
     <main>
@@ -93,31 +104,11 @@ function App() {
             <div><p className="eyebrow">Refresh probe</p><p className="clock">15m</p><p className="sub">after the previous run</p></div>
             <div><p className="eyebrow">Nightly candidate</p><p className="clock">03:00</p><p className="sub">randomized delay ≤ 10m</p></div>
           </div></aside>
-          <HoldsPanel holds={holds} />
-          <article className="panel full">
-            <h2>Events</h2>
-            <ol className="events">
-              {events.length === 0 ? (
-                <li>No events recorded yet.</li>
-              ) : events.map((event) => {
-                const text = renderEventText(event);
-                return (
-                  <li key={event.id} className={`event ${event.severity}`}>
-                    <time>{formatTimestamp(event.timestamp)}</time>
-                    <div>
-                      <p className="event-title">
-                        {text.title}
-                        <span className="event-source">{eventSource(event)}</span>
-                      </p>
-                      <p className="event-detail">{text.detail}</p>
-                      {text.summary ? <p className="event-summary">{text.summary}</p> : null}
-                      {event.inferenceError ? <p className="event-error">Inference error: {event.inferenceError}</p> : null}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          </article>
+          <HoldsPanel holds={holds} degraded={holdsDegraded} />
+          <EventsPanel
+            events={events}
+            agentEventsDegraded={agentEventsDegraded}
+          />
           <article className="panel full"><h2>Recent runs</h2><ol className="runs">
             {history.length === 0 ? <li>No terminal builds recorded yet.</li> : history.map((run) => <li key={`${run.updatedAt}-${run.state}`}><time>{formatTimestamp(run.updatedAt)}</time><span className={`badge ${run.state}`}>{run.state.toUpperCase()}</span><span>{shortRevision(run.revision || run.baseRevision)}</span></li>)}
           </ol></article>

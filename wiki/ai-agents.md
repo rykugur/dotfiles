@@ -58,7 +58,7 @@ runtime state.
 
 ## Vasher supervisor
 
-The Home Manager module `flake.modules.homeManager.vasher-supervisor` installs the `vasher-supervisor` skill and the `vasher-supervise` wrapper on Jezrien. User timers provide a fallback schedule when Hermes has no scheduler. The regular timer runs every 30 minutes and skips the Monday 09:00 weekly digest slot.
+The Home Manager module `flake.modules.homeManager.vasher-supervisor` installs the `vasher-supervise` wrapper and its user services and timers on Jezrien. Shared module `modules/ai/_skills.nix` installs the `vasher-supervisor` skill. The regular timer runs every 30 minutes and skips the Monday 09:00 weekly digest slot.
 
 Healthy polls make zero model calls. The wrapper observes the read-only `/api/status.json`, `/api/events.json`, and `/api/agent-events.json` endpoints. Actions require a dedicated public key in `ryk.vasherPrebuild.agentKeys` and its private key at `~/.ssh/vasher-agent`. Without this key pair, supervision stays read-only.
 

@@ -629,10 +629,10 @@ def decide(request: dict, verb: str, ctx: Context) -> Response:
         # repairs or removes the file.
         return deny(ctx, None, verb, "budget")
     if window_count(ledger.rejected, ctx.now) >= REJECTION_LIMIT:
-        # Do not append the lockout answer itself: otherwise repeated probes
-        # move the rolling window forward forever and a quiet day cannot
-        # restore the channel.
-        return deny(ctx, ledger, verb, "budget", record=False)
+        # Lockout probes must not mutate either ledger or extend the rolling
+        # window. Syslog remains the bounded operator-visible record.
+        ctx.log(verb, "budget")
+        return Response(accepted=False, reason="budget", event_id=None, code=1)
     # A suspect disk rejects every verb. Only an operator clears the fault
     # file; the channel user has no write permission on that directory.
     if ctx.fault_path.exists():

@@ -28,8 +28,13 @@ STUB
 cat > "$BIN/hermes" <<'STUB'
 #!/usr/bin/env bash
 printf 'call\n' >> "$CALLS/hermes"
-printf '%s\n' "$1 $2 $3" > "$CALLS/hermes-args"
-printf '%s' "${!#}" > "$CALLS/prompt"
+[[ $# -eq 7 ]] || { echo "prompt was not one argument" >&2; exit 97; }
+[[ $1 == --toolsets && $2 == todo && $3 == --ignore-rules && $4 == --skills && $5 == vasher-supervisor && $6 == --oneshot ]] || {
+  echo "unsafe Hermes invocation" >&2
+  exit 98
+}
+printf '%s\n' "$1 $2 $3 $4 $5 $6" > "$CALLS/hermes-args"
+printf '%s' "$7" > "$CALLS/prompt"
 if [[ -f "$FIXTURE/hermes-fail" ]]; then echo 'inference unavailable' >&2; exit 9; fi
 cat "$FIXTURE/hermes-output"
 STUB
@@ -42,6 +47,7 @@ STUB
 cat > "$BIN/notify-send" <<'STUB'
 #!/usr/bin/env bash
 printf '%s\n' "$*" >> "$CALLS/notify"
+[[ ! -f "$FIXTURE/notify-fail" ]]
 STUB
 cat > "$BIN/ssh" <<'STUB'
 #!/usr/bin/env bash
@@ -77,14 +83,14 @@ run_case failed failed; run; assert_calls hermes 1; jq '.updatedAt = "2026-10-12
 run_case blocked blocked; run; assert_calls hermes 1; assert_calls notify 1; jq '.updatedAt = "2026-10-12T08:15:00Z"' "$FIXTURE/status.json" > "$FIXTURE/status.next"; mv "$FIXTURE/status.next" "$FIXTURE/status.json"; run; assert_calls hermes 1; assert_calls notify 1
 run_case event-error success m2 a1 m1 a1; jq '.[0].severity = "error"' "$FIXTURE/events.json" > "$FIXTURE/events.next"; mv "$FIXTURE/events.next" "$FIXTURE/events.json"; run; assert_calls notify 1
 run_case digest success; run --digest; assert_calls hermes 1
-grep -qx -- '--skills vasher-supervisor --oneshot' "$CALLS/hermes-args" || { echo 'FAIL Hermes CLI shape'; exit 1; }
+grep -qx -- '--toolsets todo --ignore-rules --skills vasher-supervisor --oneshot' "$CALLS/hermes-args" || { echo 'FAIL Hermes CLI shape'; exit 1; }
 grep -qx '300' "$CALLS/timeout" || { echo 'FAIL Hermes timeout'; exit 1; }
 
 run_case monday-slot success m2 a1 m1 a1; VASHER_SUPERVISE_NOW='1 09:00' run; assert_calls hermes 0; VASHER_SUPERVISE_NOW='1 09:00' run --digest; assert_calls hermes 1
 
 run_case busy-lock success m2 a1 m1 a1; before=$(cat "$STATE/last-seen.json"); exec 8>"$STATE/run.lock"; flock -n 8; run; assert_calls hermes 0; [[ $(cat "$STATE/last-seen.json") == "$before" ]]; flock -u 8; exec 8>&-
 
-run_case unreachable success; touch "$FIXTURE/fail-all"; run; assert_calls notify 0; [[ $(jq -r .unreachable "$STATE/last-seen.json") == 1 ]]; run; assert_calls notify 1; [[ $(jq -r .unreachable "$STATE/last-seen.json") == 2 ]]; run; assert_calls notify 1; rm "$FIXTURE/fail-all"; run; [[ $(jq -r .unreachable "$STATE/last-seen.json") == 0 ]]
+run_case unreachable success; touch "$FIXTURE/fail-all"; run; assert_calls notify 0; [[ $(jq -r .unreachable "$STATE/last-seen.json") == 1 ]]; touch "$FIXTURE/notify-fail"; run; assert_calls notify 1; [[ $(jq -r .unreachable "$STATE/last-seen.json") == 2 ]]; [[ ! -e "$STATE/.unreachable-notified" ]]; rm "$FIXTURE/notify-fail"; run; assert_calls notify 2; [[ -e "$STATE/.unreachable-notified" ]]; touch "$FIXTURE/notify-fail"; run; assert_calls notify 2; rm "$FIXTURE/fail-all"; run; [[ $(jq -r .unreachable "$STATE/last-seen.json") == 0 ]]; [[ ! -e "$STATE/.unreachable-notified" ]]
 
 run_case model-failure failed; touch "$FIXTURE/hermes-fail"; run; assert_calls hermes 1; grep -q 'inference unavailable' "$STATE/digest.md"; run; assert_calls hermes 1
 
@@ -95,6 +101,7 @@ run_case redact success m2 a1 m1 a1; run; ! grep -Eq 'badsecret|badkey|badtoken|
 run_case missing-key failed; printf '%s\n' '{"verb":"retry-exact","revision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}' > "$FIXTURE/hermes-output"; run; assert_calls ssh 0; grep -q 'Proposal retained: SSH key is missing' "$STATE/digest.md"
 
 run_case rejection failed; mkdir -p "$HOME/.ssh"; : > "$HOME/.ssh/vasher-agent"; printf '%s\n' '{"verb":"retry-exact","revision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}' > "$FIXTURE/hermes-output"; run; assert_calls ssh 1; grep -q '"accepted":false' "$STATE/digest.md"; assert_calls hermes 1
+grep -Fq -- '-o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=yes' "$CALLS/ssh"
 
 run_case hold-other failed; mkdir -p "$HOME/.ssh"; : > "$HOME/.ssh/vasher-agent"; printf '%s\n' '{"verb":"hold-input","input":"home-manager","revision":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","expires":"2026-11-01","reason":"Pin regression"}' > "$FIXTURE/hermes-output"; run; assert_calls ssh 1
 run_case release-other failed; mkdir -p "$HOME/.ssh"; : > "$HOME/.ssh/vasher-agent"; printf '%s\n' '{"verb":"release-input","input":"home-manager"}' > "$FIXTURE/hermes-output"; run; assert_calls ssh 1

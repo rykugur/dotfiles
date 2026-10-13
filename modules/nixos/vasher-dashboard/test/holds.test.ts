@@ -39,3 +39,11 @@ test("client-controlled hold reason renders as text, not an image", () => {
   assert.match(markup, /&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.doesNotMatch(markup, /<img\b/);
 });
+
+test("degraded holds render unavailable instead of an empty claim", () => {
+  const markup = renderToStaticMarkup(
+    createElement(HoldsPanel, { holds: {}, degraded: true }),
+  );
+  assert.match(markup, /Hold list unavailable\./);
+  assert.doesNotMatch(markup, /No input holds recorded\./);
+});

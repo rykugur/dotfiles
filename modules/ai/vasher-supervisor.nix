@@ -34,7 +34,7 @@
           Service = {
             Type = "oneshot";
             ExecStart = "${vasherSupervise}/bin/vasher-supervise";
-            TimeoutStartSec = "5min";
+            TimeoutStartSec = "7min";
           };
         };
         systemd.user.timers.vasher-supervise = {
@@ -51,7 +51,7 @@
           Service = {
             Type = "oneshot";
             ExecStart = "${vasherSupervise}/bin/vasher-supervise --digest";
-            TimeoutStartSec = "5min";
+            TimeoutStartSec = "7min";
           };
         };
         systemd.user.timers.vasher-supervise-digest = {

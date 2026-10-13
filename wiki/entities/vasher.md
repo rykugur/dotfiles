@@ -1,8 +1,8 @@
 ---
 title: Vasher
 category: entity
-date: 2026-07-30
-tags: [vasher, nixos, binary-cache, prebuild, caddy, react, lxc]
+date: 2026-10-12
+tags: [vasher, nixos, binary-cache, prebuild, caddy, react, lxc, agent, hermes, monitor, holds]
 sources: ["modules/hosts/vasher/_role.nix", "modules/nixos/vasher-cache.nix", "modules/nixos/vasher-prebuild.nix", "modules/nixos/vasher-prebuild.sh", "modules/nixos/vasher-prebuild-monitor.py", "modules/nixos/vasher-agent-verb.py", "modules/nixos/vasher-dashboard/src/main.tsx", "modules/ai/vasher-supervisor.nix", "modules/ai/vasher-supervise.sh", "modules/ai/skills/vasher-supervisor/SKILL.md", "scripts/vasher-promote.sh"]
 related: ["../hosts.md", "../architecture.md", "../modules.md"]
 ---
@@ -25,7 +25,7 @@ Vasher is the LAN-only NixOS build-cache host for Jezrien. It runs in a dedicate
 
 Each run works from a detached Git worktree. It refreshes flake inputs, builds the reduced Jezrien closure, retains the output as a GC root, then checks that `origin/master` is still exactly the revision it began from. If master advanced, the candidate is marked `stale`, its newly created root is discarded, and nothing is published. Only a successful, current candidate force-with-lease updates the disposable `cache-bump` branch. A small set of successful closure roots is retained.
 
-An active hold pins one flake input to a known revision until its expiry date. The full candidate flow updates all other inputs. Expired holds and unknown input names do not change the update. If every input is held, the flow builds the base revision without an update.
+An active hold pins one flake input to a known revision until its expiry date. The full candidate flow updates all other inputs. Expired holds and unknown input names do not change the update. If every input is held, the flow skips the flake update and still applies the Oh My Pi release bump.
 
 Narrow mode is a recovery path. It updates only the requested inputs, except for held inputs, and keeps the normal build and publication gates. A failed narrow build cannot move `cache-bump`.
 
@@ -35,7 +35,7 @@ The local monitor on Vasher makes every real-time safety decision with fixed rul
 
 The remote Hermes supervisor runs on Jezrien. It polls read-only data from Vasher and asks Hermes to explain new incidents. Hermes can propose an action, but Vasher validates and decides it. Healthy polls make zero model calls.
 
-The regular supervisor runs every 30 minutes, except Monday at 09:00. The weekly digest owns that time and always calls Hermes. Each Hermes run uses `hermes --skills vasher-supervisor --oneshot` and has a 300-second limit.
+The regular supervisor runs every 30 minutes, except Monday at 09:00. The weekly digest owns that time and always calls Hermes. Each Hermes run uses `hermes --toolsets todo --ignore-rules --skills vasher-supervisor --oneshot` and has a 300-second limit. The harmless todo-only toolset keeps untrusted event and build-log text away from shell, file, and network tools.
 
 ## Agent action channel
 
@@ -49,7 +49,7 @@ The channel is inactive until an operator installs a dedicated key pair. Add the
 
 ## Storage-fault halt
 
-The monitor scans failed build logs for storage-error signatures. It also reads btrfs error counters when the container can access them. A detected error writes `/var/lib/vasher/monitor/storage-fault.json`, records `needs-attention`, and prevents a retry.
+The monitor scans failed build logs for storage-error signatures. After each failed build, it also reads btrfs error counters when sysfs is readable and compares them with the previous readable failed-build sample; it does not sample those counters continuously. A detected error writes `/var/lib/vasher/monitor/storage-fault.json`, records `needs-attention`, and prevents a retry.
 
 All prebuild modes stop while the fault file exists. They record `blocked` without noise, and an absent revision is valid in that state. The agent cannot remove the file. After the operator repairs or replaces the disk, clear the halt with:
 
@@ -76,7 +76,7 @@ A static React dashboard polls these files every five seconds. Caddy also provid
 - `/api/events.json`: Monitor events from `/var/lib/vasher/dashboard/events.json`.
 - `/api/agent-events.json`: Agent events from `/var/lib/vasher/agent/events.json`.
 
-The frontend merges the two event lists. The separate files preserve write ownership. The monitor writes its ledger, and the channel writes only its agent-owned ledger. Agent endpoint failures degrade independently and do not hide trusted monitor status.
+The frontend merges the two event lists. The separate files preserve write ownership. The monitor writes its ledger, and the channel writes only its agent-owned ledger. Agent event and hold endpoint failures degrade independently, show an unavailable message, and do not hide trusted monitor status. A 404 represents an empty optional ledger and is not degradation.
 
 The dashboard also reads `/api/holds.json` and shows active or expired holds. Caddy serves no write endpoint, journal endpoint, public DNS endpoint, or general-purpose API. The dashboard has no Node server or server-side rendering process.
 
@@ -84,7 +84,7 @@ The dashboard also reads `/api/holds.json` and shows active or expired holds. Ca
 
 Deploy the Vasher role with the normal NixOS rebuild for the published flake's `vasher` configuration. Deployment applies the configuration only. It does not start a build.
 
-Before actions can work, add the dedicated public key to `ryk.vasherPrebuild.agentKeys` on Vasher. Put its private key at `~/.ssh/vasher-agent` on Jezrien. The supervisor remains read-only when this key is absent.
+Before actions can work, seed Jezrien's `~/.ssh/known_hosts` with Vasher's verified runtime host key. Then add the dedicated public key to `ryk.vasherPrebuild.agentKeys` on Vasher and put its private key at `~/.ssh/vasher-agent` on Jezrien. The supervisor remains read-only when this key is absent. After deployment, run the real `hold-input` and `release-input` smoke test over SSH and confirm the agent ledger and `/api/holds.json`.
 
 Make sure that the cache service, timers, dashboard, and curated API files work from the trusted LAN. To populate status immediately, start `vasher-prebuild-refresh.service`. This uses the normal serialized lifecycle.
 

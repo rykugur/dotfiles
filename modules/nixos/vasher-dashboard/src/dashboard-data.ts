@@ -9,7 +9,7 @@ export type State =
   | "failed"
   | "stale"
   | "blocked";
-export type Mode = "refresh" | "candidate" | "retry";
+export type Mode = "refresh" | "candidate" | "narrow" | "retry";
 
 export type Status = {
   state: State;
@@ -29,6 +29,8 @@ export type Snapshot = {
   log: string;
   events: MonitorEvent[];
   holds: HoldMap;
+  agentEventsDegraded: boolean;
+  holdsDegraded: boolean;
   error: null;
 };
 
@@ -61,19 +63,27 @@ function isHoldMap(value: unknown): value is HoldMap {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+type OptionalAgentJson<T> = {
+  value: T;
+  degraded: boolean;
+};
+
 async function fetchOptionalAgentJson<T>(
   fetcher: DashboardFetch,
   path: string,
   fallback: T,
   validate: (value: unknown) => value is T,
-): Promise<T> {
+): Promise<OptionalAgentJson<T>> {
   try {
     const response = await fetcher(path, { cache: "no-store" });
-    if (!response.ok) return fallback;
+    if (response.status === 404) return { value: fallback, degraded: false };
+    if (!response.ok) return { value: fallback, degraded: true };
     const value: unknown = await response.json();
-    return validate(value) ? value : fallback;
+    return validate(value)
+      ? { value, degraded: false }
+      : { value: fallback, degraded: true };
   } catch {
-    return fallback;
+    return { value: fallback, degraded: true };
   }
 }
 
@@ -81,28 +91,31 @@ async function fetchOptionalAgentJson<T>(
 export async function loadSnapshot(
   fetcher: DashboardFetch = fetch,
 ): Promise<Snapshot> {
-  const [status, history, log, monitorEvents, agentEvents, holds] = await Promise.all([
-    fetchJson<Status>(fetcher, "/api/status.json"),
-    fetchJson<Status[]>(fetcher, "/api/history.json"),
-    fetcher("/api/log.txt", { cache: "no-store" }).then(async (response) => {
-      if (!response.ok) throw new Error(`/api/log.txt: ${response.status}`);
-      return response.text();
-    }),
-    fetchJsonOr<MonitorEvent[]>(fetcher, "/api/events.json", []),
-    fetchOptionalAgentJson(
-      fetcher,
-      "/api/agent-events.json",
-      [],
-      isAgentEventArray,
-    ),
-    fetchOptionalAgentJson(fetcher, "/api/holds.json", {}, isHoldMap),
-  ]);
+  const [status, history, log, monitorEvents, agentEventsResult, holdsResult] =
+    await Promise.all([
+      fetchJson<Status>(fetcher, "/api/status.json"),
+      fetchJson<Status[]>(fetcher, "/api/history.json"),
+      fetcher("/api/log.txt", { cache: "no-store" }).then(async (response) => {
+        if (!response.ok) throw new Error(`/api/log.txt: ${response.status}`);
+        return response.text();
+      }),
+      fetchJsonOr<MonitorEvent[]>(fetcher, "/api/events.json", []),
+      fetchOptionalAgentJson(
+        fetcher,
+        "/api/agent-events.json",
+        [],
+        isAgentEventArray,
+      ),
+      fetchOptionalAgentJson(fetcher, "/api/holds.json", {}, isHoldMap),
+    ]);
   return {
     status,
     history,
     log,
-    events: mergeEvents(monitorEvents, agentEvents),
-    holds,
+    events: mergeEvents(monitorEvents, agentEventsResult.value),
+    holds: holdsResult.value,
+    agentEventsDegraded: agentEventsResult.degraded,
+    holdsDegraded: holdsResult.degraded,
     error: null,
   };
 }

@@ -112,14 +112,13 @@ The program checks every condition before it accepts a verb. All conditions are 
 
 Durable counters live in `/var/lib/vasher/agent/verbs.json`. The program writes the file atomically. A restart of the host keeps the counters.
 
-The program writes one ledger event for every accepted verb and every rejected verb. Each event carries `source: "agent"` and the verb name.
+The program writes one ledger event for every accepted verb and every metered rejection. Once the rejection window is exhausted, lockout probes are logged only to syslog so they cannot churn either ledger.
 
 ### Storage fault rule
 
-The monitor gains one rule. After a candidate or retry exits with a failure, the monitor scans the captured log tail for these patterns:
+After a candidate, narrow, or retry build exits with a failure, the monitor scans the captured log tail for these patterns:
 
 - `Input/output error`
-- `I/O error`
 - `csum failed`
 - `failed to read block`
 - `blk_update_request`
@@ -134,7 +133,7 @@ The agent cannot clear this state. An operator clears it after the disk is repla
 sudo rm /var/lib/vasher/monitor/storage-fault.json
 ```
 
-The monitor also reads `/sys/fs/btrfs/*/devinfo/*/error_stats` when the path is readable. An increase in any error counter triggers the same state. Vasher is an unprivileged LXC, so this path can be absent. The rule applies only when the path exists, and the log scan covers the container case.
+After a failed build, the monitor also reads `/sys/fs/btrfs/*/devinfo/*/error_stats` when the path is readable. An increase from the previous readable failed-build sample triggers the same state. Vasher is an unprivileged LXC, so this path can be absent. The rule applies only when the path exists, and the log scan covers the container case.
 
 ### Supervisor on Jezrien
 

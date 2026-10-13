@@ -79,6 +79,7 @@ function fetchWith(agentEvents: EndpointResult, holds: EndpointResult): Dashboar
 for (const [name, brokenAgentEvents] of [
   ["transport failure", new Error("connection reset")],
   ["malformed JSON", new Response("{broken")],
+  ["server error", new Response("failed", { status: 503 })],
   ["wrong top-level type", json({ event: agentEvent })],
 ] as const) {
   test(`trusted snapshot survives agent events ${name}`, async () => {
@@ -88,12 +89,15 @@ for (const [name, brokenAgentEvents] of [
     assert.equal(snapshot.log, "trusted log");
     assert.deepEqual(snapshot.events.map(({ id }) => id), ["monitor-event"]);
     assert.deepEqual(snapshot.holds, validHolds);
+    assert.equal(snapshot.agentEventsDegraded, true);
+    assert.equal(snapshot.holdsDegraded, false);
   });
 }
 
 for (const [name, brokenHolds] of [
   ["transport failure", new Error("connection reset")],
   ["malformed JSON", new Response("{broken")],
+  ["server error", new Response("failed", { status: 503 })],
   ["wrong top-level type", json([validHolds.nixpkgs])],
 ] as const) {
   test(`trusted snapshot survives holds ${name}`, async () => {
@@ -103,5 +107,27 @@ for (const [name, brokenHolds] of [
     assert.equal(snapshot.log, "trusted log");
     assert.deepEqual(snapshot.events.map(({ id }) => id), ["agent-event", "monitor-event"]);
     assert.deepEqual(snapshot.holds, {});
+    assert.equal(snapshot.agentEventsDegraded, false);
+    assert.equal(snapshot.holdsDegraded, true);
   });
 }
+
+test("optional endpoint 404 is empty without degradation", async () => {
+  const missing = new Response("", { status: 404 });
+  const snapshot = await loadSnapshot(fetchWith(missing, missing));
+  assert.deepEqual(snapshot.events.map(({ id }) => id), ["monitor-event"]);
+  assert.deepEqual(snapshot.holds, {});
+  assert.equal(snapshot.agentEventsDegraded, false);
+  assert.equal(snapshot.holdsDegraded, false);
+});
+
+test("optional endpoint degradation clears on the next snapshot", async () => {
+  const degraded = await loadSnapshot(
+    fetchWith(new Response("{broken"), new Response("failed", { status: 500 })),
+  );
+  const recovered = await loadSnapshot(fetchWith(json([agentEvent]), json(validHolds)));
+  assert.equal(degraded.agentEventsDegraded, true);
+  assert.equal(degraded.holdsDegraded, true);
+  assert.equal(recovered.agentEventsDegraded, false);
+  assert.equal(recovered.holdsDegraded, false);
+});

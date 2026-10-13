@@ -40,7 +40,6 @@ BTRFS_ROOT = Path("/sys/fs/btrfs")
 BTRFS_ERROR_RE = re.compile(r"^\w+_errs\s+(\d+)$", re.MULTILINE)
 STORAGE_PATTERNS = (
     "Input/output error",
-    "I/O error",
     "csum failed",
     "failed to read block",
     "blk_update_request",
@@ -48,10 +47,12 @@ STORAGE_PATTERNS = (
 
 ACTIVE_UNITS = (
     "vasher-prebuild-candidate.service",
+    "vasher-prebuild-narrow.service",
     "vasher-prebuild-retry.service",
 )
 STOP_UNITS = {
     "vasher-prebuild-candidate.service",
+    "vasher-prebuild-narrow.service",
     "vasher-prebuild-retry.service",
 }
 REVISION_RE = re.compile(r"^[0-9a-f]{40}$")
