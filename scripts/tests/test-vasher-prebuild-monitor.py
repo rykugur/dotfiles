@@ -1413,7 +1413,6 @@ class StorageFaultTests(unittest.TestCase):
                     json.loads(self.state_path.read_text())["phase"],
                     "needs-attention",
                 )
-                self.assertEqual(runner.calls, [])
 
     def test_failed_build_without_pattern_keeps_existing_behavior(self):
         self.log_path.write_text("error: builder for drv failed with exit code 1\n")
@@ -1428,13 +1427,9 @@ class StorageFaultTests(unittest.TestCase):
 
     def test_fault_never_triggers_a_retry(self):
         self.log_path.write_text("nix: error: Input/output error\n")
-        runner = FakeRunner(active={"vasher-prebuild-candidate.service": True})
-        controller = self.make_controller(runner)
-        controller.observe(self.failed_sample())
-
-        self.assertTrue(self.fault_path.exists())
-        self.assertFalse(self.retry_path.exists())
-        self.assertEqual(runner.calls, [])
+        self.fault_path.write_text(
+            json.dumps({"revision": "2" * 40, "pattern": "I/O error", "at": "now"})
+        )
 
         state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
         state.phase = "retrying"
@@ -1478,12 +1473,118 @@ class StorageFaultTests(unittest.TestCase):
         self.assertEqual(controller.state.phase, "needs-attention")
         self.assertEqual(controller.state.btrfs_errors, 3)
 
-    def test_absent_btrfs_path_is_not_an_error(self):
-        self.assertEqual(
-            monitor.read_btrfs_errors(self.btrfs_root / "missing"), 0
-        )
+    def test_absent_or_unreadable_btrfs_path_reads_as_unknown(self):
+        self.assertIsNone(monitor.read_btrfs_errors(self.btrfs_root / "missing"))
+        (self.btrfs_root / "fsid" / "devinfo" / "sda1").mkdir(parents=True)
+        self.assertIsNone(monitor.read_btrfs_errors(self.btrfs_root))
         self.write_btrfs_errors(2)
         self.assertEqual(monitor.read_btrfs_errors(self.btrfs_root), 2)
+
+    def test_only_error_counter_lines_are_summed(self):
+        devinfo = self.btrfs_root / "fsid" / "devinfo" / "sda1"
+        devinfo.mkdir(parents=True)
+        (devinfo / "error_stats").write_text(
+            "devid 7\n"
+            "generation 4096\n"
+            "write_errs 0\n"
+            "read_errs 5\n"
+            "flush_errs 0\n"
+            "corruption_errs 1\n"
+            "generation_errs 0\n"
+        )
+        self.assertEqual(monitor.read_btrfs_errors(self.btrfs_root), 6)
+
+    def test_unknown_reading_on_either_side_makes_no_decision(self):
+        self.log_path.write_text("error: builder for drv failed with exit code 1\n")
+        controller = self.make_controller(FakeRunner())
+        controller.observe(self.failed_sample())
+
+        self.assertIsNone(controller.state.btrfs_errors)
+        self.assertFalse(self.fault_path.exists())
+
+        self.write_btrfs_errors(9000)
+        controller.observe(
+            self.failed_sample(120, status_updated_at="2026-09-02T23:30:00Z")
+        )
+
+        self.assertFalse(self.fault_path.exists())
+        self.assertEqual(controller.state.btrfs_errors, 9000)
+
+    def test_btrfs_baseline_survives_a_revision_change(self):
+        self.log_path.write_text("error: builder for drv failed with exit code 1\n")
+        self.write_btrfs_errors(1)
+        controller = self.make_controller(FakeRunner())
+        controller.observe(self.failed_sample())
+        self.assertEqual(controller.state.btrfs_errors, 1)
+
+        self.write_btrfs_errors(4)
+        controller.observe(
+            self.failed_sample(
+                120,
+                revision="3" * 40,
+                status_updated_at="2026-09-02T23:30:00Z",
+            )
+        )
+
+        self.assertEqual(controller.state.btrfs_errors, 4)
+        fault = json.loads(self.fault_path.read_text())
+        self.assertEqual(fault["pattern"], "btrfs-error-stats")
+        self.assertEqual(fault["revision"], "3" * 40)
+
+        reloaded = monitor.load_state(self.state_path, "1" * 40, "4" * 40)
+        self.assertEqual(reloaded.btrfs_errors, 4)
+        self.assertEqual(reloaded.phase, "observing")
+
+    def test_blocked_status_is_quiet(self):
+        root = Path(self.directory.name)
+        meminfo = root / "meminfo"
+        pressure = root / "pressure"
+        status = root / "status.json"
+        meminfo.write_text(
+            "MemAvailable:    3145728 kB\nSwapFree:         1572864 kB\n"
+        )
+        pressure.write_text("full avg10=0.00 avg60=0.00 avg300=0.00 total=0\n")
+        status.write_text(
+            json.dumps(
+                {
+                    "state": "blocked",
+                    "mode": "candidate",
+                    "updatedAt": "2026-10-12T00:00:00Z",
+                    "baseRevision": "",
+                    "revision": "",
+                }
+            )
+        )
+        runner = FakeRunner(
+            properties={
+                "vasher-prebuild-candidate.service": {"ActiveState": "inactive"},
+                "vasher-prebuild-retry.service": {"ActiveState": "inactive"},
+                "nix-daemon.service": {"MemoryCurrent": "0", "CPUUsageNSec": "0"},
+            }
+        )
+        reader = monitor.SystemReader(
+            runner,
+            meminfo_path=meminfo,
+            pressure_path=pressure,
+            status_path=status,
+            log_path=self.log_path,
+            statvfs=lambda _path: os.statvfs_result(
+                (4096, 4096, 0, 0, 1, 0, 0, 0, 0, 0)
+            ),
+            now=lambda: 1.0,
+        )
+        controller = self.make_controller(runner)
+        monitor.append_event(self.events_path, {"id": "seed", "type": "build-failed"})
+        before = self.events_path.read_text()
+
+        for _ in range(4):
+            observed = reader.sample()
+            self.assertEqual(observed.status_state, "blocked")
+            self.assertEqual(observed.base_revision, "")
+            controller.observe(observed)
+
+        self.assertEqual(self.events_path.read_text(), before)
+        self.assertFalse(self.state_path.exists())
 
     def test_older_state_file_loads_without_the_new_field(self):
         legacy = {

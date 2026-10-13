@@ -34,6 +34,7 @@ BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
 CANDIDATE_WORKTREE = "/var/lib/vasher/worktrees/candidate"
 FAULT_PATH = Path("/var/lib/vasher/monitor/storage-fault.json")
 BTRFS_ROOT = Path("/sys/fs/btrfs")
+BTRFS_ERROR_RE = re.compile(r"^\w+_errs\s+(\d+)$", re.MULTILINE)
 STORAGE_PATTERNS = (
     "Input/output error",
     "I/O error",
@@ -179,12 +180,16 @@ def scan_storage_fault(text: str) -> str | None:
     return None
 
 
-def read_btrfs_errors(root: Path = BTRFS_ROOT) -> int:
+# Returns None when nothing could be read, so that "no data" never reads as
+# "zero errors": the sysfs tree is absent inside an unprivileged container and
+# may appear later with the device's lifetime counters already non-zero.
+def read_btrfs_errors(root: Path = BTRFS_ROOT) -> int | None:
     total = 0
+    read_any = False
     try:
         filesystems = sorted(root.iterdir())
     except OSError:
-        return 0
+        return None
     for filesystem in filesystems:
         try:
             devices = sorted((filesystem / "devinfo").iterdir())
@@ -195,8 +200,11 @@ def read_btrfs_errors(root: Path = BTRFS_ROOT) -> int:
                 text = (device / "error_stats").read_text()
             except OSError:
                 continue
-            total += sum(int(value) for value in re.findall(r"\d+", text))
-    return total
+            read_any = True
+            total += sum(
+                int(value) for value in BTRFS_ERROR_RE.findall(text)
+            )
+    return total if read_any else None
 
 
 def read_worktree_head(worktree: Path) -> str | None:
@@ -232,7 +240,12 @@ def load_state(path: Path, base_revision: str, revision: str) -> MonitorState:
     except (FileNotFoundError, json.JSONDecodeError, TypeError):
         return MonitorState.for_revision(base_revision, revision)
     if (state.base_revision, state.revision) != (base_revision, revision):
-        return MonitorState.for_revision(base_revision, revision)
+        # The btrfs counters belong to the device, not to the candidate, so the
+        # baseline survives a revision change.
+        return replace(
+            MonitorState.for_revision(base_revision, revision),
+            btrfs_errors=state.btrfs_errors,
+        )
     return state
 
 
@@ -443,11 +456,15 @@ class SystemReader:
         status = json.loads(self.status_path.read_text())
         base_revision = str(status.get("baseRevision") or "")
         revision = str(status.get("revision") or "")
-        if not REVISION_RE.fullmatch(base_revision) or (
-            revision and not REVISION_RE.fullmatch(revision)
+        status_state = str(status.get("state") or "")
+        # A halted pipeline may never have learned a revision, so a blocked
+        # status only has to be consistent, not complete.
+        required = () if status_state == "blocked" else (base_revision,)
+        if any(not REVISION_RE.fullmatch(value) for value in required) or any(
+            value and not REVISION_RE.fullmatch(value)
+            for value in (base_revision, revision)
         ):
             raise InvalidStatus("status revisions must be 40-character hex")
-        status_state = str(status.get("state") or "")
         meminfo = read_meminfo(self.meminfo_path)
         vfs = self.statvfs(self.root)
         try:
@@ -652,8 +669,11 @@ class Controller:
             sample.base_revision,
             sample.revision,
         ):
-            self.state = MonitorState.for_revision(
-                sample.base_revision, sample.revision
+            self.state = replace(
+                MonitorState.for_revision(
+                    sample.base_revision, sample.revision
+                ),
+                btrfs_errors=self.state.btrfs_errors,
             )
         self.state.boot_id = self.boot_id
 
@@ -706,7 +726,12 @@ class Controller:
         errors = read_btrfs_errors(self.btrfs_root)
         previous = self.state.btrfs_errors
         self.state.btrfs_errors = errors
-        if pattern is None and previous is not None and errors > previous:
+        if (
+            pattern is None
+            and previous is not None
+            and errors is not None
+            and errors > previous
+        ):
             pattern = "btrfs-error-stats"
         return pattern
 
@@ -832,6 +857,11 @@ class Controller:
         self._summarize_pending()
 
     def observe(self, sample: Sample) -> None:
+        # A blocked pipeline is a resting state an operator clears by hand. It
+        # must stay silent: realigning or recording here would churn the state
+        # file and evict the storage-fault event from the capped ledger.
+        if sample.status_state == "blocked":
+            return
         self._align_state(sample)
         if sample.status_state == "building":
             try:

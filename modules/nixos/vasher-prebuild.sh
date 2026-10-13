@@ -116,6 +116,15 @@ storage_fault=/var/lib/vasher/monitor/storage-fault.json
 if [[ -e $storage_fault ]]; then
   printf 'vasher-prebuild: storage fault recorded in %s; refusing to build\n' \
     "$storage_fault" >&2
+  # The monitor rejects a status without a 40-hex base revision, so the blocked
+  # status keeps the revisions of the last run. A missing or unparseable status
+  # simply leaves them empty.
+  if [[ -s $status ]]; then
+    base_revision=$(jq -r '.baseRevision // "" | select(test("^[0-9a-f]{40}$"))' \
+      "$status" 2> /dev/null) || base_revision=
+    candidate_revision=$(jq -r '.revision // "" | select(test("^[0-9a-f]{40}$"))' \
+      "$status" 2> /dev/null) || candidate_revision=
+  fi
   write_status blocked null
   exit 0
 fi

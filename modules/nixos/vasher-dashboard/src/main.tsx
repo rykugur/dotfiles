@@ -4,7 +4,14 @@ import { formatTimestamp } from "./date-format.ts";
 import { type MonitorEvent, renderEventText } from "./event-text.ts";
 import "./dashboard.css";
 
-type State = "idle" | "preparing" | "building" | "success" | "failed" | "stale";
+type State =
+  | "idle"
+  | "preparing"
+  | "building"
+  | "success"
+  | "failed"
+  | "stale"
+  | "blocked";
 type Mode = "refresh" | "candidate" | "retry";
 
 type Status = {
@@ -81,6 +88,8 @@ function statusCopy(status: Status): string {
   if (status.state === "building") return "Refreshing package inputs and warming Jezrien’s reduced closure.";
   if (status.state === "success") return "Published to cache-bump and retained as a cache root.";
   if (status.state === "failed") return `Build stopped with exit code ${status.exitCode ?? "unknown"}.`;
+  if (status.state === "blocked")
+    return "Builds are stopped because the storage reported errors. An operator clears /var/lib/vasher/monitor/storage-fault.json after replacing the disk.";
   return "Current cache-bump already covers master.";
 }
 

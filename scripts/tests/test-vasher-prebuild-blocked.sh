@@ -26,13 +26,19 @@ source_text=$(<"$repo_root/modules/nixos/vasher-prebuild.sh")
 printf '%s\n' "${source_text//\/var\/lib\/vasher/$state_root}" > "$tmp/prebuild.sh"
 chmod +x "$tmp/bin/"*
 
+base_hex=$(printf '1%.0s' {1..40})
+candidate_hex=$(printf '2%.0s' {1..40})
+
 run_case() {
-  local mode=$1
+  local mode=$1 prior_status=${2-}
   rm -rf "$state_root"
-  mkdir -p "$state_root/repo/.git" "$worktree/.git" "$state_root/monitor"
+  mkdir -p "$state_root/repo/.git" "$worktree/.git" "$state_root/monitor" \
+    "$state_root/dashboard"
   : > "$events"
   printf '{"revision":"%s","pattern":"I/O error","at":"2026-10-12T00:00:00Z"}\n' \
-    "$(printf '2%.0s' {1..40})" > "$state_root/monitor/storage-fault.json"
+    "$candidate_hex" > "$state_root/monitor/storage-fault.json"
+  [[ -z $prior_status ]] ||
+    printf '%s\n' "$prior_status" > "$state_root/dashboard/status.json"
 
   local exit_code=0
   set +e
@@ -56,8 +62,13 @@ fail() {
   exit 1
 }
 
+prior_status=$(jq -cn --arg base "$base_hex" --arg revision "$candidate_hex" \
+  '{state:"success",mode:"candidate",startedAt:"2026-10-11T00:00:00Z",
+    updatedAt:"2026-10-11T01:00:00Z",baseRevision:$base,revision:$revision,
+    output:"/nix/store/out",excludedPackages:[],exitCode:0}')
+
 for mode in refresh candidate narrow; do
-  exit_code=$(run_case "$mode")
+  exit_code=$(run_case "$mode" "$prior_status")
 
   [[ $exit_code -eq 0 ]] ||
     fail "$mode: expected exit 0, got $exit_code"
@@ -85,6 +96,28 @@ for mode in refresh candidate narrow; do
   history=$(jq -r 'length' "$state_root/dashboard/history.json")
   [[ $history -eq 0 ]] ||
     fail "$mode: blocked run appended $history history entries"
+
+  base=$(jq -r .baseRevision "$state_root/dashboard/status.json")
+  revision=$(jq -r .revision "$state_root/dashboard/status.json")
+  [[ $base == "$base_hex" && $revision == "$candidate_hex" ]] ||
+    fail "$mode: expected carried revisions, got $base / $revision"
+done
+
+# A missing or unparseable status must not trip the ERR trap: the run still
+# blocks cleanly, only without revisions to carry.
+for prior in '' 'not json at all'; do
+  exit_code=$(run_case candidate "$prior")
+
+  [[ $exit_code -eq 0 ]] ||
+    fail "degraded status: expected exit 0, got $exit_code"
+
+  state=$(jq -r .state "$state_root/dashboard/status.json")
+  [[ $state == blocked ]] ||
+    fail "degraded status: expected blocked, got $state"
+
+  base=$(jq -r .baseRevision "$state_root/dashboard/status.json")
+  [[ -z $base ]] ||
+    fail "degraded status: expected empty baseRevision, got $base"
 done
 
 printf 'test-vasher-prebuild-blocked: all modes blocked\n'
