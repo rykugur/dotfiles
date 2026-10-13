@@ -379,7 +379,6 @@ class RecoveryControllerTests(unittest.TestCase):
         )
 
     def test_narrow_recovery_stops_and_fails_safe_without_candidate_retry(self):
-        self._patch_worktree("3" * 40)
         runner = FakeRunner(active={"vasher-prebuild-narrow.service": True})
         controller = monitor.Controller(
             runner, self.state_path, self.events_path, self.retry_path
@@ -392,15 +391,58 @@ class RecoveryControllerTests(unittest.TestCase):
 
         controller.recover(narrow, monitor.Decision("stop", "memory"))
 
-        self.assertIn(
-            ("systemctl", "stop", "vasher-prebuild-narrow.service"), runner.calls
-        )
-        self.assertEqual(controller.state.phase, "needs-attention")
-        self.assertNotIn(
-            ("systemctl", "start", "--no-block", "vasher-prebuild-retry.service"),
+        self.assertEqual(
             runner.calls,
+            [("systemctl", "stop", "vasher-prebuild-narrow.service")],
+        )
+        self.assertFalse(self.retry_path.exists())
+        saved = json.loads(self.state_path.read_text())
+        self.assertEqual(saved["phase"], "needs-attention")
+        events = json.loads(self.events_path.read_text())
+        self.assertTrue(
+            any(
+                event["type"] == "needs-attention"
+                and event["reason"] == "narrow-retry-unsupported"
+                for event in events
+            )
         )
 
+    def test_narrow_recovery_phases_resume_to_needs_attention(self):
+        for phase in ("stopping", "cleaning", "retrying"):
+            with self.subTest(phase=phase):
+                self.state_path.unlink(missing_ok=True)
+                self.events_path.unlink(missing_ok=True)
+                self.retry_path.unlink(missing_ok=True)
+                state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+                state.phase = phase
+                state.retry_count = int(phase == "retrying")
+                state.boot_id = "same-boot"
+                monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+                runner = FakeRunner()
+                controller = monitor.Controller(
+                    runner,
+                    self.state_path,
+                    self.events_path,
+                    self.retry_path,
+                    boot_id="same-boot",
+                )
+
+                controller.observe(
+                    sample(90, active_unit=None, mode="narrow")
+                )
+
+                self.assertEqual(runner.calls, [])
+                self.assertFalse(self.retry_path.exists())
+                saved = json.loads(self.state_path.read_text())
+                self.assertEqual(saved["phase"], "needs-attention")
+                events = json.loads(self.events_path.read_text())
+                self.assertTrue(
+                    any(
+                        event["type"] == "needs-attention"
+                        and event["reason"] == "narrow-retry-unsupported"
+                        for event in events
+                    )
+                )
 
     def test_failed_precondition_records_needs_attention(self):
         runner = FakeRunner(

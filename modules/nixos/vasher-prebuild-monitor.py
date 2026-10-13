@@ -771,6 +771,9 @@ class Controller:
         return read_worktree_head(Path(CANDIDATE_WORKTREE)) == sample.revision
 
     def _start_retry(self, sample: Sample) -> None:
+        if sample.mode == "narrow":
+            self._needs_attention(sample, "narrow-retry-unsupported")
+            return
         if self.fault_path.exists():
             self._needs_attention(sample, "storage-fault")
             return
@@ -860,6 +863,9 @@ class Controller:
         elif self.state.phase != "stopping":
             self._needs_attention(sample, "missing-stop-unit")
             return
+        if sample.mode == "narrow":
+            self._needs_attention(sample, "narrow-retry-unsupported")
+            return
         self._recovering = True
         try:
             self._cleanup_then_retry(sample)
@@ -874,6 +880,9 @@ class Controller:
         if sample.status_state == "blocked":
             return
         self._align_state(sample)
+        if sample.mode == "narrow" and self.state.phase in RECOVERY_PHASES:
+            self._needs_attention(sample, "narrow-retry-unsupported")
+            return
         if sample.status_state == "building":
             try:
                 events = json.loads(self.events_path.read_text())
