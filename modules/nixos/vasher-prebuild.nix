@@ -44,6 +44,9 @@
       monitor = pkgs.writers.writePython3Bin "vasher-prebuild-monitor" {
         flakeIgnore = [ "E203" "E265" "E501" "W503" ];
       } (builtins.readFile ./vasher-prebuild-monitor.py);
+      agent = pkgs.writers.writePython3Bin "vasher-agent-verb" {
+        flakeIgnore = [ "E203" "E265" "E501" "W503" ];
+      } (builtins.readFile ./vasher-agent-verb.py);
 
       retry = pkgs.writeShellApplication {
         name = "vasher-prebuild-retry";
@@ -106,6 +109,11 @@
           type = lib.types.int;
           default = 1;
           description = "Number of successful Jezrien closures to retain as GC roots. 1 keeps only the latest candidate.";
+        };
+        agentKeys = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = "Public keys allowed to drive the typed agent action channel. Each key is forced to the channel program and nothing else.";
         };
       };
 
@@ -220,11 +228,54 @@
             RandomizedDelaySec = "10m";
           };
         };
+        # The channel user owns its own request directory and needs to replace
+        # two files that live outside it: the ledger in the dashboard and the
+        # retry request the retry wrapper reads. Group write on those two
+        # directories is the whole grant; neither directory holds a secret.
+        # The fault file stays a root-owned 0600 record that only an operator
+        # removes, and the program has no path that removes it.
         systemd.tmpfiles.rules = [
-          "d /var/lib/vasher/dashboard 0775 vasher vasher -"
-          "d /var/lib/vasher/monitor 0755 root root -"
+          "d /var/lib/vasher/dashboard 0775 vasher vasher-agent -"
+          "d /var/lib/vasher/monitor 0775 root vasher-agent -"
+          "d /var/lib/vasher/agent 0755 vasher-agent vasher-agent -"
           "f /var/lib/vasher/dashboard/events.json 0644 root root - []"
         ];
+
+        users.groups.vasher-agent = { };
+        users.users.vasher-agent = {
+          isSystemUser = true;
+          group = "vasher-agent";
+          # No supplementary groups: the channel user is not in the vasher
+          # group, so it cannot read the deploy key or the GitHub token.
+          extraGroups = [ ];
+          home = "/var/lib/vasher-agent";
+          createHome = true;
+          homeMode = "0700";
+          # sshd runs the forced command through the login shell.
+          shell = pkgs.bashInteractive;
+          openssh.authorizedKeys.keys = map (
+            key: ''command="${agent}/bin/vasher-agent-verb",restrict ${key}''
+          ) cfg.agentKeys;
+        };
+
+        security.polkit.enable = true;
+        security.polkit.extraConfig = ''
+          polkit.addRule(function(action, subject) {
+            if (subject.user !== "vasher-agent") {
+              return polkit.Result.NOT_HANDLED;
+            }
+            if (action.id !== "org.freedesktop.systemd1.manage-units") {
+              return polkit.Result.NO;
+            }
+            var unit = action.lookup("unit");
+            if (action.lookup("verb") === "start" &&
+                (unit === "vasher-prebuild-retry.service" ||
+                 unit === "vasher-prebuild-narrow.service")) {
+              return polkit.Result.YES;
+            }
+            return polkit.Result.NO;
+          });
+        '';
         services.caddy = {
           enable = true;
           virtualHosts."http://:5080".extraConfig = ''
