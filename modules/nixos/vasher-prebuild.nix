@@ -52,7 +52,7 @@
         name = "vasher-prebuild-retry";
         runtimeInputs = [ pkgs.jq ];
         text = ''
-          request=/var/lib/vasher/monitor/retry.json
+          request=/var/lib/vasher/agent/retry.json
           base=$(jq -er '.baseRevision | select(test("^[0-9a-f]{40}$"))' "$request")
           revision=$(jq -er '.revision | select(test("^[0-9a-f]{40}$"))' "$request")
           exec ${prebuild}/bin/vasher-prebuild retry "$base" "$revision"
@@ -185,6 +185,9 @@
               ReadWritePaths = [
                 "/var/lib/vasher/dashboard"
                 "/var/lib/vasher/monitor"
+                # The monitor writes its own retry request here, beside the
+                # channel's.
+                "/var/lib/vasher/agent"
               ];
               ReadOnlyPaths = [
                 config.sops.secrets."swoleflake/openrouter_api_key".path
@@ -228,17 +231,25 @@
             RandomizedDelaySec = "10m";
           };
         };
-        # The channel user owns its own request directory and needs to replace
-        # two files that live outside it: the ledger in the dashboard and the
-        # retry request the retry wrapper reads. Group write on those two
-        # directories is the whole grant; neither directory holds a secret.
-        # The fault file stays a root-owned 0600 record that only an operator
-        # removes, and the program has no path that removes it.
+        # The channel user writes nothing outside /var/lib/vasher/agent, so the
+        # dashboard and monitor directories keep their original ownership and
+        # mode. Directory write permission is the permission to unlink, and the
+        # storage fault record must stay out of the channel's reach.
         systemd.tmpfiles.rules = [
-          "d /var/lib/vasher/dashboard 0775 vasher vasher-agent -"
-          "d /var/lib/vasher/monitor 0775 root vasher-agent -"
+          "d /var/lib/vasher/dashboard 0775 vasher vasher -"
+          "d /var/lib/vasher/monitor 0755 root root -"
           "d /var/lib/vasher/agent 0755 vasher-agent vasher-agent -"
           "f /var/lib/vasher/dashboard/events.json 0644 root root - []"
+        ];
+
+        # One entry is one authorized_keys line. An embedded newline would
+        # start a second line with neither the forced command nor restrict,
+        # which is an interactive shell for the channel key.
+        assertions = [
+          {
+            assertion = !(lib.any (key: lib.hasInfix "\n" key || lib.hasInfix "\r" key) cfg.agentKeys);
+            message = "ryk.vasherPrebuild.agentKeys entries must not contain a newline or a carriage return.";
+          }
         ];
 
         users.groups.vasher-agent = { };

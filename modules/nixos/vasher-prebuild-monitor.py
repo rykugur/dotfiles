@@ -25,7 +25,9 @@ STALL_CPU_SECONDS = 10
 
 STATE_PATH = Path("/var/lib/vasher/monitor/state.json")
 EVENTS_PATH = Path("/var/lib/vasher/dashboard/events.json")
-RETRY_PATH = Path("/var/lib/vasher/monitor/retry.json")
+# The retry request lives in the agent directory, the one place both the
+# monitor (as root) and the channel user may write.
+RETRY_PATH = Path("/var/lib/vasher/agent/retry.json")
 SYSTEMCTL = "/run/current-system/sw/bin/systemctl"
 STATUS_PATH = Path("/var/lib/vasher/dashboard/status.json")
 LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")

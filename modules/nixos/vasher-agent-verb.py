@@ -10,6 +10,13 @@ Request text never becomes a command, a unit name, a path, a URL, or a
 threshold: every command is a fixed argument list, every path is a constant,
 and the only two units that may start are named here. The program ignores
 SSH_ORIGINAL_COMMAND and never calls a shell.
+
+Every file the program writes lives in /var/lib/vasher/agent, the one directory
+the channel user owns. It reads the status record, the storage fault file and
+the prebuild lock, and it can write none of them.
+
+One exclusive lock covers the whole decision, so concurrent sessions on the
+same key cannot both spend the same budget slot or both retry one revision.
 """
 from __future__ import annotations
 
@@ -17,8 +24,11 @@ import fcntl
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
+import syslog
+import tempfile
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -31,18 +41,23 @@ MAX_INPUTS = 8
 MAX_HOLD_DAYS = 30
 MAX_REASON_CHARS = 200
 BUDGET_LIMIT = 8
+REJECTION_LIMIT = 32
+REJECTION_HISTORY = 64
 BUDGET_WINDOW_SECONDS = 24 * 60 * 60
 RETRY_HISTORY = 50
 EVENT_LIMIT = 100
 METADATA_TIMEOUT = 300
 START_TIMEOUT = 60
+STDIN_TIMEOUT = 10
+LOCK_TIMEOUT = 30.0
+LOCK_POLL = 0.02
 
+# The only directory the channel user owns, and the only one it writes.
 AGENT_DIR = Path("/var/lib/vasher/agent")
+# Read-only inputs. The channel has no write permission on either directory.
 STATUS_PATH = Path("/var/lib/vasher/dashboard/status.json")
-EVENTS_PATH = Path("/var/lib/vasher/dashboard/events.json")
 FAULT_PATH = Path("/var/lib/vasher/monitor/storage-fault.json")
-RETRY_PATH = Path("/var/lib/vasher/monitor/retry.json")
-LOCK_PATH = Path("/var/lib/vasher/prebuild.lock")
+PREBUILD_LOCK_PATH = Path("/var/lib/vasher/prebuild.lock")
 CANDIDATE_WORKTREE = Path("/var/lib/vasher/worktrees/candidate")
 AGENT_HOME = "/var/lib/vasher-agent"
 SYSTEM_BIN = "/run/current-system/sw/bin"
@@ -61,12 +76,26 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 REASON_RE = re.compile(r"^[^\x00-\x1f\x7f]+$")
 
 
+def log_denied(verb: str, reason: str) -> None:
+    """Records a denial in syslog. The request body is never logged.
+
+    Under a forced command standard error reaches the client, not the journal,
+    so syslog is the only record an operator can read afterwards.
+    """
+    try:
+        syslog.openlog("vasher-agent-verb", syslog.LOG_PID, syslog.LOG_AUTH)
+        syslog.syslog(syslog.LOG_WARNING, f"denied verb={verb} reason={reason}")
+    except OSError:
+        return
+
+
 def probe_lock(path: Path) -> bool:
     """Reports whether the prebuild lock is held, without blocking on it.
 
     A shared probe conflicts with the exclusive lock the prebuild script
-    takes, so a running build is visible, and two probes never fight. An
-    unreadable lock counts as busy: the channel fails closed.
+    takes, so a running build is visible, two probes never fight, and the lock
+    is never stolen. An unreadable lock counts as busy: the channel fails
+    closed.
     """
     try:
         descriptor = os.open(path, os.O_RDONLY)
@@ -85,11 +114,35 @@ def probe_lock(path: Path) -> bool:
         os.close(descriptor)
 
 
+def acquire_channel_lock(path: Path, timeout: float) -> int | None:
+    """Takes the channel's own exclusive lock, or gives up after timeout.
+
+    The file is distinct from the prebuild lock, which the channel only ever
+    probes, so the two can never deadlock.
+    """
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        descriptor = os.open(path, os.O_RDWR | os.O_CREAT, 0o600)
+    except OSError:
+        return None
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return descriptor
+        except OSError:
+            if time.monotonic() >= deadline:
+                os.close(descriptor)
+                return None
+            time.sleep(LOCK_POLL)
+
+
 def read_flake_inputs(worktree: Path) -> frozenset[str] | None:
     """Returns the root flake input names of the candidate worktree.
 
     Returns None when the worktree is absent or the metadata is unusable, so
-    that "unknown" never reads as "nothing is known": the caller rejects.
+    that "unknown" never reads as "nothing is known": the caller rejects. This
+    is the one expensive check, so it runs only after every cheap one passes.
     """
     if not (worktree / "flake.nix").is_file():
         return None
@@ -117,10 +170,10 @@ def read_flake_inputs(worktree: Path) -> frozenset[str] | None:
         return None
     if not isinstance(metadata, dict):
         return None
-    nodes = metadata.get("locks", {})
-    nodes = nodes.get("nodes", {}) if isinstance(nodes, dict) else {}
-    root = nodes.get("root", {}) if isinstance(nodes, dict) else {}
-    inputs = root.get("inputs", {}) if isinstance(root, dict) else {}
+    locks = metadata.get("locks")
+    nodes = locks.get("nodes") if isinstance(locks, dict) else None
+    root = nodes.get("root") if isinstance(nodes, dict) else None
+    inputs = root.get("inputs") if isinstance(root, dict) else None
     if not isinstance(inputs, dict):
         return None
     return frozenset(name for name in inputs if isinstance(name, str))
@@ -143,17 +196,18 @@ class Context:
     now: float
     agent_dir: Path = AGENT_DIR
     status_path: Path = STATUS_PATH
-    events_path: Path = EVENTS_PATH
     fault_path: Path = FAULT_PATH
-    retry_path: Path = RETRY_PATH
-    lock_path: Path = LOCK_PATH
+    prebuild_lock_path: Path = PREBUILD_LOCK_PATH
     worktree: Path = CANDIDATE_WORKTREE
+    lock_timeout: float = LOCK_TIMEOUT
     lock_busy: Callable[[Path], bool] = field(default=probe_lock)
     flake_inputs: Callable[[Path], frozenset[str] | None] = field(
         default=read_flake_inputs
     )
     start_unit: Callable[[str], None] = field(default=start_unit)
+    log: Callable[[str, str], None] = field(default=log_denied)
 
+    # Every writable path is derived from agent_dir and nothing else.
     @property
     def holds_path(self) -> Path:
         return self.agent_dir / "holds.json"
@@ -165,6 +219,18 @@ class Context:
     @property
     def verbs_path(self) -> Path:
         return self.agent_dir / "verbs.json"
+
+    @property
+    def retry_path(self) -> Path:
+        return self.agent_dir / "retry.json"
+
+    @property
+    def events_path(self) -> Path:
+        return self.agent_dir / "events.json"
+
+    @property
+    def channel_lock_path(self) -> Path:
+        return self.agent_dir / "channel.lock"
 
     @property
     def today(self):
@@ -203,15 +269,23 @@ class Plan:
 @dataclass(frozen=True)
 class Ledger:
     accepted: tuple[dict[str, object], ...] = ()
+    rejected: tuple[dict[str, object], ...] = ()
     retries: dict[str, int] = field(default_factory=dict)
+    corrupt: bool = False
 
 
 def atomic_json(path: Path, value: object, mode: int = 0o600) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
-    temporary.write_text(json.dumps(value, separators=(",", ":")) + "\n")
-    temporary.chmod(mode)
-    temporary.replace(path)
+    descriptor, name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "w") as handle:
+            handle.write(json.dumps(value, separators=(",", ":")) + "\n")
+        os.chmod(temporary, mode)
+        os.replace(temporary, path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 def load_json(path: Path) -> object:
@@ -228,40 +302,79 @@ def append_event(path: Path, event: dict[str, object]) -> None:
     atomic_json(path, [event, *events][:EVENT_LIMIT], mode=0o644)
 
 
-def load_ledger(path: Path) -> Ledger:
-    value = load_json(path)
-    if not isinstance(value, dict):
-        return Ledger()
-    raw_accepted = value.get("accepted")
-    accepted = tuple(
+def _entries(value: object) -> tuple[dict[str, object], ...]:
+    return tuple(
         entry
-        for entry in (raw_accepted if isinstance(raw_accepted, list) else [])
-        if isinstance(entry, dict) and isinstance(entry.get("at"), (int, float))
+        for entry in (value if isinstance(value, list) else [])
+        if isinstance(entry, dict)
+        and isinstance(entry.get("at"), (int, float))
         and not isinstance(entry.get("at"), bool)
     )
+
+
+def load_ledger(path: Path) -> Ledger:
+    """Reads the durable counters.
+
+    A missing file is a fresh budget. A file that exists but cannot be read or
+    parsed is corrupt, which counts as an exhausted budget: a damaged ledger
+    must never hand out a free allowance.
+    """
+    try:
+        value = json.loads(path.read_text())
+    except FileNotFoundError:
+        return Ledger()
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return Ledger(corrupt=True)
+    if not isinstance(value, dict):
+        return Ledger(corrupt=True)
     raw_retries = value.get("retries")
     retries = {
         name: count
         for name, count in (
             raw_retries.items() if isinstance(raw_retries, dict) else []
         )
-        if isinstance(name, str) and isinstance(count, int)
+        if isinstance(name, str)
+        and isinstance(count, int)
         and not isinstance(count, bool)
     }
-    return Ledger(accepted=accepted, retries=retries)
+    return Ledger(
+        accepted=_entries(value.get("accepted")),
+        rejected=_entries(value.get("rejected")),
+        retries=retries,
+    )
 
 
-def spent(ledger: Ledger, now: float) -> int:
+def window_count(entries: tuple[dict[str, object], ...], now: float) -> int:
     window = now - BUDGET_WINDOW_SECONDS
-    return sum(1 for entry in ledger.accepted if entry["at"] >= window)
+    return sum(1 for entry in entries if entry["at"] >= window)
 
 
-def record_verb(
+def _in_window(
+    entries: tuple[dict[str, object], ...], now: float
+) -> list[dict[str, object]]:
+    window = now - BUDGET_WINDOW_SECONDS
+    return [entry for entry in entries if entry["at"] >= window]
+
+
+def write_ledger(
+    ctx: Context,
+    accepted: list[dict[str, object]],
+    rejected: list[dict[str, object]],
+    retries: dict[str, int],
+) -> None:
+    atomic_json(
+        ctx.verbs_path,
+        {"accepted": accepted, "rejected": rejected[-REJECTION_HISTORY:],
+         "retries": retries},
+        0o600,
+    )
+
+
+def record_accept(
     ctx: Context, ledger: Ledger, event_id: str, verb: str, plan: Plan
 ) -> None:
-    window = ctx.now - BUDGET_WINDOW_SECONDS
-    entries = [entry for entry in ledger.accepted if entry["at"] >= window]
-    entries.append(
+    accepted = _in_window(ledger.accepted, ctx.now)
+    accepted.append(
         {"id": event_id, "at": ctx.now, "verb": verb, "revision": plan.revision}
     )
     retries = dict(ledger.retries)
@@ -269,7 +382,22 @@ def record_verb(
         retries[plan.retry_revision] = retries.get(plan.retry_revision, 0) + 1
         if len(retries) > RETRY_HISTORY:
             retries = dict(list(retries.items())[-RETRY_HISTORY:])
-    atomic_json(ctx.verbs_path, {"accepted": entries, "retries": retries}, 0o600)
+    write_ledger(ctx, accepted, _in_window(ledger.rejected, ctx.now), retries)
+
+
+def record_reject(
+    ctx: Context, ledger: Ledger, event_id: str, verb: str, reason: str
+) -> None:
+    rejected = _in_window(ledger.rejected, ctx.now)
+    rejected.append(
+        {"id": event_id, "at": ctx.now, "verb": verb, "reason": reason}
+    )
+    write_ledger(
+        ctx,
+        _in_window(ledger.accepted, ctx.now),
+        rejected,
+        dict(ledger.retries),
+    )
 
 
 def emit(
@@ -297,16 +425,26 @@ def emit(
     try:
         append_event(ctx.events_path, event)
     except OSError:
-        # The ledger is a report, not the decision. A full or read-only
-        # dashboard directory must not turn an answered request into a crash.
+        # The ledger is a report, not the decision. A full directory must not
+        # turn an answered request into a crash.
         return
 
 
-def reject(
-    ctx: Context, verb: str, reason: str, revision: str | None = None
+def deny(
+    ctx: Context,
+    ledger: Ledger | None,
+    verb: str,
+    reason: str,
+    revision: str | None = None,
 ) -> Response:
     event_id = uuid.uuid4().hex
+    if ledger is not None:
+        try:
+            record_reject(ctx, ledger, event_id, verb, reason)
+        except OSError:
+            pass
     emit(ctx, event_id, verb, False, reason, revision)
+    ctx.log(verb, reason)
     return Response(accepted=False, reason=reason, event_id=event_id, code=1)
 
 
@@ -338,7 +476,14 @@ def load_holds(path: Path) -> dict[str, object]:
     }
 
 
-def check_retry(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
+#
+# Each verb is one cheap validator and one builder. The validator reads only
+# local files and the request; the builder may consult the flake metadata,
+# which costs a nix evaluation, so it runs only after the budget check.
+#
+
+
+def validate_retry(request: dict, ctx: Context, ledger: Ledger) -> str | None:
     revision = request.get("revision")
     if not is_revision(revision):
         return "revision"
@@ -347,14 +492,23 @@ def check_retry(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
         return "state"
     if status.get("state") not in RETRY_STATES:
         return "state"
-    base = status.get("baseRevision")
-    recorded = status.get("revision")
-    if not is_revision(base) or not is_revision(recorded):
+    if not is_revision(status.get("baseRevision")) or not is_revision(
+        status.get("revision")
+    ):
         return "state"
-    if revision != recorded:
+    if revision != status.get("revision"):
         return "revision"
     if ledger.retries.get(revision, 0):
         return "retry-budget"
+    return None
+
+
+def build_retry(request: dict, ctx: Context) -> Plan | str:
+    revision = request["revision"]
+    status = load_json(ctx.status_path)
+    if not isinstance(status, dict) or not is_revision(status.get("baseRevision")):
+        return "state"
+    base = status["baseRevision"]
     return Plan(
         writes=(
             (ctx.retry_path, {"baseRevision": base, "revision": revision}, 0o644),
@@ -365,7 +519,7 @@ def check_retry(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
     )
 
 
-def check_narrow(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
+def validate_narrow(request: dict, ctx: Context, ledger: Ledger) -> str | None:
     base = request.get("base")
     if not is_revision(base):
         return "base"
@@ -379,27 +533,31 @@ def check_narrow(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
         return "inputs"
     if len(set(inputs)) != len(inputs):
         return "inputs"
+    return None
+
+
+def build_narrow(request: dict, ctx: Context) -> Plan | str:
+    inputs = list(request["inputs"])
     known = ctx.flake_inputs(ctx.worktree)
     if known is None or not set(inputs) <= known:
         return "inputs"
     return Plan(
         writes=(
-            (ctx.narrow_request_path, {"base": base, "inputs": list(inputs)}, 0o644),
+            (
+                ctx.narrow_request_path,
+                {"base": request["base"], "inputs": inputs},
+                0o644,
+            ),
         ),
         unit=NARROW_UNIT,
-        revision=base,
+        revision=request["base"],
     )
 
 
-def check_hold(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
-    name = request.get("input")
-    if not is_input_name(name):
+def validate_hold(request: dict, ctx: Context, ledger: Ledger) -> str | None:
+    if not is_input_name(request.get("input")):
         return "inputs"
-    known = ctx.flake_inputs(ctx.worktree)
-    if known is None or name not in known:
-        return "inputs"
-    revision = request.get("revision")
-    if not is_revision(revision):
+    if not is_revision(request.get("revision")):
         return "hold"
     expires = parse_date(request.get("expires"))
     if expires is None:
@@ -413,20 +571,34 @@ def check_hold(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
     text = reason.strip()
     if not text or len(text) > MAX_REASON_CHARS or REASON_RE.fullmatch(text) is None:
         return "hold"
+    return None
+
+
+def build_hold(request: dict, ctx: Context) -> Plan | str:
+    name = request["input"]
+    known = ctx.flake_inputs(ctx.worktree)
+    if known is None or name not in known:
+        return "inputs"
     holds = load_holds(ctx.holds_path)
     holds[name] = {
-        "revision": revision,
-        "expires": expires.isoformat(),
-        "reason": text,
+        "revision": request["revision"],
+        "expires": parse_date(request["expires"]).isoformat(),
+        "reason": request["reason"].strip(),
         "createdAt": ctx.timestamp,
     }
-    return Plan(writes=((ctx.holds_path, holds, 0o644),), revision=revision)
+    return Plan(
+        writes=((ctx.holds_path, holds, 0o644),), revision=request["revision"]
+    )
 
 
-def check_release(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
-    name = request.get("input")
-    if not is_input_name(name):
+def validate_release(request: dict, ctx: Context, ledger: Ledger) -> str | None:
+    if not is_input_name(request.get("input")):
         return "inputs"
+    return None
+
+
+def build_release(request: dict, ctx: Context) -> Plan | str:
+    name = request["input"]
     holds = load_holds(ctx.holds_path)
     if name not in holds:
         return "hold"
@@ -434,43 +606,77 @@ def check_release(request: dict, ctx: Context, ledger: Ledger) -> Plan | str:
     return Plan(writes=((ctx.holds_path, remaining, 0o644),))
 
 
-CHECKS: dict[str, Callable[[dict, Context, Ledger], "Plan | str"]] = {
-    "retry-exact": check_retry,
-    "narrow-inputs": check_narrow,
-    "hold-input": check_hold,
-    "release-input": check_release,
+CHECKS: dict[
+    str,
+    tuple[
+        Callable[[dict, Context, Ledger], "str | None"],
+        Callable[[dict, Context], "Plan | str"],
+    ],
+] = {
+    "retry-exact": (validate_retry, build_retry),
+    "narrow-inputs": (validate_narrow, build_narrow),
+    "hold-input": (validate_hold, build_hold),
+    "release-input": (validate_release, build_release),
 }
 
 
-def handle(request: dict, ctx: Context) -> Response:
-    verb = request.get("verb")
-    if not isinstance(verb, str) or verb not in CHECKS:
-        return Response(accepted=False, reason="verb", event_id=None, code=2)
-    # A suspect disk rejects every verb. Only an operator clears the fault
-    # file; this program has no path that removes it.
-    if ctx.fault_path.exists():
-        return reject(ctx, verb, "storage-fault")
-    if verb in BUILD_VERBS and ctx.lock_busy(ctx.lock_path):
-        return reject(ctx, verb, "busy")
+def decide(request: dict, verb: str, ctx: Context) -> Response:
     ledger = load_ledger(ctx.verbs_path)
-    outcome = CHECKS[verb](request, ctx, ledger)
+    if ledger.corrupt:
+        # A ledger that cannot be read cannot prove the budget is free, and
+        # rewriting it here would hand out a fresh allowance. An operator
+        # repairs or removes the file.
+        return deny(ctx, None, verb, "budget")
+    if window_count(ledger.rejected, ctx.now) >= REJECTION_LIMIT:
+        return deny(ctx, ledger, verb, "budget")
+    # A suspect disk rejects every verb. Only an operator clears the fault
+    # file; the channel user has no write permission on that directory.
+    if ctx.fault_path.exists():
+        return deny(ctx, ledger, verb, "storage-fault")
+    if verb in BUILD_VERBS and ctx.lock_busy(ctx.prebuild_lock_path):
+        return deny(ctx, ledger, verb, "busy")
+    validate, build = CHECKS[verb]
+    reason = validate(request, ctx, ledger)
+    if reason is not None:
+        return deny(ctx, ledger, verb, reason)
+    if window_count(ledger.accepted, ctx.now) >= BUDGET_LIMIT:
+        return deny(ctx, ledger, verb, "budget")
+    outcome = build(request, ctx)
     if isinstance(outcome, str):
-        return reject(ctx, verb, outcome)
-    if spent(ledger, ctx.now) >= BUDGET_LIMIT:
-        return reject(ctx, verb, "budget", outcome.revision)
+        return deny(ctx, ledger, verb, outcome)
     event_id = uuid.uuid4().hex
     # The budget is spent before the action runs: a crash between the two
     # costs one verb, while the reverse would let a crash loop spend none.
-    record_verb(ctx, ledger, event_id, verb, outcome)
+    record_accept(ctx, ledger, event_id, verb, outcome)
     for path, value, mode in outcome.writes:
         atomic_json(path, value, mode)
     if outcome.unit is not None:
         try:
             ctx.start_unit(outcome.unit)
         except Exception:
-            return reject(ctx, verb, "unit", outcome.revision)
+            return deny(
+                ctx, load_ledger(ctx.verbs_path), verb, "unit", outcome.revision
+            )
     emit(ctx, event_id, verb, True, "accepted", outcome.revision)
     return Response(accepted=True, reason="accepted", event_id=event_id, code=0)
+
+
+def handle(request: dict, ctx: Context) -> Response:
+    verb = request.get("verb")
+    if not isinstance(verb, str) or verb not in CHECKS:
+        # The verb is untrusted text until it matches a known name, so the log
+        # carries the fixed word instead.
+        ctx.log("unknown", "verb")
+        return Response(accepted=False, reason="verb", event_id=None, code=2)
+    descriptor = acquire_channel_lock(ctx.channel_lock_path, ctx.lock_timeout)
+    if descriptor is None:
+        # Without the lock the counters cannot be read or written safely, so
+        # the request is refused rather than decided on stale numbers.
+        return deny(ctx, None, verb, "busy")
+    try:
+        return decide(request, verb, ctx)
+    finally:
+        os.close(descriptor)
 
 
 def parse_request(data: bytes) -> dict | None:
@@ -486,17 +692,53 @@ def parse_request(data: bytes) -> dict | None:
 def process(data: bytes, ctx: Context) -> tuple[dict[str, object], int]:
     request = parse_request(data)
     if request is None:
+        ctx.log("unknown", "malformed")
         return {"accepted": False, "reason": "malformed", "eventId": None}, 2
     response = handle(request, ctx)
     return response.payload(), response.code
 
 
-def main() -> int:
+def read_request(timeout: int = STDIN_TIMEOUT) -> bytes:
+    """Reads the request body under a deadline.
+
+    A client that opens the session and sends nothing would otherwise pin this
+    process and one sshd session for as long as it likes.
+    """
+
+    def expire(signum: int, frame: object) -> None:
+        raise TimeoutError("timed out reading the request")
+
+    try:
+        previous = signal.signal(signal.SIGALRM, expire)
+        signal.alarm(timeout)
+    except ValueError:
+        previous = None
+    try:
+        return sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
+    finally:
+        if previous is not None:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, previous)
+
+
+def main(ctx: Context | None = None) -> int:
     # SSH_ORIGINAL_COMMAND is deliberately unread: the forced command fixes the
     # program, and the request body is the only input.
-    data = sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
-    payload, code = process(data, Context(now=time.time()))
+    context = Context(now=time.time()) if ctx is None else ctx
+    try:
+        data = read_request()
+    except TimeoutError:
+        context.log("unknown", "timeout")
+        payload: dict[str, object] = {
+            "accepted": False,
+            "reason": "timeout",
+            "eventId": None,
+        }
+        code = 2
+    else:
+        payload, code = process(data, context)
     sys.stdout.write(json.dumps(payload, separators=(",", ":")) + "\n")
+    sys.stdout.flush()
     return code
 
 
