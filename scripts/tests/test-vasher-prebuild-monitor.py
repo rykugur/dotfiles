@@ -195,6 +195,29 @@ class DurableStateTests(unittest.TestCase):
                     self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
                     self.assertFalse(path.with_name(f".{path.name}.tmp").exists())
 
+    def test_atomic_write_never_follows_a_predictable_temp_symlink(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "retry.json"
+            sentinel = root / "must-not-change"
+            sentinel.write_text("agent-owned decoy")
+            decoy = root / ".retry.json.tmp"
+            decoy.symlink_to(sentinel)
+
+            monitor.atomic_json(target, {"revision": "b" * 40}, mode=0o644)
+
+            self.assertEqual(
+                json.loads(target.read_text()), {"revision": "b" * 40}
+            )
+            self.assertEqual(sentinel.read_text(), "agent-owned decoy")
+            self.assertTrue(decoy.is_symlink())
+            leftovers = [
+                path
+                for path in root.iterdir()
+                if path.name.startswith(".retry.json.") and path != decoy
+            ]
+            self.assertEqual(leftovers, [])
+
     def test_ledger_mode_is_world_readable(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "events.json"

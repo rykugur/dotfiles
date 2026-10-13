@@ -436,9 +436,10 @@ def deny(
     verb: str,
     reason: str,
     revision: str | None = None,
+    record: bool = True,
 ) -> Response:
     event_id = uuid.uuid4().hex
-    if ledger is not None:
+    if ledger is not None and record:
         try:
             record_reject(ctx, ledger, event_id, verb, reason)
         except OSError:
@@ -628,7 +629,10 @@ def decide(request: dict, verb: str, ctx: Context) -> Response:
         # repairs or removes the file.
         return deny(ctx, None, verb, "budget")
     if window_count(ledger.rejected, ctx.now) >= REJECTION_LIMIT:
-        return deny(ctx, ledger, verb, "budget")
+        # Do not append the lockout answer itself: otherwise repeated probes
+        # move the rolling window forward forever and a quiet day cannot
+        # restore the channel.
+        return deny(ctx, ledger, verb, "budget", record=False)
     # A suspect disk rejects every verb. Only an operator clears the fault
     # file; the channel user has no write permission on that directory.
     if ctx.fault_path.exists():
@@ -708,16 +712,20 @@ def read_request(timeout: int = STDIN_TIMEOUT) -> bytes:
     def expire(signum: int, frame: object) -> None:
         raise TimeoutError("timed out reading the request")
 
+    armed = False
+    previous = None
     try:
         previous = signal.signal(signal.SIGALRM, expire)
         signal.alarm(timeout)
+        armed = True
     except ValueError:
-        previous = None
+        pass
     try:
         return sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
     finally:
-        if previous is not None:
+        if armed:
             signal.alarm(0)
+        if previous is not None:
             signal.signal(signal.SIGALRM, previous)
 
 

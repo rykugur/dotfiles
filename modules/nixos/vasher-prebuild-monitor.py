@@ -5,6 +5,7 @@ import json
 import os
 import re
 import subprocess
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -169,10 +170,16 @@ def evaluate(
 
 def atomic_json(path: Path, value: object, mode: int = 0o600) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_name(f".{path.name}.tmp")
-    temporary.write_text(json.dumps(value, separators=(",", ":")) + "\n")
-    temporary.chmod(mode)
-    temporary.replace(path)
+    descriptor, name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "w") as handle:
+            handle.write(json.dumps(value, separators=(",", ":")) + "\n")
+        os.chmod(temporary, mode)
+        os.replace(temporary, path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 def scan_storage_fault(text: str) -> str | None:

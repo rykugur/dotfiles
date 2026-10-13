@@ -549,6 +549,16 @@ class BudgetTests(ChannelCase):
         self.now = NOW + 24 * 60 * 60 + 1
         self.assertAccepted(self.call(hold_request()))
 
+    def test_rejection_lockout_does_not_extend_itself(self):
+        for _ in range(32):
+            self.assertRejected(self.call(hold_request(expires="soon")), "hold")
+        # These probes answer budget but do not create newer rejection entries.
+        for _ in range(4):
+            self.assertRejected(self.call(hold_request(expires="soon")), "budget")
+        self.assertEqual(len(self.ledger()["rejected"]), 32)
+        self.now = NOW + 24 * 60 * 60 + 1
+        self.assertAccepted(self.call(hold_request()))
+
     def test_a_corrupt_ledger_counts_as_an_exhausted_budget(self):
         self.verbs_path.write_text("{not json")
         self.assertRejected(self.call(hold_request()), "budget")
@@ -782,6 +792,38 @@ class MainTests(ChannelCase):
         finally:
             sys.stdin = original_in
         self.assertLess(time.monotonic() - started, 5)
+
+    def test_read_request_disarms_when_prior_handler_is_none(self):
+        calls: list[tuple[str, object]] = []
+
+        class Readable:
+            def read(self, size: int) -> bytes:
+                return b"{}"
+
+        original_in = sys.stdin
+        original_signal = channel.signal.signal
+        original_alarm = channel.signal.alarm
+
+        def fake_signal(signum: int, handler: object):
+            calls.append(("signal", handler))
+            return None
+
+        def fake_alarm(seconds: int):
+            calls.append(("alarm", seconds))
+            return 0
+
+        sys.stdin = type("Stream", (), {"buffer": Readable()})()
+        channel.signal.signal = fake_signal
+        channel.signal.alarm = fake_alarm
+        try:
+            self.assertEqual(channel.read_request(3), b"{}")
+        finally:
+            sys.stdin = original_in
+            channel.signal.signal = original_signal
+            channel.signal.alarm = original_alarm
+        self.assertEqual(calls[0][0], "signal")
+        self.assertTrue(callable(calls[0][1]))
+        self.assertEqual(calls[1:], [("alarm", 3), ("alarm", 0)])
 
     def test_main_answers_a_read_timeout_with_exit_two(self):
         def expire(timeout: int = channel.STDIN_TIMEOUT) -> bytes:
