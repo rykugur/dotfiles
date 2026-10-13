@@ -18,6 +18,7 @@
           pkgs.jq
           pkgs.libnotify
           pkgs.openssh
+          pkgs.util-linux
         ];
         text = builtins.readFile ./vasher-supervise.sh;
       };
@@ -33,6 +34,7 @@
           Service = {
             Type = "oneshot";
             ExecStart = "${vasherSupervise}/bin/vasher-supervise";
+            TimeoutStartSec = "5min";
           };
         };
         systemd.user.timers.vasher-supervise = {
@@ -49,6 +51,7 @@
           Service = {
             Type = "oneshot";
             ExecStart = "${vasherSupervise}/bin/vasher-supervise --digest";
+            TimeoutStartSec = "5min";
           };
         };
         systemd.user.timers.vasher-supervise-digest = {

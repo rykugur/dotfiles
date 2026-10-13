@@ -16,9 +16,11 @@ Observation and notification need no SSH key. Sending an action requires the ope
 | Verb | Exact JSON | Preconditions visible in evidence |
 |---|---|---|
 | Retry the recorded candidate once | `{"verb":"retry-exact","revision":"<40 hex>"}` | State is `failed` or `needs-attention`; revision equals the candidate revision; agent retry count is zero. |
-| Build with only nixpkgs moved | `{"verb":"narrow-inputs","base":"<40 hex>","inputs":["nixpkgs"]}` | Base equals recorded `origin/master`; nixpkgs is known. |
-| Hold nixpkgs | `{"verb":"hold-input","input":"nixpkgs","revision":"<40 hex>","expires":"YYYY-MM-DD","reason":"<text>"}` | Revision is hexadecimal; nixpkgs is known; expiry is no more than 30 days ahead; reason is evidence-based. |
-| Release nixpkgs | `{"verb":"release-input","input":"nixpkgs"}` | An active nixpkgs hold is evidenced. |
+| Build with selected inputs moved | `{"verb":"narrow-inputs","base":"<40 hex>","inputs":["nixpkgs","home-manager"]}` | Base equals recorded `origin/master`; list has 1–8 distinct input names; every name is known. |
+| Hold an input | `{"verb":"hold-input","input":"home-manager","revision":"<40 hex>","expires":"YYYY-MM-DD","reason":"<text>"}` | Revision is hexadecimal; input is known; expiry is no more than 30 days ahead; reason is evidence-based. |
+| Release an input | `{"verb":"release-input","input":"home-manager"}` | An active hold for that input is evidenced. |
+
+Input names must match `[A-Za-z0-9][A-Za-z0-9._-]{0,63}`. Vasher remains authoritative for whether a syntactically valid input is known.
 
 Every verb also requires no active storage fault and capacity under the rolling limit of 8 accepted verbs per 24 hours. Build verbs additionally require the prebuild lock to be free. Missing evidence means no action.
 
