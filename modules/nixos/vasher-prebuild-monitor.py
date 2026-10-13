@@ -600,6 +600,7 @@ class Controller:
             "reason": reason,
             "metrics": metrics,
             "action": action,
+            "source": "monitor",
             "summary": "",
         }
         if extra:

@@ -310,6 +310,16 @@
               root * /var/lib/vasher/dashboard
               file_server
             }
+            handle /api/agent-events.json {
+              rewrite * /events.json
+              root * /var/lib/vasher/agent
+              file_server
+            }
+            handle /api/holds.json {
+              rewrite * /holds.json
+              root * /var/lib/vasher/agent
+              file_server
+            }
             handle {
               root * ${dashboard}/share/vasher-dashboard
               try_files {path} /index.html

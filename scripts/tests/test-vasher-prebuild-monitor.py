@@ -383,6 +383,8 @@ class RecoveryControllerTests(unittest.TestCase):
             runner.calls,
         )
         self.assertEqual(controller.state.phase, "needs-attention")
+        events = json.loads(self.events_path.read_text())
+        self.assertTrue(all(event.get("source") == "monitor" for event in events))
 
     def test_retry_count_is_saved_before_retry_start(self):
         runner = FakeRunner(

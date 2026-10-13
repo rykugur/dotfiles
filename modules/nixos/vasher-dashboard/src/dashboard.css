@@ -32,10 +32,17 @@ h1 { margin: 0; font: 700 clamp(2rem, 5vw, 2.4rem)/1 ui-monospace, monospace; le
 .events { margin: 0; padding: 0; list-style: none; }
 .event { display: grid; grid-template-columns: 12rem 1fr; gap: 1rem; border-bottom: 1px solid var(--surface); padding: .9rem 1rem; }
 .event:last-child { border-bottom: 0; }
-.event-title { margin: 0; color: var(--blue); font: 700 .78rem ui-monospace, monospace; }
+.event-title { display: flex; align-items: baseline; gap: .65rem; margin: 0; color: var(--blue); font: 700 .78rem ui-monospace, monospace; }
 .event.warning .event-title { color: var(--peach); }
 .event.error .event-title, .event-error { color: var(--red); }
 .event-detail { margin: .25rem 0 0; color: var(--subtext); font: .75rem ui-monospace, monospace; }
 .event-summary { margin: .55rem 0 0; }
 .event-error { margin: .55rem 0 0; font: .75rem ui-monospace, monospace; }
+.event-source { color: var(--subtext); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; }
+.holds { margin: 0; padding: 0; list-style: none; }
+.hold { border-bottom: 1px solid var(--surface); padding: .9rem 1rem; }
+.hold:last-child { border-bottom: 0; }
+.hold dl { grid-template-columns: 8.25rem minmax(0, 1fr); }
+.badge.active { color: var(--green); }
+.badge.expired { color: var(--red); }
 @media (max-width: 760px) { main { padding: 24px 16px; } header { align-items: start; flex-direction: column; } .layout { grid-template-columns: 1fr; } .runs li { grid-template-columns: 1fr; gap: .45rem; } .event { grid-template-columns: 1fr; } }

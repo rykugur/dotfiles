@@ -1,7 +1,8 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { formatTimestamp } from "./date-format.ts";
-import { type MonitorEvent, renderEventText } from "./event-text.ts";
+import { eventSource, mergeEvents, type MonitorEvent, renderEventText } from "./event-text.ts";
+import { HoldsPanel, type HoldMap } from "./holds.ts";
 import "./dashboard.css";
 
 type State =
@@ -31,10 +32,18 @@ type Snapshot = {
   history: Status[];
   log: string;
   events: MonitorEvent[];
+  holds: HoldMap;
   error: string | null;
 };
 
-const emptySnapshot: Snapshot = { status: null, history: [], log: "", events: [], error: null };
+const emptySnapshot: Snapshot = {
+  status: null,
+  history: [],
+  log: "",
+  events: [],
+  holds: {},
+  error: null,
+};
 
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path, { cache: "no-store" });
@@ -42,17 +51,33 @@ async function fetchJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+async function fetchJsonOr<T>(path: string, fallback: T): Promise<T> {
+  const response = await fetch(path, { cache: "no-store" });
+  if (response.status === 404) return fallback;
+  if (!response.ok) throw new Error(`${path}: ${response.status}`);
+  return response.json() as Promise<T>;
+}
+
 async function loadSnapshot(): Promise<Snapshot> {
-  const [status, history, log, events] = await Promise.all([
+  const [status, history, log, monitorEvents, agentEvents, holds] = await Promise.all([
     fetchJson<Status>("/api/status.json"),
     fetchJson<Status[]>("/api/history.json"),
     fetch("/api/log.txt", { cache: "no-store" }).then(async (response) => {
       if (!response.ok) throw new Error(`/api/log.txt: ${response.status}`);
       return response.text();
     }),
-    fetchJson<MonitorEvent[]>("/api/events.json"),
+    fetchJsonOr<MonitorEvent[]>("/api/events.json", []),
+    fetchJsonOr<MonitorEvent[]>("/api/agent-events.json", []),
+    fetchJsonOr<HoldMap>("/api/holds.json", {}),
   ]);
-  return { status, history, log, events, error: null };
+  return {
+    status,
+    history,
+    log,
+    events: mergeEvents(monitorEvents, agentEvents),
+    holds,
+    error: null,
+  };
 }
 
 function useSnapshot(): Snapshot {
@@ -94,7 +119,7 @@ function statusCopy(status: Status): string {
 }
 
 function App() {
-  const { status, history, log, events, error } = useSnapshot();
+  const { status, history, log, events, holds, error } = useSnapshot();
 
   return (
     <main>
@@ -128,18 +153,22 @@ function App() {
             <div><p className="eyebrow">Refresh probe</p><p className="clock">15m</p><p className="sub">after the previous run</p></div>
             <div><p className="eyebrow">Nightly candidate</p><p className="clock">03:00</p><p className="sub">randomized delay ≤ 10m</p></div>
           </div></aside>
+          <HoldsPanel holds={holds} />
           <article className="panel full">
-            <h2>Monitor events</h2>
+            <h2>Events</h2>
             <ol className="events">
               {events.length === 0 ? (
-                <li>No monitor events recorded yet.</li>
+                <li>No events recorded yet.</li>
               ) : events.map((event) => {
                 const text = renderEventText(event);
                 return (
                   <li key={event.id} className={`event ${event.severity}`}>
                     <time>{formatTimestamp(event.timestamp)}</time>
                     <div>
-                      <p className="event-title">{text.title}</p>
+                      <p className="event-title">
+                        {text.title}
+                        <span className="event-source">{eventSource(event)}</span>
+                      </p>
                       <p className="event-detail">{text.detail}</p>
                       {text.summary ? <p className="event-summary">{text.summary}</p> : null}
                       {event.inferenceError ? <p className="event-error">Inference error: {event.inferenceError}</p> : null}
