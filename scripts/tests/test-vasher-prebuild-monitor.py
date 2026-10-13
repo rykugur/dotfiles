@@ -391,21 +391,67 @@ class RecoveryControllerTests(unittest.TestCase):
 
         controller.recover(narrow, monitor.Decision("stop", "memory"))
 
-        self.assertEqual(
-            runner.calls,
-            [("systemctl", "stop", "vasher-prebuild-narrow.service")],
-        )
+        expected_calls = [
+            ("systemctl", "stop", "vasher-prebuild-narrow.service")
+        ]
+        self.assertEqual(runner.calls, expected_calls)
         self.assertFalse(self.retry_path.exists())
         saved = json.loads(self.state_path.read_text())
         self.assertEqual(saved["phase"], "needs-attention")
         events = json.loads(self.events_path.read_text())
-        self.assertTrue(
-            any(
-                event["type"] == "needs-attention"
-                and event["reason"] == "narrow-retry-unsupported"
+        self.assertEqual(
+            [
+                event["reason"]
                 for event in events
+                if event["type"] == "needs-attention"
+            ],
+            ["narrow-retry-unsupported"],
+        )
+
+        failed = dataclasses.replace(
+            narrow,
+            at=120,
+            active_unit=None,
+            status_state="failed",
+            status_updated_at="2026-09-02T22:03:00Z",
+            exit_code=143,
+        )
+        state_bytes = self.state_path.read_bytes()
+        event_bytes = self.events_path.read_bytes()
+        controller.observe(failed)
+
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertEqual(runner.calls, expected_calls)
+        self.assertFalse(self.retry_path.exists())
+        self.assertEqual(self.state_path.read_bytes(), state_bytes)
+        self.assertEqual(self.events_path.read_bytes(), event_bytes)
+
+        controller.observe(failed)
+
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertEqual(runner.calls, expected_calls)
+        self.assertEqual(self.state_path.read_bytes(), state_bytes)
+        self.assertEqual(self.events_path.read_bytes(), event_bytes)
+
+    def test_start_retry_rejects_matching_narrow_worktree(self):
+        runner = FakeRunner()
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+
+        controller._start_retry(
+            dataclasses.replace(
+                self.unsafe_sample,
+                active_unit=None,
+                mode="narrow",
             )
         )
+
+        self.assertEqual(runner.calls, [])
+        self.assertFalse(self.retry_path.exists())
+        self.assertEqual(controller.state.phase, "needs-attention")
+        events = json.loads(self.events_path.read_text())
+        self.assertEqual(events[0]["reason"], "narrow-retry-unsupported")
 
     def test_narrow_recovery_phases_resume_to_needs_attention(self):
         for phase in ("stopping", "cleaning", "retrying"):

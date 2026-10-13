@@ -880,6 +880,8 @@ class Controller:
         if sample.status_state == "blocked":
             return
         self._align_state(sample)
+        if self.state.phase == "needs-attention":
+            return
         if sample.mode == "narrow" and self.state.phase in RECOVERY_PHASES:
             self._needs_attention(sample, "narrow-retry-unsupported")
             return
@@ -948,7 +950,7 @@ class Controller:
                 self._start_retry(sample)
                 self._summarize_pending()
             return
-        if self.state.phase in {"needs-attention", "complete"}:
+        if self.state.phase == "complete":
             return
         if self.state.phase == "cleaning":
             self._recovering = True
