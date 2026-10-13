@@ -39,11 +39,19 @@ in
           clipboard-paste-protection = false;
           app-notifications = false;
 
-          keybind = [
-            "ctrl+shift+h=goto_split:left"
-            "ctrl+shift+j=goto_split:bottom"
-            "ctrl+shift+k=goto_split:top"
-            "ctrl+shift+l=goto_split:right"
+          keybind =
+            if (config.programs.herdr.enable or false) then
+              [ "ctrl+shift+j=unbind" ]
+            else
+              [
+                "ctrl+shift+h=goto_split:left"
+                "ctrl+shift+j=goto_split:bottom"
+                "ctrl+shift+k=goto_split:top"
+                "ctrl+shift+l=goto_split:right"
+              ];
+
+          command-palette-entry = [
+            ''title:"Fav: Paste screen path",action:"write_screen_file:action:paste,emit:plain"''
           ];
         }
         // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {

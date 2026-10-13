@@ -50,12 +50,30 @@
             "prefix+l"
             "alt+l"
           ];
-          move_tab_previous = "alt+shift+h";
-          move_tab_next = "alt+shift+l";
-          focus_pane_left = "prefix+shift+h";
-          focus_pane_down = "prefix+shift+j";
-          focus_pane_up = "prefix+shift+k";
-          focus_pane_right = "prefix+shift+l";
+          move_tab_previous = [
+            "prefix+ctrl+h"
+            "alt+shift+h"
+          ];
+          move_tab_next = [
+            "prefix+ctrl+l"
+            "alt+shift+l"
+          ];
+          focus_pane_left = [
+            "prefix+shift+h"
+            "ctrl+shift+h"
+          ];
+          focus_pane_down = [
+            "prefix+shift+j"
+            "ctrl+shift+j"
+          ];
+          focus_pane_up = [
+            "prefix+shift+k"
+            "ctrl+shift+k"
+          ];
+          focus_pane_right = [
+            "prefix+shift+l"
+            "ctrl+shift+l"
+          ];
           command = [
             {
               key = "prefix+t";

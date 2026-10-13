@@ -201,3 +201,21 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Updated [ai-agents.md](ai-agents.md), [hosts.md](hosts.md),
   [entities/vasher.md](entities/vasher.md), [modules.md](modules.md), and
   [index.md](index.md).
+
+## [2026-10-13] update | Herdr-aware Ghostty navigation and palette favorite
+
+- Added Ctrl+Shift+H/J/K/L pane focus and prefix+Ctrl+H/L tab-movement
+  fallbacks to `modules/ai/herdr.nix`; retained Alt tab navigation and all
+  existing prefix bindings.
+- Guarded Ghostty's navigation bindings with `config.programs.herdr.enable or false`:
+  enabled homes release the chords to Herdr and unbind the Linux Ctrl+Shift+J
+  default; other homes keep the four original Ghostty split shortcuts.
+- Added the `Fav: Paste screen path` palette alias for all Ghostty homes using
+  the expanded action syntax accepted by Ghostty 1.3.1.
+- Static guard/key-list checks, 16-chord uniqueness, application validation of
+  the extracted literal settings for both Ghostty branches and Herdr, and
+  `git diff --check` passed. These are not Home Manager evaluation results.
+- No Nix commands, system activation, live configuration edits, or SSH-agent
+  changes ran. Nix evaluation is deferred to the user's Linux box; no standalone
+  Nix formatter is installed here.
+- Updated [ai-agents.md](ai-agents.md) and [index.md](index.md).

@@ -1,7 +1,7 @@
 ---
 title: AI Agents
 category: ai
-date: 2026-10-12
+date: 2026-10-13
 tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, openrig, mempalace, llm-wiki, skills, mcp]
 sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix", "flake.nix"]
 related: ["overview.md", "architecture.md", "modules.md"]
@@ -33,10 +33,21 @@ Each has a home-manager module under `modules/ai/<name>.nix`.
 Home Manager module owns tab and pane navigation and installs the OMP lifecycle
 integration. The local `pkgs.herdr-navigator` package builds version 0.3.3
 reproducibly; activation links its immutable plugin root into Herdr, while
-`prefix+t` opens its cross-workspace picker. `Alt+H/L` and `Alt+Shift+H/L`
-navigate and reorder Herdr tabs on both hosts; Ghostty no longer consumes those
-chords. Herdr's implicit Catppuccin default is named explicitly so Navigator's
-theme inheritance selects its matching Catppuccin Mocha palette.
+`prefix+t` opens its cross-workspace picker. `Alt+H/L` switches tabs;
+`Alt+Shift+H/L` reorders them. `Ctrl+Shift+H/J/K/L` focuses panes left/down/up/right.
+Prefix fallbacks remain for tab switching, tab movement, and pane focus.
+Herdr's implicit Catppuccin default is named explicitly so Navigator's theme
+inheritance selects its matching Catppuccin Mocha palette.
+
+The [Ghostty module](../modules/terminal/ghostty.nix) checks
+`config.programs.herdr.enable or false`: Herdr-enabled homes release Ghostty's
+split-navigation chords and unbind its Linux `Ctrl+Shift+J` default. Homes without
+Herdr retain the four original Ghostty split shortcuts. All Ghostty homes get a
+`Fav: Paste screen path` palette alias, using the expanded action fields accepted
+by Ghostty 1.3.1; default palette entries remain available. Helix bindings are
+unchanged. See the [Herdr module](../modules/ai/herdr.nix) for the full key lists.
+Nix evaluation and activation are deferred to the Linux machine; neither ran
+during this configuration edit.
 
 **Oh My Pi** comes from the official `can1357/oh-my-pi` flake via
 `programs.omp.enable`. The local Home Manager module still owns `AGENTS.md`,

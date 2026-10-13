@@ -1,7 +1,7 @@
 ---
 title: Index
 category: core
-date: 2026-10-12
+date: 2026-10-13
 tags: [index, catalog]
 sources: ["all current wiki pages"]
 related: ["schema.md", "log.md"]
@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-10-12 (OMP consumes the official oh-my-pi flake)
+Last major update: 2026-10-13 (Herdr-aware Ghostty navigation and favorite palette alias)
 
 ---
 
@@ -24,7 +24,7 @@ Last major update: 2026-10-12 (OMP consumes the official oh-my-pi flake)
 - [Hosts](hosts.md) — Host wiring, including Jezrien's built but not activated Windows VFIO session and TTY recovery workflow.
 - [Modules](modules.md) — Current modules tree, registration pattern, groups, desktop composition, shared tools, and the dendritic Windows VFIO module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
-- [AI Agents](ai-agents.md) — Declarative provisioning of coding agents plus Herdr/OpenRig orchestration, official oh-my-pi flake package, centralized MCPs and skills, mempalace, and the self-referential wiki.
+- [AI Agents](ai-agents.md) — Declarative coding agents, Herdr/OpenRig orchestration, Herdr-aware Ghostty navigation and palette alias, official oh-my-pi flake package, centralized MCPs and skills, mempalace, and the self-referential wiki.
 
 ## Entities
 
