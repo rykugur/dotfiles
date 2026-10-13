@@ -159,8 +159,6 @@ let
                   zen-browser
                 ];
 
-                ryk.vasherSupervisor.enable = true;
-
                 sops.secrets = {
                   homelab_ssh_private_key = {
                     sopsFile = ./secrets.yaml;
