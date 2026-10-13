@@ -15,6 +15,7 @@ let
       modules = [
         # WM: niri (hyprland lives at self.modules.nixos.hyprland)
         self.modules.nixos.niri
+        self.modules.nixos.dank-material-shell
 
         self.modules.nixos.nix-defaults
         self.modules.nixos.vasher-cache

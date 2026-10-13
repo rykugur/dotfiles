@@ -16,8 +16,6 @@
     in
     {
       options.ryk.dankMaterialShell = {
-        enable = lib.mkEnableOption "the dankMaterialShell quickshell bar";
-
         screenshotBackend = lib.mkOption {
           type = lib.types.enum [
             "swappy"
@@ -34,7 +32,7 @@
         };
       };
 
-      config = lib.mkIf cfg.enable {
+      config = {
         services.accounts-daemon.enable = lib.mkIf (cfg.avatar != null) true;
 
         systemd.user.services.niri-flake-polkit.enable = false;

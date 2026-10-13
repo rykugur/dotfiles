@@ -11,19 +11,9 @@
       cfg = config.ryk.niri;
     in
     {
-      imports = [
-        inputs.niri.nixosModules.niri
-      ]
-      # Bars declare their own options + home-manager wiring; pulling both in
-      # keeps `bar` a single switch instead of a per-host import dance.
-      ++ (with self.modules.nixos; [
-        dank-material-shell
-        noctalia
-      ]);
+      imports = [ inputs.niri.nixosModules.niri ];
 
       options.ryk.niri = {
-        enable = lib.mkEnableOption "the niri window manager";
-
         monitors = lib.mkOption {
           type = lib.types.attrs;
           default = { };
@@ -59,15 +49,6 @@
           default = null;
         };
 
-        bar = lib.mkOption {
-          type = lib.types.enum [
-            "dankMaterialShell"
-            "noctalia"
-            "none"
-          ];
-          default = "none";
-        };
-
         # TODO: use this in the home-manager layout block
         defaultColumnWidth = lib.mkOption {
           type = lib.types.float;
@@ -85,16 +66,13 @@
         };
       };
 
-      config = lib.mkIf cfg.enable {
+      config = {
         programs.niri = {
           enable = true;
           package = pkgs.niri;
         };
 
         ryk.desktop.compositor = "niri";
-
-        ryk.dankMaterialShell.enable = cfg.bar == "dankMaterialShell";
-        ryk.noctalia.enable = cfg.bar == "noctalia";
 
         home-manager.users.${config.ryk.username}.imports = [ self.modules.homeManager.niri ];
       };

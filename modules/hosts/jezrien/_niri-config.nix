@@ -1,9 +1,6 @@
 { ... }:
 {
   ryk.niri = {
-    enable = true;
-    bar = "dankMaterialShell";
-
     monitors = {
       "DP-1" = {
         mode = {
