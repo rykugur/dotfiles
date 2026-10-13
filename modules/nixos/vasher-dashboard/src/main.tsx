@@ -1,42 +1,17 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { formatTimestamp } from "./date-format.ts";
-import { eventSource, mergeEvents, type MonitorEvent, renderEventText } from "./event-text.ts";
-import { HoldsPanel, type HoldMap } from "./holds.ts";
+import { loadSnapshot, type Snapshot, type Status } from "./dashboard-data.ts";
+import { eventSource, renderEventText } from "./event-text.ts";
+import { HoldsPanel } from "./holds.ts";
 import "./dashboard.css";
 
-type State =
-  | "idle"
-  | "preparing"
-  | "building"
-  | "success"
-  | "failed"
-  | "stale"
-  | "blocked";
-type Mode = "refresh" | "candidate" | "retry";
-
-type Status = {
-  state: State;
-  mode: Mode;
-  startedAt: string;
-  updatedAt: string;
-  baseRevision: string;
-  revision: string;
-  output: string;
-  excludedPackages: string[];
-  exitCode?: number;
-};
-
-type Snapshot = {
+type DashboardState = Omit<Snapshot, "status" | "error"> & {
   status: Status | null;
-  history: Status[];
-  log: string;
-  events: MonitorEvent[];
-  holds: HoldMap;
   error: string | null;
 };
 
-const emptySnapshot: Snapshot = {
+const emptySnapshot: DashboardState = {
   status: null,
   history: [],
   log: "",
@@ -45,42 +20,7 @@ const emptySnapshot: Snapshot = {
   error: null,
 };
 
-async function fetchJson<T>(path: string): Promise<T> {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-}
-
-async function fetchJsonOr<T>(path: string, fallback: T): Promise<T> {
-  const response = await fetch(path, { cache: "no-store" });
-  if (response.status === 404) return fallback;
-  if (!response.ok) throw new Error(`${path}: ${response.status}`);
-  return response.json() as Promise<T>;
-}
-
-async function loadSnapshot(): Promise<Snapshot> {
-  const [status, history, log, monitorEvents, agentEvents, holds] = await Promise.all([
-    fetchJson<Status>("/api/status.json"),
-    fetchJson<Status[]>("/api/history.json"),
-    fetch("/api/log.txt", { cache: "no-store" }).then(async (response) => {
-      if (!response.ok) throw new Error(`/api/log.txt: ${response.status}`);
-      return response.text();
-    }),
-    fetchJsonOr<MonitorEvent[]>("/api/events.json", []),
-    fetchJsonOr<MonitorEvent[]>("/api/agent-events.json", []),
-    fetchJsonOr<HoldMap>("/api/holds.json", {}),
-  ]);
-  return {
-    status,
-    history,
-    log,
-    events: mergeEvents(monitorEvents, agentEvents),
-    holds,
-    error: null,
-  };
-}
-
-function useSnapshot(): Snapshot {
+function useSnapshot(): DashboardState {
   const [snapshot, setSnapshot] = useState(emptySnapshot);
 
   useEffect(() => {
