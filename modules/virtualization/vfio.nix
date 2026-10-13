@@ -18,7 +18,6 @@
             };
             system.stateVersion = "25.11";
             ryk.vfio = {
-              enable = true;
               domainName = "windows-vm-check";
               gpu.pciAddress = "0000:01:00.0";
               audio.pciAddress = "0000:01:00.1";
@@ -280,8 +279,6 @@
     in
     {
       options.ryk.vfio = {
-        enable = lib.mkEnableOption "the Windows VFIO session";
-
         domainName = lib.mkOption {
           type = lib.types.strMatching "[A-Za-z0-9._-]+";
           default = "windows-vm";
@@ -354,7 +351,7 @@
         };
       };
 
-      config = lib.mkIf cfg.enable {
+      config = {
         assertions = [
           {
             assertion = builtins.length cfg.usbDevices == 5;

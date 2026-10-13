@@ -4,26 +4,20 @@
     {
       config,
       lib,
-      osConfig,
       pkgs,
       ...
     }:
     let
-      # herdr's default_shell wants a command name; ryk.defaultShell uses "nushell".
-      shellCmd =
-        {
-          fish = "fish";
-          nushell = "nu";
-          bash = "bash";
-        }
-        .${osConfig.ryk.defaultShell or "nushell"};
-
       herdrNavigatorPlugin = "${pkgs.herdr-navigator}/share/herdr/plugins/herdr-navigator";
     in
     {
       # herdr's home-manager module ships with home-manager upstream
-      # (programs.herdr). Enabling it installs the package and, if `settings`
-      # is set, writes ~/.config/herdr/config.toml.
+      # (programs.herdr). `settings` is deliberately unset: it writes
+      # ~/.config/herdr/config.toml as a read-only store symlink, and herdr
+      # must be able to rewrite that file at runtime (dismissing onboarding
+      # fails with "Read-only file system (os error 30)" otherwise). Point it
+      # at the tracked dotfile instead; herdr writes through the symlink, so
+      # runtime changes land in the repo.
       programs.herdr.enable = true;
       programs.herdr.settings = {
         terminal.default_shell = shellCmd;

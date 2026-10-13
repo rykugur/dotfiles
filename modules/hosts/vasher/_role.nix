@@ -59,14 +59,7 @@
   };
 
   networking.firewall.enable = true;
-  ryk.vasherCache = {
-    enable = true;
-    serve = true;
-  };
-  ryk.vasherPrebuild = {
-    enable = true;
-    targetAttr = "nixosConfigurations.jezrien-prebuild.config.system.build.toplevel";
-  };
+  ryk.vasherPrebuild.targetAttr = "nixosConfigurations.jezrien-prebuild.config.system.build.toplevel";
 
   environment.systemPackages = with pkgs; [ git jq ];
   system.stateVersion = "24.11";

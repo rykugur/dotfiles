@@ -21,8 +21,6 @@
     common-cpu-amd
     common-gpu-amd
   ]);
-  ryk.vasherCache.enable = true;
-
   nix.settings = {
     trusted-users = [
       "root"

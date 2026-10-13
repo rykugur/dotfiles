@@ -87,7 +87,6 @@
     in
     {
       options.ryk.vasherPrebuild = {
-        enable = lib.mkEnableOption "serialized Vasher prebuild jobs";
         repoUrl = lib.mkOption {
           type = lib.types.str;
           default = "git@github.com:rykugur/dotfiles.git";
@@ -117,7 +116,7 @@
         };
       };
 
-      config = lib.mkIf cfg.enable {
+      config = {
         sops.secrets."swoleflake/deploy_key" = {
           key = "swoleflake/deploy_key";
           owner = "vasher";
