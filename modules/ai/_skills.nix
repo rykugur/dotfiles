@@ -36,6 +36,10 @@ let
       name = "llm-wiki";
       src = ./skills/llm-wiki;
     }
+    {
+      name = "vasher-supervisor";
+      src = ./skills/vasher-supervisor;
+    }
   ];
 
   # Superpowers skills (https://github.com/obra/superpowers).

@@ -131,6 +131,7 @@ let
                   codex
                   herdr
                   hermes-agent
+                  vasher-supervisor
                   opencode
                   oh-my-pi
 
@@ -157,6 +158,8 @@ let
                   wezterm
                   zen-browser
                 ];
+
+                ryk.vasherSupervisor.enable = true;
 
                 sops.secrets = {
                   homelab_ssh_private_key = {
