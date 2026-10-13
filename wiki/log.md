@@ -219,3 +219,9 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   changes ran. Nix evaluation is deferred to the user's Linux box; no standalone
   Nix formatter is installed here.
 - Updated [ai-agents.md](ai-agents.md) and [index.md](index.md).
+## [2026-10-12] update | Documented Vasher agent supervision
+
+- Documented the local monitor, remote Hermes supervisor, action channel, input holds, narrow recovery, and storage-fault halt.
+- Recorded the separate read-only event endpoints and the dedicated key prerequisite for action transport.
+- Updated the wiki for branch `feat/vasher-agent-supervision` and design document `docs/superpowers/specs/2026-10-12-vasher-agent-supervision-design.md`.
+- Updated [entities/vasher.md](entities/vasher.md) and [index.md](index.md).

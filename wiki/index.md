@@ -24,11 +24,11 @@ Last major update: 2026-10-13 (Herdr-aware Ghostty navigation and favorite palet
 - [Hosts](hosts.md) — Host wiring, including Jezrien's built but not activated Windows VFIO session and TTY recovery workflow.
 - [Modules](modules.md) — Current modules tree, registration pattern, groups, desktop composition, shared tools, and the dendritic Windows VFIO module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
-- [AI Agents](ai-agents.md) — Declarative coding agents, Herdr/OpenRig orchestration, Herdr-aware Ghostty navigation and palette alias, official oh-my-pi flake package, centralized MCPs and skills, mempalace, and the self-referential wiki.
+- [AI Agents](ai-agents.md) — Declarative coding agents, shared skills, Herdr/OpenRig orchestration, Herdr-aware Ghostty navigation and palette alias, official oh-my-pi flake package, Vasher supervisor module and skill, centralized MCPs and skills, mempalace, and the self-referential wiki.
 
 ## Entities
 
-- [Vasher](entities/vasher.md) — LAN-only signed binary cache and serialized Jezrien prebuilder: candidate freshness/promotion boundary, resource envelope, bounded status files, Caddy-served React work ledger, and deployment checks. (sources: Vasher host and role modules)
+- [Vasher](entities/vasher.md) — LAN-only cache and prebuilder with deterministic monitoring, held inputs, narrow recovery, storage-fault halts, and remote Hermes supervision.
 
 ## Schema & Navigation
 
