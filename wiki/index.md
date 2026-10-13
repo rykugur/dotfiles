@@ -28,7 +28,7 @@ Last major update: 2026-10-13 (Herdr-aware Ghostty navigation and favorite palet
 
 ## Entities
 
-- [Vasher](entities/vasher.md) — LAN-only cache and prebuilder with deterministic monitoring, held inputs, narrow recovery, storage-fault halts, and remote Hermes supervision.
+- [Vasher](entities/vasher.md) — LAN-only cache and prebuilder with deterministic monitoring, held inputs, narrow recovery, storage-fault halts, and remote Hermes supervision. (sources: Vasher host, NixOS prebuild modules, AI supervisor module and skill)
 
 ## Schema & Navigation
 

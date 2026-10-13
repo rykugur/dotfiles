@@ -2,8 +2,8 @@
 title: AI Agents
 category: ai
 date: 2026-10-13
-tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, openrig, mempalace, llm-wiki, skills, mcp]
-sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix", "flake.nix"]
+tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, hermes, vasher, openrig, mempalace, llm-wiki, skills, mcp]
+sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/vasher-supervisor.nix", "modules/ai/vasher-supervise.sh", "modules/ai/skills/vasher-supervisor/SKILL.md", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix", "flake.nix"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
 
@@ -55,6 +55,12 @@ MCP, skills, shell completions, and `omp config set` for model roles / theme /
 mnemopi. `programs.omp.settings` is intentionally unset: upstream copies a
 generated YAML over `~/.omp/agent/config.yml` and would wipe oauth and
 runtime state.
+
+## Vasher supervisor
+
+The Home Manager module `flake.modules.homeManager.vasher-supervisor` installs the `vasher-supervisor` skill and the `vasher-supervise` wrapper on Jezrien. User timers provide a fallback schedule when Hermes has no scheduler. The regular timer runs every 30 minutes and skips the Monday 09:00 weekly digest slot.
+
+Healthy polls make zero model calls. The wrapper observes the read-only `/api/status.json`, `/api/events.json`, and `/api/agent-events.json` endpoints. Actions require a dedicated public key in `ryk.vasherPrebuild.agentKeys` and its private key at `~/.ssh/vasher-agent`. Without this key pair, supervision stays read-only.
 
 ## Shared infrastructure (the key to DRY)
 
