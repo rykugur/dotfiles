@@ -1,8 +1,16 @@
 { inputs, ... }:
 {
-  flake.modules.homeManager.vasher-supervisor =
-    { pkgs, ... }:
+  # Runs on the always-on Hermes host, not on a desktop. Polling is cheap and
+  # deterministic; Hermes is only invoked when an incident exists.
+  flake.modules.nixos.vasher-supervisor =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
+      cfg = config.ryk.vasherSupervisor;
       vasherSupervise = pkgs.writeShellApplication {
         name = "vasher-supervise";
         runtimeInputs = [
@@ -10,48 +18,75 @@
           pkgs.curl
           inputs.hermes-agent.packages.${pkgs.system}.default
           pkgs.jq
-          pkgs.libnotify
           pkgs.openssh
           pkgs.util-linux
         ];
         text = builtins.readFile ./vasher-supervise.sh;
       };
+      environment = {
+        HOME = cfg.hermesHome;
+        VASHER_SUPERVISE_STATE = "/var/lib/vasher-supervise";
+        VASHER_SUPERVISE_KEY = cfg.agentKey;
+      }
+      // lib.optionalAttrs (cfg.sendTarget != null) {
+        VASHER_SUPERVISE_SEND_TARGET = cfg.sendTarget;
+      };
+      service = args: {
+        description = "Triage new Vasher incidents";
+        inherit environment;
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${vasherSupervise}/bin/vasher-supervise${args}";
+          TimeoutStartSec = "7min";
+          User = cfg.user;
+          Group = cfg.user;
+          StateDirectory = "vasher-supervise";
+          StateDirectoryMode = "0700";
+        };
+      };
+      timer = onCalendar: {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = onCalendar;
+          Persistent = true;
+        };
+      };
     in
     {
-      home.packages = [ vasherSupervise ];
+      options.ryk.vasherSupervisor = {
+        user = lib.mkOption {
+          type = lib.types.str;
+          default = "hermes";
+          description = "Service user. Must be the user that owns the Hermes state directory.";
+        };
+        hermesHome = lib.mkOption {
+          type = lib.types.path;
+          default = "/var/lib/hermes";
+          description = "HOME for the Hermes CLI. Hermes refuses to start without its own state directory.";
+        };
+        agentKey = lib.mkOption {
+          type = lib.types.str;
+          default = "/var/lib/hermes/.ssh/vasher-agent";
+          description = "Private key for the Vasher action channel. While this file is absent, proposals are written to the digest and no action is attempted.";
+        };
+        sendTarget = lib.mkOption {
+          type = lib.types.nullOr lib.types.str;
+          default = null;
+          example = "telegram";
+          description = "Hermes gateway target for alerts, as accepted by `hermes send -t`. Alerts always reach the journal; this adds an off-host channel.";
+        };
+      };
 
-      systemd.user.services.vasher-supervise = {
-        Unit.Description = "Triage new Vasher incidents";
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${vasherSupervise}/bin/vasher-supervise";
-          TimeoutStartSec = "7min";
-        };
-      };
-      systemd.user.timers.vasher-supervise = {
-        Unit.Description = "Poll Vasher every 30 minutes";
-        Timer = {
-          OnCalendar = "*:0/30";
-          Persistent = true;
-        };
-        Install.WantedBy = [ "timers.target" ];
-      };
+      config = {
+        environment.systemPackages = [ vasherSupervise ];
 
-      systemd.user.services.vasher-supervise-digest = {
-        Unit.Description = "Write the weekly Vasher digest";
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${vasherSupervise}/bin/vasher-supervise --digest";
-          TimeoutStartSec = "7min";
+        systemd.services.vasher-supervise = service "";
+        systemd.timers.vasher-supervise = timer "*:0/30";
+
+        systemd.services.vasher-supervise-digest = service " --digest" // {
+          description = "Write the weekly Vasher digest";
         };
-      };
-      systemd.user.timers.vasher-supervise-digest = {
-        Unit.Description = "Run the weekly Vasher digest";
-        Timer = {
-          OnCalendar = "Mon *-*-* 09:00:00";
-          Persistent = true;
-        };
-        Install.WantedBy = [ "timers.target" ];
+        systemd.timers.vasher-supervise-digest = timer "Mon *-*-* 09:00:00";
       };
     };
 }

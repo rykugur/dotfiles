@@ -33,7 +33,7 @@ Narrow mode is a recovery path. It updates only the requested inputs, except for
 
 The local monitor on Vasher makes every real-time safety decision with fixed rules. It watches the build, storage, memory, and disk space. It can stop an unsafe build and run the existing one-time recovery path. It does not accept model output as a safety decision.
 
-The remote Hermes supervisor runs on Jezrien. It polls read-only data from Vasher and asks Hermes to explain new incidents. Hermes can propose an action, but Vasher validates and decides it. Healthy polls make zero model calls.
+The remote Hermes supervisor runs on the `hermes` container, which is always on. It polls read-only data from Vasher and asks Hermes to explain new incidents. Hermes can propose an action, but Vasher validates and decides it. Healthy polls make zero model calls. Alerts go to the journal, and to a Hermes gateway channel when `ryk.vasherSupervisor.sendTarget` names one.
 
 The regular supervisor runs every 30 minutes, except Monday at 09:00. The weekly digest owns that time and always calls Hermes. Each Hermes run uses `hermes --toolsets todo --ignore-rules --skills vasher-supervisor --oneshot` and has a 300-second limit. The harmless todo-only toolset keeps untrusted event and build-log text away from shell, file, and network tools.
 
@@ -45,7 +45,7 @@ SSH forces the `vasher-agent-verb` command and disables command selection, forwa
 
 The channel serializes requests with `channel.lock`. It accepts at most 8 requests and rejects at most 32 requests in a rolling 24-hour period. It reads standard input for at most 10 seconds. It logs denials to syslog and uses unique temporary files for atomic writes.
 
-The channel is inactive until an operator installs a dedicated key pair. Add the public key to `ryk.vasherPrebuild.agentKeys` on Vasher. Put the matching private key at `~/.ssh/vasher-agent` on Jezrien. Do not use an operator key for this channel.
+The channel is inactive until an operator installs a dedicated key pair. Add the public key to `ryk.vasherPrebuild.agentKeys` on Vasher. Put the matching private key at `/var/lib/hermes/.ssh/vasher-agent` on the `hermes` container. Do not use an operator key for this channel.
 
 ## Storage-fault halt
 
@@ -84,7 +84,7 @@ The dashboard also reads `/api/holds.json` and shows active or expired holds. Ca
 
 Deploy the Vasher role with the normal NixOS rebuild for the published flake's `vasher` configuration. Deployment applies the configuration only. It does not start a build.
 
-Before actions can work, seed Jezrien's `~/.ssh/known_hosts` with Vasher's verified runtime host key. Then add the dedicated public key to `ryk.vasherPrebuild.agentKeys` on Vasher and put its private key at `~/.ssh/vasher-agent` on Jezrien. The supervisor remains read-only when this key is absent. After deployment, run the real `hold-input` and `release-input` smoke test over SSH and confirm the agent ledger and `/api/holds.json`.
+Before actions can work, seed the `hermes` container's `/var/lib/hermes/.ssh/known_hosts` with Vasher's verified runtime host key. Then add the dedicated public key to `ryk.vasherPrebuild.agentKeys` on Vasher and put its private key at `/var/lib/hermes/.ssh/vasher-agent`. The supervisor remains read-only when this key is absent. After deployment, run the real `hold-input` and `release-input` smoke test over SSH and confirm the agent ledger and `/api/holds.json`.
 
 Make sure that the cache service, timers, dashboard, and curated API files work from the trusted LAN. To populate status immediately, start `vasher-prebuild-refresh.service`. This uses the normal serialized lifecycle.
 

@@ -27,6 +27,11 @@ cat "$file"
 STUB
 cat > "$BIN/hermes" <<'STUB'
 #!/usr/bin/env bash
+if [[ ${1-} == send ]]; then
+  printf '%s\n' "$*" >> "$CALLS/hermes-send"
+  [[ ! -f "$FIXTURE/send-fail" ]]
+  exit $?
+fi
 printf 'call\n' >> "$CALLS/hermes"
 [[ $# -eq 7 ]] || { echo "prompt was not one argument" >&2; exit 97; }
 [[ $1 == --toolsets && $2 == todo && $3 == --ignore-rules && $4 == --skills && $5 == vasher-supervisor && $6 == --oneshot ]] || {
@@ -44,7 +49,7 @@ printf '%s\n' "$1" >> "$CALLS/timeout"
 shift
 exec "$@"
 STUB
-cat > "$BIN/notify-send" <<'STUB'
+cat > "$BIN/logger" <<'STUB'
 #!/usr/bin/env bash
 printf '%s\n' "$*" >> "$CALLS/notify"
 [[ ! -f "$FIXTURE/notify-fail" ]]
@@ -82,6 +87,8 @@ run_case agent-event success m1 a2 m1 a1; run; assert_calls hermes 1
 run_case failed failed; run; assert_calls hermes 1; jq '.updatedAt = "2026-10-12T08:15:00Z"' "$FIXTURE/status.json" > "$FIXTURE/status.next"; mv "$FIXTURE/status.next" "$FIXTURE/status.json"; run; assert_calls hermes 1
 run_case blocked blocked; run; assert_calls hermes 1; assert_calls notify 1; jq '.updatedAt = "2026-10-12T08:15:00Z"' "$FIXTURE/status.json" > "$FIXTURE/status.next"; mv "$FIXTURE/status.next" "$FIXTURE/status.json"; run; assert_calls hermes 1; assert_calls notify 1
 run_case event-error success m2 a1 m1 a1; jq '.[0].severity = "error"' "$FIXTURE/events.json" > "$FIXTURE/events.next"; mv "$FIXTURE/events.next" "$FIXTURE/events.json"; run; assert_calls notify 1
+run_case send-target blocked; VASHER_SUPERVISE_SEND_TARGET=telegram run; assert_calls notify 1; assert_calls hermes-send 1; grep -q 'send -t telegram -s Vasher needs attention' "$CALLS/hermes-send" || { echo 'FAIL gateway alert shape'; exit 1; }
+run_case send-unset blocked; run; assert_calls notify 1; [[ ! -e "$CALLS/hermes-send" ]] || { echo 'FAIL sent without a target'; exit 1; }
 run_case digest success; run --digest; assert_calls hermes 1
 grep -qx -- '--toolsets todo --ignore-rules --skills vasher-supervisor --oneshot' "$CALLS/hermes-args" || { echo 'FAIL Hermes CLI shape'; exit 1; }
 grep -qx '300' "$CALLS/timeout" || { echo 'FAIL Hermes timeout'; exit 1; }

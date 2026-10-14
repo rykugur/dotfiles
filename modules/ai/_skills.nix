@@ -58,8 +58,8 @@ let
     src = "${superpowersDir}/${name}";
   }) superpowersSkillNames;
 
-  # For .agents/skills consumers (codex, grok) and any other that wants the
-  # full set including superpowers methodology.
+  # Installed to ~/.agents/skills by flake.modules.homeManager.ai-skills
+  # (codex, grok, Zed Agent, and any other AGENTS.md-layout consumer).
   skillsForDotAgents = commonSkills ++ superpowersSkills;
 in
 {

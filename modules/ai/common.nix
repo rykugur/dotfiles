@@ -1,4 +1,4 @@
-{ ... }:
+{ self, ... }:
 {
   flake.modules.homeManager.ai-common =
     { lib, pkgs, ... }:
@@ -8,6 +8,8 @@
       '';
     in
     {
+      imports = [ self.modules.homeManager.ai-skills ];
+
       home.packages = [
         pkgs.llmfit
         pkgs.rtk

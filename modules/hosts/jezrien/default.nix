@@ -131,9 +131,8 @@ let
                   claude-code
                   codex
                   herdr
+                  zed-editor
                   hermes-agent
-                  vasher-supervisor
-                  opencode
                   oh-my-pi
 
                   # individual modules

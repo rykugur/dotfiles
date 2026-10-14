@@ -36,6 +36,23 @@
           pane_gaps = true;
           show_agent_labels_on_pane_borders = true;
           status_indicators = "symbols";
+          # Agent panel: one line per agent instead of the default two-row
+          # (icon/space/tab + agent kind) block. The agent kind is dropped
+          # because every pane here runs omp. Sorting stays "spaces", so rows
+          # of the same space stay adjacent; Herdr 0.9.1 has no group headers.
+          sidebar_width = 32;
+          sidebar_max_width = 40;
+          agent_panel_sort = "spaces";
+          sidebar.agents.rows = [
+            [
+              "state_icon"
+              {
+                token = "workspace";
+                dim = true;
+              }
+              "tab"
+            ]
+          ];
           toast = {
             delivery = "herdr";
             delay_seconds = 1;

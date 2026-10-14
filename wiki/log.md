@@ -282,3 +282,27 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   derivation and its home package list: those two remain, GameGlass does not.
   A full Jezrien closure build and Vasher retry remain unverified.
 - Updated [modules.md](modules.md).
+
+## [2026-10-14] update | Jezrien Zed test and shared ~/.agents/skills
+
+- Added `modules/ai/ai-skills.nix` and imported it from `ai-common`, so
+  `~/.agents/skills/` is owned by one Home Manager module instead of Codex
+  and Grok. `_skills.nix` remains the registry. Harness-local copies stay
+  for Claude Code, OpenCode, OMP, and Hermes because those tools do not
+  read `~/.agents/skills/`.
+- MCP stays in `_mcp.nix` with per-harness serializers. There is no shared
+  on-disk MCP layout to extract.
+- Imported the existing `zed-editor` module on Jezrien only (`helix_mode =
+  true`). Herdr remains. No Zed keymap or MCP wiring yet.
+- Updated [ai-agents.md](ai-agents.md), [modules.md](modules.md),
+  [hosts.md](hosts.md), and [index.md](index.md).
+
+## [2026-10-14] update | Moved the Vasher supervisor to the hermes container
+
+- Converted `vasher-supervisor` from a Home Manager module to
+  `flake.modules.nixos.vasher-supervisor`; the `hermes` CT imports it from its
+  own `/etc/nixos/local.nix` through the `dotfiles` flake input.
+- Replaced `notify-send` with a journal entry plus an optional `hermes send`
+  gateway target, because the supervisor host has no desktop session.
+- Removed the Jezrien import; the desktop no longer polls Vasher.
+- Updated [ai-agents.md](ai-agents.md) and [entities/vasher.md](entities/vasher.md).

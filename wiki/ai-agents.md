@@ -58,16 +58,15 @@ runtime state.
 
 ## Vasher supervisor
 
-The Home Manager module `flake.modules.homeManager.vasher-supervisor` installs the `vasher-supervise` wrapper and its user services and timers on Jezrien. Shared module `modules/ai/_skills.nix` installs the `vasher-supervisor` skill. The regular timer runs every 30 minutes and skips the Monday 09:00 weekly digest slot.
+The NixOS module `flake.modules.nixos.vasher-supervisor` installs the `vasher-supervise` wrapper and its system services and timers on the `hermes` container, which runs the always-on Hermes agent. The container imports the module from its own `/etc/nixos/local.nix` through the `dotfiles` flake input. Shared module `modules/ai/_skills.nix` installs the `vasher-supervisor` skill. The regular timer runs every 30 minutes and skips the Monday 09:00 weekly digest slot.
 
-Healthy polls make zero model calls. The wrapper observes the read-only `/api/status.json`, `/api/events.json`, and `/api/agent-events.json` endpoints. Actions require a dedicated public key in `ryk.vasherPrebuild.agentKeys` and its private key at `~/.ssh/vasher-agent`. Without this key pair, supervision stays read-only.
+Healthy polls make zero model calls. The wrapper observes the read-only `/api/status.json`, `/api/events.json`, and `/api/agent-events.json` endpoints. Alerts go to the journal, and to a Hermes gateway channel when `ryk.vasherSupervisor.sendTarget` names one. Actions require a dedicated public key in `ryk.vasherPrebuild.agentKeys` and its private key at `/var/lib/hermes/.ssh/vasher-agent`. Without this key pair, supervision stays read-only.
 
 ## Shared infrastructure (the key to DRY)
 
-Two underscore modules provide single source of truth:
-
-- `modules/ai/_agents.nix` — common agent definitions / settings.
-- `modules/ai/_mcp.nix` — canonical MCP server list + serializers for each agent's config schema.
+- `_agents.nix` — common agent definitions / settings.
+- `_mcp.nix` — canonical MCP server list + serializers for each agent's config schema. Definitions stay here because each harness has a different on-disk schema; there is no shared `~/.mcp` layout.
+- `ai-skills.nix` — Home Manager module that installs the `_skills.nix` registry to `~/.agents/skills/`. `ai-common` imports it, so Jezrien and Taln share that tree without each harness copying files.
 
 `common.nix` provides a `mempalace` wrapper script and installs `rtk`, `llmfit`, and the locally packaged OpenRig CLI.
 
@@ -86,16 +85,20 @@ Permissions / allow-lists are also managed per-agent (e.g. `mcp__mempalace__*`, 
 
 ## Skills
 
-Skills are loaded via the agent's extension/skill mechanism:
+The skill registry is `_skills.nix`. Installation of the AGENTS.md layout is `ai-skills` (`~/.agents/skills/`), not any harness module.
 
 - `llm-wiki` (this very pattern — vendored at `modules/ai/skills/llm-wiki/SKILL.md`)
 - `sensitive-files`
-- Superpowers skills (https://github.com/obra/superpowers) — the full TDD / planning / subagent / review methodology. Installed wholesale for `.agents/skills/` consumers (codex, grok) via `_skills.nix`; loaded as plugins for claude-code and opencode.
+- Superpowers skills (https://github.com/obra/superpowers) — the full TDD / planning / subagent / review methodology. Installed wholesale into `~/.agents/skills/` for Codex, Grok, and Zed Agent. Claude Code and OpenCode still load Superpowers as plugins and keep harness-local copies of `commonSkills`.
 - Herdr's official `herdr` skill, sourced directly from the configured Herdr package, teaches agents to operate Herdr only when running in a Herdr-managed pane. Package and skill therefore update in lockstep.
+
+Harnesses that cannot read `~/.agents/skills/` still copy from the same registry: Claude Code (`~/.claude/skills/`), OpenCode (`~/.config/opencode/skills/`), OMP (`~/.omp/agent/skills/`), Hermes (`~/.hermes/skills/`).
 
 The skill files (and companion assets) are passed as store paths (via `flake = false` inputs or direct paths) so no imperative install is needed. For superpowers we symlink entire skill dirs so extra docs are present.
 
-See how `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix`, and `herdr.nix` consume or extend the shared skill infrastructure. `_skills.nix` is the central skill registry.
+See `modules/ai/ai-skills.nix` plus `claude-code.nix`, `opencode.nix`, `oh-my-pi/default.nix`, and `hermes-agent.nix` for the remaining harness-local copies. `_skills.nix` is the central skill registry.
+
+**Zed** is imported on Jezrien only as a test (`helix_mode = true`). Herdr stays enabled. Zed Agent reads `~/.agents/skills/`; it does not yet consume `_mcp.nix`. Taln does not import Zed.
 
 ## Why this matters (self-referentiality)
 

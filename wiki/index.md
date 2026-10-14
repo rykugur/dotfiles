@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-10-13 (Herdr-aware Ghostty navigation and favorite palette alias)
+Last major update: 2026-10-14 (Jezrien Zed test; shared `~/.agents/skills` via ai-skills)
 
 ---
 
@@ -24,7 +24,7 @@ Last major update: 2026-10-13 (Herdr-aware Ghostty navigation and favorite palet
 - [Hosts](hosts.md) — Host wiring, including Jezrien's built but not activated Windows VFIO session and TTY recovery workflow.
 - [Modules](modules.md) — Current modules tree, registration pattern, groups, desktop composition, shared tools, and the dendritic Windows VFIO module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
-- [AI Agents](ai-agents.md) — Declarative coding agents, shared skills, Herdr/OpenRig orchestration, Herdr-aware Ghostty navigation and palette alias, official oh-my-pi flake package, Vasher supervisor module and skill, centralized MCPs and skills, mempalace, and the self-referential wiki.
+- [AI Agents](ai-agents.md) — Declarative coding agents, shared `~/.agents/skills` via `ai-skills`, Herdr/OpenRig orchestration, Jezrien-only Zed test, official oh-my-pi flake package, Vasher supervisor module and skill, centralized MCPs and skills, mempalace, and the self-referential wiki.
 
 ## Entities
 

@@ -18,7 +18,8 @@ The three (sometimes four) machines managed by Swoleflake.
 - **Window manager**: Niri is active; a dormant Hyprland profile remains available
 - **Workload**: Heavy dev + gaming (Star Citizen via starcitizen-lite, EVE Online, Steam, Lutris, VR, Starsector, etc.)
 - **Notable modules**:
-  - Full AI agent suite (claude-code, codex, opencode, pi, ...)
+  - Full AI agent suite (claude-code, codex, opencode, pi, herdr, ...)
+  - Zed editor imported as a Helix-mode test; Herdr stays enabled. Not on Taln.
   - Audio (easyeffects, pipewire)
   - Peripherals (razer, wooting, zsa)
   - Virtualization (docker, winboat, Windows VFIO session)

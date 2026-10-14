@@ -45,6 +45,17 @@ write_digest() {
   fi
 }
 
+# Alerts go to the journal always, and to a Hermes gateway channel when one is
+# configured. There is no desktop session on the supervisor host.
+notify() {
+  local subject=$1 body=$2 ok=0
+  logger -t vasher-supervise -p daemon.warning -- "$subject: $body" || ok=1
+  if [[ -n ${VASHER_SUPERVISE_SEND_TARGET:-} ]]; then
+    printf '%s\n' "$body" | hermes send -t "$VASHER_SUPERVISE_SEND_TARGET" -s "$subject" || ok=1
+  fi
+  return "$ok"
+}
+
 fetch() { curl --fail --silent --show-error --max-time 10 "$1"; }
 status=$(fetch "$base_url/status.json" 2>/dev/null) || status=
 events=$(fetch "$base_url/events.json" 2>/dev/null) || events=
@@ -56,7 +67,7 @@ if [[ -z $status || -z $events ]] || ! jq -e 'type == "object"' <<<"$status" >/d
   state=$(jq -c --argjson count "$unreachable" '.unreachable = $count' <<<"$state")
   write_state "$state" || exit 0
   if (( unreachable == 2 )) && [[ $(jq -r '.unreachable' "$state_file") == 2 ]] && [[ ! -e "$state_dir/.unreachable-notified" ]]; then
-    if notify-send --urgency=critical 'Vasher is unreachable' 'Two consecutive supervisor polls failed.'; then
+    if notify 'Vasher is unreachable' 'Two consecutive supervisor polls failed.'; then
       : > "$state_dir/.unreachable-notified"
     fi
   fi
@@ -140,7 +151,7 @@ severity=$(jq -nr --arg state "$status_state" --argjson events "$merged" '
   elif any($events[]; ((.severity // "") == "critical" or (.severity // "") == "error" or (.severity // "") == "warning")) then "warning"
   else "informational" end')
 if [[ $severity == warning ]]; then
-  notify-send --urgency=critical 'Vasher needs attention' "State: $status_state. See $digest_file" || true
+  notify 'Vasher needs attention' "State: $status_state. See $digest_file" || true
 fi
 
 if [[ -n $model_error ]]; then
@@ -178,7 +189,7 @@ case "$verb" in
     ;;
   *) exit 0 ;;
 esac
-key="$HOME/.ssh/vasher-agent"
+key=${VASHER_SUPERVISE_KEY:-"$HOME/.ssh/vasher-agent"}
 if [[ ! -f $key ]]; then
   printf '\nProposal retained: SSH key is missing at %s; no action was attempted.\n' "$key" >> "$digest_file"
   exit 0
