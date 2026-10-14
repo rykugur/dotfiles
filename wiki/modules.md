@@ -233,6 +233,19 @@ Manager's evaluated `xdg.systemDirs.config`, preserving Stylix's generated KDE
 palette when a non-Plasma session resets `XDG_CONFIG_DIRS`; Kvantum remains the
 Stylix-managed Qt 6 widget style.
 
+Removing Nautilus in favour of Dolphin broke the XDG desktop portal file
+chooser. niri ships `niri-portals.conf` with `default=gnome;gtk`, and
+`xdg-desktop-portal-gnome` 47+ delegates `org.freedesktop.impl.portal.FileChooser`
+to `org.gnome.Nautilus`; without Nautilus every portal file dialog failed with
+`Delegated FileChooser call failed: The name is not activatable`, so "Browse"
+and upload buttons in Zen and Chrome did nothing. `modules/desktop/niri/default.nix`
+now sets `xdg.portal.config.niri`, which lands in
+`/etc/xdg/xdg-desktop-portal/` and shadows niri's shipped file, pinning
+`FileChooser` to the GTK backend and keeping niri's other preferences.
+`xdg-desktop-portal-gtk` moved from `home.packages` to
+`xdg.portal.extraPortals` so the backend is system-managed alongside the GNOME
+one instead of being visible only through the user profile.
+
 ## NFS automount
 
 The NFS automount module defines an on-demand share mount and registers two

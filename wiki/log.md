@@ -236,3 +236,38 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   dashboard and corrected hold, skill ownership, and btrfs sampling details.
 - Updated [entities/vasher.md](entities/vasher.md),
   [ai-agents.md](ai-agents.md), and [index.md](index.md).
+
+## [2026-10-14] fix | Routed the niri portal FileChooser to the GTK backend
+
+- Browser "Browse"/upload dialogs (Zen and Chrome) silently did nothing on
+  jezrien. Root cause: commit `7fcc6167` ("standardize explorer") dropped
+  Nautilus, and `xdg-desktop-portal-gnome` 50 delegates
+  `org.freedesktop.impl.portal.FileChooser` to `org.gnome.Nautilus`. niri's
+  shipped `niri-portals.conf` sends FileChooser to the GNOME backend via
+  `default=gnome;gtk`, so every request failed with
+  `Delegated FileChooser call failed: The name is not activatable`. The GNOME
+  backend advertises the interface, so xdg-desktop-portal never fell back to
+  GTK.
+- `modules/desktop/niri/default.nix` now sets `xdg.portal.config.niri` with
+  `org.freedesktop.impl.portal.FileChooser = "gtk"` plus niri's other upstream
+  preferences. NixOS writes it to `/etc/xdg/xdg-desktop-portal/`, which wins
+  over the package-provided file in `/run/current-system/sw/share/`; the file
+  shadows rather than merges, hence restating the other keys.
+- Moved `xdg-desktop-portal-gtk` from `home.packages` to
+  `xdg.portal.extraPortals`, and dropped the duplicate
+  `xdg-desktop-portal-gnome` user-profile copy. The GTK backend is now a real
+  system portal instead of being discoverable only through the user profile's
+  `XDG_DATA_DIRS`.
+- Rejected alternatives: reinstalling Nautilus (contradicts standardizing on
+  Dolphin) and adding `xdg-desktop-portal-kde` (pulls Plasma integration for
+  one dialog; GTK is already installed and Stylix-themed).
+- Verified by evaluation and a live smoke test: temporarily placing the config
+  in `$XDG_CONFIG_HOME`, restarting `xdg-desktop-portal.service`, and calling
+  `org.freedesktop.portal.FileChooser.OpenFile` produced a real dialog window
+  (`App ID: xdg-desktop-portal-gtk`). The temporary override was removed
+  afterwards, so the fix takes effect on the next rebuild.
+- Confirmed by Dusty after rebuilding: the file picker works in the browsers,
+  but a manual `systemctl --user restart xdg-desktop-portal.service` was
+  required first. NixOS activation does not restart user portal services, so
+  the running daemon kept the stale backend mapping.
+- Updated [modules.md](modules.md).

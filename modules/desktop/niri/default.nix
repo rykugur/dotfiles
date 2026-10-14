@@ -72,6 +72,27 @@
           package = pkgs.niri;
         };
 
+        # niri ships niri-portals.conf with `default=gnome;gtk`, which sends
+        # FileChooser to xdg-desktop-portal-gnome. Since GNOME 47 that backend
+        # delegates the file chooser to org.gnome.Nautilus, which we no longer
+        # install (Dolphin is the standard explorer), so every "Browse"/upload
+        # dialog fails with "Delegated FileChooser call failed". Pin FileChooser
+        # to the GTK backend; the rest mirrors niri's upstream config, which this
+        # file shadows via /etc/xdg/xdg-desktop-portal/.
+        xdg.portal = {
+          extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+          config.niri = {
+            default = [
+              "gnome"
+              "gtk"
+            ];
+            "org.freedesktop.impl.portal.Access" = [ "gtk" ];
+            "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+            "org.freedesktop.impl.portal.Notification" = [ "gtk" ];
+            "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+          };
+        };
+
         ryk.desktop.compositor = "niri";
 
         home-manager.users.${config.ryk.username}.imports = [ self.modules.homeManager.niri ];
@@ -122,9 +143,6 @@
           wlogout
           wtype
           yad
-
-          xdg-desktop-portal-gnome
-          xdg-desktop-portal-gtk
 
           xwayland-satellite
         ]
