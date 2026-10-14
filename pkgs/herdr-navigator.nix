@@ -16,6 +16,14 @@ rustPlatform.buildRustPackage rec {
   };
   cargoHash = "sha256-nIbFZx0AH4DtcgmmI3Bxh123t5ye4vRRx+Dl3L7z5KA=";
 
+  # Upstream's test fixtures key workspaces by literal "/tmp", while production
+  # canonicalizes it to "/private/tmp" on Darwin.
+  postPatch = ''
+    substituteInPlace src/app.rs \
+      --replace-fail '            "/tmp".into(),' \
+      '            canonical_str(Path::new("/tmp")).unwrap_or_else(|| "/tmp".into()),'
+  '';
+
   postInstall = ''
     pluginDir="$out/share/herdr/plugins/herdr-navigator"
     mkdir -p "$pluginDir"
