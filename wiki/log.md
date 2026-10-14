@@ -271,3 +271,14 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   required first. NixOS activation does not restart user portal services, so
   the running daemon kept the stale backend mapping.
 - Updated [modules.md](modules.md).
+
+## [2026-10-14] fix | Removed unused GameGlass from Star Citizen modules
+
+- Removed GameGlass packages and desktop entries from
+  `modules/gaming/starcitizen-lite.nix` and `modules/gaming/starcitizen.nix`.
+  The unused upstream AppImage changed its bytes without matching the pinned
+  hash, blocking Vasher's Jezrien prebuild.
+- Retained OpenTrack and LUG Helper. Evaluated Jezrien's prebuild system
+  derivation and its home package list: those two remain, GameGlass does not.
+  A full Jezrien closure build and Vasher retry remain unverified.
+- Updated [modules.md](modules.md).

@@ -45,30 +45,16 @@
     { pkgs, ... }:
     let
       sys = pkgs.stdenv.hostPlatform.system;
-      gameglass = inputs.nix-citizen.packages.${sys}.gameglass;
       lug-helper = inputs.nix-citizen.packages.${sys}.lug-helper;
       wineAstralPkg = inputs.nix-citizen.packages.${sys}.wine-astral;
     in
     {
       home.packages = with pkgs; [
         opentrack
-        gameglass
         lug-helper
       ];
 
       # lazy-mode - for opentrack
       home.file.".wine-astral".source = wineAstralPkg;
-
-      xdg.desktopEntries.gameglass = {
-        name = "GameGlass";
-        icon = "gameglass";
-        exec = "${gameglass}/bin/gameglass";
-        terminal = false;
-        type = "Application";
-        categories = [
-          "Game"
-          "Utility"
-        ];
-      };
     };
 }

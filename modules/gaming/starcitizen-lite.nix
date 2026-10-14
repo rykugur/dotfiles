@@ -56,13 +56,11 @@
     { pkgs, ... }:
     let
       sys = pkgs.stdenv.hostPlatform.system;
-      gameglass = inputs.nix-citizen.packages.${sys}.gameglass;
       lug-helper = inputs.nix-citizen.packages.${sys}.lug-helper;
     in
     {
       home.packages = with pkgs; [
         opentrack
-        gameglass
         lug-helper
       ];
 
@@ -96,18 +94,6 @@
             kill "$(cat /tmp/sc-opentrack.pid 2>/dev/null)" 2>/dev/null || true
           '';
         };
-      };
-
-      xdg.desktopEntries.gameglass = {
-        name = "GameGlass";
-        icon = "gameglass";
-        exec = "${gameglass}/bin/gameglass";
-        terminal = false;
-        type = "Application";
-        categories = [
-          "Game"
-          "Utility"
-        ];
       };
     };
 }

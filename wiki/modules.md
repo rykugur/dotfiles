@@ -64,6 +64,11 @@ Home-manager modules are the majority for user environment.
 - `gaming` — steam, lutris, moonlight, starcitizen-lite, eve-online, starsector, gamemode, jackify, ...
 - `_3dp` (printing3d) — presumably 3d printing related (prusa, orca, etc. not deeply surveyed yet).
 
+Jezrien's `starcitizen-lite` home module keeps OpenTrack and LUG Helper but no
+longer installs GameGlass. The inactive full `starcitizen` module also omits it:
+the unused AppImage's upstream download changed without its pinned hash, which
+prevented Vasher from building Jezrien's closure.
+
 Inside a host's home-manager users section you see:
 
 ```nix
