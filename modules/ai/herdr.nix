@@ -8,6 +8,13 @@
       ...
     }:
     let
+      shellCmd =
+        {
+          fish = "fish";
+          nushell = "nu";
+          bash = "bash";
+        }
+        .${config.osConfig.ryk.defaultShell or "nushell"};
       herdrNavigatorPlugin = "${pkgs.herdr-navigator}/share/herdr/plugins/herdr-navigator";
     in
     {
