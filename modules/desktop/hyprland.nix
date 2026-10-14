@@ -243,7 +243,6 @@
               "1password"
               "discord"
               "steam"
-              "corectrl --minimize-systray"
             ]
             ++ lib.optionals (hyprCfg.bar == "none") [
               "albert"

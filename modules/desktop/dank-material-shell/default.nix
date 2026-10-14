@@ -105,6 +105,17 @@
 
             systemd.enable = false;
 
+            # Upstream IdleInhibitor.qml has no hover tooltip; swap in a
+            # patched copy (adds a DankTooltip, same pattern as Vpn.qml /
+            # Battery.qml) after the normal quickshell QML install step.
+            package = inputs.dankMaterialShell.packages.${pkgs.system}.dms-shell.overrideAttrs (old: {
+              postInstall =
+                old.postInstall
+                + ''
+                  cp ${./IdleInhibitor.qml} $out/share/quickshell/dms/Modules/DankBar/Widgets/IdleInhibitor.qml
+                '';
+            });
+
             enableAudioWavelength = true;
             enableCalendarEvents = false;
             enableDynamicTheming = false;
