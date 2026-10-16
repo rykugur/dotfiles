@@ -326,3 +326,13 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   live sidebar still shows one row until the next switch.
 - Known cosmetic cost: OMP's `π > ` / `π ⠸ ` title prefix consumes four of the
   ~30 usable columns and duplicates Herdr's own state icon.
+
+## [2026-10-16] update | Restore blank-row spacing in the Herdr sidebar
+
+- Two-row agent entries ran together visually, so set
+  `ui.sidebar.agents.row_gap = 1` and `ui.sidebar.spaces.row_gap = 1` in
+  [modules/ai/herdr.nix](../modules/ai/herdr.nix). Herdr 0.9.x defaults both to
+  `0`; `1` is the pre-0.9 spacing.
+- Verified in a nested `herdr --session t2` server against the generated TOML:
+  a blank row now separates each agent entry. Test session removed; no
+  activation run.

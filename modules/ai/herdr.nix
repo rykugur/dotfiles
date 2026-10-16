@@ -46,6 +46,9 @@
           sidebar_width = 32;
           sidebar_max_width = 40;
           agent_panel_sort = "spaces";
+          # Two-row entries need a blank separator row to stay legible.
+          sidebar.agents.row_gap = 1;
+          sidebar.spaces.row_gap = 1;
           sidebar.agents.rows = [
             [
               "state_icon"
