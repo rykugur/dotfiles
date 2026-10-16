@@ -2,11 +2,6 @@
 {
   flake.modules.homeManager.ai-common =
     { lib, pkgs, ... }:
-    let
-      mempalace = pkgs.writeShellScriptBin "mempalace" ''
-        exec ${pkgs.uv}/bin/uvx --python 3.13 mempalace "$@"
-      '';
-    in
     {
       imports = [ self.modules.homeManager.ai-skills ];
 
@@ -14,8 +9,6 @@
         pkgs.llmfit
         pkgs.rtk
         pkgs.openrig
-
-        mempalace
       ];
 
       home.activation.rtkInitClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

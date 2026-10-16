@@ -272,12 +272,12 @@ source of truth.
 `modules/ai/` is one of the most interesting parts of the repo:
 
 - Shared agent definitions in `_agents.nix`
-- Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, mempalace, context7, arcanum)
+- Shared MCP server definitions in `_mcp.nix` (jcodemunch, context-mode, context7, arcanum)
 - `ai-skills.nix` — installs `_skills.nix` into `~/.agents/skills/` via `ai-common`
 - Individual agent modules: `claude-code.nix`, `codex.nix`, `grok.nix`, `opencode.nix`, `oh-my-pi/default.nix` (official `oh-my-pi` flake for the package; local files/activation for config)
 - `herdr.nix` — shared terminal workspace configuration, OMP integration, and declarative `herdr-navigator` registration
 - `zed-editor.nix` — existing Helix-mode Zed module; Jezrien-only test import, Herdr remains
-- `common.nix` (installs the mempalace wrapper, rtk, llmfit, the local OpenRig package, and `ai-skills`)
+- `common.nix` (installs rtk, llmfit, the local OpenRig package, and `ai-skills`)
 - `pkgs/herdr-navigator.nix` — reproducible Rust build whose patched plugin manifest invokes Nix-store binaries
 - `_skills.nix` plus local `skills/` — declarative skill registry
 - Permission policies per agent

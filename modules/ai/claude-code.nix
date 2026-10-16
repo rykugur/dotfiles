@@ -41,7 +41,6 @@ let
       mcp.pick [
         "jcodemunch"
         "context-mode"
-        "mempalace"
       ]
     );
 
@@ -70,7 +69,6 @@ let
       defaultMode = "auto";
       allow = map (cmd: "Bash(${cmd}:*)") allowedBashCommands ++ [
         "mcp__jcodemunch__*"
-        "mcp__mempalace__*"
         "mcp__context-mode__*"
         "mcp__plugin_context7-plugin_context7__*"
         "WebFetch(domain:github.com)"

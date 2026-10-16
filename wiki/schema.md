@@ -156,7 +156,7 @@ The LLM is excellent at this bookkeeping.
 - The declarative configuration system itself (not end-user apps inside the configs).
 - How modules compose, the dendritic philosophy (fine-grained, auto-discovered modules), host wiring, groups.
 - History of major refactors (the "superpowers" plans & specs in `docs/superpowers/` are gold).
-- The AI agent layer (`modules/ai/*`) — this is unusually sophisticated and self-referential (the wiki skill and mempalace are managed here).
+- The AI agent layer (`modules/ai/*`) — this is unusually sophisticated and self-referential (the wiki skill is managed here).
 - Secrets (sops-nix), custom packages, overlays, home-manager patterns.
 - Cross-platform (linux + darwin) concerns.
 
@@ -179,10 +179,10 @@ The LLM is excellent at this bookkeeping.
 - Root `CLAUDE.md` and `README.md` are the "operator manual". The wiki can quote or link their build sections but should not duplicate them verbatim forever — point to them.
 - When build commands or high-level overview drift, the wiki's overview must be reconciled with them.
 
-**Mempalace integration**:
-- `mempalace` (MCP + CLI) + the rooms in root `mempalace.yaml` provide dynamic, queryable "working memory" partitioned by area of the repo ("wing: dotfiles", rooms for modules, configs, etc.).
+**Memory layers**:
 - This wiki is the **curated, synthesized, slower-changing layer** with history and rationale.
-- They are complementary. When answering, you may use both (mempalace for fresh context or specific room facts; wiki for big-picture and "why").
+- OMP's Mnemopi store holds conversation-derived facts; `jcodemunch` / `context-mode` answer "what does the code say" from the working tree.
+- There is no separate mined file index: `mempalace` was retired on 2026-10-16 (duplicate of the above, and it rotted).
 
 **Self-reference**:
 Because this repo *manages* the llm-wiki skill itself (see `modules/ai/skills/llm-wiki/`, `claude-code.nix`, `oh-my-pi/default.nix` etc.), the wiki should eventually have a good page on "how the wiki skill is distributed and activated".

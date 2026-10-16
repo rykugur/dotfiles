@@ -1,7 +1,7 @@
 ---
 title: History & Major Migrations
 category: migration
-date: 2026-08-12
+date: 2026-10-16
 tags: [history, migration, dendritic, superpowers, refactor]
 sources: ["DENDRITIC_MIGRATION.md", "docs/superpowers/plans/*.md", "docs/superpowers/specs/*.md"]
 related: ["architecture.md", "overview.md"]
@@ -21,6 +21,11 @@ These are **primary sources** for the wiki. When in doubt about "why is it like 
 Synthesized per-source pages live under `wiki/sources/` (e.g. [2026-03-23 Dendritic Conversion](../sources/2026-03-23-dendritic-module-conversion.md)).
 
 ## Timeline of major efforts (reverse chrono, approximate)
+
+- **2026-10**: MemPalace retired
+  - Removed the `mempalace` MCP server, the CLI wrapper in `common.nix`, the Claude Code allow-list entry, and both `mempalace.yaml` room configs (dotfiles + homelab).
+  - Rationale: the mined file index duplicated `jcodemunch`/`context-mode` (which read the live working tree), and the curated half duplicated this wiki and Arcanum. The palace had not been written since 2026-04-07, so searches returned flux-era manifests as if current — a stale index is worse than none.
+  - Memory now has three clear layers: Mnemopi (OMP conversation facts, automatic), the llm-wiki + Arcanum (curated rationale), and `jcodemunch`/`context-mode` (live code).
 
 - **2026-08**: Dendritic migration completed
   - Converted the final desktop stack (hyprland, niri, DankMaterialShell, noctalia).
@@ -78,7 +83,7 @@ This is excellent raw material for an llm-wiki: the specs are the "primary liter
 
 - The dendritic conversion is complete; `legacy-modules/` no longer exists.
 - Groups are the composition story.
-- AI agents are fully declarative and include the tools that maintain this wiki (mempalace + llm-wiki skill).
+- AI agents are fully declarative and include the llm-wiki skill that maintains this wiki.
 - More small cleanups and feature additions are continuous (see open items in root CLAUDE.md and TODOs scattered in code).
 
 ## How to use this history as an agent

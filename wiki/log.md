@@ -336,3 +336,30 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
 - Verified in a nested `herdr --session t2` server against the generated TOML:
   a blank row now separates each agent entry. Test session removed; no
   activation run.
+
+## [2026-10-16] refactor | Retire MemPalace
+
+- Removed the `mempalace` MCP server from [_mcp.nix](../modules/ai/_mcp.nix),
+  the `mempalace` pick and `mcp__mempalace__*` allow-list entry from
+  [claude-code.nix](../modules/ai/claude-code.nix), and the `uvx` wrapper
+  script from [common.nix](../modules/ai/common.nix). Deleted root
+  `mempalace.yaml` here and in the homelab repo, and removed the stale
+  `mempalace` server from the hand-managed `~/.grok/user-settings.json`
+  (Grok's settings stopped being Nix-managed in `e602d2bf`).
+- Rationale: mempalace was used as a mined *file* index, which duplicates
+  `jcodemunch` and `context-mode` — both of which read the live working tree.
+  Its curated half duplicates this wiki and Arcanum. The palace had not been
+  written since 2026-04-07; `mempalace search "traefik ingressroute" --wing
+  homelab` still returned weave-gitops/flux-era manifests as if current. A
+  stale semantic index is worse than none.
+- Memory layering is now explicit: Mnemopi (OMP-only conversation facts,
+  automatic, `memory.backend = "mnemopi"`), llm-wiki + Arcanum (curated
+  rationale), `jcodemunch`/`context-mode` (live code).
+- Verified with `nix eval` that `_mcp.nix` exposes only
+  `["arcanum","context-mode","context7","jcodemunch"]`, that the wrapped
+  `packages.claude-code` derivation contains no `mempalace` string, and that
+  `nixosConfigurations.jezrien.config.system.build.toplevel` still evaluates.
+  No activation was run, so `~/.nix-profile/bin/mempalace` persists until the
+  next switch.
+- The `~/.mempalace` store (11 MB, 1329 drawers) was moved to
+  `~/.mempalace.removed-2026-10-16` rather than deleted, pending confirmation.

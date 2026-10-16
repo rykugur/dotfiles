@@ -13,7 +13,7 @@ This directory holds immutable source documents that feed the wiki.
 
 The wiki treats the following as canonical live sources (read via tools or cat in context):
 
-- Root: README.md, CLAUDE.md, flake.nix, flake.lock, mempalace.yaml, DENDRITIC_MIGRATION.md, justfile
+- Root: README.md, CLAUDE.md, flake.nix, flake.lock, DENDRITIC_MIGRATION.md, justfile
 - docs/superpowers/{plans,specs}/*.md — historical design artifacts and migration plans (the "superpowers" that shaped current form)
 - modules/ tree (all .nix)
 - hosts/*/ 
@@ -25,7 +25,7 @@ When a design doc is particularly pivotal, a copy or excerpt may be placed in th
 
 ## Tools
 
-- Use `mempalace` (via MCP or CLI) in conjunction for working memory / rooms.
+- Use `jcodemunch` / `context-mode` (via MCP) for live code lookups; they read the working tree.
 - The llm-wiki skill (this pattern) governs how we maintain the synthesized layer.
 
 See `../schema.md` for full conventions.

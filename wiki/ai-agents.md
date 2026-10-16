@@ -1,8 +1,8 @@
 ---
 title: AI Agents
 category: ai
-date: 2026-10-13
-tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, hermes, vasher, openrig, mempalace, llm-wiki, skills, mcp]
+date: 2026-10-16
+tags: [ai, agents, claude-code, codex, grok, opencode, oh-my-pi, herdr, herdr-navigator, hermes, vasher, openrig, llm-wiki, skills, mcp]
 sources: ["modules/ai/", "modules/ai/_agents.nix", "modules/ai/_mcp.nix", "modules/ai/_skills.nix", "modules/ai/claude-code.nix", "modules/ai/grok.nix", "modules/ai/herdr.nix", "modules/ai/oh-my-pi/default.nix", "modules/ai/common.nix", "modules/ai/vasher-supervisor.nix", "modules/ai/vasher-supervise.sh", "modules/ai/skills/vasher-supervisor/SKILL.md", "modules/ai/skills/llm-wiki/SKILL.md", "pkgs/herdr-navigator.nix", "pkgs/openrig.nix", "flake.nix"]
 related: ["overview.md", "architecture.md", "modules.md"]
 ---
@@ -74,7 +74,7 @@ Healthy polls make zero model calls. The wrapper observes the read-only `/api/st
 - `_mcp.nix` — canonical MCP server list + serializers for each agent's config schema. Definitions stay here because each harness has a different on-disk schema; there is no shared `~/.mcp` layout.
 - `ai-skills.nix` — Home Manager module that installs the `_skills.nix` registry to `~/.agents/skills/`. `ai-common` imports it, so Jezrien and Taln share that tree without each harness copying files.
 
-`common.nix` provides a `mempalace` wrapper script and installs `rtk`, `llmfit`, and the locally packaged OpenRig CLI.
+`common.nix` installs `rtk`, `llmfit`, and the locally packaged OpenRig CLI.
 
 ## MCP servers (centralized)
 
@@ -82,12 +82,12 @@ Defined once in `_mcp.nix`:
 
 - `jcodemunch`
 - `context-mode`
-- `mempalace` (the memory palace MCP + CLI that complements this wiki)
+- `arcanum` (HTTP; the curated knowledge base MCP)
 - `context7`
 
 Each agent module imports the shared definition and translates it into the schema that agent expects (stdio for Claude Code, etc.).
 
-Permissions / allow-lists are also managed per-agent (e.g. `mcp__mempalace__*`, `Bash(allowed commands:*)` etc.).
+Permissions / allow-lists are also managed per-agent (e.g. `mcp__jcodemunch__*`, `Bash(allowed commands:*)` etc.).
 
 ## Skills
 
@@ -116,12 +116,13 @@ Because the agents can (and do) work inside this repository, and the repository 
 
 This is why `ai-agents.md` exists as a first-class wiki page early in the bootstrap.
 
-## MemPalace + llm-wiki
+## Memory and knowledge
 
-- **mempalace**: provides dynamic, partitioned working memory ("wings" and "rooms"). Configured at repo root by `mempalace.yaml` (currently one wing "dotfiles" with rooms for configuration, modules, overlays, pkgs, docs, general, etc.). Used via MCP by the agents for fast context.
-- **llm-wiki** (this wiki): the slower, curated, synthesized, cross-linked, git-tracked knowledge base with history and rationale. Complements mempalace. The LLM writes the wiki; you browse it in Obsidian or via grep/agents.
+- **llm-wiki** (this wiki): the slow, curated, synthesized, cross-linked, git-tracked knowledge base with history and rationale. The LLM writes it; you browse it in Obsidian or via grep/agents. Arcanum plays the same role for homelab/dotfiles change history and is reachable as an MCP server.
+- **Mnemopi** (OMP only, `memory.backend = "mnemopi"`): conversation-derived facts and episodes, retained automatically per turn and scoped `per-project-tagged`. Not shared with other harnesses.
+- **Code lookup** is handled by `jcodemunch` and `context-mode`, which read the working tree, so no separate file index is maintained.
 
-Both are enabled for the main agents (with slight variation per tool).
+`mempalace` was removed on 2026-10-16: its file-mining duplicated `jcodemunch`, its curated half duplicated the wiki and Arcanum, and the palace had gone six months stale (last written 2026-04-07), answering with flux-era manifests. See `history.md`.
 
 ## Configuration surface (high level)
 

@@ -21,19 +21,6 @@ let
         PATH = "${pkgs.nodejs}/bin:${pkgs.coreutils}/bin:/bin:/usr/bin";
       };
     };
-    mempalace = {
-      command = "${pkgs.uv}/bin/uv";
-      args = [
-        "run"
-        "--with"
-        "mempalace"
-        "--python"
-        "3.13"
-        "python"
-        "-m"
-        "mempalace.mcp_server"
-      ];
-    };
     context7 = {
       command = "${pkgs.bun}/bin/bunx";
       args = [ "@upstash/context7-mcp" ];

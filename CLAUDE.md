@@ -71,5 +71,5 @@ This repository maintains an llm-wiki under `wiki/` following the Karpathy LLM W
 - Raw sources go in `wiki/raw/`.
 - When making significant changes or after migrations, update or ingest into the wiki so knowledge compounds instead of being rediscovered.
 
-The wiki complements `mempalace` (configured in root `mempalace.yaml`, exposed as MCP).
+The wiki is the durable knowledge layer. Code lookups go through `jcodemunch` / `context-mode`, which read the working tree.
 
