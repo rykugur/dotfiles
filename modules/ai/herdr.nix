@@ -36,10 +36,13 @@
           pane_gaps = true;
           show_agent_labels_on_pane_borders = true;
           status_indicators = "symbols";
-          # Agent panel: one line per agent instead of the default two-row
-          # (icon/space/tab + agent kind) block. The agent kind is dropped
-          # because every pane here runs omp. Sorting stays "spaces", so rows
-          # of the same space stay adjacent; Herdr 0.9.1 has no group headers.
+          # Agent panel: two rows per agent. Row 1 is the locator
+          # (state icon / space / tab). Row 2 is the pane's terminal title,
+          # which omp sets to its session title ("VASH: Stop Vasher LXC
+          # thrashing"), so the panel says what each agent is working on.
+          # The default row 2 (agent kind) is dropped because every pane here
+          # runs omp. Sorting stays "spaces", so rows of the same space stay
+          # adjacent; Herdr 0.9.1 has no group headers.
           sidebar_width = 32;
           sidebar_max_width = 40;
           agent_panel_sort = "spaces";
@@ -52,6 +55,7 @@
               }
               "tab"
             ]
+            [ "terminal_title_stripped" ]
           ];
           toast = {
             delivery = "herdr";

@@ -39,6 +39,12 @@ Prefix fallbacks remain for tab switching, tab movement, and pane focus.
 Herdr's implicit Catppuccin default is named explicitly so Navigator's theme
 inheritance selects its matching Catppuccin Mocha palette.
 
+The agent sidebar renders two rows per agent: a locator row
+(`state_icon` / dimmed workspace / tab) and the pane's
+`terminal_title_stripped`. OMP writes its session title to the terminal title,
+so the sidebar states what each agent is working on without any agent-side
+title command. Titles truncate at the 32-column sidebar width.
+
 The [Ghostty module](../modules/terminal/ghostty.nix) checks
 `config.programs.herdr.enable or false`: Herdr-enabled homes release Ghostty's
 split-navigation chords and unbind its Linux `Ctrl+Shift+J` default. Homes without

@@ -306,3 +306,23 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   gateway target, because the supervisor host has no desktop session.
 - Removed the Jezrien import; the desktop no longer polls Vasher.
 - Updated [ai-agents.md](ai-agents.md) and [entities/vasher.md](entities/vasher.md).
+
+## [2026-10-16] update | Show the OMP session title in the Herdr agent sidebar
+
+- Added a second sidebar row, `[ "terminal_title_stripped" ]`, to
+  `ui.sidebar.agents.rows` in [modules/ai/herdr.nix](../modules/ai/herdr.nix).
+  The previous single-row layout showed only state icon, workspace, and tab,
+  so panes were identified by location rather than by work.
+- No agent-side title automation was added. OMP already writes its session
+  title as the OSC terminal title (`VASH: Stop Vasher LXC thrashing`), which
+  Herdr exposes as `terminal_title` / `terminal_title_stripped`. The
+  alternatives, `herdr pane rename` and `herdr pane report-metadata --title`,
+  would cost one CLI call per update and risk stale labels; `pane rename` also
+  suppresses `show_agent_labels_on_pane_borders`.
+- Verified by building the generated TOML and rendering it in an isolated
+  nested `herdr --session titletest` server with four demo agents: both rows
+  appear and long titles truncate with `…` at the sidebar edge. The test
+  session and its pane were removed afterwards. No activation was run, so the
+  live sidebar still shows one row until the next switch.
+- Known cosmetic cost: OMP's `π > ` / `π ⠸ ` title prefix consumes four of the
+  ~30 usable columns and duplicates Herdr's own state icon.
