@@ -62,5 +62,15 @@
           };
         };
       };
+
+      home.file.".local/share/easyeffects/autoload/input/alsa_input.usb-Elgato_Systems_Elgato_Wave_3_BS14M1A01945-00.mono-fallback:Microphone.json" = {
+        force = true;
+        text = builtins.toJSON {
+          device = "alsa_input.usb-Elgato_Systems_Elgato_Wave_3_BS14M1A01945-00.mono-fallback";
+          device-description = "Elgato Wave 3 Mono";
+          device-profile = "Microphone";
+          preset-name = "mic-chain";
+        };
+      };
     };
 }
