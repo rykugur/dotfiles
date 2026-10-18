@@ -75,12 +75,28 @@ write_status() {
   fi
 }
 
+maybe_collect_garbage() {
+  local fs_info blocks size
+  fs_info=$(stat -f -c '%a %S' /nix/store)
+  read -r blocks size <<< "$fs_info"
+  if ((blocks * size >= 45 * 1024 ** 3)); then
+    return 0
+  fi
+  nix-collect-garbage
+  fs_info=$(stat -f -c '%a %S' /nix/store)
+  read -r blocks size <<< "$fs_info"
+  if ((blocks * size < 45 * 1024 ** 3)); then
+    printf 'vasher-prebuild: less than 45 GiB free on /nix after garbage collection\n' >&2
+    return 1
+  fi
+}
+
 record_failure() {
   local exit_code=$?
   trap - ERR
   ((BASH_SUBSHELL == 0)) || exit "$exit_code"
   [[ $lock_acquired == true ]] && write_status failed "$exit_code" || true
-  [[ $lock_acquired == true ]] && nix-collect-garbage || true
+  # Failed substitutions may still contain reusable store paths.
   exit "$exit_code"
 }
 trap record_failure ERR
@@ -196,7 +212,7 @@ prepare_updated_candidate() {
   local -a update_inputs=()
   local selection= selection_status=0
   write_status preparing null
-  nix-collect-garbage
+  maybe_collect_garbage
   if [[ ! -e $worktree/.git ]]; then
     mkdir -p "$(dirname "$worktree")"
     git -C "$repo" worktree add --detach "$worktree" "$base_revision"
@@ -250,7 +266,7 @@ prepare_narrow_candidate() {
   }
   load_github_token
   write_status preparing null
-  nix-collect-garbage
+  maybe_collect_garbage
   if [[ ! -e $worktree/.git ]]; then
     mkdir -p "$(dirname "$worktree")"
     git -C "$repo" worktree add --detach "$worktree" "$base_revision"
@@ -305,7 +321,7 @@ prepare_exact_retry() {
   }
   git -C "$worktree" merge-base --is-ancestor "$base_revision" "$candidate_revision"
   write_status preparing null
-  nix-collect-garbage
+  maybe_collect_garbage
 }
 
 if [[ $mode == retry ]]; then

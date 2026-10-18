@@ -22,6 +22,7 @@ STALL_SECONDS = 30 * 60
 MEMORY_LIMIT = 768 * MIB
 SWAP_LIMIT = 256 * MIB
 DISK_LIMIT = 5 * GIB
+DISK_BUILD_RESERVE = 45 * GIB
 STALL_CPU_SECONDS = 10
 
 STATE_PATH = Path("/var/lib/vasher/monitor/state.json")
@@ -33,6 +34,7 @@ SYSTEMCTL = "/run/current-system/sw/bin/systemctl"
 STATUS_PATH = Path("/var/lib/vasher/dashboard/status.json")
 LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")
 PRESSURE_PATH = Path("/proc/pressure/memory")
+CGROUP_ROOT = Path("/sys/fs/cgroup/system.slice")
 BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
 CANDIDATE_WORKTREE = "/var/lib/vasher/worktrees/candidate"
 FAULT_PATH = Path("/var/lib/vasher/monitor/storage-fault.json")
@@ -45,16 +47,13 @@ STORAGE_PATTERNS = (
     "blk_update_request",
 )
 
-ACTIVE_UNITS = (
-    "vasher-prebuild-candidate.service",
-    "vasher-prebuild-narrow.service",
-    "vasher-prebuild-retry.service",
-)
-STOP_UNITS = {
-    "vasher-prebuild-candidate.service",
-    "vasher-prebuild-narrow.service",
-    "vasher-prebuild-retry.service",
+MODE_UNITS = {
+    "refresh": "vasher-prebuild-refresh.service",
+    "candidate": "vasher-prebuild-candidate.service",
+    "narrow": "vasher-prebuild-narrow.service",
+    "retry": "vasher-prebuild-retry.service",
 }
+STOP_UNITS = set(MODE_UNITS.values())
 REVISION_RE = re.compile(r"^[0-9a-f]{40}$")
 RECOVERY_PHASES = {"stopping", "cleaning", "retrying"}
 RETRY_WAIT_SECONDS = 600
@@ -398,6 +397,11 @@ class Runner:
             text=True,
             capture_output=True,
             shell=False,
+            timeout=(
+                10 if arguments[1] == "show"
+                else 300 if arguments[-1] == "vasher-prebuild-cleanup.service"
+                else 30
+            ),
         )
 
 
@@ -419,11 +423,32 @@ def read_memory_pressure(path: Path = PRESSURE_PATH) -> float:
 
 
 def systemd_values(
-    runner: Runner, unit: str, properties: tuple[str, ...]
+    runner: Runner, unit: str, properties: tuple[str, ...], cgroup_root: Path
 ) -> dict[str, str]:
-    result = runner.run(
-        [SYSTEMCTL, "show", unit, *[f"--property={item}" for item in properties]]
-    )
+    try:
+        result = runner.run(
+            [SYSTEMCTL, "show", unit, *[f"--property={item}" for item in properties]]
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        if not cgroup_root.is_dir():
+            raise
+        group = cgroup_root / unit
+        if not group.is_dir():
+            return {"ActiveState": "inactive", "MemoryCurrent": "0", "CPUUsageNSec": "0"}
+        values = {}
+        if "ActiveState" in properties:
+            values["ActiveState"] = (
+                "active" if (group / "cgroup.procs").read_text().strip() else "inactive"
+            )
+        if "MemoryCurrent" in properties:
+            values["MemoryCurrent"] = (group / "memory.current").read_text().strip()
+        if "CPUUsageNSec" in properties:
+            cpu = dict(
+                line.split(maxsplit=1)
+                for line in (group / "cpu.stat").read_text().splitlines()
+            )
+            values["CPUUsageNSec"] = str(int(cpu["usage_usec"]) * 1000)
+        return values
     return dict(
         line.split("=", 1) for line in result.stdout.splitlines() if "=" in line
     )
@@ -452,6 +477,7 @@ class SystemReader:
         statvfs: Callable[[str], os.statvfs_result] = os.statvfs,
         now: Callable[[], float] = time.monotonic,
         root: str = "/",
+        cgroup_root: Path = CGROUP_ROOT,
     ) -> None:
         self.runner = runner
         self.meminfo_path = meminfo_path
@@ -459,6 +485,7 @@ class SystemReader:
         self.status_path = status_path
         self.log_path = log_path
         self.statvfs = statvfs
+        self.cgroup_root = cgroup_root
         self.now = now
         self.root = root
 
@@ -482,24 +509,26 @@ class SystemReader:
         except FileNotFoundError:
             log_size = 0
         nix = systemd_values(
-            self.runner, "nix-daemon.service", ("MemoryCurrent", "CPUUsageNSec")
+            self.runner, "nix-daemon.service", ("MemoryCurrent", "CPUUsageNSec"),
+            self.cgroup_root,
         )
+        mode = str(status.get("mode") or "")
         active_unit = None
         unit_cpu = 0.0
-        if status_state not in {"success", "failed"}:
-            for unit in ACTIVE_UNITS:
-                values = systemd_values(
-                    self.runner, unit, ("ActiveState", "CPUUsageNSec")
-                )
-                if values.get("ActiveState") in {"active", "activating"}:
-                    active_unit = unit
-                    unit_cpu = _cpu_seconds(values.get("CPUUsageNSec"))
-                    break
+        unit = MODE_UNITS.get(mode)
+        if status_state not in {"success", "failed"} and unit is not None:
+            values = systemd_values(
+                self.runner, unit, ("ActiveState", "CPUUsageNSec"),
+                self.cgroup_root,
+            )
+            if values.get("ActiveState") in {"active", "activating"}:
+                active_unit = unit
+                unit_cpu = _cpu_seconds(values.get("CPUUsageNSec"))
         exit_code = status.get("exitCode")
         return Sample(
             at=self.now(),
             active_unit=active_unit,
-            mode=str(status.get("mode") or ""),
+            mode=mode,
             status_state=status_state,
             status_updated_at=str(status.get("updatedAt") or ""),
             exit_code=exit_code if isinstance(exit_code, int) else None,
@@ -770,9 +799,17 @@ class Controller:
     def _worktree_matches(self, sample: Sample) -> bool:
         return read_worktree_head(Path(CANDIDATE_WORKTREE)) == sample.revision
 
+    def _stop_unit(self, sample: Sample, unit: str) -> bool:
+        try:
+            self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            self._needs_attention(sample, "stop-failed")
+            return False
+        return True
+
     def _start_retry(self, sample: Sample) -> None:
-        if sample.mode == "narrow":
-            self._needs_attention(sample, "narrow-retry-unsupported")
+        if sample.mode in {"narrow", "refresh"}:
+            self._needs_attention(sample, f"{sample.mode}-retry-unsupported")
             return
         if self.fault_path.exists():
             self._needs_attention(sample, "storage-fault")
@@ -791,10 +828,13 @@ class Controller:
             },
             mode=0o644,
         )
-        self.runner.run(
-            [SYSTEMCTL, "start", "--no-block", "vasher-prebuild-retry.service"],
-            check=True,
-        )
+        try:
+            self.runner.run(
+                [SYSTEMCTL, "start", "--no-block", "vasher-prebuild-retry.service"],
+                check=True,
+            )
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            self._needs_attention(sample, "retry-start-failed")
 
     def _cleaning_wait_elapsed(self, sample: Sample) -> float:
         if self.state.cleaning_since is None:
@@ -807,14 +847,15 @@ class Controller:
         if self.state.cleaning_since is None:
             self.state.cleaning_since = sample.at
         self._save()
-        try:
-            self.runner.run(
-                [SYSTEMCTL, "start", "vasher-prebuild-cleanup.service"],
-                check=True,
-            )
-        except subprocess.CalledProcessError:
-            self._needs_attention(sample, "cleanup-failed")
-            return
+        if sample.disk_free < DISK_BUILD_RESERVE:
+            try:
+                self.runner.run(
+                    [SYSTEMCTL, "start", "vasher-prebuild-cleanup.service"],
+                    check=True,
+                )
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+                self._needs_attention(sample, "cleanup-failed")
+                return
         current = self._next_sample(sample)
         while True:
             if self._retry_ready(current):
@@ -845,8 +886,8 @@ class Controller:
         self._align_state(sample)
         unit = sample.active_unit
         if decision.action == "stop-final":
-            if unit in STOP_UNITS:
-                self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+            if unit in STOP_UNITS and not self._stop_unit(sample, unit):
+                return
             self._needs_attention(sample, decision.reason)
             return
         if unit in STOP_UNITS:
@@ -859,9 +900,13 @@ class Controller:
                 action="stop",
                 severity="warning",
             )
-            self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+            if not self._stop_unit(sample, unit):
+                return
         elif self.state.phase != "stopping":
             self._needs_attention(sample, "missing-stop-unit")
+            return
+        if sample.mode == "refresh":
+            self._needs_attention(sample, decision.reason)
             return
         if sample.mode == "narrow":
             self._needs_attention(sample, "narrow-retry-unsupported")
@@ -884,6 +929,12 @@ class Controller:
             return
         if sample.mode == "narrow" and self.state.phase in RECOVERY_PHASES:
             self._needs_attention(sample, "narrow-retry-unsupported")
+            return
+        if sample.mode == "refresh" and self.state.phase in RECOVERY_PHASES:
+            if sample.active_unit == MODE_UNITS["refresh"]:
+                if not self._stop_unit(sample, sample.active_unit):
+                    return
+            self._needs_attention(sample, "refresh-retry-unsupported")
             return
         if sample.status_state == "building":
             try:
@@ -930,7 +981,8 @@ class Controller:
         if self.state.phase == "stopping":
             unit = sample.active_unit
             if unit in STOP_UNITS:
-                self.runner.run([SYSTEMCTL, "stop", unit], check=True)
+                if not self._stop_unit(sample, unit):
+                    return
             self._recovering = True
             try:
                 self._cleanup_then_retry(sample)

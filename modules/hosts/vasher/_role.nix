@@ -15,6 +15,7 @@
       trusted-users = [ "root" "vasher" ];
       auto-optimise-store = true;
       max-jobs = 1;
+      max-substitution-jobs = 1;
       cores = 4;
       substituters = [
         "https://cache.nixos.org"
@@ -35,9 +36,12 @@
     };
   };
 
+  # Bound Nix below the CT's 8 GiB RAM limit, leaving room for the evaluator
+  # and system services. A build that cannot fit fails instead of thrashing.
   systemd.services.nix-daemon.serviceConfig = {
-    MemoryHigh = "8G";
-    MemoryMax = "10G";
+    MemoryHigh = "5G";
+    MemoryMax = "6G";
+    MemorySwapMax = "512M";
   };
 
   users.groups.vasher = { };

@@ -433,6 +433,66 @@ class RecoveryControllerTests(unittest.TestCase):
         self.assertEqual(self.state_path.read_bytes(), state_bytes)
         self.assertEqual(self.events_path.read_bytes(), event_bytes)
 
+    def test_refresh_pressure_stops_without_cleanup_or_retry(self):
+        unit = "vasher-prebuild-refresh.service"
+        runner = FakeRunner(active={unit: True})
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        refresh = dataclasses.replace(
+            self.unsafe_sample, active_unit=unit, mode="refresh"
+        )
+
+        controller.recover(refresh, monitor.Decision("stop", "memory"))
+
+        self.assertFalse(runner.active[unit])
+        self.assertFalse(self.retry_path.exists())
+        self.assertEqual(controller.state.phase, "needs-attention")
+        events = json.loads(self.events_path.read_text())
+        self.assertEqual(
+            {event["type"] for event in events},
+            {"safety-stop", "needs-attention"},
+        )
+        self.assertEqual(events[0]["reason"], "memory")
+
+    def test_unresponsive_systemd_stop_requires_operator_attention(self):
+        class UnresponsiveStop(FakeRunner):
+            def run(self, arguments, *, check=True):
+                if arguments[1] == "stop":
+                    raise subprocess.TimeoutExpired(arguments, 30)
+                return super().run(arguments, check=check)
+
+        runner = UnresponsiveStop(
+            active={"vasher-prebuild-candidate.service": True}
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+
+        controller.recover(self.unsafe_sample, monitor.Decision("stop", "memory"))
+
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertFalse(self.retry_path.exists())
+        events = json.loads(self.events_path.read_text())
+        self.assertEqual(events[0]["reason"], "stop-failed")
+
+    def test_candidate_retry_does_not_need_gc_with_ample_disk(self):
+        runner = FakeRunner(
+            active={"vasher-prebuild-candidate.service": True},
+            cleanup_result=1,
+        )
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path
+        )
+        candidate = dataclasses.replace(self.unsafe_sample, disk_free=60 * monitor.GIB)
+
+        controller.recover(candidate, monitor.Decision("stop", "memory"))
+
+        self.assertEqual(controller.state.phase, "retrying")
+        self.assertEqual(
+            json.loads(self.retry_path.read_text())["revision"], "2" * 40
+        )
+
     def test_start_retry_rejects_matching_narrow_worktree(self):
         runner = FakeRunner()
         controller = monitor.Controller(
@@ -634,6 +694,29 @@ class RecoveryControllerTests(unittest.TestCase):
             ],
         )
         self.assertEqual(controller.state.phase, "retrying")
+
+    def test_refresh_stopping_does_not_resume_into_candidate_retry(self):
+        runner = FakeRunner()
+        state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+        state.phase = "stopping"
+        state.boot_id = "same-boot"
+        monitor.atomic_json(self.state_path, dataclasses.asdict(state))
+        controller = monitor.Controller(
+            runner, self.state_path, self.events_path, self.retry_path,
+            boot_id="same-boot",
+        )
+        stopped = dataclasses.replace(
+            sample(90, active_unit=None), mode="refresh"
+        )
+
+        controller.observe(stopped)
+
+        self.assertEqual(controller.state.phase, "needs-attention")
+        self.assertFalse(self.retry_path.exists())
+        self.assertNotIn(
+            ("systemctl", "start", "vasher-prebuild-cleanup.service"),
+            runner.calls,
+        )
 
     def test_observe_resumes_retrying_without_active_unit(self):
         runner = FakeRunner()
@@ -930,8 +1013,15 @@ class SamplingConversionTests(unittest.TestCase):
             )
             log_path.write_bytes(b"hello world")
             runner = FakeRunner(
-                active={"vasher-prebuild-candidate.service": True},
+                active={
+                    "vasher-prebuild-refresh.service": True,
+                    "vasher-prebuild-candidate.service": True,
+                },
                 properties={
+                    "vasher-prebuild-refresh.service": {
+                        "ActiveState": "active",
+                        "CPUUsageNSec": "1000000000",
+                    },
                     "vasher-prebuild-candidate.service": {
                         "ActiveState": "active",
                         "CPUUsageNSec": "4000000000",
@@ -978,6 +1068,61 @@ class SamplingConversionTests(unittest.TestCase):
             self.assertEqual(observed.nix_memory, 512 * monitor.MIB)
             self.assertEqual(observed.combined_cpu_seconds, 6.5)
             self.assertEqual(observed.log_size, 11)
+
+    def test_refresh_is_sampled_when_systemd_is_unresponsive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            cgroups = root / "cgroups"
+            cgroups.mkdir()
+            nix = cgroups / "nix-daemon.service"
+            nix.mkdir()
+            (nix / "memory.current").write_text(str(5 * monitor.GIB))
+            (nix / "cpu.stat").write_text("usage_usec 2500000\n")
+            refresh = cgroups / "vasher-prebuild-refresh.service"
+            refresh.mkdir()
+            (refresh / "cgroup.procs").write_text("1234\n")
+            (refresh / "cpu.stat").write_text("usage_usec 4000000\n")
+            (root / "meminfo").write_text(
+                "MemAvailable: 524288 kB\nSwapFree: 262144 kB\n"
+            )
+            (root / "pressure").write_text("full avg10=2.50\n")
+            (root / "status.json").write_text(json.dumps({
+                "state": "building",
+                "mode": "refresh",
+                "updatedAt": "2026-10-14T13:19:12Z",
+                "baseRevision": "1" * 40,
+                "revision": "2" * 40,
+            }))
+
+            class UnresponsiveSystemd(FakeRunner):
+                def run(self, arguments, *, check=True):
+                    if arguments[1] == "show":
+                        raise subprocess.CalledProcessError(1, arguments)
+                    return super().run(arguments, check=check)
+
+            reader = monitor.SystemReader(
+                UnresponsiveSystemd(),
+                meminfo_path=root / "meminfo",
+                pressure_path=root / "pressure",
+                status_path=root / "status.json",
+                log_path=root / "missing.log",
+                cgroup_root=cgroups,
+                statvfs=lambda _path: os.statvfs_result(
+                    (4096, 4096, 0, 0, 15 * 1024 * 1024, 0, 0, 0, 0, 0)
+                ),
+            )
+
+            observed = reader.sample()
+            self.assertEqual(observed.active_unit, "vasher-prebuild-refresh.service")
+            self.assertEqual(observed.nix_memory, 5 * monitor.GIB)
+            self.assertEqual(observed.combined_cpu_seconds, 6.5)
+            state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+            state, decision = monitor.evaluate(state, observed)
+            self.assertIsNone(decision)
+            state, decision = monitor.evaluate(
+                state, dataclasses.replace(observed, at=observed.at + 120)
+            )
+            self.assertEqual(decision, monitor.Decision("stop", "memory"))
 
     def test_system_reader_identifies_narrow_unit(self):
         with tempfile.TemporaryDirectory() as directory:

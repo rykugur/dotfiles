@@ -72,6 +72,8 @@
         # nothing ever cleans them up. 369 accumulated dumps filled the disk
         # to 100% on 2026-09-11 and starved the flake-lock write itself.
         LimitCORE = 0;
+        MemoryMax = "1G";
+        MemorySwapMax = "512M";
       };
       environment = {
         HOME = "/var/lib/vasher";
@@ -214,8 +216,10 @@
           };
         };
 
+        # Leave both timers off during the first bounded manual build. The
+        # operator can re-enable them after observing a successful candidate.
         systemd.timers.vasher-prebuild-refresh = {
-          wantedBy = [ "timers.target" ];
+          wantedBy = [ ];
           timerConfig = {
             OnBootSec = "5m";
             OnUnitInactiveSec = "15m";
@@ -223,7 +227,7 @@
           };
         };
         systemd.timers.vasher-prebuild-candidate = {
-          wantedBy = [ "timers.target" ];
+          wantedBy = [ ];
           timerConfig = {
             OnCalendar = "*-*-* 03:00:00";
             Persistent = true;
