@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-10-18 (Jezrien user-session shutdown timeout)
+Last major update: 2026-10-18 (hoid always-on agent container)
 
 ---
 
@@ -28,7 +28,8 @@ Last major update: 2026-10-18 (Jezrien user-session shutdown timeout)
 
 ## Entities
 
-- [Vasher](entities/vasher.md) — LAN-only cache and prebuilder with supervised narrow builds, deterministic storage monitoring, held inputs, degraded endpoint reporting, and constrained remote Hermes supervision. (sources: Vasher host, NixOS prebuild modules, AI supervisor module and skill)
+- [Vasher](entities/vasher.md) — LAN-only cache/prebuilder with bounded 8 GiB CT operation, disabled automatic timers during the first manual trial, disk-aware retention of failed downloads, supervised narrow builds, and a constrained remote Hermes channel. (sources: Vasher host, NixOS prebuild modules, AI supervisor module and skill)
+- [Hoid](entities/hoid.md) — Always-on OMP agent container on roshar: supervised `dtach` session publishing a Collab room for phone access, ttyd attach surface, Collab link dispenser, and the auth-broker vault; records why it is flake-managed rather than a thin `nixos-lxc` CT. (sources: `modules/hosts/hoid/`, `modules/ai/omp-host.nix`)
 
 ## Schema & Navigation
 

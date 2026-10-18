@@ -125,6 +125,17 @@ Vasher prebuilds `nixosConfigurations.jezrien-prebuild`, which intentionally omi
 - **Migration**: retain the role module and replace the LXC platform module with bare-metal hardware, filesystem, bootloader, and networking configuration.
 - **Details**: [Vasher](entities/vasher.md) documents the candidate lifecycle, promotion boundary, dashboard, and operational checks.
 
+## hoid (always-on agent container)
+
+- **Platform**: `x86_64-linux`, NixOS, unprivileged Proxmox LXC on roshar
+- **Purpose**: one supervised interactive OMP session reachable from a phone browser through a Collab room, plus the OMP auth-broker credential vault.
+- **Surfaces** (all loopback; exposure is `tailscale serve`): `omp-agent` session under `dtach -N`, `ttyd` on 7681 attached to that same session, the `omp-collab-link` dispenser on 7682, and `omp auth-broker serve` on 8765.
+- **Module**: `flake.modules.nixos.omp-host` (`ryk.ompHost.*`) holds all of it; the host only turns it on.
+- **Approvals**: `tools.approvalMode = write` — every exec-tier call prompts, and those prompts render in the Collab web guest, so a phone can approve or deny.
+- **Deploy**: `nixos-rebuild switch --flake .#hoid --target-host dusty@hoid --sudo` from Jezrien; the container never evaluates nixpkgs itself. First install uses `nix build .#hoid-lxc-image`.
+- **Why in-flake rather than a thin `nixos-lxc` CT**: the `hermes` CT proved the failure mode — it was still on a 2026-10-13 lock, so the Vasher supervisor documented as running there had never deployed.
+- **Details**: [Hoid](entities/hoid.md).
+
 ## nixy (test container)
 
 - **Platform**: x86_64-linux, NixOS (LXC / container)
