@@ -6,9 +6,9 @@
 
 ## Project Change History
 
-- Arcanum is the source of truth for changes and decisions made with Dusty in dotfiles, homelab, and other personal projects.
-- Before completing such work, read Arcanum's `CLAUDE.md`, `index.md`, and recent `log.md` entries. Record each change or related batch in `log.md`: what changed, why, decisions and tradeoffs, affected paths, and observed results or uncertainty. Update relevant wiki pages for durable decisions.
-- Keep implementation details in project-local documentation. If Arcanum is unavailable, report that the change was not logged rather than claiming it was.
+- Arcanum is the single wiki and the source of truth for changes and decisions made with Dusty in dotfiles, homelab, and other personal projects. Those repos keep no `wiki/` and no `docs/`; they hold code, a `README.md`, and a `CLAUDE.md` that points at Arcanum.
+- Before completing such work, read Arcanum's `CLAUDE.md`, `index.md`, and the recent entries in the current month's `log/YYYY-MM.md`. Record each change or related batch as a new entry there — heading `## [YYYY-MM-DD] <verb> | <title>` followed by `**Project:** <name>` — stating what changed, why, decisions and tradeoffs, affected paths, and observed results or uncertainty. Update the relevant page under `wiki/Projects/<Name>/` for durable decisions.
+- Keep durable documentation in Arcanum, not in the project repo. If Arcanum is unavailable, report that the change was not logged rather than claiming it was.
 
 ## System Configuration
 

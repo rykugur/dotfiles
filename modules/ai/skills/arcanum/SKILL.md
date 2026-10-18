@@ -16,11 +16,12 @@ optional extra.
 
 - Before diagnosing an infra/networking/homelab problem — the root cause or a
   closely related one may already be written up (see e.g.
-  `wiki/Reference/Slow-Steam-Downloads.md`'s multi-pass investigation history:
+  `wiki/Reference/Slow Steam Downloads.md`'s multi-pass investigation history:
   checking first would have skipped a retired, wrong theory).
 - Before making a non-trivial change to `~/projects/homelab` or
-  `~/projects/dotfiles` — check for prior decisions/conventions that constrain
-  the change (see `[[conventions]]`, `[[architecture-overview]]`-style pages).
+  `~/.dotfiles` — check for prior decisions/conventions that constrain
+  the change (see `[[Homelab Conventions]]`, `[[Homelab]]`-style hub and
+  convention pages under `wiki/Projects/<Name>/`).
 - Whenever the user references "we", "before", "last time", "already", or
   otherwise implies continuity with past work.
 - Before answering "what do you know about X" for X = a project, host,
