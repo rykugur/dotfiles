@@ -61,15 +61,22 @@ All modules receive `inputs`, `outputs`, `hostname`, and `username` via `special
 - Overlays are split into `additions` (new packages) and `modifications` (overrides)
 - Cachix substituters configured for hyprland, nix-gaming, nix-citizen, helix
 
-## LLM Wiki (knowledge base)
+## Knowledge base (Arcanum)
 
-This repository maintains an llm-wiki under `wiki/` following the Karpathy LLM Wiki pattern (see `modules/ai/skills/llm-wiki/SKILL.md` and `wiki/schema.md`).
+This repository keeps **no wiki and no `docs/superpowers/`**. All durable knowledge
+about Swoleflake — architecture, hosts, modules, AI agents, history, Vasher, Hoid —
+plus the full change chronology lives in **Arcanum**, the single personal wiki.
 
-- `wiki/index.md` is the entry point — read it first for any question about architecture, history, modules, or agents.
-- `wiki/schema.md` contains the exact instructions and workflows for maintaining the wiki.
-- Core pages: overview, architecture, hosts, modules, history (with links to the superpowers design docs), ai-agents.
-- Raw sources go in `wiki/raw/`.
-- When making significant changes or after migrations, update or ingest into the wiki so knowledge compounds instead of being rediscovered.
+- Reachable from any session through the `arcanum` MCP (`query` to search, `get` to
+  read a path), or directly at `~/projects/arcanum`.
+- Start at Arcanum's `index.md`; this project's hub is
+  `wiki/Projects/Dotfiles/Dotfiles.md`.
+- Specs and plans are retained under `archive/specs/dotfiles/` and
+  `archive/plans/dotfiles/`. They are synced and readable by path but deliberately
+  excluded from the search index, because they describe superseded intent.
+- **Record every assisted change** as an entry in Arcanum's current-month
+  `log/YYYY-MM.md` with `**Project:** Dotfiles`, per Arcanum's `CLAUDE.md`. Do not
+  create a wiki here.
 
-The wiki is the durable knowledge layer. Code lookups go through `jcodemunch` / `context-mode`, which read the working tree.
-
+Arcanum is the durable knowledge layer. Code lookups go through `jcodemunch` /
+`context-mode`, which read the working tree.
