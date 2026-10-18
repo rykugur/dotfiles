@@ -30,6 +30,8 @@ The three (sometimes four) machines managed by Swoleflake.
 - **Hardware config**: `_hardware-configuration.nix`
 - **Special WM configs**: `_hyprland-config.nix`, `_niri-config.nix`
 - **Networking**: single plain **dhcpcd** scripted-networking stack (`networking.useDHCP` in `_hardware-configuration.nix`); no NetworkManager/networkd. RTL8125 2.5GbE NIC uses the vendor `r8125` driver (`r8169` blacklisted in `_configuration.nix`).
+- **Bootloader**: systemd-boot on the NixOS ESP (`nvme0n1p1`). A `windows.conf` extra entry (`sort-key z_windows`) is last in the menu. Each bootloader install RO-mounts the Windows ESP (`nvme3n1p1` PARTUUID `05e33b02-f15d-4d8f-9bb8-33771103bb79`), copies `EFI/Microsoft` onto the NixOS ESP, then unmounts. Native Windows stays on `nvme3n1`; VFIO uses a separate qcow2.
+- **User-session shutdown**: Jezrien sets `systemd.user.settings.Manager.DefaultTimeoutStopSec = "30s"` in `_configuration.nix`. User services and transient Ghostty scopes get 30 seconds to stop before systemd kills remaining processes; the previous 90-second default let detached OMP processes hold up reboot. This does not change the separate two-minute `user@1000.service` fallback. Reboot ends running processes; OMP resume uses saved session state, and forced termination can lose in-flight writes.
 
 Jezrien is the "full fat" machine where most new modules are proven.
 

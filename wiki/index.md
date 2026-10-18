@@ -13,7 +13,7 @@ related: ["schema.md", "log.md"]
 
 This is the content-oriented catalog. Each entry has a one-line summary and pointers to primary sources where relevant. Categories roughly follow the directory layout + core concerns.
 
-Last major update: 2026-10-14 (Jezrien Zed test; shared `~/.agents/skills` via ai-skills)
+Last major update: 2026-10-18 (Jezrien user-session shutdown timeout)
 
 ---
 
@@ -21,7 +21,7 @@ Last major update: 2026-10-14 (Jezrien Zed test; shared `~/.agents/skills` via a
 
 - [Overview](overview.md) — High-level description of Swoleflake, hosts, quick-start commands, philosophy. (sources: README, CLAUDE.md, flake.nix)
 - [Architecture](architecture.md) — Complete dendritic loading model: flake-parts + import-tree, groups, special args, home-manager integration, and migration status. (sources: CLAUDE, design docs, host wiring)
-- [Hosts](hosts.md) — Host wiring, including Jezrien's built but not activated Windows VFIO session and TTY recovery workflow.
+- [Hosts](hosts.md) — Host wiring, including Jezrien's 30-second user-session stop timeout, systemd-boot Windows extra entry, built-but-not-activated Windows VFIO session, and TTY recovery workflow.
 - [Modules](modules.md) — Current modules tree, registration pattern, groups, desktop composition, shared tools, and the dendritic Windows VFIO module.
 - [History & Major Migrations](history.md) — The "superpowers" campaign, completed dendritic conversion timeline, and primary design artifacts.
 - [AI Agents](ai-agents.md) — Declarative coding agents, shared `~/.agents/skills` via `ai-skills`, Herdr/OpenRig orchestration, Jezrien-only Zed test, official oh-my-pi flake package, Vasher supervisor module and skill, centralized MCPs and skills, the memory layering (Mnemopi / wiki / live code lookup), and the self-referential wiki.

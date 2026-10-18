@@ -44,7 +44,26 @@
     blacklistedKernelModules = [ "r8169" ];
 
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        extraEntries."windows.conf" = ''
+          title Windows
+          efi /EFI/Microsoft/Boot/bootmgfw.efi
+          sort-key z_windows
+        '';
+        extraInstallCommands = ''
+          win_esp=$(${pkgs.coreutils}/bin/mktemp -d)
+          cleanup() {
+            ${pkgs.util-linux}/bin/umount "$win_esp" >/dev/null 2>&1 || true
+            ${pkgs.coreutils}/bin/rmdir "$win_esp" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          ${pkgs.util-linux}/bin/mount -o ro,umask=077 /dev/disk/by-partuuid/05e33b02-f15d-4d8f-9bb8-33771103bb79 "$win_esp"
+          ${pkgs.coreutils}/bin/mkdir -p ${config.boot.loader.efi.efiSysMountPoint}/EFI
+          ${pkgs.coreutils}/bin/rm -rf ${config.boot.loader.efi.efiSysMountPoint}/EFI/Microsoft
+          ${pkgs.coreutils}/bin/cp -a "$win_esp/EFI/Microsoft" ${config.boot.loader.efi.efiSysMountPoint}/EFI/
+        '';
+      };
       efi.canTouchEfiVariables = true;
     };
   };
@@ -148,6 +167,9 @@
       '';
     };
   };
+
+  # A detached OMP process can keep a Ghostty scope stopping for the 90s default.
+  systemd.user.settings.Manager.DefaultTimeoutStopSec = "30s";
 
   users.users = {
     ${username} = {

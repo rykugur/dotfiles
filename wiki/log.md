@@ -363,3 +363,16 @@ Future work will be driven by actual ingest of the superpowers design docs (deep
   next switch.
 - The `~/.mempalace` store (11 MB, 1329 drawers) was moved to
   `~/.mempalace.removed-2026-10-16` rather than deleted, pending confirmation.
+
+## [2026-10-16] update | Jezrien systemd-boot Windows extra entry
+
+- Stayed on systemd-boot. Added `windows.conf` with `sort-key z_windows` so Windows is last after NixOS generations.
+- `extraInstallCommands` RO-mounts the Windows ESP by PARTUUID, copies `EFI/Microsoft` onto the NixOS ESP, then unmounts via `trap EXIT`.
+- Native Windows disk is `nvme3n1`; this is not the VFIO qcow2 session.
+- Takes effect on the next bootloader install (`nixos-rebuild switch`/`boot`). Not activated here.
+
+## [2026-10-18] update | Bound Jezrien user-service shutdown to 30 seconds
+
+- Set `systemd.user.settings.Manager.DefaultTimeoutStopSec = "30s"` in `modules/hosts/jezrien/_configuration.nix` after the Oct 15 shutdown logged a Ghostty scope waiting 90 seconds before killing two `omp` processes. Oct 16 at 22:00 showed a Ghostty scope still stopping when the journal ended; its process identity was not recorded.
+- The setting affects all Jezrien user services and transient scopes. It leaves the separate 120-second `user@1000.service` timeout unchanged. Forced termination may lose writes still in progress; resumable OMP sessions rely on saved state, not processes surviving reboot.
+- Verified `nix eval` produced `DefaultTimeoutStopSec=30s` in `/etc/systemd/user.conf`, the full Jezrien toplevel derivation evaluated, and `nix build --no-link .#nixosConfigurations.jezrien.config.system.build.toplevel` succeeded. No activation or reboot was run; observed runtime shutdown improvement is pending.
