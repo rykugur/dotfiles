@@ -67,6 +67,20 @@
     {
       imports = [ inputs.oh-my-pi.homeManagerModules.default ];
 
+      options.ryk.omp.broker.url = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        example = "http://hoid.local.ryk.sh:8765";
+        description = ''
+          Remote auth-broker this client resolves credentials through. Setting
+          it bypasses the local SQLite credential store entirely: if the broker
+          is unreachable at startup and the encrypted snapshot cache (1 h) has
+          expired, OMP fails closed rather than falling back. The bearer token
+          is read from `~/.omp/auth-broker.token`, which the host wires through
+          sops — it is never written into the Nix store.
+        '';
+      };
+
       config = lib.mkMerge [
         {
           # Enable the upstream module for the package only. Do not set
@@ -90,6 +104,12 @@
             run ${ohMyPi}/bin/omp config set mnemopi.scoping ${lib.escapeShellArg mnemopiScoping}
             run ${ohMyPi}/bin/omp config set cycleOrder ${lib.escapeShellArg (builtins.toJSON cycleOrder)}
           '';
+
+          home.activation.ohMyPiBroker = lib.mkIf (config.ryk.omp.broker.url != null) (
+            lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              run ${ohMyPi}/bin/omp config set auth.broker.url ${lib.escapeShellArg config.ryk.omp.broker.url}
+            ''
+          );
         }
 
         (lib.mkIf (config.ryk.defaultShell == "fish") {
