@@ -104,6 +104,12 @@
 
     oh-my-pi.url = "github:can1357/oh-my-pi";
 
+    # Local web UI for omp: drives it over RPC on this machine, no relay.
+    ompweb = {
+      url = "github:kahme247/ompweb";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     #  plugins
     superpowers = {
       url = "github:obra/superpowers";

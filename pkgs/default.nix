@@ -27,6 +27,18 @@ in
   tpm = pkgs.callPackage ./tpm.nix { };
   openrig = pkgs.callPackage ./openrig.nix { };
   herdr-navigator = pkgs.callPackage ./herdr-navigator.nix { };
+  pve-provision = pkgs.callPackage ./pve-provision.nix { };
+}
+// (
+  # `pkgs` here is the overlay's `final`, whose `lib` the modifications
+  # overlay itself extends — so deciding this attrset's keys with `lib`
+  # recurses. Plain `if` only looks at `inputs`.
+  if inputs ? ompweb then
+    { ompweb = pkgs.callPackage ./ompweb.nix { src = inputs.ompweb; }; }
+  else
+    { }
+)
+// {
 
   ### sui/move (eve frontier)
   sui = pkgs.callPackage ./sui.nix { version = suiVersion; };

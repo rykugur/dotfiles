@@ -6,10 +6,10 @@
       wowup-cf = pkgs.wowup-cf.overrideAttrs (
         old:
         let
-          version = "2.24.0-beta.6";
+          version = "2.24.0";
           src = pkgs.fetchurl {
             url = "https://github.com/WowUp/WowUp.CF/releases/download/v${version}/WowUp-CF-${version}.AppImage";
-            hash = "sha256-TZ5b/DfVkEh9MsrBi2M/0dAPE1Tfd+zzquRXwprtLqQ=";
+            hash = "sha256-aaR58XUBA78JPk8tsDD6A+gAYJkeJHlyHiYcRD8ptCA=";
           };
           appimageContents = pkgs.appimageTools.extract {
             inherit (old) pname;

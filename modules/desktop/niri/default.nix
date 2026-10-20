@@ -558,6 +558,7 @@
                 { app-id = "galculator"; }
                 { app-id = "neovide"; }
                 { app-id = "obsidian"; }
+                { app-id = "org.kde.ark"; }
                 # { app-id = "opentrack"; }
                 { app-id = "org.kde.dolphin"; }
                 { app-id = "org.pulseaudio.pavucontrol"; }

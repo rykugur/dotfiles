@@ -1609,6 +1609,26 @@
         "type": "github"
       }
     },
+    "ompweb": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792442793,
+        "narHash": "sha256-C4nblOT5PntQodFVPXuzgLFnHfFChfGOkTe6KcUwJYc=",
+        "owner": "kahme247",
+        "repo": "ompweb",
+        "rev": "351237d7ec77249600af4d3c4747855a8373e39e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kahme247",
+        "repo": "ompweb",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -1705,6 +1725,7 @@
         "nixpkgs": "nixpkgs_6",
         "noctalia": "noctalia",
         "oh-my-pi": "oh-my-pi",
+        "ompweb": "ompweb",
         "ryze312-stackpkgs": "ryze312-stackpkgs",
         "skills-anthropic": "skills-anthropic",
         "skills-simple-english": "skills-simple-english",
