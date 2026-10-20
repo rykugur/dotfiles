@@ -36,6 +36,10 @@
       group = userCfg.group;
 
       dtach = lib.getExe pkgs.dtach;
+
+      # Caddy enables ACME for an `https://` site address and serves plain
+      # HTTP for an `http://` one.
+      scheme = if cfg.proxy.tls.enable then "https" else "http";
       socket = "/run/omp/agent.sock";
 
       # Passed with --config, never written over ~/.omp/agent/config.yml: that
@@ -195,6 +199,43 @@
           };
         };
 
+        proxy = {
+          enable = lib.mkEnableOption "a Caddy front end for the web UI and the broker";
+          hostName = lib.mkOption {
+            type = lib.types.str;
+            default = "${config.networking.hostName}.local.ryk.sh";
+            description = "Name the proxy serves, and the name on its certificate.";
+          };
+          tls = {
+            enable = lib.mkEnableOption "ACME certificates through a DNS-01 challenge" // {
+              default = true;
+            };
+            email = lib.mkOption {
+              type = lib.types.str;
+              default = "ryk@ryk.sh";
+            };
+            environmentFile = lib.mkOption {
+              type = lib.types.nullOr lib.types.path;
+              default = null;
+              description = ''
+                Environment file holding `CF_API_TOKEN` for the DNS-01
+                challenge. Required when `tls.enable` is set: these names only
+                exist on the LAN, so HTTP-01 could never validate them.
+              '';
+            };
+          };
+          brokerPort = lib.mkOption {
+            type = lib.types.port;
+            default = 8765;
+            description = ''
+              Port the proxy publishes the broker on. Clients keep
+              `https://<host>:<port>` as their `auth.broker.url`, so the
+              broker moves to a loopback port behind the proxy rather than
+              living under a path prefix clients would have to know about.
+            '';
+          };
+        };
+
         user = lib.mkOption {
           type = lib.types.str;
           default = config.ryk.username;
@@ -344,6 +385,41 @@
           };
         };
 
+        assertions = [
+          {
+            assertion = !(cfg.proxy.enable && cfg.proxy.tls.enable) || cfg.proxy.tls.environmentFile != null;
+            message = "ryk.ompHost.proxy.tls needs an environmentFile holding CF_API_TOKEN.";
+          }
+        ];
+
+        services.caddy = lib.mkIf cfg.proxy.enable {
+          enable = true;
+          # The Cloudflare DNS plugin is not in the stock build, and DNS-01 is
+          # the only challenge that can answer for a name that resolves on the
+          # LAN only.
+          package = pkgs.caddy.withPlugins {
+            plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
+            hash = "sha256-dQvk6ezY6TQ1J7PjhCXnThF/SqVgPwBO8/RXzHCY+js=";
+          };
+          email = lib.mkIf cfg.proxy.tls.enable cfg.proxy.tls.email;
+          environmentFile = lib.mkIf (cfg.proxy.tls.environmentFile != null) cfg.proxy.tls.environmentFile;
+          globalConfig = lib.mkIf cfg.proxy.tls.enable ''
+            acme_dns cloudflare {env.CF_API_TOKEN}
+          '';
+          virtualHosts = lib.mkMerge [
+            (lib.mkIf cfg.web.enable {
+              "${scheme}://${cfg.proxy.hostName}".extraConfig = ''
+                reverse_proxy ${cfg.web.address}:${toString cfg.web.port}
+              '';
+            })
+            (lib.mkIf cfg.broker.enable {
+              "${scheme}://${cfg.proxy.hostName}:${toString cfg.proxy.brokerPort}".extraConfig = ''
+                reverse_proxy ${cfg.broker.bind}
+              '';
+            })
+          ];
+        };
+
         systemd.services.omp-agent = lib.mkIf cfg.session.enable {
           description = "Always-on OMP agent session";
           wantedBy = [ "multi-user.target" ];
@@ -423,9 +499,16 @@
         };
 
         networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall (
-          lib.optional cfg.ttyd.enable cfg.ttyd.port
-          ++ lib.optional cfg.linkService.enable cfg.linkService.port
-          ++ lib.optional cfg.broker.enable (lib.toInt (lib.last (lib.splitString ":" cfg.broker.bind)))
+          if cfg.proxy.enable then
+            # Only the proxy is reachable; everything it fronts stays on
+            # loopback. 80 stays open for Caddy's HTTP->HTTPS redirect.
+            [ 80 ]
+            ++ lib.optional cfg.proxy.tls.enable 443
+            ++ lib.optional cfg.broker.enable cfg.proxy.brokerPort
+          else
+            lib.optional cfg.ttyd.enable cfg.ttyd.port
+            ++ lib.optional cfg.linkService.enable cfg.linkService.port
+            ++ lib.optional cfg.broker.enable (lib.toInt (lib.last (lib.splitString ":" cfg.broker.bind)))
         );
 
         environment.systemPackages = [

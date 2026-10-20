@@ -57,6 +57,9 @@ in
         mode = "0400";
       };
       ompweb_password_hash = { };
+      # Read by Caddy for the ACME DNS-01 challenge; same token the cluster's
+      # cert-manager uses.
+      cloudflare_api_token = { };
     };
   };
 
@@ -89,12 +92,12 @@ in
 
   # No Tailscale here. The homelab router already advertises 10.3.10.0/24 to
   # the tailnet, so a second node would add a /dev/net/tun requirement (two
-  # root-only `lxc.*` keys a CT recreate loses) for no reach we do not have.
+  # root-only `lxc.*` keys a CT recreate loses) for reach the tailnet already
+  # has through that route.
   ryk.ompHost = {
     enable = true;
     # ompweb drives omp over RPC on this box and reads its sessions straight
-    # from disk, so the chat UI involves no relay at all. Caddy publishes it
-    # on port 80; ompweb itself stays on loopback because it has no TLS.
+    # from disk, so the chat UI involves no relay at all.
     web = {
       enable = true;
       name = "hoid";
@@ -107,20 +110,22 @@ in
     linkService.enable = false;
     broker = {
       enable = true;
-      # Bearer-token authenticated; jezrien and taln reach it over the LAN.
-      bind = "0.0.0.0:8765";
+      # Loopback: Caddy publishes it on 8765 with TLS. The bearer token is
+      # the whole vault, so it should not cross the LAN in clear.
+      bind = "127.0.0.1:8766";
+    };
+    proxy = {
+      enable = true;
+      hostName = "hoid.local.ryk.sh";
+      tls.environmentFile = config.sops.templates."caddy-cloudflare.env".path;
     };
     openFirewall = true;
   };
 
-  services.caddy = {
-    enable = true;
-    virtualHosts."http://hoid.local.ryk.sh".extraConfig = ''
-      reverse_proxy 127.0.0.1:${toString config.ryk.ompHost.web.port}
-    '';
+  sops.templates."caddy-cloudflare.env" = {
+    content = "CF_API_TOKEN=${config.sops.placeholder.cloudflare_api_token}";
+    owner = "caddy";
   };
-
-  networking.firewall.allowedTCPPorts = [ 80 ];
 
   system.stateVersion = "24.11";
 }

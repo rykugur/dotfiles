@@ -175,7 +175,7 @@ let
 
                 # Credentials come from hoid. Local logins are bypassed while
                 # this is set, and a cold start with hoid down fails closed.
-                ryk.omp.broker.url = "http://hoid.local.ryk.sh:8765";
+                ryk.omp.broker.url = "https://hoid.local.ryk.sh:8765";
 
                 home.packages = with pkgs; [
                   # nix

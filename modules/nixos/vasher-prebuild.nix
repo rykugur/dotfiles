@@ -72,7 +72,8 @@
         # nothing ever cleans them up. 369 accumulated dumps filled the disk
         # to 100% on 2026-09-11 and starved the flake-lock write itself.
         LimitCORE = 0;
-        MemoryMax = "1G";
+        Slice = "vasher-build.slice";
+        MemoryMax = "3G";
         MemorySwapMax = "512M";
       };
       environment = {

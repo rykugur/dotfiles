@@ -36,9 +36,14 @@
     };
   };
 
-  # Bound Nix below the CT's 8 GiB RAM limit, leaving room for the evaluator
-  # and system services. A build that cannot fit fails instead of thrashing.
+  # Bound the daemon and prebuild clients together below the CT's 8 GiB limit.
+  systemd.slices.vasher-build.sliceConfig = {
+    MemoryHigh = "6G";
+    MemoryMax = "7G";
+    MemorySwapMax = "1G";
+  };
   systemd.services.nix-daemon.serviceConfig = {
+    Slice = "vasher-build.slice";
     MemoryHigh = "5G";
     MemoryMax = "6G";
     MemorySwapMax = "512M";
