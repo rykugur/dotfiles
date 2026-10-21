@@ -9,6 +9,9 @@ fail() {
   exit 1
 }
 
+host=$(hostname)
+[[ $host == jezrien ]] || fail 'promotion must run on jezrien'
+
 [[ $(git branch --show-current) == master ]] || fail 'checkout must be on master'
 [[ -z $(git status --porcelain) ]] || fail 'checkout must be clean'
 
@@ -25,6 +28,5 @@ git merge --ff-only origin/cache-bump
 printf '%s\n' 'Pushing master...'
 git push origin master
 
-host=$(hostname)
 printf 'Switching NixOS host %s...\n' "$host"
 nh os switch ".#$host"
