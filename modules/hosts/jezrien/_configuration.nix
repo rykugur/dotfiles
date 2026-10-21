@@ -26,9 +26,20 @@
       "root"
       "@wheel"
     ];
-    substituters = [ "https://helix.cachix.org" ];
+    # Declared here rather than relying on the flake's nixConfig: that path
+    # needs a per-user prompt whose answer is cached against the exact
+    # substituter list, so any change to the set silently falls back to
+    # "ignoring untrusted flake configuration setting" under a non-interactive
+    # nixos-rebuild, and the caches go unused.
+    substituters = [
+      "https://helix.cachix.org"
+      "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
     trusted-public-keys = [
       "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
