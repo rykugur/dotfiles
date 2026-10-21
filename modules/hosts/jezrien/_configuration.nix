@@ -192,9 +192,27 @@
   };
 
   # Keep the desktop responsive during memory-heavy local builds.
+  #
+  # max-jobs = 1 never bounded this: a single derivation with cores = 8 is what
+  # produced the 64 GB link-time spikes, and the daemon cgroup had no ceiling at
+  # all. cores = 4 halves per-derivation link parallelism (the actual memory
+  # source) and the cgroup limits below cap every concurrent build together, so
+  # a runaway build now dies instead of swapping the machine to death. That
+  # makes 4 jobs safer than the old single unbounded one.
   nix.settings = {
-    max-jobs = 1;
-    cores = 8;
+    max-jobs = 4; # 4 x 4 = 16 of 24 threads; 8 left for the session
+    cores = 4;
+    max-substitution-jobs = 8; # default 16; vasher saw a 7.1 GiB substituter
+  };
+
+  nix.daemonCPUSchedPolicy = "batch";
+  nix.daemonIOSchedClass = "idle";
+
+  systemd.services.nix-daemon.serviceConfig = {
+    MemoryHigh = "40G"; # throttle and reclaim into zram, no kill
+    MemoryMax = "52G"; # hard ceiling; kills the build, not the desktop
+    CPUWeight = 20; # the session sits at the 100 default and wins contention
+    IOWeight = 20;
   };
 
   ### custom module stuff
