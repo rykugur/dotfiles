@@ -105,14 +105,16 @@
 
             systemd.enable = false;
 
-            # Upstream IdleInhibitor.qml has no hover tooltip; swap in a
-            # patched copy (adds a DankTooltip, same pattern as Vpn.qml /
-            # Battery.qml) after the normal quickshell QML install step.
+            # Upstream Modules/DBar/Widgets/IdleInhibitor.qml has no hover
+            # tooltip; swap in a patched copy (adds a DTooltip, same pattern as
+            # Vpn.qml / DiskUsage.qml) after the normal quickshell QML install
+            # step. DMS 2.0 moved the bar widgets from DankBar/ to DBar/ — the
+            # old path is now only a deprecation shim, so patching it is inert.
             package = inputs.dankMaterialShell.packages.${pkgs.system}.dms-shell.overrideAttrs (old: {
               postInstall =
                 old.postInstall
                 + ''
-                  cp ${./IdleInhibitor.qml} $out/share/quickshell/dms/Modules/DankBar/Widgets/IdleInhibitor.qml
+                  cp ${./IdleInhibitor.qml} $out/share/quickshell/dms/Modules/DBar/Widgets/IdleInhibitor.qml
                 '';
             });
 
@@ -122,9 +124,8 @@
             enableSystemMonitoring = true;
 
             settings = {
-              # SettingsSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js
-              # SessionSpec.js: https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
-              dynamicThemeing = false;
+              # SettingsSpec.js: https://raw.githubusercontent.com/duxlabs-dev/dux-shell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js
+              # SessionSpec.js: https://raw.githubusercontent.com/duxlabs-dev/dux-shell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
               enableU2f = true;
 
               acMonitorTimeout = 900; # 15 min
@@ -163,9 +164,9 @@
                     "cpuUsage"
                     "memUsage"
                     "notificationButton"
-                    # Click toggles idle inhibit indefinitely; duration presets
-                    # live on the control center tile. Blocks the three ac*
-                    # timeouts above via SessionService.idleInhibited.
+                    # Click toggles idle inhibit indefinitely; right-click opens
+                    # the duration presets popout (new in DMS 2.0). Blocks the
+                    # three ac* timeouts above via SessionService.idleInhibited.
                     "idleInhibitor"
                     "battery"
                     "controlCenterButton"
@@ -173,15 +174,19 @@
                 }
               ];
 
-              showWeather = true;
               useFahrenheit = true;
+              # DMS 2.0 moved these two out of settings.json into
+              # ~/.local/state/dms/session.json. They stay here as the legacy
+              # seed SessionStore.js migrates from; declaring `session` instead
+              # would make session.json a read-only symlink and break wallpaper,
+              # DND and night-mode state writes.
               weatherLocation = "Rosemount, MN";
               weatherCoordinates = "44.747998,-93.133574";
             };
           };
 
           xdg.mimeApps.defaultApplications = {
-            "text/plain" = [ "com.danklinux.dms.notepad.desktop" ];
+            "text/plain" = [ "dev.duxlabs.shell.notepad.desktop" ];
           };
         }
 
@@ -193,7 +198,7 @@
             enableSpawn = false;
 
             # shit breaks with this enabled.
-            # more info here: https://danklinux.com/docs/dankmaterialshell/nixos-flake#config-includes
+            # more info here: https://duxlabs.dev/docs/dms/nixos-flake#config-includes
             includes.enable = false;
           };
 

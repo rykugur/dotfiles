@@ -2,6 +2,7 @@ import QtQuick
 import qs.Common
 import qs.Modules.Plugins
 import qs.Services
+import qs.DCommon.Widgets
 import qs.Widgets
 
 BasePill {
@@ -15,7 +16,7 @@ BasePill {
             implicitWidth: icon.width
             implicitHeight: root.contentThickness
 
-            DankIcon {
+            DIcon {
                 id: icon
                 anchors.centerIn: parent
                 name: SessionService.idleInhibited ? "motion_sensor_active" : "motion_sensor_idle"
@@ -25,25 +26,27 @@ BasePill {
         }
     }
 
+    onClicked: SessionService.toggleIdleInhibit()
+
     Loader {
         id: tooltipLoader
         active: false
-        sourceComponent: DankTooltip {}
+        sourceComponent: DTooltip {}
     }
 
+    // Hover-only overlay: acceptedButtons is NoButton so left click (toggle) and
+    // right click (duration presets popout, wired up by SurfaceWidgetFactory)
+    // still reach BarPill's own MouseArea underneath.
     MouseArea {
-        id: clickArea
+        id: tooltipArea
 
+        z: 1
+        acceptedButtons: Qt.NoButton
         x: -root.leftMargin
         y: -root.topMargin
         width: root.width + root.leftMargin + root.rightMargin
         height: root.height + root.topMargin + root.bottomMargin
         hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        onPressed: mouse => {
-            root.triggerRipple(this, mouse.x, mouse.y);
-            SessionService.toggleIdleInhibit();
-        }
         onEntered: {
             if (!root.parentScreen)
                 return;
