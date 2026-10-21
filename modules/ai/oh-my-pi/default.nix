@@ -93,6 +93,12 @@
             ".omp/agent/mcp.json".text = builtins.toJSON {
               mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
             };
+            # Escape stays free for autocomplete/modal dismissal; F9 is the
+            # muscle-memory-safe cancel-turn chord for vim/helix users who
+            # reach for Esc out of habit.
+            ".omp/agent/keybindings.yml".text = builtins.toJSON {
+              "app.interrupt" = "F9";
+            };
           }
           // skillFiles;
           home.activation.ohMyPiModelConfiguration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
