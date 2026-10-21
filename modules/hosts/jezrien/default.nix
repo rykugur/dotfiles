@@ -194,7 +194,6 @@ let
                   xbacklight
 
                   # misc gaming
-                  cataclysm-dda
                   dolphin-emu
                   faugus-launcher # lutris alternative
 
