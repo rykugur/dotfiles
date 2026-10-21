@@ -110,7 +110,7 @@
             # Vpn.qml / DiskUsage.qml) after the normal quickshell QML install
             # step. DMS 2.0 moved the bar widgets from DankBar/ to DBar/ — the
             # old path is now only a deprecation shim, so patching it is inert.
-            package = inputs.dankMaterialShell.packages.${pkgs.system}.dms-shell.overrideAttrs (old: {
+            package = inputs.dankMaterialShell.packages.${pkgs.stdenv.hostPlatform.system}.dms-shell.overrideAttrs (old: {
               postInstall =
                 old.postInstall
                 + ''

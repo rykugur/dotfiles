@@ -34,7 +34,7 @@ in
       );
     in
     {
-      home.packages = [ inputs.hermes-agent.packages.${pkgs.system}.default ];
+      home.packages = [ inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default ];
 
       home.file = builtins.listToAttrs (
         map (skill: {
@@ -68,6 +68,6 @@ in
   perSystem =
     { pkgs, ... }:
     {
-      packages.hermes-agent = inputs.hermes-agent.packages.${pkgs.system}.default;
+      packages.hermes-agent = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
     };
 }

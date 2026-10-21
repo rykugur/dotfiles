@@ -16,7 +16,7 @@
         runtimeInputs = [
           pkgs.coreutils
           pkgs.curl
-          inputs.hermes-agent.packages.${pkgs.system}.default
+          inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default
           pkgs.jq
           pkgs.openssh
           pkgs.util-linux
