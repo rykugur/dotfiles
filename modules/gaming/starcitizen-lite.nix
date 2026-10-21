@@ -33,9 +33,12 @@
         }
       ];
 
-      # Kernel modules nix-citizen sets up for SC's audio/video pipeline.
+      # snd-aloop backs SC's audio pipeline. nix-citizen also pulls in
+      # v4l2loopback here (modules/nixos/star-citizen/default.nix), but SC has no
+      # video capture path — that is OBS/streaming plumbing — and the package
+      # breaks the kernel module tree on 7.2 by shipping depmod metadata that
+      # collides with the kernel's own. Deliberately not included.
       # (ntsync moved to its own module — it's a general wine/Proton feature, not SC's.)
-      boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
       boot.kernelModules = [ "snd-aloop" ];
 
       nix.settings = {

@@ -17,6 +17,106 @@
       system = prev.stdenv.hostPlatform.system;
     in
     {
+      # TEMPORARY — REVIEW BY 2026-10-28.
+      #
+      # nixpkgs 6bd75267 (PR #571181, 2026-10-13) made aggregateModules merge a
+      # <mod>.ko.cer for every external kernel module. Packages that copy their
+      # .ko by hand instead of going through Kbuild's modules_install never
+      # produce one, so `cat` fails, xargs exits 123, and the whole kernel
+      # module tree fails to build. Upstream issue: NixOS/nixpkgs#575192.
+      #
+      # These three mirror the upstream fixes verbatim. Drop each one as it
+      # reaches nixos-unstable:
+      #   r8125       PR #576564 (merged 2026-10-21)
+      #   openrazer   PR #576293 (merged 2026-10-20)
+      #   xpad-noone  PR #576469 (open)
+      # jezrien runs boot.kernelPackages = pkgs.linuxPackages_zen, and that set
+      # is built by linuxKernel.packagesFor internally — overriding the
+      # pkgs.linuxPackagesFor alias does nothing.
+      linuxPackages_zen = prev.lib.warn
+        "overlays: local kernel-module .ko.cer workarounds are active (nixpkgs#575192). Drop r8125/openrazer/xpad-noone overrides once nixos-unstable carries them — review by 2026-10-28."
+        (
+          prev.linuxPackages_zen.extend (
+            _: kprev:
+            let
+              build = "${kprev.kernel.dev}/lib/modules/${kprev.kernel.modDirVersion}/build";
+              out = builtins.placeholder "out";
+            in
+            {
+                r8125 = kprev.r8125.overrideAttrs (old: {
+                  # The packaged preBuild also rewrites modules_install to pin
+                  # INSTALL_MOD_PATH, which upstream dropped in favour of the
+                  # makeFlag below; keep only the BASEDIR relaxation.
+                  preBuild = null;
+                  postPatch = (old.postPatch or "") + ''
+                    substituteInPlace src/Makefile --replace-fail "BASEDIR :=" "BASEDIR ?="
+                  '';
+                  makeFlags = old.makeFlags ++ [
+                    "INSTALL_MOD_PATH=${out}"
+                    "INSTALL_MOD_DIR=kernel/drivers/net/ethernet/realtek"
+                    "INSTALL_MOD_STRIP=1"
+                    "DEPMOD=true"
+                  ];
+                  installPhase = null;
+                  installTargets = [ "modules_install" ];
+                  installFlags = [
+                    "-C"
+                    build
+                    "M=$(PWD)/src"
+                  ];
+                });
+
+                openrazer = kprev.openrazer.overrideAttrs (old: {
+                  makeFlags = old.makeFlags ++ [
+                    "INSTALL_MOD_PATH=${out}"
+                    "INSTALL_MOD_DIR=kernel/drivers/hid"
+                    "INSTALL_MOD_STRIP=1"
+                    "DEPMOD=true"
+                  ];
+                  # Upstream keeps only the udev/razer_mount half, as postInstall.
+                  installPhase = null;
+                  installTargets = [ "modules_install" ];
+                  installFlags = [
+                    "-C"
+                    build
+                    "M=$(PWD)/driver"
+                  ];
+                  postInstall = ''
+                    RAZER_MOUNT_OUT="$out/bin/razer_mount"
+                    RAZER_RULES_OUT="$out/etc/udev/rules.d/99-razer.rules"
+                    install -m 644 -v -D install_files/udev/99-razer.rules $RAZER_RULES_OUT
+                    install -m 755 -v -D install_files/udev/razer_mount $RAZER_MOUNT_OUT
+                    substituteInPlace $RAZER_RULES_OUT \
+                      --replace razer_mount $RAZER_MOUNT_OUT \
+                      --replace plugdev openrazer
+                    substituteInPlace $RAZER_MOUNT_OUT \
+                      --replace /usr/bin/logger ${prev.util-linux}/bin/logger \
+                      --replace chgrp ${prev.coreutils}/bin/chgrp \
+                      --replace "PATH='/sbin:/bin:/usr/sbin:/usr/bin'" "" \
+                      --replace plugdev openrazer
+                  '';
+                });
+
+                xpad-noone = kprev.xpad-noone.overrideAttrs (old: {
+                  makeFlags = old.makeFlags ++ [
+                    "KERNEL_SRC=${build}"
+                    "INSTALL_MOD_PATH=${out}"
+                    "INSTALL_MOD_DIR=kernel/drivers/xpad-noone"
+                    "INSTALL_MOD_STRIP=1"
+                    "DEPMOD=true"
+                  ];
+                  installPhase = null;
+                  installTargets = [ "modules_install" ];
+                  installFlags = [
+                    "-C"
+                    build
+                    "M=$(PWD)"
+                  ];
+                });
+              }
+            )
+          );
+
       # openldap's syncreplication test (test017) is timing-sensitive and flaky in Nix's sandbox
       openldap = prev.openldap.overrideAttrs (_: {
         doCheck = false;
