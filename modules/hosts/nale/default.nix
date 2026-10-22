@@ -14,6 +14,9 @@
       self.modules.nixos.comin
       ./_disko.nix
       ./_role.nix
+      # Pilot: deploy from this branch, not master. Flip to "master" (and let
+      # the host converge on that commit) before the branch is merged.
+      { ryk.comin.branch = "comin-rollout-plan"; }
       # ./_impermanence.nix — only after comin is proven without it
     ];
     specialArgs = { inherit inputs; };

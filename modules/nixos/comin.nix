@@ -20,6 +20,30 @@
         '';
       };
 
+      options.ryk.comin.manualHosts = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [
+          "jezrien"
+          "taln"
+        ];
+        description = ''
+          Hosts that are deployed by hand and must never poll. Importing this
+          module on one of them would let a push overwrite a workstation's
+          running generation, so it fails evaluation instead.
+        '';
+      };
+
+      config.assertions = [
+        {
+          assertion = !(lib.elem config.networking.hostName config.ryk.comin.manualHosts);
+          message = ''
+            ${config.networking.hostName} is deployed by hand: remove
+            `self.modules.nixos.comin` from its module list, or drop it from
+            `ryk.comin.manualHosts` if it really should pull from git.
+          '';
+        }
+      ];
+
       config.services.comin = {
         enable = true;
 
