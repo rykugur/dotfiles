@@ -9,11 +9,13 @@
         ishar-lxc-image =
           (inputs.nixpkgs.lib.nixosSystem {
             inherit system;
-            # comin ships in the template, so the CT starts converging on
-            # master from its first boot instead of waiting for a hand deploy.
+            # comin ships in the template, so the CT starts converging from
+            # its first boot instead of waiting for a hand deploy. The branch
+            # setting has to be here too, or the seed polls master.
             modules = [
               ./_seed.nix
               self.modules.nixos.comin
+              ./_comin-branch.nix
             ];
           }).config.system.build.tarball;
       };

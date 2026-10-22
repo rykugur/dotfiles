@@ -1,6 +1,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 pve_token := "$HOME/.config/pve/agent.token"
+pve_url := "https://roshar.local.ryk.sh:8006"
 tofu_dir := "infra/proxmox"
 
 default:
@@ -8,7 +9,7 @@ default:
 
 # Create an LXC on roshar and let comin take it over from first boot.
 lxc host node="roshar" memory="4096" disk="32" cores="2":
-  PVE_API_TOKEN="$(cat {{pve_token}})" \
+  PVE_API_TOKEN="$(cat {{pve_token}})" PVE_API_URL="{{pve_url}}" \
   nix run .#pve-provision -- lxc {{host}} \
     --node {{node}} \
     --build .#{{host}}-lxc-image \
@@ -17,13 +18,13 @@ lxc host node="roshar" memory="4096" disk="32" cores="2":
 
 # Same, but only prints what would be created.
 lxc-dry host node="roshar":
-  PVE_API_TOKEN="$(cat {{pve_token}})" \
+  PVE_API_TOKEN="$(cat {{pve_token}})" PVE_API_URL="{{pve_url}}" \
   nix run .#pve-provision -- lxc {{host}} --node {{node}} \
     --build .#{{host}}-lxc-image --dry-run
 
 # Destroy a guest. Refuses anything outside pool `agent-managed`.
 destroy vmid:
-  PVE_API_TOKEN="$(cat {{pve_token}})" \
+  PVE_API_TOKEN="$(cat {{pve_token}})" PVE_API_URL="{{pve_url}}" \
   nix run .#pve-provision -- destroy {{vmid}} --force-stop
 
 # Create the nale VM and install NixOS onto it, headless end to end.
