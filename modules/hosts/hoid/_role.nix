@@ -57,6 +57,9 @@ in
         mode = "0400";
       };
       ompweb_password_hash = { };
+      # Bearer token the Collab link dispenser requires once Caddy exposes
+      # it on the LAN (ryk.ompHost.linkService.tokenFile below).
+      collab_link_token = { };
       # Read by Caddy for the ACME DNS-01 challenge; same token the cluster's
       # cert-manager uses.
       cloudflare_api_token = { };
@@ -109,7 +112,10 @@ in
     # third-party hop. ompweb still covers the human/browser case.
     session.enable = true;
     ttyd.enable = false;
-    linkService.enable = true;
+    linkService = {
+      enable = true;
+      tokenFile = config.sops.secrets.collab_link_token.path;
+    };
     collab.relay.enable = true;
     broker = {
       enable = true;
