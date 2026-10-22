@@ -13,7 +13,7 @@
         pname = "vasher-dashboard";
         version = "1.0.0";
         src = ./vasher-dashboard;
-        npmDepsHash = "sha256-Lt2zzqo4LIbO93T7XZbVAVJ9/foyXopE5wpIixxVmjM=";
+        npmDepsHash = "sha256-YmGXeZVoJnAEeYjYMWhU39nrji9vq2vuPCzp8D4cSgw=";
         npmBuildScript = "build";
         installPhase = ''
           mkdir -p "$out/share/vasher-dashboard"
@@ -304,9 +304,18 @@
               root * /var/lib/vasher/dashboard
               file_server
             }
+            handle /api/live.json {
+              rewrite * /live.json
+              root * /var/lib/vasher/dashboard
+              file_server
+            }
             handle /api/log.txt {
               rewrite * /log.txt
               root * /var/lib/vasher/dashboard
+              file_server
+            }
+            handle_path /api/runs/* {
+              root * /var/lib/vasher/dashboard/runs
               file_server
             }
             handle /api/events.json {

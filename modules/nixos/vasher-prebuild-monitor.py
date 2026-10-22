@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+from dataclasses import asdict, dataclass, replace
+from datetime import datetime, timezone
 import json
 import os
 import re
@@ -10,7 +12,6 @@ import time
 import urllib.error
 import urllib.request
 import uuid
-from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Callable, Literal
 
@@ -33,6 +34,8 @@ RETRY_PATH = Path("/var/lib/vasher/agent/retry.json")
 SYSTEMCTL = "/run/current-system/sw/bin/systemctl"
 STATUS_PATH = Path("/var/lib/vasher/dashboard/status.json")
 LOG_PATH = Path("/var/lib/vasher/dashboard/current.log")
+LIVE_PATH = Path("/var/lib/vasher/dashboard/live.json")
+PUBLIC_LOG_PATH = Path("/var/lib/vasher/dashboard/log.txt")
 PRESSURE_PATH = Path("/proc/pressure/memory")
 CGROUP_ROOT = Path("/sys/fs/cgroup/vasher.slice/vasher-build.slice")
 BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
@@ -66,10 +69,12 @@ SUMMARY_EVENTS = {
     "build-succeeded",
     "needs-attention",
 }
+# Pattern redaction cannot catch arbitrary secrets printed outside known formats.
 SECRET_PATTERNS = (
     re.compile(r"(?im)^(authorization:\s*(?:bearer|token)\s+)\S+"),
     re.compile(r"(?im)^(x-api-key:\s*)\S+"),
     re.compile(r"(?i)([?&](?:access_token|token|key)=)[^&\s]+"),
+    re.compile(r"(?i)(access-tokens\s*=\s*github\.com=)\S+"),
 )
 
 Action = Literal["stop", "stop-final"]
@@ -182,6 +187,82 @@ def atomic_json(path: Path, value: object, mode: int = 0o600) -> None:
         raise
 
 
+def atomic_text(path: Path, value: str, mode: int = 0o644) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "w") as handle:
+            handle.write(value)
+        os.chmod(temporary, mode)
+        os.replace(temporary, path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def publish_live_sample(
+    sample: Sample,
+    path: Path,
+    now: Callable[[], str] = lambda: datetime.now(timezone.utc).isoformat(
+        timespec="seconds"
+    ).replace("+00:00", "Z"),
+) -> None:
+    atomic_json(
+        path,
+        {
+            "sampledAt": now(),
+            "activeUnit": sample.active_unit,
+            "mode": sample.mode,
+            "statusState": sample.status_state,
+            "memAvailable": sample.mem_available,
+            "swapFree": sample.swap_free,
+            "diskFree": sample.disk_free,
+            "nixMemory": sample.nix_memory,
+            "memoryPressureFull": sample.memory_pressure_full,
+        },
+        mode=0o644,
+    )
+
+
+def publish_public_log(
+    raw_path: Path, public_path: Path, secrets: list[str] | None = None
+) -> None:
+    with raw_path.open("rb") as handle:
+        handle.seek(0, os.SEEK_END)
+        offset = handle.tell()
+        chunks: list[bytes] = []
+        newlines = 0
+        while offset and newlines <= 200:
+            length = min(offset, 64 * 1024)
+            offset -= length
+            handle.seek(offset)
+            chunk = handle.read(length)
+            chunks.append(chunk)
+            newlines += chunk.count(b"\n")
+    text = b"".join(reversed(chunks)).splitlines(keepends=True)[-200:]
+    atomic_text(
+        public_path,
+        bounded_log(redact(b"".join(text).decode(errors="replace"), secrets or [])),
+    )
+
+
+def publish_telemetry(
+    sample: Sample, live_path: Path, raw_path: Path, public_path: Path
+) -> None:
+    # Dashboard I/O cannot skip safety evaluation. Each write is independent:
+    # a missing log must not prevent the live heartbeat.
+    try:
+        publish_live_sample(sample, live_path)
+    except Exception:
+        pass
+    if sample.active_unit and sample.status_state in {"preparing", "building"}:
+        try:
+            publish_public_log(raw_path, public_path)
+        except Exception:
+            pass
+
+
 def scan_storage_fault(text: str) -> str | None:
     for pattern in STORAGE_PATTERNS:
         if pattern in text:
@@ -286,7 +367,7 @@ def bounded_log(text: str) -> str:
 
 
 def build_evidence(event: dict[str, object], log_text: str, secrets: list[str]) -> str:
-    lines = redact(bounded_log(log_text), secrets).splitlines()
+    lines = bounded_log(redact(log_text, secrets)).splitlines()
     while True:
         document = {
             "revision": event.get("revision", ""),
@@ -557,12 +638,14 @@ class Controller:
         log_path: Path | None = None,
         fault_path: Path | None = None,
         btrfs_root: Path | None = None,
+        telemetry: Callable[[Sample], None] | None = None,
     ) -> None:
         self.runner = runner
         self.state_path = state_path
         self.events_path = events_path
         self.retry_path = retry_path
         self.reader = reader
+        self.telemetry = telemetry
         self.model = model
         self.log_path = LOG_PATH if log_path is None else log_path
         self.fault_path = FAULT_PATH if fault_path is None else fault_path
@@ -743,6 +826,8 @@ class Controller:
         if self.reader is not None:
             observed = self.reader.sample()
             if observed is not None:
+                if self.telemetry is not None:
+                    self.telemetry(observed)
                 return observed
         return replace(current, at=current.at + SAMPLE_INTERVAL)
 
@@ -1025,14 +1110,19 @@ def main() -> int:
     reader = SystemReader(runner)
     key_file = os.environ.get("OPENROUTER_API_KEY_FILE")
     model = OpenRouterClient(Path(key_file)) if key_file else None
+
+    def telemetry(observed: Sample) -> None:
+        publish_telemetry(observed, LIVE_PATH, LOG_PATH, PUBLIC_LOG_PATH)
+
     controller = Controller(
-        runner, STATE_PATH, EVENTS_PATH, RETRY_PATH, model=model
+        runner, STATE_PATH, EVENTS_PATH, RETRY_PATH,
+        reader=reader, model=model, telemetry=telemetry,
     )
-    controller.reader = reader
     while True:
         try:
             sample = reader.sample()
             if sample is not None:
+                telemetry(sample)
                 controller.observe(sample)
         except InvalidStatus as error:
             controller.record_error(str(error))

@@ -21,11 +21,26 @@ export type Status = {
   output: string;
   excludedPackages: string[];
   exitCode?: number;
+  id?: string;
+  logPath?: string;
+};
+
+export type LiveSample = {
+  sampledAt: string;
+  activeUnit: string | null;
+  mode: string;
+  statusState: string;
+  memAvailable: number;
+  swapFree: number;
+  diskFree: number;
+  nixMemory: number;
+  memoryPressureFull: number;
 };
 
 export type Snapshot = {
   status: Status;
   history: Status[];
+  live: LiveSample | null;
   log: string;
   events: MonitorEvent[];
   holds: HoldMap;
@@ -63,6 +78,17 @@ function isHoldMap(value: unknown): value is HoldMap {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+function isLiveSample(value: unknown): value is LiveSample {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) return false;
+  const sample = value as Record<string, unknown>;
+  return typeof sample.sampledAt === "string"
+    && (typeof sample.activeUnit === "string" || sample.activeUnit === null)
+    && typeof sample.mode === "string"
+    && typeof sample.statusState === "string"
+    && ["memAvailable", "swapFree", "diskFree", "nixMemory", "memoryPressureFull"]
+      .every((key) => typeof sample[key] === "number" && Number.isFinite(sample[key]));
+}
+
 type OptionalAgentJson<T> = {
   value: T;
   degraded: boolean;
@@ -91,10 +117,11 @@ async function fetchOptionalAgentJson<T>(
 export async function loadSnapshot(
   fetcher: DashboardFetch = fetch,
 ): Promise<Snapshot> {
-  const [status, history, log, monitorEvents, agentEventsResult, holdsResult] =
+  const [status, history, liveResult, log, monitorEvents, agentEventsResult, holdsResult] =
     await Promise.all([
       fetchJson<Status>(fetcher, "/api/status.json"),
       fetchJson<Status[]>(fetcher, "/api/history.json"),
+      fetchOptionalAgentJson(fetcher, "/api/live.json", null, isLiveSample),
       fetcher("/api/log.txt", { cache: "no-store" }).then(async (response) => {
         if (!response.ok) throw new Error(`/api/log.txt: ${response.status}`);
         return response.text();
@@ -111,6 +138,7 @@ export async function loadSnapshot(
   return {
     status,
     history,
+    live: liveResult.value,
     log,
     events: mergeEvents(monitorEvents, agentEventsResult.value),
     holds: holdsResult.value,

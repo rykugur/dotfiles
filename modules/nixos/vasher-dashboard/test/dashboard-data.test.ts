@@ -131,3 +131,40 @@ test("optional endpoint degradation clears on the next snapshot", async () => {
   assert.equal(recovered.agentEventsDegraded, false);
   assert.equal(recovered.holdsDegraded, false);
 });
+
+test("missing live endpoint keeps historical data available", async () => {
+  const snapshot = await loadSnapshot(fetchWith(json([]), json(validHolds)));
+  assert.equal(snapshot.live, null);
+  assert.equal(snapshot.status.state, "blocked");
+  assert.equal(snapshot.log, "trusted log");
+});
+
+test("valid live sample is included without replacing historical status", async () => {
+  const sample = {
+    sampledAt: "2026-10-12T10:00:00Z",
+    activeUnit: "vasher-prebuild.service",
+    mode: "candidate",
+    statusState: "building",
+    memAvailable: 12_000,
+    swapFree: 13_000,
+    diskFree: 14_000,
+    nixMemory: 15_000,
+    memoryPressureFull: 0.4,
+  };
+  const base = fetchWith(json([]), json(validHolds));
+  const snapshot = await loadSnapshot((path, init) =>
+    path === "/api/live.json" ? Promise.resolve(json(sample)) : base(path, init));
+  assert.deepEqual(snapshot.live, sample);
+  assert.equal(snapshot.status.state, "blocked");
+});
+
+test("unavailable or malformed live sample does not discard holds and events", async () => {
+  const base = fetchWith(json([]), json(validHolds));
+  for (const failed of [new Response("down", { status: 503 }), new Response("{oops")]) {
+    const snapshot = await loadSnapshot((path, init) =>
+      path === "/api/live.json" ? Promise.resolve(failed) : base(path, init));
+    assert.equal(snapshot.live, null);
+    assert.deepEqual(snapshot.events.map(({ id }) => id), ["monitor-event"]);
+    assert.deepEqual(snapshot.holds, validHolds);
+  }
+});

@@ -9,6 +9,7 @@ status="$state_dir/status.json"
 history="$state_dir/history.json"
 log="$state_dir/log.txt"
 raw_log="$state_dir/current.log"
+runs="$state_dir/runs"
 legacy_status=/var/lib/vasher/last-build.json
 HOLDS_FILE=/var/lib/vasher/agent/holds.json
 base_revision=
@@ -16,31 +17,69 @@ candidate_revision=
 out=
 root_created=false
 lock_acquired=false
-started_at=$(date --iso-8601=seconds)
 
 mkdir -p "$state_dir"
+exec 9>/var/lib/vasher/prebuild.lock
+case $mode in
+  refresh) flock -n 9 || exit 0; lock_acquired=true ;;
+  candidate | retry | narrow) flock 9; lock_acquired=true ;;
+  *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
+esac
+started_at=$(date --iso-8601=seconds)
 : > "$raw_log"
+exec 3>&1 4>&2
 exec > >(tee -a "$raw_log") 2>&1
+tee_pid=$!
 
 cleanup_tmp() {
   rm -f "$status_tmp" "$history_tmp" "$log_tmp" "$legacy_status_tmp"
 }
 
 snapshot_log() {
-  tail -n 200 "$raw_log" > "$log_tmp"
-  mv "$log_tmp" "$log"
+  # Redact before the byte cut, so truncation cannot expose a token suffix.
+  tail -n 200 "$raw_log" |
+    jq -Rr '
+      gsub("(?im)^(?<prefix>authorization:\\s*(?:bearer|token)\\s+)\\S+"; "\(.prefix)[REDACTED]") |
+      gsub("(?im)^(?<prefix>x-api-key:\\s*)\\S+"; "\(.prefix)[REDACTED]") |
+      gsub("(?i)(?<prefix>[?&](?:access_token|token|key)=)[^&\\s]+"; "\(.prefix)[REDACTED]") |
+      gsub("(?i)(?<prefix>access-tokens\\s*=\\s*github\\.com=)\\S+"; "\(.prefix)[REDACTED]")
+    ' | tail -c 32768 > "$log_tmp" &&
+    mv "$log_tmp" "$log"
 }
 
 append_history() {
-  jq -cn --argjson entry "$1" --slurpfile old "$history" \
+  local entry=$1 file id
+  local -A retained=()
+  jq -cn --argjson entry "$entry" --slurpfile old "$history" \
     '[$entry] + ($old[0] // []) | .[:20]' > "$history_tmp"
   mv "$history_tmp" "$history"
+  [[ -d $runs && ! -L $runs ]] || return 0
+  while IFS= read -r id; do
+    retained["$id"]=1
+  done < <(jq -r '.[] | select(.logPath? != null) | .id? // empty |
+    select(type == "string" and test("^[A-Za-z0-9_-]+$"))' "$history")
+  for file in "$runs"/*.txt; do
+    [[ -f $file && ! -L $file ]] || continue
+    id=${file##*/}
+    id=${id%.txt}
+    [[ $id =~ ^[A-Za-z0-9_-]+$ ]] || continue
+    if [[ -z ${retained[$id]-} ]]; then
+      rm -f -- "$file" || true
+    fi
+  done
 }
 
 write_status() {
   local state=$1
   local exit_code=$2
-  local updated_at payload
+  local updated_at payload id archive_tmp log_path log_ready=false
+
+  if [[ $state =~ ^(success|failed|stale)$ ]]; then
+    # Stop the journal tee before taking the terminal snapshot: otherwise
+    # buffered output can arrive after the archived log has been copied.
+    exec 1>&3 2>&4
+    wait "$tee_pid" || true
+  fi
 
   updated_at=$(date --iso-8601=seconds)
   payload=$(jq -n \
@@ -68,9 +107,28 @@ write_status() {
   mv "$status_tmp" "$status"
   jq -c . <<< "$payload" > "$legacy_status_tmp"
   mv "$legacy_status_tmp" "$legacy_status"
-  snapshot_log
+  # Status is the historical Hermes contract; telemetry must not change it.
+  if snapshot_log; then
+    log_ready=true
+  else
+    log_ready=false
+  fi
 
   if [[ $state =~ ^(success|failed|stale)$ ]]; then
+    id="run-$(date -u +%Y%m%dT%H%M%S%N)-$$"
+    log_path=
+    if [[ $log_ready == true ]] && mkdir -p "$runs" 2> /dev/null &&
+       [[ -d $runs && ! -L $runs ]]; then
+      archive_tmp="$runs/.$id.$$"
+      if cp "$log" "$archive_tmp" && mv "$archive_tmp" "$runs/$id.txt"; then
+        log_path="/api/runs/$id.txt"
+      else
+        rm -f -- "$archive_tmp" || true
+      fi
+    fi
+    payload=$(jq -c --arg id "$id" --arg logPath "$log_path" \
+      '. + {id: $id} + (if $logPath == "" then {} else {logPath: $logPath} end)' \
+      <<< "$payload")
     append_history "$payload"
   fi
 }
@@ -117,13 +175,6 @@ legacy_status_tmp="$legacy_status.$$"
 trap cleanup_tmp EXIT
 
 [[ -e $history ]] || printf '[]\n' > "$history"
-
-exec 9>/var/lib/vasher/prebuild.lock
-case $mode in
-  refresh) flock -n 9 || exit 0; lock_acquired=true ;;
-  candidate | retry | narrow) flock 9; lock_acquired=true ;;
-  *) printf 'vasher-prebuild: unknown mode %s\n' "$mode" >&2; exit 2 ;;
-esac
 
 # A storage fault means the disk under the Nix store is suspect. Building again
 # would only add writes, so the pipeline halts until an operator removes the

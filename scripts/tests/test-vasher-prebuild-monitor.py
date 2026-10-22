@@ -966,6 +966,140 @@ class RecoveryControllerTests(unittest.TestCase):
         )
 
 
+class DashboardTelemetryTests(unittest.TestCase):
+    def test_active_and_idle_heartbeat_preserve_historical_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            status = root / "status.json"
+            live = root / "live.json"
+            status.write_text('{"state":"building","mode":"candidate"}\n')
+            monitor.publish_live_sample(
+                sample(15), live, now=lambda: "2026-10-22T12:00:00Z"
+            )
+            self.assertEqual(json.loads(live.read_text()), {
+                "sampledAt": "2026-10-22T12:00:00Z",
+                "activeUnit": "vasher-prebuild-candidate.service",
+                "mode": "candidate",
+                "statusState": "building",
+                "memAvailable": 4 * monitor.GIB,
+                "swapFree": 2 * monitor.GIB,
+                "diskFree": 20 * monitor.GIB,
+                "nixMemory": 256 * monitor.MIB,
+                "memoryPressureFull": 0.0,
+            })
+            monitor.publish_live_sample(
+                sample(45, active_unit=None, status_state="success"),
+                live,
+                now=lambda: "2026-10-22T12:00:30Z",
+            )
+            self.assertIsNone(json.loads(live.read_text())["activeUnit"])
+            self.assertEqual(json.loads(live.read_text())["statusState"], "success")
+            self.assertEqual(status.read_text(), '{"state":"building","mode":"candidate"}\n')
+
+    def test_public_log_is_redacted_before_line_and_byte_limits(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "current.log"
+            visible = root / "log.txt"
+            raw.write_text(
+                "ignored early marker\n" * 12
+                + "Authorization: Bearer bearer-secret\n"
+                + "x-api-key: api-secret\n"
+                + "request https://host/?access_token=url-secret\n"
+                + "access-tokens = github.com=github-secret\n"
+                + "arbitrary sensitive-secret\n"
+                + "line\n" * 215
+                + "X" * 40000
+                + "sensitive-secret\n"
+            )
+            monitor.publish_public_log(raw, visible, ["sensitive-secret"])
+            body = visible.read_text()
+            self.assertLessEqual(len(visible.read_bytes()), 32768)
+            self.assertLessEqual(len(body.splitlines()), 200)
+            for secret in ("bearer-secret", "api-secret", "url-secret",
+                           "github-secret", "sensitive-secret", "ignored early marker"):
+                self.assertNotIn(secret, body)
+            self.assertIn("[REDACTED]", body)
+
+    def test_public_log_keeps_only_last_200_short_lines(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "current.log"
+            public = root / "log.txt"
+            raw.write_text("first-should-drop\n" + "".join(
+                f"line-{index:03d}\n" for index in range(220)
+            ))
+            monitor.publish_public_log(raw, public)
+            lines = public.read_text().splitlines()
+            self.assertEqual(len(lines), 200)
+            self.assertEqual(lines[0], "line-020")
+            self.assertEqual(lines[-1], "line-219")
+
+    def test_public_log_redacts_each_known_secret_format(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            raw = root / "current.log"
+            public = root / "log.txt"
+            raw.write_text(
+                "Authorization: Bearer bearer-secret\n"
+                "x-api-key: api-secret\n"
+                "request https://host/?access_token=url-secret\n"
+                "access-tokens = github.com=github-secret\n"
+            )
+            monitor.publish_public_log(raw, public)
+            result = public.read_text()
+            self.assertEqual(result.count("[REDACTED]"), 4)
+            for secret in ("bearer-secret", "api-secret", "url-secret", "github-secret"):
+                self.assertNotIn(secret, result)
+
+    def test_telemetry_write_failure_does_not_prevent_safety_observation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bad_live = root / "unwritable"
+            bad_live.mkdir()
+            current_log = root / "current.log"
+            current_log.write_text("running\n")
+            visible_log = root / "log.txt"
+            state = monitor.MonitorState.for_revision("1" * 40, "2" * 40)
+            observed = sample(100, mem_available=512 * monitor.MIB)
+            monitor.publish_telemetry(
+                observed, bad_live, current_log, visible_log
+            )
+            self.assertEqual(visible_log.read_text(), "running")
+            state, decision = monitor.evaluate(state, observed)
+            self.assertIsNone(decision)
+            state, decision = monitor.evaluate(
+                state, sample(220, mem_available=512 * monitor.MIB)
+            )
+            self.assertEqual(decision, monitor.Decision("stop", "memory"))
+
+    def test_recovery_sampling_refreshes_heartbeat_without_fake_samples(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            live = root / "live.json"
+            observed = sample(30, active_unit=None, status_state="failed")
+            controller = monitor.Controller(
+                FakeRunner(),
+                root / "state.json",
+                root / "events.json",
+                root / "retry.json",
+                boot_id="test-boot",
+                reader=SequenceReader([observed]),
+                telemetry=lambda current: monitor.publish_live_sample(
+                    current, live, now=lambda: "2026-10-22T12:00:30Z"
+                ),
+            )
+            self.assertEqual(controller._next_sample(sample(0)), observed)
+            self.assertIsNone(json.loads(live.read_text())["activeUnit"])
+            self.assertEqual(
+                controller._next_sample(observed),
+                dataclasses.replace(observed, at=observed.at + 30),
+            )
+            self.assertEqual(
+                json.loads(live.read_text())["sampledAt"], "2026-10-22T12:00:30Z"
+            )
+
+
 class SamplingConversionTests(unittest.TestCase):
     def test_read_meminfo_converts_kib_to_bytes(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -1437,6 +1571,13 @@ class HaikuSummaryTests(unittest.TestCase):
         evidence = monitor.build_evidence(self.event, "line\n" * 10000, [])
         self.assertLessEqual(len(evidence.encode()), 32 * 1024)
         self.assertLessEqual(evidence.count("\n"), 200)
+
+    def test_evidence_redacts_before_cutting_secret_across_byte_boundary(self):
+        secret = "needle-credential"
+        log = "X" * 1024 + secret + "Y" * (30 * 1024 - 5)
+        evidence = monitor.build_evidence(self.event, log, [secret])
+        self.assertNotIn(secret[-5:], evidence)
+        self.assertLessEqual(len(evidence.encode()), 32 * 1024)
 
     def test_openrouter_request_has_no_tools(self):
         transport = FakeTransport(
