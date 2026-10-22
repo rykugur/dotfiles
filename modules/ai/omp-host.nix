@@ -90,7 +90,9 @@
         # Resolves the agent's current Collab control URL on demand. The room
         # generation changes on /new, /resume and /fork, and `collab link`
         # refuses a stale generation, so every request re-lists.
+        import hmac
         import json
+        import os
         import subprocess
         import sys
         from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -98,6 +100,15 @@
         OMP = "${omp}"
         HOST = "${cfg.linkService.address}"
         PORT = ${toString cfg.linkService.port}
+
+        # systemd LoadCredential="token:<file>" lands the bearer token here
+        # only when ryk.ompHost.linkService.tokenFile is set; its absence
+        # means no auth is configured, same as before this option existed.
+        CREDENTIALS_DIR = os.environ.get("CREDENTIALS_DIRECTORY")
+        TOKEN = None
+        if CREDENTIALS_DIR:
+            with open(os.path.join(CREDENTIALS_DIR, "token")) as f:
+                TOKEN = f.read().strip()
 
 
         def run(args):
@@ -127,7 +138,25 @@
 
 
         class Handler(BaseHTTPRequestHandler):
+            def _authorized(self):
+                if TOKEN is None:
+                    return True
+                auth = self.headers.get("Authorization", "")
+                prefix = "Bearer "
+                if not auth.startswith(prefix):
+                    return False
+                return hmac.compare_digest(auth[len(prefix):], TOKEN)
+
             def do_GET(self):
+                if not self._authorized():
+                    body = b"unauthorized"
+                    self.send_response(401)
+                    self.send_header("WWW-Authenticate", "Bearer")
+                    self.send_header("Content-Type", "text/plain; charset=utf-8")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
                 try:
                     url, host = resolve_with_retry()
                 except Exception as exc:
@@ -327,6 +356,20 @@
             type = lib.types.port;
             default = 7682;
           };
+          tokenFile = lib.mkOption {
+            type = lib.types.nullOr lib.types.path;
+            default = null;
+            description = ''
+              File holding a bearer token the dispenser requires on every
+              request once set, loaded through a systemd credential so the
+              sops file itself never has to be readable by this user. The
+              dispensed link grants full agent control, so treat this token
+              the same as the link itself. Null keeps the dispenser
+              unauthenticated and loopback-only (today's behavior); setting
+              it is also what lets the Caddy route below expose the
+              dispenser on the LAN.
+            '';
+          };
         };
 
         openFirewall = lib.mkOption {
@@ -455,19 +498,30 @@
             acme_dns cloudflare {env.CF_API_TOKEN}
           '';
           virtualHosts = lib.mkMerge [
-            (lib.mkIf (cfg.web.enable || cfg.collab.relay.enable) {
-              # One definition, not two merged ones: Caddy's path-based
-              # routing pattern requires the matched `/r/*` reverse_proxy to
-              # precede the catch-all in the adapted config, and relying on
-              # module-merge order across separate mkIf branches to land
-              # that way is not guaranteed.
+            (lib.mkIf (
+              cfg.web.enable || cfg.collab.relay.enable || (cfg.linkService.enable && cfg.linkService.tokenFile != null)
+            ) {
+              # One definition, not several merged ones: Caddy evaluates
+              # same-name directives in source order but resorts different
+              # directive names by its own built-in precedence regardless of
+              # source position, so everything here uses the same `handle`/
+              # `handle_path` directive family — first match wins, in the
+              # order written, and the no-matcher catch-all stays last.
               "${scheme}://${cfg.proxy.hostName}".extraConfig = ''
+                ${lib.optionalString (cfg.linkService.enable && cfg.linkService.tokenFile != null) ''
+                  handle_path /collab-link/* {
+                    reverse_proxy ${cfg.linkService.address}:${toString cfg.linkService.port}
+                  }
+                ''}
                 ${lib.optionalString cfg.collab.relay.enable ''
-                  @collabRelay path /r/*
-                  reverse_proxy @collabRelay 127.0.0.1:${toString cfg.collab.relay.port}
+                  handle /r/* {
+                    reverse_proxy 127.0.0.1:${toString cfg.collab.relay.port}
+                  }
                 ''}
                 ${lib.optionalString cfg.web.enable ''
-                  reverse_proxy ${cfg.web.address}:${toString cfg.web.port}
+                  handle {
+                    reverse_proxy ${cfg.web.address}:${toString cfg.web.port}
+                  }
                 ''}
               '';
             })
@@ -539,6 +593,9 @@
             ExecStart = lib.getExe linkDispenser;
             Restart = "always";
             RestartSec = 5;
+          }
+          // lib.optionalAttrs (cfg.linkService.tokenFile != null) {
+            LoadCredential = "token:${cfg.linkService.tokenFile}";
           };
         };
 
