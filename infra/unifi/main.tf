@@ -27,6 +27,12 @@ resource "unifi_network" "world" {
   subnet = "${var.world_gateway_ip}/${var.world_prefix_length}"
   vlan   = var.world_vlan_id
 
+  # The provider's 0.59.0 payload sends setting_preference="" when unset,
+  # which the controller rejects with api.err.InvalidValue (confirmed
+  # live 2026-10-22). "manual" is required, not just preferred: "auto"
+  # silently drops the explicit DNS override below (also confirmed live).
+  setting_preference = "manual"
+
   network_isolation = true
   multicast_dns     = false
   igmp_snooping     = false
@@ -59,7 +65,7 @@ data "unifi_firewall_zone" "gateway" {
 }
 
 data "unifi_firewall_zone" "vpn" {
-  name = "VPN"
+  name = "Vpn"
 }
 
 data "unifi_firewall_zone" "hotspot" {
@@ -67,7 +73,13 @@ data "unifi_firewall_zone" "hotspot" {
 }
 
 data "unifi_firewall_zone" "dmz" {
-  name = "DMZ"
+  name = "Dmz"
+}
+
+# AI Fun is its own zone (not folded into Internal), confirmed live on
+# 2026-10-22. Block it explicitly like every other existing zone.
+data "unifi_firewall_zone" "ai_fun" {
+  name = "AI Fun"
 }
 
 # --- Inbound: only the approved admin source may open SSH into the world ---
@@ -102,6 +114,13 @@ resource "unifi_firewall_policy" "block_internal_to_world" {
   protocol = "all"
   logging  = true
 
+  # Restricted to NEW/INVALID: a plain "ALL states" block (the omitted
+  # default) also matches the auto-generated SSH return-traffic allow's
+  # ESTABLISHED replies and silently drops them, since this policy's index
+  # (10001) sits below that auto-rule's index (30000). Confirmed live
+  # 2026-10-22 as the actual cause of SSH timing out despite the allow.
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
   source = {
     zone_id         = data.unifi_firewall_zone.internal.id
     matching_target = "ANY"
@@ -120,11 +139,16 @@ resource "unifi_firewall_policy" "block_internal_to_world" {
 # is needed here.
 
 resource "unifi_firewall_policy" "allow_world_dhcp_to_gateway" {
-  name                 = "Allow World DHCP to Gateway"
-  action               = "ALLOW"
-  protocol             = "udp"
-  create_allow_respond = true
-  logging              = true
+  name     = "Allow World DHCP to Gateway"
+  action   = "ALLOW"
+  protocol = "udp"
+  logging  = true
+
+  # The controller rejects create_allow_respond=true for this policy
+  # (api.err.FirewallPolicyCreateRespondTrafficPolicyNotAllowed, confirmed
+  # live 2026-10-22) — not just an ICMP restriction as the provider docs
+  # suggest. Add the reverse DHCP-reply leg explicitly instead.
+  create_allow_respond = false
 
   source = {
     zone_id         = unifi_firewall_zone.world.id
@@ -139,12 +163,33 @@ resource "unifi_firewall_policy" "allow_world_dhcp_to_gateway" {
   }
 }
 
+resource "unifi_firewall_policy" "allow_gateway_dhcp_to_world" {
+  name     = "Allow Gateway DHCP to World"
+  action   = "ALLOW"
+  protocol = "udp"
+  logging  = true
+
+  source = {
+    zone_id         = data.unifi_firewall_zone.gateway.id
+    matching_target = "ANY"
+  }
+
+  destination = {
+    zone_id            = unifi_firewall_zone.world.id
+    matching_target    = "ANY"
+    port               = "68"
+    port_matching_type = "SPECIFIC"
+  }
+}
+
 resource "unifi_firewall_policy" "block_world_to_gateway" {
   name     = "Block World to Gateway"
   action   = "BLOCK"
   protocol = "all"
   logging  = true
 
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
   source = {
     zone_id         = unifi_firewall_zone.world.id
     matching_target = "ANY"
@@ -169,6 +214,8 @@ resource "unifi_firewall_policy" "block_world_to_internal" {
   protocol = "all"
   logging  = true
 
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
   source = {
     zone_id         = unifi_firewall_zone.world.id
     matching_target = "ANY"
@@ -186,6 +233,8 @@ resource "unifi_firewall_policy" "block_world_to_vpn" {
   protocol = "all"
   logging  = true
 
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
   source = {
     zone_id         = unifi_firewall_zone.world.id
     matching_target = "ANY"
@@ -203,6 +252,8 @@ resource "unifi_firewall_policy" "block_world_to_hotspot" {
   protocol = "all"
   logging  = true
 
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
   source = {
     zone_id         = unifi_firewall_zone.world.id
     matching_target = "ANY"
@@ -220,6 +271,8 @@ resource "unifi_firewall_policy" "block_world_to_dmz" {
   protocol = "all"
   logging  = true
 
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
   source = {
     zone_id         = unifi_firewall_zone.world.id
     matching_target = "ANY"
@@ -227,6 +280,25 @@ resource "unifi_firewall_policy" "block_world_to_dmz" {
 
   destination = {
     zone_id         = data.unifi_firewall_zone.dmz.id
+    matching_target = "ANY"
+  }
+}
+
+resource "unifi_firewall_policy" "block_world_to_ai_fun" {
+  name     = "Block World to AI Fun"
+  action   = "BLOCK"
+  protocol = "all"
+  logging  = true
+
+  connection_state_type = "CUSTOM"
+  connection_states     = ["NEW", "INVALID"]
+  source = {
+    zone_id         = unifi_firewall_zone.world.id
+    matching_target = "ANY"
+  }
+
+  destination = {
+    zone_id         = data.unifi_firewall_zone.ai_fun.id
     matching_target = "ANY"
   }
 }
