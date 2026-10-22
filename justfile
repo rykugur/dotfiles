@@ -31,6 +31,7 @@ destroy vmid:
 vm-install host="nale":
   #!/usr/bin/env bash
   set -euo pipefail
+  umask 077
   export PROXMOX_VE_API_TOKEN="$(cat {{pve_token}})"
   iso="$(nix build --no-link --print-out-paths .#{{host}}-installer-iso)/iso/{{host}}-installer.iso"
 

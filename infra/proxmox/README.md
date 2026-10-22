@@ -4,10 +4,13 @@ OpenTofu for the Proxmox **VMs** on roshar. LXCs keep using `pve-provision`,
 which already owns template upload, CT creation, age-key injection and the
 pool guardrail.
 
-State lives in `terraform.tfstate` next to this file and is git-ignored: it
-records vmids and volume ids, not secrets, but it is machine-local and should
-not be a merge conflict. The API token is read from the environment, never from
-a variable file.
+State and its backups live beside this file. They are ignored by Git but remain
+plaintext on disk. Treat them as sensitive: they currently describe VM resources,
+but future resources could record secrets. The install recipe uses `umask 077` so
+new files are owner-only. Run `umask 077` before any manual `tofu` command, and
+keep the state files and backups at mode 0600. The API token comes from the
+environment, never a Terraform variable; do not put credentials in `.tfvars`
+or a saved plan. Git ignores those files, but ignoring does not encrypt them.
 
 ## Prerequisites
 

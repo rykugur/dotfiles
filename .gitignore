@@ -15,8 +15,11 @@ __pycache__/
 
 result
 
-# OpenTofu state for infra/proxmox: machine-local, holds vmids and volume ids.
+# OpenTofu state and variable files: machine-local and potentially sensitive.
 # `.terraform.lock.hcl` is deliberately NOT ignored: it pins provider hashes.
 .terraform/
 *.tfstate
 *.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
