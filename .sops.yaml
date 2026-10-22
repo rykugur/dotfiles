@@ -9,6 +9,8 @@ keys:
     - &work-macbook age1a2dsa5sk4xnl8m8vdahhl0h7v54n89nzp4jesuk0mn79ck4ukdjsjuyuax
     - &vasher age1l07dtlnkauaqluenmh2rwtzxgcza4e4fj6hefshpqyumkpj6d96s5rx95r
     - &hoid age1vcun05gc9dw48wkmsll9jydyxm878j80wnasra4kvzyjznev8ykqj5un6f
+    - &ishar age1a8rusrt8xle2l397qkhspup8ktc6rt7xk65xqx7gqgkv0yqt4als36aggq
+    - &nale age1hjwxz3qq4zaqfg85rm74p2qdhwtv0ka6vxa5a465wy4q2f5gpsksw4qegh
 
 creation_rules:
   - path_regex: jezrien/secrets.yaml$
@@ -40,6 +42,24 @@ creation_rules:
   # installs it into a freshly provisioned container. That is what lets
   # hoid/secrets.yaml be encrypted before the container exists.
   - path_regex: hoid/age-key.sops$
+    key_groups:
+      - age:
+          - *dusty
+  - path_regex: ishar/secrets.yaml$
+    key_groups:
+      - age:
+          - *dusty
+          - *ishar
+  - path_regex: ishar/age-key.sops$
+    key_groups:
+      - age:
+          - *dusty
+  - path_regex: nale/secrets.yaml$
+    key_groups:
+      - age:
+          - *dusty
+          - *nale
+  - path_regex: nale/age-key.sops$
     key_groups:
       - age:
           - *dusty
