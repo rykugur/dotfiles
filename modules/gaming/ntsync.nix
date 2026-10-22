@@ -12,10 +12,10 @@
       # Lutris, lug-wine, EVE, …), so it lives in its own module rather than riding
       # along in a single game's config.
       #
-      # This only loads the kernel driver (exposes /dev/ntsync); apps opt in at
-      # runtime via WINENTSYNC=1 (Proton sets it automatically; for the lug-wine SC
-      # runner it's exported in sc-launch.sh). Mainlined as a module in kernel 6.14;
-      # skipped on older kernels.
+      # Loading the driver exposes /dev/ntsync; Wine 11 uses it when
+      # available. Proton has its own PROTON_USE_NTSYNC switch (set in
+      # Jezrien's user session). Keep this separate from SC so other Wine
+      # games can use the same driver.
       boot.kernelModules = lib.optional (
         lib.versionAtLeast config.boot.kernelPackages.kernel.version "6.14"
       ) "ntsync";

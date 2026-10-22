@@ -42,13 +42,28 @@
       scheme = if cfg.proxy.tls.enable then "https" else "http";
       socket = "/run/omp/agent.sock";
 
+      # wss:// is mandatory for a non-localhost relay — the Collab client
+      # itself rejects plain ws:// unless the hostname is localhost — so a
+      # self-hosted relay is only reachable once the proxy terminates TLS.
+      # An explicit relayUrl always wins; otherwise a running relay implies
+      # the proxy's own hostname, and no relay keeps upstream's default
+      # (wss://my.omp.sh).
+      collabRelayUrl =
+        if cfg.collab.relayUrl != null then
+          cfg.collab.relayUrl
+        else if cfg.collab.relay.enable then
+          "wss://${cfg.proxy.hostName}"
+        else
+          null;
+
       # Passed with --config, never written over ~/.omp/agent/config.yml: that
       # file holds oauth and onboarding state the agent writes itself.
       overlay = (pkgs.formats.yaml { }).generate "omp-host.yml" {
         collab = {
           autoStart = "control";
           displayName = cfg.displayName;
-        };
+        }
+        // lib.optionalAttrs (collabRelayUrl != null) { relayUrl = collabRelayUrl; };
         tools.approvalMode = cfg.approvalMode;
         startup = {
           quiet = true;
@@ -328,6 +343,35 @@
             description = "Broker listen address. Keep it on loopback or a tailnet address; the broker has no transport security of its own.";
           };
         };
+
+        collab = {
+          relayUrl = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            description = ''
+              Override the generated `collab.relayUrl` (a wss:// origin).
+              Null defaults to upstream's public relay, or — once
+              `collab.relay.enable` is set — to this host's own proxy.
+            '';
+          };
+          relay = {
+            enable = lib.mkEnableOption "a self-hosted Collab relay (an offline stand-in for wss://my.omp.sh), for agent-to-agent Collab without the public relay";
+            package = lib.mkOption {
+              type = lib.types.package;
+              default = pkgs.omp-collab-relay;
+              defaultText = lib.literalExpression "pkgs.omp-collab-relay";
+            };
+            port = lib.mkOption {
+              type = lib.types.port;
+              default = 7466;
+              description = ''
+                Port passed to the relay. It has no bind-address flag and
+                listens on every interface, so this stays unreachable unless
+                the proxy fronts it — keep it out of `openFirewall`.
+              '';
+            };
+          };
+        };
       };
 
       config = lib.mkIf cfg.enable {
@@ -390,6 +434,10 @@
             assertion = !(cfg.proxy.enable && cfg.proxy.tls.enable) || cfg.proxy.tls.environmentFile != null;
             message = "ryk.ompHost.proxy.tls needs an environmentFile holding CF_API_TOKEN.";
           }
+          {
+            assertion = !cfg.collab.relay.enable || cfg.proxy.tls.enable;
+            message = "ryk.ompHost.collab.relay needs ryk.ompHost.proxy.tls.enable: the Collab client refuses a ws:// relay origin unless the hostname is localhost.";
+          }
         ];
 
         services.caddy = lib.mkIf cfg.proxy.enable {
@@ -407,9 +455,20 @@
             acme_dns cloudflare {env.CF_API_TOKEN}
           '';
           virtualHosts = lib.mkMerge [
-            (lib.mkIf cfg.web.enable {
+            (lib.mkIf (cfg.web.enable || cfg.collab.relay.enable) {
+              # One definition, not two merged ones: Caddy's path-based
+              # routing pattern requires the matched `/r/*` reverse_proxy to
+              # precede the catch-all in the adapted config, and relying on
+              # module-merge order across separate mkIf branches to land
+              # that way is not guaranteed.
               "${scheme}://${cfg.proxy.hostName}".extraConfig = ''
-                reverse_proxy ${cfg.web.address}:${toString cfg.web.port}
+                ${lib.optionalString cfg.collab.relay.enable ''
+                  @collabRelay path /r/*
+                  reverse_proxy @collabRelay 127.0.0.1:${toString cfg.collab.relay.port}
+                ''}
+                ${lib.optionalString cfg.web.enable ''
+                  reverse_proxy ${cfg.web.address}:${toString cfg.web.port}
+                ''}
               '';
             })
             (lib.mkIf cfg.broker.enable {
@@ -493,6 +552,20 @@
             User = cfg.user;
             Group = group;
             ExecStart = "${omp} auth-broker serve --bind ${cfg.broker.bind}";
+            Restart = "always";
+            RestartSec = 5;
+          };
+        };
+
+        systemd.services.omp-collab-relay = lib.mkIf cfg.collab.relay.enable {
+          description = "Self-hosted Collab relay (offline stand-in for wss://my.omp.sh)";
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            # Content-blind and stateless — no HOME, no credentials, no
+            # filesystem access needed, so a dynamic user is strictly
+            # narrower than borrowing cfg.user.
+            DynamicUser = true;
+            ExecStart = "${lib.getExe cfg.collab.relay.package} --port ${toString cfg.collab.relay.port}";
             Restart = "always";
             RestartSec = 5;
           };

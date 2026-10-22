@@ -25,16 +25,21 @@
       # produce one, so `cat` fails, xargs exits 123, and the whole kernel
       # module tree fails to build. Upstream issue: NixOS/nixpkgs#575192.
       #
-      # These three mirror the upstream fixes verbatim. Drop each one as it
-      # reaches nixos-unstable:
+      # The first three mirror upstream fixes; drop each as nixos-unstable picks
+      # them up:
       #   r8125       PR #576564 (merged 2026-10-21)
       #   openrazer   PR #576293 (merged 2026-10-20)
       #   xpad-noone  PR #576469 (open)
+      #
+      # Separately, kernel.dev now ships System.map, so v4l2loopback's
+      # modules_install runs depmod and emits modules.alias/dep into its output.
+      # Those collide with the kernel's files in aggregateModules (#576406).
+      # Mirror the install fix from nixpkgs PR #575861 to skip depmod.
       # jezrien runs boot.kernelPackages = pkgs.linuxPackages_zen, and that set
       # is built by linuxKernel.packagesFor internally — overriding the
       # pkgs.linuxPackagesFor alias does nothing.
       linuxPackages_zen = prev.lib.warn
-        "overlays: local kernel-module .ko.cer workarounds are active (nixpkgs#575192). Drop r8125/openrazer/xpad-noone overrides once nixos-unstable carries them — review by 2026-10-28."
+        "overlays: local kernel-module install workarounds are active (nixpkgs#575192, #576406). Review r8125/openrazer/xpad-noone/v4l2loopback by 2026-10-28."
         (
           prev.linuxPackages_zen.extend (
             _: kprev:
@@ -111,6 +116,14 @@
                     "-C"
                     build
                     "M=$(PWD)"
+                  ];
+                });
+
+                v4l2loopback = kprev.v4l2loopback.overrideAttrs (_: {
+                  preBuild = null;
+                  installFlags = [
+                    "DEPMOD=true"
+                    "INSTALL_MOD_PATH=${out}"
                   ];
                 });
               }

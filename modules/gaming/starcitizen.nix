@@ -1,12 +1,21 @@
 { inputs, self, ... }:
 {
   flake.modules.nixos.starcitizen =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       username = config.ryk.username;
     in
     {
       imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
+
+      security.pam.loginLimits = [
+        {
+          domain = "*";
+          type = "hard";
+          item = "nofile";
+          value = "16777216";
+        }
+      ];
 
       nix.settings = {
         substituters = [
@@ -21,21 +30,26 @@
 
       programs.rsi-launcher = {
         enable = true;
+        enableNTsync = false; # Jezrien imports the standalone ntsync module.
 
-        # Additional commands before the game starts
+        # Launch OpenTrack alongside RSI Launcher in the same Wine environment.
         preCommands = ''
+          ${pkgs.opentrack}/bin/opentrack &
+          scOpentrackPid=$!
           export MESA_VK_WSI_PRESENT_MODE=mailbox
           export DXVK_HUD=compiler
           export MANGO_HUD=1
           export MANGOHUD=1
           export WINE_HIDE_NVIDIA_GPU=1
           export PROTON_ENABLE_WAYLAND=1
-          export WINEDLLOVERRIDES="winewayland.drv=n,b"
+          export WINEDLLOVERRIDES="$WINEDLLOVERRIDES;winewayland.drv=n,b"
+        '';
+        postCommands = ''
+          kill "$scOpentrackPid" 2>/dev/null || true
         '';
 
         patchXwayland = true;
         enforceWaylandDrv = true;
-        # umu.enable = true;
       };
 
       home-manager.users.${username}.imports = [ self.modules.homeManager.starcitizen ];

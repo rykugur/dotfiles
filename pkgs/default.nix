@@ -28,6 +28,7 @@ in
   openrig = pkgs.callPackage ./openrig.nix { };
   herdr-navigator = pkgs.callPackage ./herdr-navigator.nix { };
   pve-provision = pkgs.callPackage ./pve-provision.nix { };
+  omp-collab-relay = pkgs.callPackage ./omp-collab-relay.nix { src = inputs.oh-my-pi; };
 }
 // (
   # `pkgs` here is the overlay's `final`, whose `lib` the modifications

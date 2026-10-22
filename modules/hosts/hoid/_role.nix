@@ -103,11 +103,14 @@ in
       name = "hoid";
       passwordHashFile = config.sops.secrets.ompweb_password_hash.path;
     };
-    # The dtach session exists only to host a Collab room, which is relayed
-    # through my.omp.sh. Off: the web UI covers the same job on the LAN.
-    session.enable = false;
+    # The dtach session exists to host a Collab room and the self-hosted
+    # relay below carries it on the LAN/tailnet instead of my.omp.sh, so
+    # another omp instance can join and prompt this agent without a
+    # third-party hop. ompweb still covers the human/browser case.
+    session.enable = true;
     ttyd.enable = false;
-    linkService.enable = false;
+    linkService.enable = true;
+    collab.relay.enable = true;
     broker = {
       enable = true;
       # Loopback: Caddy publishes it on 8765 with TLS. The bearer token is
