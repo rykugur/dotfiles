@@ -201,8 +201,21 @@ def "depot-fill" [
         return
     }
 
+    # .NET scopes the saved login to the executable's store path. A Nix
+    # update gives DepotDownloader a new scope with no remembered login.
+    let binary_path = (which DepotDownloader | get path.0 | path expand)
+    let state_path = (($env.XDG_STATE_HOME? | default ($env.HOME | path join ".local/state")) | path join "depot-fill" "depotdownloader-path")
+    if not $qr {
+        if not ($state_path | path exists) {
+            print $"If DepotDownloader asks for a password, press Ctrl-C and run depot-fill ($appid) --qr to sign in with the Steam mobile app."
+        } else if ((open --raw $state_path | str trim) != $binary_path) {
+            error make {msg: $"DepotDownloader changed since your last successful depot-fill run. Its saved login is tied to the old executable. Run depot-fill ($appid) --qr to sign in with the Steam mobile app."}
+        }
+    }
     mkdir $target_dir
     ^DepotDownloader ...$args
+    mkdir ($state_path | path dirname)
+    $binary_path | save -f $state_path
 
     print ""
     print "Done. In Steam: restart, then Properties -> Installed Files -> \"Verify integrity of game files\"."
