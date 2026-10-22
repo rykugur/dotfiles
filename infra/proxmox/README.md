@@ -21,37 +21,22 @@ already granted.
 
 ## Install nale
 
+Run from the dotfiles repo root:
+
 ```sh
-export PROXMOX_VE_API_TOKEN="$(cat ~/.config/pve/agent.token)"
-
-iso=$(nix build --no-link --print-out-paths .#nale-installer-iso)/iso/nale-installer.iso
-
-tofu init
-tofu apply -var="installer_iso_path=$iso"        # creates the VM, boots the ISO
-tofu output nale_ipv4                            # guest agent reports the address
-
-# age identity into a tmpfs tree that nixos-anywhere copies onto the installed
-# system, so sops-nix can decrypt on first boot
-install -d -m 700 /dev/shm/nale-extra/var/lib/sops-nix
-sops -d --input-type binary --output-type binary modules/hosts/nale/age-key.sops \
-  > /dev/shm/nale-extra/var/lib/sops-nix/key.txt
-
-# `nix develop` provides tofu, nixos-anywhere, sops and age
-nixos-anywhere \
-  --flake .#nale \
-  --extra-files /dev/shm/nale-extra \
-  --chown /var/lib/sops-nix 0:0 \
-  root@<ip>
-
-shred -u /dev/shm/nale-extra/var/lib/sops-nix/key.txt && rm -rf /dev/shm/nale-extra
-
-# detach the installer and boot the installed system
-tofu apply -var="installer_iso_path=$iso" -var="boot_from_disk=true"
+nix develop --command just vm-install nale
 ```
 
-From here comin owns the host: pushes to `master` land within a poll period,
-and `testing-nale` is the per-host branch (comin runs those as `test`, so the
-bootloader is untouched).
+The recipe builds the headless ISO, creates VM 120 in `agent-managed`, boots
+the installer, reads its address through the guest agent, installs NixOS with
+`nixos-anywhere`, and injects the sops-nix identity from tmpfs. It then ejects
+the ISO, reboots from disk and verifies the btrfs root and active comin service.
+It refuses to reinstall a VM already in OpenTofu state. Subsequent applies
+with `installer_iso_path` set default to disk boot; only the initial install
+passes `boot_from_disk=false`.
+
+The host polls `comin-rollout-plan` for now, not `master`. Its per-host
+`testing-nale` branch uses comin's `test` operation.
 
 ## Destroy
 

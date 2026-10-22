@@ -30,7 +30,7 @@ variable "installer_iso_path" {
 }
 
 variable "boot_from_disk" {
-  description = "false while installing from the ISO, true once NixOS is on scsi0."
+  description = "Boot the installed system by default; set false only during initial installation."
   type        = bool
-  default     = false
+  default     = true
 }

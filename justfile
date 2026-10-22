@@ -35,7 +35,12 @@ vm-install host="nale":
   iso="$(nix build --no-link --print-out-paths .#{{host}}-installer-iso)/iso/{{host}}-installer.iso"
 
   tofu -chdir={{tofu_dir}} init -input=false
-  tofu -chdir={{tofu_dir}} apply -auto-approve -input=false -var="installer_iso_path=$iso"
+  if tofu -chdir={{tofu_dir}} state show proxmox_virtual_environment_vm.nale >/dev/null 2>&1; then
+    echo "nale already managed by OpenTofu; refusing to reinstall its disk" >&2
+    exit 1
+  fi
+  tofu -chdir={{tofu_dir}} apply -auto-approve -input=false \
+    -var="installer_iso_path=$iso" -var="boot_from_disk=false"
 
   echo "waiting for the installer to report an address"
   for _ in $(seq 1 60); do
@@ -51,18 +56,43 @@ vm-install host="nale":
   # The host's sops identity rides along in tmpfs so sops-nix can decrypt on
   # first boot; it never touches disk on this machine.
   extra="$(mktemp -d -p /dev/shm)"
-  trap 'find "$extra" -type f -exec shred -u {} +; rm -rf "$extra"' EXIT
+  ssh_hosts="$(mktemp -p /dev/shm)"
+  trap 'find "$extra" -type f -exec shred -u {} +; rm -rf "$extra"; rm -f "$ssh_hosts"' EXIT
   install -d -m 700 "$extra/var/lib/sops-nix"
   sops -d --input-type binary --output-type binary \
     modules/hosts/{{host}}/age-key.sops > "$extra/var/lib/sops-nix/key.txt"
+  chmod 600 "$extra/var/lib/sops-nix/key.txt"
 
   nixos-anywhere --flake .#{{host}} \
+    --phases disko,install \
+    --ssh-option "UserKnownHostsFile=$ssh_hosts" \
+    --ssh-option StrictHostKeyChecking=accept-new \
     --extra-files "$extra" --chown /var/lib/sops-nix 0:0 \
     "root@$ip"
 
   # Detach the installer so the VM boots what disko just wrote.
   tofu -chdir={{tofu_dir}} apply -auto-approve -input=false \
     -var="installer_iso_path=$iso" -var="boot_from_disk=true"
+
+  # Switching boot order does not guarantee that PVE reboots an already-running
+  # installer. Reboot explicitly only after the ISO has been ejected.
+  printf 'header = "Authorization: PVEAPIToken=%s"\n' "$PROXMOX_VE_API_TOKEN" |
+    curl -fsS --config - -X POST "{{pve_url}}/api2/json/nodes/roshar/qemu/120/status/reboot" |
+    jq -r '.data'
+
+  for _ in $(seq 1 60); do
+    if ssh -o BatchMode=yes -o ConnectTimeout=5 \
+      -o "UserKnownHostsFile=$ssh_hosts" -o StrictHostKeyChecking=accept-new \
+      "root@{{host}}.local.ryk.sh" \
+      'test "$(findmnt -n -o FSTYPE /)" = btrfs && systemctl is-active --quiet comin' \
+      >/dev/null 2>&1; then
+      echo "{{host}} booted NixOS from disk; comin active"
+      exit 0
+    fi
+    sleep 5
+  done
+  echo "{{host}} did not boot the installed system" >&2
+  exit 1
 
 # What each comin host is running right now.
 comin-status +hosts:

@@ -2,7 +2,7 @@
 {
   # Minimal first-boot system for the Proxmox CT template. It comes up on the
   # network with SSH; comin (added on top in `_image.nix`) pulls the real
-  # `ishar` closure from master on its first poll.
+  # `ishar` closure from the configured pilot branch on its first poll.
   #
   # `lxc-container.nix`, not `proxmox-lxc.nix`: see hoid/_seed.nix for why
   # (register-nix-paths, systemd-udev-trigger, veth DHCP).

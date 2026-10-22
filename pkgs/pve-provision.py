@@ -20,11 +20,11 @@ import hashlib
 import http.client
 import json
 import os
-import shutil
 import socket
 import ssl
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.parse
 import uuid
@@ -314,7 +314,7 @@ def container_address(pve, node, vmid, timeout=120):
         time.sleep(5)
 
 
-def wait_for_ssh(host, user, timeout=300):
+def wait_for_ssh(host, user, known_hosts, timeout=300):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         try:
@@ -327,6 +327,8 @@ def wait_for_ssh(host, user, timeout=300):
                     "BatchMode=yes",
                     "-o",
                     "StrictHostKeyChecking=accept-new",
+                    "-o",
+                    f"UserKnownHostsFile={known_hosts}",
                     "-o",
                     "ConnectTimeout=5",
                     f"{user}@{host}",
@@ -360,7 +362,7 @@ def read_age_identity(key_file=None, sops_file=None):
     return key
 
 
-def install_age_key(host, user, key):
+def install_age_key(host, user, key, known_hosts):
     """Push the host's sops-nix age identity.
 
     This is what removes the chicken-and-egg: the identity is generated once,
@@ -375,26 +377,13 @@ def install_age_key(host, user, key):
             "BatchMode=yes",
             "-o",
             "StrictHostKeyChecking=accept-new",
+            "-o",
+            f"UserKnownHostsFile={known_hosts}",
             f"{user}@{host}",
             "install -d -m 0755 /var/lib/sops-nix && "
             "install -m 0600 /dev/stdin /var/lib/sops-nix/key.txt",
         ],
         input=key,
-        check=True,
-    )
-
-
-def deploy(attr, host, user):
-    log(f"deploying {attr} to {host}")
-    subprocess.run(
-        [
-            "nixos-rebuild",
-            "switch",
-            "--flake",
-            attr,
-            "--target-host",
-            f"{user}@{host}",
-        ],
         check=True,
     )
 
@@ -476,9 +465,9 @@ def cmd_create(pve, args):
 
     target = args.ssh_host or args.hostname
     want_key = args.age_key_file or args.age_key_sops
-    if want_key or args.deploy:
+    if want_key:
         if not args.start:
-            raise ProvisionError("--age-key-*/--deploy require the container to start")
+            raise ProvisionError("--age-key-* requires the container to start")
         if not args.ssh_host:
             try:
                 socket.getaddrinfo(target, 22)
@@ -492,14 +481,18 @@ def cmd_create(pve, args):
                     )
                 log(f"{target} does not resolve yet; using {address}")
                 target = address
-        log(f"waiting for ssh on {target}")
-        if not wait_for_ssh(target, args.ssh_user):
-            raise ProvisionError(f"no ssh on {target} after the container started")
-        if want_key:
+        # DHCP addresses are reused. A previous guest's key in the operator's
+        # known_hosts must not block a new CT, but all SSH steps in this run
+        # must still agree on the new guest's key.
+        with tempfile.TemporaryDirectory(prefix="pve-provision-") as ssh_dir:
+            known_hosts = os.path.join(ssh_dir, "known_hosts")
+            with open(known_hosts, "x"):
+                pass
+            log(f"waiting for ssh on {target}")
+            if not wait_for_ssh(target, args.ssh_user, known_hosts):
+                raise ProvisionError(f"no ssh on {target} after the container started")
             key = read_age_identity(args.age_key_file, args.age_key_sops)
-            install_age_key(target, args.ssh_user, key)
-        if args.deploy:
-            deploy(args.deploy, target, args.ssh_user)
+            install_age_key(target, args.ssh_user, key, known_hosts)
 
     print(
         json.dumps(
@@ -628,7 +621,6 @@ def parse_args(argv):
         "--age-key-sops",
         help="sops-encrypted age identity (decrypted in memory, never written locally)",
     )
-    create.add_argument("--deploy", help="flake attr to nixos-rebuild onto the new CT")
     create.add_argument("--dry-run", action="store_true")
     create.set_defaults(func=cmd_create)
 
@@ -650,8 +642,6 @@ def main(argv=None):
     try:
         if not args.url:
             raise ProvisionError("set PVE_API_URL or pass --url")
-        if getattr(args, "deploy", None) and not shutil.which("nixos-rebuild"):
-            raise ProvisionError("--deploy needs nixos-rebuild on PATH")
         pve = Pve(
             args.url,
             read_token(args),

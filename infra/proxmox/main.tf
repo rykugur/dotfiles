@@ -69,7 +69,9 @@ resource "proxmox_virtual_environment_vm" "nale" {
   }
 
   cdrom {
-    file_id = proxmox_virtual_environment_file.nale_installer.id
+    # The provider ignores the deprecated `enabled` flag; use `none` to
+    # actually eject the installer once disko has installed the system.
+    file_id = var.boot_from_disk ? "none" : proxmox_virtual_environment_file.nale_installer.id
   }
 
   network_device {
@@ -81,9 +83,9 @@ resource "proxmox_virtual_environment_vm" "nale" {
     enabled = true
   }
 
-  # Installer first; flip to disk-only once nixos-anywhere has run (see
-  # README.md), which also proves the system boots on its own bootloader.
-  boot_order = var.boot_from_disk ? ["scsi0"] : ["ide3", "scsi0"]
+  # PVE retains the empty IDE drive in the boot-order list after ejecting its
+  # ISO. Boot the installed disk first; the empty IDE drive cannot boot.
+  boot_order = var.boot_from_disk ? ["scsi0", "ide3"] : ["ide3", "scsi0"]
 
   operating_system {
     type = "l26"
