@@ -39,7 +39,7 @@ in
 
           users.${username} = {
             # `login-shell` already imports the shared `shell` module for this
-            # user, which is what declares ryk.defaultShell.
+            # user (nushell + fish companion).
             imports = with hmModules; [
               helix
               helix-lxc
@@ -53,8 +53,6 @@ in
               tmux
               oh-my-pi
             ];
-
-            ryk.defaultShell = "nushell";
 
             # The shared `nushell` module sources `~/.dotfiles/configs/nu`,
             # which on a workstation is a symlink into the checkout. Hoid has

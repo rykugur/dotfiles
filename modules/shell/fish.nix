@@ -1,8 +1,8 @@
 { ... }:
 {
   flake.modules.homeManager.fish =
-    { config, lib, pkgs, ... }:
-    lib.mkIf (builtins.elem config.ryk.defaultShell [ "fish" "nushell" ]) {
+    { pkgs, ... }:
+    {
       home.packages = with pkgs; [
         babelfish
 

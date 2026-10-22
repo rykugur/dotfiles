@@ -8,13 +8,6 @@
       ...
     }:
     let
-      shellCmd =
-        {
-          fish = "fish";
-          nushell = "nu";
-          bash = "bash";
-        }
-        .${config.osConfig.ryk.defaultShell or "nushell"};
       herdrNavigatorPlugin = "${pkgs.herdr-navigator}/share/herdr/plugins/herdr-navigator";
     in
     {
@@ -26,89 +19,8 @@
       # at the tracked dotfile instead; herdr writes through the symlink, so
       # runtime changes land in the repo.
       programs.herdr.enable = true;
-      programs.herdr.settings = {
-        terminal.default_shell = shellCmd;
-        # Herdr defaults to Catppuccin implicitly, but plugins can only inherit
-        # a theme named in config. Navigator maps this name to Catppuccin Mocha.
-        theme.name = "catppuccin";
-        ui = {
-          pane_borders = true;
-          pane_gaps = true;
-          show_agent_labels_on_pane_borders = true;
-          status_indicators = "symbols";
-          # Agent panel: two rows per agent. Row 1 is the locator
-          # (state icon / space / tab). Row 2 is the pane's terminal title,
-          # which omp sets to its session title ("VASH: Stop Vasher LXC
-          # thrashing"), so the panel says what each agent is working on.
-          # The default row 2 (agent kind) is dropped because every pane here
-          # runs omp. Sorting stays "spaces", so rows of the same space stay
-          # adjacent; Herdr 0.9.1 has no group headers.
-          sidebar_width = 32;
-          sidebar_max_width = 40;
-          agent_panel_sort = "spaces";
-          # Two-row entries need a blank separator row to stay legible.
-          sidebar.agents.row_gap = 1;
-          sidebar.spaces.row_gap = 1;
-          sidebar.agents.rows = [
-            [
-              "state_icon"
-              {
-                token = "workspace";
-                dim = true;
-              }
-              "tab"
-            ]
-            [ "terminal_title_stripped" ]
-          ];
-          toast = {
-            delivery = "herdr";
-            delay_seconds = 1;
-            herdr.position = "bottom-right";
-          };
-        };
-        keys = {
-          previous_tab = [
-            "prefix+h"
-            "alt+h"
-          ];
-          next_tab = [
-            "prefix+l"
-            "alt+l"
-          ];
-          move_tab_previous = [
-            "prefix+ctrl+h"
-            "alt+shift+h"
-          ];
-          move_tab_next = [
-            "prefix+ctrl+l"
-            "alt+shift+l"
-          ];
-          focus_pane_left = [
-            "prefix+shift+h"
-            "ctrl+shift+h"
-          ];
-          focus_pane_down = [
-            "prefix+shift+j"
-            "ctrl+shift+j"
-          ];
-          focus_pane_up = [
-            "prefix+shift+k"
-            "ctrl+shift+k"
-          ];
-          focus_pane_right = [
-            "prefix+shift+l"
-            "ctrl+shift+l"
-          ];
-          command = [
-            {
-              key = "prefix+t";
-              type = "plugin_action";
-              command = "herdr-navigator.open";
-              description = "jump to anything";
-            }
-          ];
-        };
-      };
+      xdg.configFile."herdr/config.toml".source =
+        config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dotfiles/configs/herdr/config.toml";
 
       # Keep the OMP lifecycle extension in lockstep with the configured Herdr binary.
       # `herdr integration install omp` errors out if the extensions dir is missing,

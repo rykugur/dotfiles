@@ -57,12 +57,6 @@
         "default"
       ];
 
-      mkCompletion =
-        shell:
-        pkgs.runCommand "omp-${shell}-completion" { nativeBuildInputs = [ ohMyPi ]; } ''
-          export HOME="$TMPDIR"
-          omp completions ${shell} > "$out"
-        '';
     in
     {
       imports = [ inputs.oh-my-pi.homeManagerModules.default ];
@@ -81,55 +75,40 @@
         '';
       };
 
-      config = lib.mkMerge [
-        {
-          # Enable the upstream module for the package only. Do not set
-          # `programs.omp.settings` — that copies a generated YAML over
-          # ~/.omp/agent/config.yml and wipes oauth / onboarding / runtime state.
-          programs.omp.enable = true;
+      config = {
+        # Enable the upstream module for the package only. Do not set
+        # `programs.omp.settings` — that copies a generated YAML over
+        # ~/.omp/agent/config.yml and wipes oauth / onboarding / runtime state.
+        programs.omp.enable = true;
 
-          home.file = {
-            ".omp/agent/AGENTS.md".source = ./AGENTS.md;
-            ".omp/agent/mcp.json".text = builtins.toJSON {
-              mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
-            };
-            # Escape stays free for autocomplete/modal dismissal; F9 is the
-            # muscle-memory-safe cancel-turn chord for vim/helix users who
-            # reach for Esc out of habit.
-            ".omp/agent/keybindings.yml".text = builtins.toJSON {
-              "app.interrupt" = "F9";
-            };
-          }
-          // skillFiles;
-          home.activation.ohMyPiModelConfiguration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            run ${ohMyPi}/bin/omp config set modelRoles ${lib.escapeShellArg (builtins.toJSON modelRoles)}
-            run ${ohMyPi}/bin/omp config set retry.fallbackChains ${lib.escapeShellArg (builtins.toJSON fallbackChains)}
-            run ${ohMyPi}/bin/omp config set symbolPreset ${lib.escapeShellArg symbolPreset}
-            run ${ohMyPi}/bin/omp config set theme.dark ${lib.escapeShellArg themeDark}
-            run ${ohMyPi}/bin/omp config set memory.backend ${lib.escapeShellArg memoryBackend}
-            run ${ohMyPi}/bin/omp config set mnemopi.scoping ${lib.escapeShellArg mnemopiScoping}
-            run ${ohMyPi}/bin/omp config set cycleOrder ${lib.escapeShellArg (builtins.toJSON cycleOrder)}
-          '';
-
-          home.activation.ohMyPiBroker = lib.mkIf (config.ryk.omp.broker.url != null) (
-            lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              run ${ohMyPi}/bin/omp config set auth.broker.url ${lib.escapeShellArg config.ryk.omp.broker.url}
-            ''
-          );
-        }
-
-        (lib.mkIf (config.ryk.defaultShell == "fish") {
-          xdg.configFile."fish/completions/omp.fish".source = mkCompletion "fish";
-        })
-
-        (lib.mkIf (config.ryk.defaultShell == "bash") {
-          programs.bash = {
-            enable = true;
-            enableCompletion = true;
+        home.file = {
+          ".omp/agent/AGENTS.md".source = ./AGENTS.md;
+          ".omp/agent/mcp.json".text = builtins.toJSON {
+            mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
           };
+          # Escape stays free for autocomplete/modal dismissal; F9 is the
+          # muscle-memory-safe cancel-turn chord for vim/helix users who
+          # reach for Esc out of habit.
+          ".omp/agent/keybindings.yml".text = builtins.toJSON {
+            "app.interrupt" = "F9";
+          };
+        }
+        // skillFiles;
+        home.activation.ohMyPiModelConfiguration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          run ${ohMyPi}/bin/omp config set modelRoles ${lib.escapeShellArg (builtins.toJSON modelRoles)}
+          run ${ohMyPi}/bin/omp config set retry.fallbackChains ${lib.escapeShellArg (builtins.toJSON fallbackChains)}
+          run ${ohMyPi}/bin/omp config set symbolPreset ${lib.escapeShellArg symbolPreset}
+          run ${ohMyPi}/bin/omp config set theme.dark ${lib.escapeShellArg themeDark}
+          run ${ohMyPi}/bin/omp config set memory.backend ${lib.escapeShellArg memoryBackend}
+          run ${ohMyPi}/bin/omp config set mnemopi.scoping ${lib.escapeShellArg mnemopiScoping}
+          run ${ohMyPi}/bin/omp config set cycleOrder ${lib.escapeShellArg (builtins.toJSON cycleOrder)}
+        '';
 
-          home.file.".local/share/bash-completion/completions/omp".source = mkCompletion "bash";
-        })
-      ];
+        home.activation.ohMyPiBroker = lib.mkIf (config.ryk.omp.broker.url != null) (
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            run ${ohMyPi}/bin/omp config set auth.broker.url ${lib.escapeShellArg config.ryk.omp.broker.url}
+          ''
+        );
+      };
     };
 }

@@ -241,8 +241,6 @@ let
 
                 programs.ghostty.settings.window-decoration = "none";
 
-                ryk.defaultShell = "nushell";
-
                 xdg.enable = true;
                 programs.home-manager.enable = true;
 
