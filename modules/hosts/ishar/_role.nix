@@ -64,5 +64,7 @@ in
     jq
   ];
 
+  users.motd = "ishar — comin pilot, deployed from git. Do not nixos-rebuild.\n";
+
   system.stateVersion = "26.05";
 }
