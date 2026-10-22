@@ -12,5 +12,6 @@
 
 ## System Configuration
 
-- Never run a command that activates or changes the current NixOS, nix-darwin, or Home Manager configuration. This rule includes live `nixos-rebuild`, `darwin-rebuild`, and `home-manager switch` runs.
-- Commands that only evaluate, build, check, or perform a dry run are allowed. `nix flake check` is allowed.
+- Never run a command that activates or changes the CURRENT machine's NixOS, nix-darwin, or Home Manager configuration — i.e. no `--target-host`/remote target, or any invocation defaulting to the local system. This rule includes live `nixos-rebuild switch`/`boot`, `darwin-rebuild switch`, and `home-manager switch` runs against the machine the agent is running on.
+- Activating a REMOTE host (`nixos-rebuild`/`darwin-rebuild switch --target-host <other-host>`, never the current machine) is allowed, but only after asking and receiving explicit permission for that specific run. Do not run a remote switch unprompted, and do not treat an earlier approval as standing permission for a later run.
+- Commands that only evaluate, build, check, or perform a dry run are allowed, for local or remote targets. `nix flake check` is allowed.
