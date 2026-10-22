@@ -14,3 +14,9 @@ __pycache__/
 *.py[cod]
 
 result
+
+# OpenTofu state for infra/proxmox: machine-local, holds vmids and volume ids.
+# `.terraform.lock.hcl` is deliberately NOT ignored: it pins provider hashes.
+.terraform/
+*.tfstate
+*.tfstate.*
