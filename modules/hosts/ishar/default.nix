@@ -10,21 +10,8 @@
     modules = [
       self.modules.nixos.nix-defaults
       self.modules.nixos.vasher-cache
-      inputs.home-manager.nixosModules.home-manager
-      {
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          extraSpecialArgs = { inherit inputs; };
-          users.dusty = {
-            imports = with self.modules.homeManager; [
-              helix
-              helix-lxc
-            ];
-            home.stateVersion = "26.05";
-          };
-        };
-      }
+      self.modules.nixos.meta
+      self.modules.nixos.helix-guest
       self.modules.nixos.comin
       ./_role.nix
       ./_platform-lxc.nix

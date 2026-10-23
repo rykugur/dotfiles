@@ -3,10 +3,13 @@
 # change after that arrives through comin, pulling the public repo over
 # HTTPS with no credential. See [[OpenRig Agent World]] in Arcanum.
 #
-# Deliberately NOT importing `self.modules.nixos.vasher-cache`, any
-# Tailscale module, or home-manager for Dusty's user: this guest gets
-# nothing of Dusty's. Its only secret is its own dedicated OpenRouter key,
-# added later by Dusty directly into `secrets.yaml`.
+# Deliberately NOT importing `self.modules.nixos.vasher-cache` or any
+# Tailscale module: this guest reaches nothing on the LAN. Its only secret
+# is its own dedicated OpenRouter key, added later by Dusty directly into
+# `secrets.yaml`. Home-manager was excluded for the same reason until
+# a3cf6241 gave Dusty his own login here; `helix-guest` is editor config
+# only — no keys, no cache, no outbound credential — so it carries none of
+# that isolation.
 { inputs, self, ... }:
 {
   imports = [ ./_installer.nix ];
@@ -17,6 +20,8 @@
       self.modules.nixos.nix-defaults
       self.modules.nixos.pve-vm
       self.modules.nixos.comin
+      self.modules.nixos.meta
+      self.modules.nixos.helix-guest
       ./_disko.nix
       ./_role.nix
       ./_world.nix

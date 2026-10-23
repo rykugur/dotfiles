@@ -19,6 +19,7 @@ in
       self.modules.nixos.meta
       self.modules.nixos.login-shell
       self.modules.nixos.vasher-cache
+      self.modules.nixos.helix-guest
       self.modules.nixos.helix-root
       self.modules.nixos.omp-host
 
@@ -41,8 +42,6 @@ in
             # `login-shell` already imports the shared `shell` module for this
             # user (nushell + fish companion).
             imports = with hmModules; [
-              helix
-              helix-lxc
               git
               starship
               zoxide
