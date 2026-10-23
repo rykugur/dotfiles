@@ -20,7 +20,6 @@
       ./_disko.nix
       ./_role.nix
       ./_world.nix
-      ./_comin-branch.nix
     ];
     specialArgs = { inherit inputs; };
   };
