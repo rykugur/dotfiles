@@ -35,6 +35,18 @@ vm-install host:
   export PROXMOX_VE_API_TOKEN="$(cat {{pve_token}})"
   iso="$(nix build --no-link --print-out-paths .#{{host}}-installer-iso)/iso/{{host}}-installer.iso"
 
+  # Hosts with a dedicated keypair (not Dusty's ambient default identity,
+  # e.g. elantris) need it named explicitly, or every ssh attempt --
+  # including nixos-anywhere's internal ssh-copy-id -- fails with
+  # "Permission denied" against an installer that only trusts that key.
+  identity="$HOME/.config/{{host}}/admin_ed25519"
+  ssh_identity_opts=()
+  plain_ssh_identity_opts=()
+  if [[ -f "$identity" ]]; then
+    ssh_identity_opts=(--ssh-option "IdentityFile=$identity" --ssh-option "IdentitiesOnly=yes")
+    plain_ssh_identity_opts=(-o "IdentityFile=$identity" -o "IdentitiesOnly=yes")
+  fi
+
   tofu -chdir={{tofu_dir}} init -input=false
   if tofu -chdir={{tofu_dir}} state show "proxmox_virtual_environment_vm.{{host}}" >/dev/null 2>&1; then
     echo "{{host}} already managed by OpenTofu; refusing to reinstall its disk" >&2
@@ -68,6 +80,7 @@ vm-install host:
     --phases disko,install \
     --ssh-option "UserKnownHostsFile=$ssh_hosts" \
     --ssh-option StrictHostKeyChecking=accept-new \
+    "${ssh_identity_opts[@]}" \
     --extra-files "$extra" --chown /var/lib/sops-nix 0:0 \
     "root@$ip"
 
@@ -85,6 +98,7 @@ vm-install host:
   for _ in $(seq 1 60); do
     if ssh -o BatchMode=yes -o ConnectTimeout=5 \
       -o "UserKnownHostsFile=$ssh_hosts" -o StrictHostKeyChecking=accept-new \
+      "${plain_ssh_identity_opts[@]}" \
       "root@{{host}}.local.ryk.sh" \
       'test "$(findmnt -n -o FSTYPE /)" = btrfs && systemctl is-active --quiet comin' \
       >/dev/null 2>&1; then
