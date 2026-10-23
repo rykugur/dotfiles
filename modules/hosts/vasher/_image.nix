@@ -1,14 +1,16 @@
 { inputs, ... }:
 {
   perSystem =
-    { pkgs, system, ... }:
+    { lib, system, ... }:
     {
-      packages = pkgs.lib.optionalAttrs (system == "x86_64-linux") {
-        vasher-lxc-image = inputs.nixos-generators.nixosGenerate {
-          inherit pkgs;
-          format = "proxmox-lxc";
-          modules = [ ./_seed.nix ];
-        };
+      # `proxmox-lxc.nix` builds the CT template itself, so this needs no
+      # nixos-generators (deprecated since its upstreaming in 25.05).
+      packages = lib.optionalAttrs (system == "x86_64-linux") {
+        vasher-lxc-image =
+          (inputs.nixpkgs.lib.nixosSystem {
+            inherit system;
+            modules = [ ./_seed.nix ];
+          }).config.system.build.tarball;
       };
     };
 }

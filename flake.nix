@@ -14,8 +14,14 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     import-tree.url = "github:vic/import-tree";
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
+
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

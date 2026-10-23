@@ -1,0 +1,30 @@
+name: whimsy
+version: "1.0"
+description: A Shard's Intent, resident in the world — see guidance/role.md
+
+defaults:
+  runtime: omp
+  model: opencode-go/deepseek-v4.1-flash
+  lifecycle:
+    restore_policy: resume_if_possible
+
+profiles:
+  default:
+    uses:
+      skills: []
+      guidance: [role]
+      subagents: []
+      plugins: []
+      runtime_resources: []
+
+resources:
+  guidance:
+    - id: role
+      path: guidance/role.md
+
+startup:
+  files:
+    - path: guidance/role.md
+      delivery_hint: send_text
+      required: true
+  actions: []
