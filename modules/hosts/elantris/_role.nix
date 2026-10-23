@@ -23,6 +23,11 @@ in
   time.timeZone = "America/Chicago";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  # Safety net for the same OOM: compressed swap in RAM, so a single large
+  # Rust crate spikes into zram instead of killing comin. Costs no host
+  # memory, and avoids btrfs swapfile handling on the disko layout.
+  zramSwap.enable = true;
+
   nix.settings = {
     experimental-features = [
       "nix-command"
@@ -34,7 +39,14 @@ in
       "world"
       "dusty"
     ];
-    max-jobs = 2;
+    # comin builds locally here (no vasher cache — this host can't reach the
+    # LAN by design), and OMP comes from a flake input that isn't on
+    # cache.nixos.org, so it compiles from source including Rust deps. At
+    # max-jobs=2 that peaked 7.2G and the kernel OOM-killed comin on this
+    # 8G guest. roshar has no spare RAM to grow the VM into (26/31G used),
+    # so cap concurrency instead.
+    max-jobs = 1;
+    cores = 2;
   };
 
   sops = {
