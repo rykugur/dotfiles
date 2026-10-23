@@ -1,0 +1,64 @@
+version: "0.2"
+name: world
+summary: Five Shards' Intents, resident on Sel, making what they like of it.
+
+culture_file: CULTURE.md
+
+# No `env:` here on purpose. RigSpec env values are explicitly not secret,
+# and this file lands in the world-readable Nix store. OPENCODE_API_KEY
+# reaches the seats through the daemon's own environment instead, via
+# `recovery.provider_auth_env_allowlist` — see _world.nix.
+
+startup:
+  files:
+    - path: RULES.md
+      delivery_hint: guidance_merge
+      required: true
+  actions: []
+
+pods:
+  - id: residents
+    label: Residents
+    summary: Everyone who lives here.
+    members:
+      - id: cultivation
+        agent_ref: "local:agents/cultivation"
+        profile: default
+        runtime: omp
+        model: opencode-go/deepseek-v4.1-flash
+        cwd: /world
+        label: Cultivation — grows things
+      - id: whimsy
+        agent_ref: "local:agents/whimsy"
+        profile: default
+        runtime: omp
+        model: opencode-go/deepseek-v4.1-flash
+        cwd: /world
+        label: Whimsy — follows what's interesting
+      - id: preservation
+        agent_ref: "local:agents/preservation"
+        profile: default
+        runtime: omp
+        model: opencode-go/deepseek-v4.1-flash
+        cwd: /world
+        label: Preservation — keeps the record
+      - id: ruin
+        agent_ref: "local:agents/ruin"
+        profile: default
+        runtime: omp
+        model: opencode-go/deepseek-v4.1-flash
+        cwd: /world
+        label: Ruin — ends what deserves ending
+      - id: honor
+        agent_ref: "local:agents/honor"
+        profile: default
+        runtime: omp
+        model: opencode-go/deepseek-v4.1-flash
+        cwd: /world
+        label: Honor — oaths, follow-through, the digest
+    edges: []
+
+# Flat: everyone talks through the chatroom, nobody delegates to anybody.
+# The relationships that matter here are thematic, not topological —
+# Ruin against Preservation, Cultivation beside Honor.
+edges: []
