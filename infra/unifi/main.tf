@@ -27,6 +27,15 @@ resource "unifi_network" "world" {
   subnet = "${var.world_gateway_ip}/${var.world_prefix_length}"
   vlan   = var.world_vlan_id
 
+  # Required to publish <name>.local.ryk.sh in LAN DNS (confirmed live
+  # 2026-10-23: without it, UniFi registered the DHCP client as
+  # "elantris 42:2a" — disambiguated/MAC-suffixed rather than a clean
+  # resolvable name — and never answered the FQDN at all, even queried
+  # directly). The Integration API's read-back of this field is
+  # unreliable (showed domainName=null for nale's working network too);
+  # Dusty confirmed nale's actual UI setting is "local.ryk.sh".
+  domain_name = "local.ryk.sh"
+
   # The provider's 0.59.0 payload sends setting_preference="" when unset,
   # which the controller rejects with api.err.InvalidValue (confirmed
   # live 2026-10-22). "manual" is required, not just preferred: "auto"
