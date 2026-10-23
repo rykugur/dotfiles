@@ -100,6 +100,13 @@ in
     ];
     wants = [ "network-online.target" ];
     serviceConfig = {
+      # `rig daemon start` is a launcher: it reserves the instance, spawns
+      # the daemon child, verifies its PID, then exits. Under Type=simple
+      # systemd saw the launcher exit and tore the child down with it
+      # ("Daemon child liveness could not be confirmed"). Verified by hand:
+      # run as `world` it starts cleanly and `rig status` reports the
+      # daemon on port 7433.
+      Type = "forking";
       User = user;
       WorkingDirectory = worldDir;
       EnvironmentFile = config.sops.templates."openrig-env".path;
@@ -124,7 +131,7 @@ in
       ${rigCli} config set recovery.provider_auth_env_allowlist '["OPENCODE_API_KEY"]' || true
     '';
     script = ''
-      exec ${rigCli} daemon start --no-kernel
+      ${rigCli} daemon start --no-kernel
     '';
   };
 
