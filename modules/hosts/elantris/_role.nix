@@ -5,6 +5,7 @@
 }:
 let
   sshKeys = import ./_ssh-keys.nix;
+  dustySshKeys = import ../../misc/_dusty-ssh-keys.nix;
 in
 {
   imports = [ inputs.sops-nix.nixosModules.sops ];
@@ -31,6 +32,7 @@ in
     trusted-users = [
       "root"
       "world"
+      "dusty"
     ];
     max-jobs = 2;
   };
@@ -57,6 +59,13 @@ in
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = sshKeys;
+  };
+  # Dusty's own admin login, at his request: inbound SSH only, no outbound
+  # credential or access this guest wouldn't otherwise have.
+  users.users.dusty = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    openssh.authorizedKeys.keys = dustySshKeys;
   };
   security.sudo.wheelNeedsPassword = false;
 
