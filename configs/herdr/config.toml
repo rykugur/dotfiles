@@ -1,3 +1,4 @@
+onboarding = false
 # Symlinked to ~/.config/herdr/config.toml by modules/ai/herdr.nix via
 # mkOutOfStoreSymlink, so herdr can write it at runtime (onboarding state,
 # toast/panel preferences). Runtime edits land here as a git diff — commit or
