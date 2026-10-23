@@ -24,12 +24,34 @@ variable "nale_vm_id" {
   default = 120
 }
 
-variable "installer_iso_path" {
+variable "nale_installer_iso_path" {
   description = "Result of `nix build .#nale-installer-iso` (…/iso/nale-installer.iso)."
   type        = string
 }
 
-variable "boot_from_disk" {
+variable "nale_boot_from_disk" {
+  description = "Boot the installed system by default; set false only during initial installation."
+  type        = bool
+  default     = true
+}
+
+variable "elantris_vm_id" {
+  type    = number
+  default = 121
+}
+
+variable "elantris_vlan_id" {
+  description = "World VLAN, see infra/unifi. Tagged on vmbr0; untagged (no vlan_id) is the default/native VLAN nale uses."
+  type        = number
+  default     = 199
+}
+
+variable "elantris_installer_iso_path" {
+  description = "Result of `nix build .#elantris-installer-iso` (…/iso/elantris-installer.iso)."
+  type        = string
+}
+
+variable "elantris_boot_from_disk" {
   description = "Boot the installed system by default; set false only during initial installation."
   type        = bool
   default     = true

@@ -27,8 +27,8 @@ destroy vmid:
   PVE_API_TOKEN="$(cat {{pve_token}})" PVE_API_URL="{{pve_url}}" \
   nix run .#pve-provision -- destroy {{vmid}} --force-stop
 
-# Create the nale VM and install NixOS onto it, headless end to end.
-vm-install host="nale":
+# Create a VM and install NixOS onto it, headless end to end (nale, elantris, ...).
+vm-install host:
   #!/usr/bin/env bash
   set -euo pipefail
   umask 077
@@ -36,12 +36,12 @@ vm-install host="nale":
   iso="$(nix build --no-link --print-out-paths .#{{host}}-installer-iso)/iso/{{host}}-installer.iso"
 
   tofu -chdir={{tofu_dir}} init -input=false
-  if tofu -chdir={{tofu_dir}} state show proxmox_virtual_environment_vm.nale >/dev/null 2>&1; then
-    echo "nale already managed by OpenTofu; refusing to reinstall its disk" >&2
+  if tofu -chdir={{tofu_dir}} state show "proxmox_virtual_environment_vm.{{host}}" >/dev/null 2>&1; then
+    echo "{{host}} already managed by OpenTofu; refusing to reinstall its disk" >&2
     exit 1
   fi
   tofu -chdir={{tofu_dir}} apply -auto-approve -input=false \
-    -var="installer_iso_path=$iso" -var="boot_from_disk=false"
+    -var="{{host}}_installer_iso_path=$iso" -var="{{host}}_boot_from_disk=false"
 
   echo "waiting for the installer to report an address"
   for _ in $(seq 1 60); do
@@ -49,7 +49,7 @@ vm-install host="nale":
       | jq -r 'flatten | map(select(. != "127.0.0.1" and . != "")) | first // empty')"
     [[ -n "$ip" ]] && break
     sleep 5
-    tofu -chdir={{tofu_dir}} refresh -input=false -var="installer_iso_path=$iso" >/dev/null
+    tofu -chdir={{tofu_dir}} refresh -input=false -var="{{host}}_installer_iso_path=$iso" >/dev/null
   done
   [[ -n "${ip:-}" ]] || { echo "no address from the guest agent" >&2; exit 1; }
   echo "installer at $ip"
@@ -73,12 +73,13 @@ vm-install host="nale":
 
   # Detach the installer so the VM boots what disko just wrote.
   tofu -chdir={{tofu_dir}} apply -auto-approve -input=false \
-    -var="installer_iso_path=$iso" -var="boot_from_disk=true"
+    -var="{{host}}_installer_iso_path=$iso" -var="{{host}}_boot_from_disk=true"
 
   # Switching boot order does not guarantee that PVE reboots an already-running
   # installer. Reboot explicitly only after the ISO has been ejected.
+  vmid="$(tofu -chdir={{tofu_dir}} output -raw {{host}}_vm_id)"
   printf 'header = "Authorization: PVEAPIToken=%s"\n' "$PROXMOX_VE_API_TOKEN" |
-    curl -fsS --config - -X POST "{{pve_url}}/api2/json/nodes/roshar/qemu/120/status/reboot" |
+    curl -fsS --config - -X POST "{{pve_url}}/api2/json/nodes/roshar/qemu/$vmid/status/reboot" |
     jq -r '.data'
 
   for _ in $(seq 1 60); do

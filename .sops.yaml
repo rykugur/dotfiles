@@ -11,6 +11,7 @@ keys:
     - &hoid age1vcun05gc9dw48wkmsll9jydyxm878j80wnasra4kvzyjznev8ykqj5un6f
     - &ishar age1a8rusrt8xle2l397qkhspup8ktc6rt7xk65xqx7gqgkv0yqt4als36aggq
     - &nale age1hjwxz3qq4zaqfg85rm74p2qdhwtv0ka6vxa5a465wy4q2f5gpsksw4qegh
+    - &elantris age15cr5khkyad0arkfw29kzd8klxl0jhx8uawk90grrr4j2fkyhy4msdmtyhu
 
 creation_rules:
   - path_regex: jezrien/secrets.yaml$
@@ -60,6 +61,15 @@ creation_rules:
           - *dusty
           - *nale
   - path_regex: nale/age-key.sops$
+    key_groups:
+      - age:
+          - *dusty
+  - path_regex: elantris/secrets.yaml$
+    key_groups:
+      - age:
+          - *dusty
+          - *elantris
+  - path_regex: elantris/age-key.sops$
     key_groups:
       - age:
           - *dusty
