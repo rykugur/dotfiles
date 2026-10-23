@@ -25,8 +25,9 @@ variable "nale_vm_id" {
 }
 
 variable "nale_installer_iso_path" {
-  description = "Result of `nix build .#nale-installer-iso` (…/iso/nale-installer.iso)."
+  description = "Result of `nix build .#nale-installer-iso` (…/iso/nale-installer.iso). Defaults to the path already in state so installing a different host doesn't require this unrelated value — a real reinstall still overrides it explicitly."
   type        = string
+  default     = "/nix/store/41ilqq8ql56g98277blf1xl7r76h00n7-nale-installer.iso/iso/nale-installer.iso"
 }
 
 variable "nale_boot_from_disk" {
