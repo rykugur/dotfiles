@@ -184,11 +184,16 @@ in
     };
   };
 
-  # The viewer: loopback only. Dusty reaches it over an SSH tunnel, which
-  # keeps the guest's inbound surface to the single SSH port.
+  # The viewer. Reachable directly from jezrien rather than through an SSH
+  # tunnel: the UniFi allow for this VLAN covers tcp/22,8080 from Dusty's
+  # workstation IP only, and everything else inbound still hits the block.
+  # The agents control what lands in /world/www, so this is a (small,
+  # deliberate) widening of what they can serve straight to a browser.
+  networking.firewall.allowedTCPPorts = [ 8080 ];
+
   services.caddy = {
     enable = true;
-    virtualHosts."http://127.0.0.1:8080".extraConfig = ''
+    virtualHosts.":8080".extraConfig = ''
       root * ${worldDir}/www
       file_server browse
     '';

@@ -91,10 +91,10 @@ data "unifi_firewall_zone" "ai_fun" {
   name = "AI Fun"
 }
 
-# --- Inbound: only the approved admin source may open SSH into the world ---
+# --- Inbound: only the approved admin source, only SSH and the viewer ---
 
 resource "unifi_firewall_policy" "allow_admin_ssh_to_world" {
-  name                 = "Allow admin SSH to World"
+  name                 = "Allow admin SSH and viewer to World"
   action               = "ALLOW"
   protocol             = "tcp"
   create_allow_respond = true
@@ -107,9 +107,12 @@ resource "unifi_firewall_policy" "allow_admin_ssh_to_world" {
   }
 
   destination = {
-    zone_id            = unifi_firewall_zone.world.id
-    matching_target    = "ANY"
-    port               = "22"
+    zone_id         = unifi_firewall_zone.world.id
+    matching_target = "ANY"
+    # 22 = SSH, 8080 = the /world/www viewer. Widened from 22-only at
+    # Dusty's request so the viewer is reachable without an SSH tunnel.
+    # Still one source IP; everything else falls through to the block below.
+    port               = "22,8080"
     port_matching_type = "SPECIFIC"
   }
 }
