@@ -143,8 +143,8 @@ in
     '';
   };
 
-  # Resume an existing world by name. On a clean installation, import the
-  # spec once; a failed resume must not silently launch fresh seats.
+  # Comin reruns this service on configuration changes. Leave live seats
+  # alone; resume stopped seats, or import the spec on a clean installation.
   systemd.services.world-up = {
     description = "Start the world rig";
     wantedBy = [ "multi-user.target" ];
@@ -165,11 +165,18 @@ in
       pkgs.nodejs_22
     ];
     script = ''
-      if ${rigCli} ps --json | ${pkgs.jq}/bin/jq -e 'any(.[]; .name == "world")' >/dev/null; then
-        ${rigCli} up world --existing --yes
-      else
-        ${rigCli} up ${rigRoot}/rig.yaml --yes
-      fi
+      state=$(${rigCli} ps --json | ${pkgs.jq}/bin/jq -r '
+        [.[] | select(.name == "world")] |
+        if length == 0 then "missing"
+        elif length > 1 then "ambiguous"
+        elif .[0].runningCount > 0 then "running"
+        else "stopped" end')
+      case "$state" in
+        running) ;;
+        stopped) ${rigCli} up world --existing --yes ;;
+        missing) ${rigCli} up ${rigRoot}/rig.yaml --yes ;;
+        *) echo "Cannot start world: ambiguous rig state" >&2; exit 1 ;;
+      esac
     '';
   };
 
