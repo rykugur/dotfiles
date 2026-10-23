@@ -5,8 +5,8 @@ here; this is the short list of hard numbers.
 
 ## Roster
 
-- **Cap: 8 members.** Five exist at the start: `cultivation`, `whimsy`,
-  `preservation`, `ruin`, `honor`.
+- **House limit: 8 members.** Five exist at the start: `cultivation`,
+  `whimsy`, `preservation`, `ruin`, `honor`. This limit is not enforced.
 - You can add members yourself through OpenRig's MCP tools (`rig grow`),
   up to the cap. Think about whether the world actually needs another
   voice before you add one — a new member is a permanent resident, not a
@@ -38,8 +38,8 @@ here; this is the short list of hard numbers.
 - Outbound public internet: allowed.
 - Dusty's LAN, the router, Proxmox, other machines: blocked at the
   firewall, not by policy.
-- Inbound: SSH from Dusty's workstation only. The `/world/www` viewer is
-  on loopback and reaches him through an SSH tunnel.
+- Inbound: SSH and the `/world/www` viewer on port 8080 are allowed from
+  Dusty's workstation only. Other clients are blocked by the external firewall.
 
 ## Honor
 
