@@ -100,13 +100,20 @@ in
     ];
     wants = [ "network-online.target" ];
     serviceConfig = {
-      # `rig daemon start` is a launcher: it reserves the instance, spawns
-      # the daemon child, verifies its PID, then exits. Under Type=simple
-      # systemd saw the launcher exit and tore the child down with it
-      # ("Daemon child liveness could not be confirmed"). Verified by hand:
-      # run as `world` it starts cleanly and `rig status` reports the
-      # daemon on port 7433.
-      Type = "forking";
+      # Run the daemon itself in the foreground rather than going through
+      # `rig daemon start`. That command is a launcher: it spawns the daemon
+      # child, polls it for liveness, then exits. Under systemd the child
+      # got SIGTERM mid-verification — its own log shows
+      # "listening on http://127.0.0.1:7433" immediately followed by
+      # "received SIGTERM" — so the launcher reported "liveness could not be
+      # confirmed" and the unit flapped. Type=forking didn't help. Invoking
+      # the entrypoint directly makes the daemon systemd's main process,
+      # which is what we actually want for a supervised service.
+      #
+      # This reaches into the package layout, which is acceptable only
+      # because pkgs/openrig.nix pins 0.6.5 in-repo: an upgrade is a
+      # deliberate edit where this path gets re-checked.
+      Type = "simple";
       User = user;
       WorkingDirectory = worldDir;
       EnvironmentFile = config.sops.templates."openrig-env".path;
@@ -131,7 +138,8 @@ in
       ${rigCli} config set recovery.provider_auth_env_allowlist '["OPENCODE_API_KEY"]' || true
     '';
     script = ''
-      ${rigCli} daemon start --no-kernel
+      exec ${pkgs.nodejs_22}/bin/node \
+        ${pkgs.openrig}/lib/node_modules/@openrig/cli/daemon/dist/index.js
     '';
   };
 
