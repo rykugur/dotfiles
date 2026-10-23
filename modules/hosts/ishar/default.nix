@@ -28,7 +28,6 @@
       self.modules.nixos.comin
       ./_role.nix
       ./_platform-lxc.nix
-      ./_comin-branch.nix
     ];
     specialArgs = { inherit inputs; };
   };

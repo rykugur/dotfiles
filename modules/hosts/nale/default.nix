@@ -29,7 +29,6 @@
       self.modules.nixos.comin
       ./_disko.nix
       ./_role.nix
-      ./_comin-branch.nix
       # ./_impermanence.nix — only after comin is proven without it
     ];
     specialArgs = { inherit inputs; };

@@ -13,10 +13,8 @@
         type = lib.types.str;
         default = "master";
         description = ''
-          Remote branch comin deploys from. A pilot host can track its own
-          branch so iterating on it never touches master; flip the value back
-          to "master" (and let the host converge on that commit) before the
-          pilot branch is merged and stops moving.
+          Remote branch comin deploys from. Override this for a pilot branch;
+          remove the override to promote the host to master.
         '';
       };
 
