@@ -143,8 +143,8 @@ in
     '';
   };
 
-  # Bring the world up once the daemon is live. `--existing` resumes the
-  # rig across restarts instead of starting everyone fresh.
+  # Resume an existing world by name. On a clean installation, import the
+  # spec once; a failed resume must not silently launch fresh seats.
   systemd.services.world-up = {
     description = "Start the world rig";
     wantedBy = [ "multi-user.target" ];
@@ -165,8 +165,11 @@ in
       pkgs.nodejs_22
     ];
     script = ''
-      ${rigCli} up ${rigRoot}/rig.yaml --existing --yes || \
+      if ${rigCli} ps --json | ${pkgs.jq}/bin/jq -e 'any(.[]; .name == "world")' >/dev/null; then
+        ${rigCli} up world --existing --yes
+      else
         ${rigCli} up ${rigRoot}/rig.yaml --yes
+      fi
     '';
   };
 
