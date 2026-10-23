@@ -4,6 +4,16 @@ summary: Five Shards' Intents, resident on Sel, making what they like of it.
 
 culture_file: CULTURE.md
 
+# Headless agents can't answer approval prompts. Without a policy these
+# seats launch at the floor (`--approval-mode always-ask` for OMP), and
+# OpenRig's own docs say a headless runner's approval requests are
+# cancelled and the seat parks in needing-attention — so nothing would
+# ever happen. full_bypass is the correct posture here precisely because
+# the VM is the security boundary: these agents are meant to have root
+# and act unattended, and everything that actually constrains them
+# (network, budget) is enforced outside the guest where they can't reach.
+permission_policy: builtin:yolo
+
 # No `env:` here on purpose. RigSpec env values are explicitly not secret,
 # and this file lands in the world-readable Nix store. OPENCODE_API_KEY
 # reaches the seats through the daemon's own environment instead, via
