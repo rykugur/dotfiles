@@ -15,6 +15,23 @@
       self.modules.nixos.nix-defaults
       self.modules.nixos.vasher-cache
       self.modules.nixos.comin
+      inputs.home-manager.nixosModules.home-manager
+      {
+        # Headless box, so Helix takes the same no-Wayland overrides the
+        # containers use.
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          extraSpecialArgs = { inherit inputs; };
+          users.dusty = {
+            imports = with self.modules.homeManager; [
+              helix
+              helix-lxc
+            ];
+            home.stateVersion = "26.05";
+          };
+        };
+      }
       ./_hardware.nix
       ./_disko.nix
       ./_role.nix
