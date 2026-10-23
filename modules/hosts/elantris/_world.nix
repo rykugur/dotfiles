@@ -36,6 +36,14 @@ in
   # The daemon reads OPENCODE_API_KEY from its own environment and hands it
   # to seats whose model is `opencode-go/...` (oh-my-pi's provider map; the
   # allowlist below is what permits it through).
+  #
+  # The secret must be declared, not just referenced: `sops.placeholder.<n>`
+  # only resolves for a declared `sops.secrets.<n>`. Declaring templates
+  # alone left sops-nix with nothing to activate, so /run/secrets was never
+  # created and the daemon died 50+ times on "Failed to load environment
+  # files".
+  sops.secrets.opencode_api_key = { };
+
   sops.templates."openrig-env" = {
     content = ''
       OPENCODE_API_KEY=${config.sops.placeholder.opencode_api_key}
