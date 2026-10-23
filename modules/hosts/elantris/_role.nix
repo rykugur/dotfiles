@@ -23,10 +23,14 @@ in
   time.timeZone = "America/Chicago";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Safety net for the same OOM: compressed swap in RAM, so a single large
-  # Rust crate spikes into zram instead of killing comin. Costs no host
-  # memory, and avoids btrfs swapfile handling on the disko layout.
-  zramSwap.enable = true;
+  # OOM headroom. zram alone is not enough here: a single OMP derivation
+  # (Bun/Zig) peaked ~7.5G of this guest's 7.7G, so compressing RAM into
+  # more RAM doesn't help — it needs somewhere off-RAM to spill. roshar has
+  # no memory to grow the VM into (26/31G used), but the 64G disk is nearly
+  # empty, so 10G of btrfs swapfile is the cheap fix. Created live with
+  # `btrfs filesystem mkswapfile --size 10g /swapfile` (which sets NOCOW
+  # for us); this declaration just makes it survive a generation switch.
+  swapDevices = [ { device = "/swapfile"; } ];
 
   nix.settings = {
     experimental-features = [
