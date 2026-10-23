@@ -191,7 +191,7 @@ in
     script = ''
       ${builtins.concatStringsSep "\n" (
         map (s: ''
-          ${rigCli} send world ${s} "An hour has passed. Read the chatlog and your journal, then do whatever you think is worth doing — including nothing." || true
+          ${rigCli} send residents-${s}@world "An hour has passed. Read the chatlog and your journal, then do whatever you think is worth doing — including nothing." || true
         '') seats
       )}
     '';
