@@ -207,3 +207,75 @@ output "elantris_ipv4" {
 output "elantris_vm_id" {
   value = var.elantris_vm_id
 }
+
+# Independent throwaway for impermanence; deliberately no comin or sops.
+resource "proxmox_virtual_environment_file" "rysn_installer" {
+  content_type = "iso"
+  datastore_id = "local"
+  node_name    = var.node_name
+
+  source_file {
+    path      = var.rysn_installer_iso_path
+    file_name = "rysn-installer.iso"
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "rysn" {
+  name      = "rysn"
+  node_name = var.node_name
+  vm_id     = var.rysn_vm_id
+  pool_id   = var.pool_id
+
+  machine = "q35"
+  bios    = "ovmf"
+
+  cpu {
+    cores = 2
+    type  = "host"
+  }
+  memory {
+    dedicated = 4096
+  }
+  efi_disk {
+    datastore_id = var.disk_datastore_id
+    type         = "4m"
+    file_format  = "raw"
+  }
+  scsi_hardware = "virtio-scsi-single"
+  disk {
+    datastore_id = var.disk_datastore_id
+    interface    = "scsi0"
+    size         = 32
+    discard      = "on"
+    ssd          = true
+    file_format  = "raw"
+  }
+  cdrom {
+    file_id = var.rysn_boot_from_disk ? "none" : proxmox_virtual_environment_file.rysn_installer.id
+  }
+  network_device {
+    bridge = "vmbr0"
+    model  = "virtio"
+  }
+  agent {
+    enabled = true
+  }
+  boot_order = var.rysn_boot_from_disk ? ["scsi0", "ide3"] : ["ide3", "scsi0"]
+  operating_system {
+    type = "l26"
+  }
+  on_boot         = true
+  stop_on_destroy = true
+  lifecycle {
+    ignore_changes = [disk[0].size]
+  }
+}
+
+output "rysn_ipv4" {
+  description = "Addresses reported by the guest agent (installer or installed system)."
+  value       = proxmox_virtual_environment_vm.rysn.ipv4_addresses
+}
+
+output "rysn_vm_id" {
+  value = var.rysn_vm_id
+}

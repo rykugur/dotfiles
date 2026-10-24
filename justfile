@@ -66,22 +66,26 @@ vm-install host:
   [[ -n "${ip:-}" ]] || { echo "no address from the guest agent" >&2; exit 1; }
   echo "installer at $ip"
 
-  # The host's sops identity rides along in tmpfs so sops-nix can decrypt on
-  # first boot; it never touches disk on this machine.
-  extra="$(mktemp -d -p /dev/shm)"
+  # Hosts without sops (rysn's persistence-only phase) need no extra files.
   ssh_hosts="$(mktemp -p /dev/shm)"
-  trap 'find "$extra" -type f -exec shred -u {} +; rm -rf "$extra"; rm -f "$ssh_hosts"' EXIT
-  install -d -m 700 "$extra/var/lib/sops-nix"
-  sops -d --input-type binary --output-type binary \
-    modules/hosts/{{host}}/age-key.sops > "$extra/var/lib/sops-nix/key.txt"
-  chmod 600 "$extra/var/lib/sops-nix/key.txt"
+  trap 'rm -f "$ssh_hosts"' EXIT
+  extra_opts=()
+  if [[ -f "modules/hosts/{{host}}/age-key.sops" ]]; then
+    extra="$(mktemp -d -p /dev/shm)"
+    trap 'find "$extra" -type f -exec shred -u {} +; rm -rf "$extra"; rm -f "$ssh_hosts"' EXIT
+    install -d -m 700 "$extra/var/lib/sops-nix"
+    sops -d --input-type binary --output-type binary \
+      modules/hosts/{{host}}/age-key.sops > "$extra/var/lib/sops-nix/key.txt"
+    chmod 600 "$extra/var/lib/sops-nix/key.txt"
+    extra_opts=(--extra-files "$extra" --chown /var/lib/sops-nix 0:0)
+  fi
 
   nixos-anywhere --flake .#{{host}} \
     --phases disko,install \
     --ssh-option "UserKnownHostsFile=$ssh_hosts" \
     --ssh-option StrictHostKeyChecking=accept-new \
     "${ssh_identity_opts[@]}" \
-    --extra-files "$extra" --chown /var/lib/sops-nix 0:0 \
+    "${extra_opts[@]}" \
     "root@$ip"
 
   # Detach the installer so the VM boots what disko just wrote.
@@ -100,9 +104,9 @@ vm-install host:
       -o "UserKnownHostsFile=$ssh_hosts" -o StrictHostKeyChecking=accept-new \
       "${plain_ssh_identity_opts[@]}" \
       "root@{{host}}.local.ryk.sh" \
-      'test "$(findmnt -n -o FSTYPE /)" = btrfs && systemctl is-active --quiet comin' \
+      'test "$(findmnt -n -o FSTYPE /)" = btrfs && { test "{{host}}" = rysn && findmnt -n /home && findmnt -n /persist || systemctl is-active --quiet comin; }' \
       >/dev/null 2>&1; then
-      echo "{{host}} booted NixOS from disk; comin active"
+      echo "{{host}} booted NixOS from disk"
       exit 0
     fi
     sleep 5
