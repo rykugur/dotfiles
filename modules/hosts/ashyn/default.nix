@@ -17,6 +17,7 @@
       self.modules.nixos.comin
       self.modules.nixos.meta
       self.modules.nixos.helix-guest
+      self.modules.nixos.incus-instances
       ./_hardware.nix
       ./_disko.nix
       ./_role.nix

@@ -51,6 +51,31 @@
     };
   };
 
+  # The guests themselves. `incus-instances.service` reconciles these on every
+  # activation, so a push comin deploys is what changes a VM — no `tofu apply`
+  # from a workstation, no API credential.
+  #
+  # amp: the CubeCoders AMP panel. Debian because AMP ships .deb packages and
+  # installs its own systemd units; nothing about it is Nix-able, so the
+  # declarative boundary is the VM and its disk, with `/home/amp/.ampdata` as
+  # the data to back up.
+  ryk.incus.instances.amp = {
+    image = "images:debian/12";
+    virtualMachine = true;
+    config = {
+      "limits.cpu" = "3";
+      "limits.memory" = "6GiB";
+      # The Debian VM image is unsigned, so OVMF's secureboot rejects it.
+      "security.secureboot" = "false";
+    };
+    devices.root = {
+      type = "disk";
+      path = "/";
+      pool = "local";
+      size = "32GiB";
+    };
+  };
+
   # Incus asserts on iptables; it manages its own nft chains.
   networking.nftables.enable = true;
 
