@@ -66,19 +66,6 @@ let
   # OMP (oh-my-pi) mcp.json schema is the canonical form unchanged.
   toOhMyPi = serverSet: serverSet;
 
-  # Hermes Agent config.yaml `mcp_servers` schema:
-  # stdio: { command; args; env?; }; HTTP: { url; headers?; timeout?; ... }.
-  # See https://hermes-agent.nousresearch.com/docs/reference/mcp-config-reference
-  toHermes =
-    serverSet:
-    lib.mapAttrs (
-      _: s:
-      if s ? command then
-        { inherit (s) command args; } // lib.optionalAttrs (s ? env) { inherit (s) env; }
-      else
-        { inherit (s) url; } // lib.optionalAttrs (s ? timeout) { inherit (s) timeout; }
-    ) serverSet;
-
   # Grok (superagent-ai/grok-cli) mcp config in ~/.grok/user-settings.json
   # under mcp.servers (array of McpServerConfig).
   # See src/utils/settings.ts in grok-cli for the type:
@@ -105,6 +92,5 @@ in
     toOpencode
     toOhMyPi
     toGrok
-    toHermes
     ;
 }

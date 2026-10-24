@@ -127,7 +127,6 @@ let
                   codex
                   herdr
                   zed-editor
-                  hermes-agent
                   oh-my-pi
 
                   # individual modules
