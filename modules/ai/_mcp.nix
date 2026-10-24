@@ -31,7 +31,7 @@ let
     # is too tight.
     arcanum = {
       type = "http";
-      url = "https://arcanum.k8s.local.ryk.sh/mcp";
+      url = "https://mcp.arcanum.k8s.local.ryk.sh/mcp";
       timeout = 90000;
     };
   };
