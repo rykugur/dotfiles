@@ -27,7 +27,7 @@ destroy vmid:
   PVE_API_TOKEN="$(cat {{pve_token}})" PVE_API_URL="{{pve_url}}" \
   nix run .#pve-provision -- destroy {{vmid}} --force-stop
 
-# Create a VM and install NixOS onto it, headless end to end (nale, elantris, ...).
+# Create a VM and install NixOS onto it, headless end to end (elantris, rysn, ...).
 vm-install host:
   #!/usr/bin/env bash
   set -euo pipefail

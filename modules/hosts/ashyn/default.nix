@@ -6,7 +6,7 @@
 # so the comparison is against PVE itself, not against proxmox-nixos.
 #
 # Installed once with nixos-anywhere + disko; every change after that arrives
-# through comin, the same way nale and ishar work.
+# through comin, the same way the other comin pilots work.
 { inputs, self, ... }:
 {
   flake.nixosConfigurations.ashyn = inputs.nixpkgs.lib.nixosSystem {

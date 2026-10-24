@@ -19,30 +19,13 @@ variable "disk_datastore_id" {
   default = "local-lvm"
 }
 
-variable "nale_vm_id" {
-  type    = number
-  default = 120
-}
-
-variable "nale_installer_iso_path" {
-  description = "Result of `nix build .#nale-installer-iso` (…/iso/nale-installer.iso). Defaults to the path already in state so installing a different host doesn't require this unrelated value — a real reinstall still overrides it explicitly."
-  type        = string
-  default     = "/nix/store/41ilqq8ql56g98277blf1xl7r76h00n7-nale-installer.iso/iso/nale-installer.iso"
-}
-
-variable "nale_boot_from_disk" {
-  description = "Boot the installed system by default; set false only during initial installation."
-  type        = bool
-  default     = true
-}
-
 variable "elantris_vm_id" {
   type    = number
   default = 121
 }
 
 variable "elantris_vlan_id" {
-  description = "World VLAN, see infra/unifi. Tagged on vmbr0; untagged (no vlan_id) is the default/native VLAN nale uses."
+  description = "World VLAN, see infra/unifi. Tagged on vmbr0; untagged (no vlan_id) is the default/native VLAN other guests use."
   type        = number
   default     = 199
 }

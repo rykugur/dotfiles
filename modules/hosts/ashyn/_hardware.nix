@@ -33,7 +33,7 @@
   # One onboard NIC, so it cannot both carry the host address and serve
   # guests: it is enslaved to br0 and br0 takes the DHCP lease. Guests
   # attached to br0 then get LAN addresses straight from UniFi, which is
-  # exactly what roshar's vmbr0 does for nale and ishar today.
+  # exactly what roshar's vmbr0 does for its comin guests.
   #
   # br0 inherits the NIC's MAC so the lease (and any UniFi reservation) keeps
   # following the same address across the installer -> installed transition.

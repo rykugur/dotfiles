@@ -12,7 +12,7 @@ in
 
   networking = {
     hostName = "elantris";
-    # Deliberately NOT AdGuard (10.3.9.5/.6, as nale uses): this VLAN's own
+    # Deliberately NOT AdGuard (10.3.9.5/.6, as other guests use): this VLAN's own
     # UniFi DHCP server hands out 1.1.1.1/9.9.9.9 only, and the firewall
     # blocks the guest from reaching AdGuard or any other LAN DNS at all.
     # An explicit `networking.nameservers` here would just duplicate (or
