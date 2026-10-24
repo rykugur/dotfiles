@@ -17,5 +17,6 @@ in
   };
   security.sudo.wheelNeedsPassword = false;
   environment.systemPackages = [ pkgs.btrfs-progs ];
+  environment.etc."rysn-comin-probe".text = "deployed by comin on pilot\n";
   system.stateVersion = "26.05";
 }
