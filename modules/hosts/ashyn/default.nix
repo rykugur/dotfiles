@@ -18,10 +18,12 @@
       self.modules.nixos.meta
       self.modules.nixos.helix-guest
       self.modules.nixos.incus-instances
+      self.modules.nixos.btrfs-rollback
       ./_hardware.nix
       ./_disko.nix
       ./_role.nix
       ./_incus.nix
+      ./_impermanence.nix
     ];
     specialArgs = { inherit inputs; };
   };

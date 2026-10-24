@@ -20,8 +20,11 @@
         storePaths = [ pkgs.btrfs-progs ];
         services.rollback-root = {
           unitConfig.DefaultDependencies = false;
-          serviceConfig.Type = "oneshot";
-          wantedBy = [ "initrd.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+          };
+          requiredBy = [ "sysroot.mount" ];
           before = [ "sysroot.mount" ];
           requires = [ diskUnit ];
           after = [ diskUnit "local-fs-pre.target" ];

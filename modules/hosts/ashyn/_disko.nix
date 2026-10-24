@@ -2,8 +2,8 @@
   # Single 238G NVMe (the box shipped with a Windows layout; this wipes it).
   # Same btrfs shape as nale, plus a dedicated subvolume for Incus so guest
   # volumes are separable from the host's own state and can be snapshotted or
-  # sent without dragging /nix along. `/persist` exists from day one so
-  # impermanence can be switched on later without repartitioning.
+  # sent without dragging /nix along. `/persist` holds host identity and comin;
+  # an empty `root-blank` template resets only the host root on each boot.
   disko.devices.disk.main = {
     type = "disk";
     device = "/dev/nvme0n1";
@@ -33,6 +33,8 @@
                   "noatime"
                 ];
               };
+              # Existing installations need this created once before enabling rollback.
+              "/root-blank" = { };
               "/nix" = {
                 mountpoint = "/nix";
                 mountOptions = [
