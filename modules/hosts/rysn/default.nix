@@ -12,6 +12,7 @@
       self.modules.nixos.meta
       self.modules.nixos.helix-guest
       self.modules.nixos.comin
+      self.modules.nixos.btrfs-rollback
       ./_disko.nix
       ./_impermanence.nix
       ./_role.nix
