@@ -79,13 +79,6 @@
     };
   };
 
-  # Throwaway: proves a push creates a guest, and the next one deletes it.
-  ryk.incus.instances.loop-test = {
-    ensure = "absent";
-    image = "images:alpine/edge";
-    config."limits.memory" = "256MiB";
-  };
-
   # Incus asserts on iptables; it manages its own nft chains.
   networking.nftables.enable = true;
 
