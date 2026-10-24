@@ -31,6 +31,7 @@ in
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
+      "/var/lib/comin"
       "/var/lib/nixos"
       "/var/log/journal"
     ];
