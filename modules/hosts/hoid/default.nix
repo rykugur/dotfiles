@@ -22,6 +22,7 @@ in
       self.modules.nixos.helix-guest
       self.modules.nixos.helix-root
       self.modules.nixos.omp-host
+      self.modules.nixos.comin
 
       ./_platform-lxc.nix
       ./_role.nix
