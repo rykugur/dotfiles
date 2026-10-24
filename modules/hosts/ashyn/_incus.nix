@@ -67,6 +67,9 @@
       "limits.memory" = "6GiB";
       # The Debian VM image is unsigned, so OVMF's secureboot rejects it.
       "security.secureboot" = "false";
+      # Start with the host rather than relying on Incus restoring whatever
+      # was running when it last stopped.
+      "boot.autostart" = "true";
     };
     devices.root = {
       type = "disk";
@@ -74,6 +77,12 @@
       pool = "local";
       size = "32GiB";
     };
+  };
+
+  # Throwaway: proves a push creates a guest, and the next one deletes it.
+  ryk.incus.instances.loop-test = {
+    image = "images:alpine/edge";
+    config."limits.memory" = "256MiB";
   };
 
   # Incus asserts on iptables; it manages its own nft chains.
