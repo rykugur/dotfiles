@@ -94,7 +94,8 @@
       type = "disk";
       path = "/";
       pool = "local";
-      size = "8GiB";
+      # Incus initially allocates 10GiB; PATCH cannot shrink block volumes.
+      size = "16GiB";
     };
   };
 
