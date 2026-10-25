@@ -79,6 +79,25 @@
     };
   };
 
+  # A second VM created by comin after impermanence was already live.
+  # Keep it declared to verify guest persistence across later host updates.
+  ryk.incus.instances.ashyn-probe = {
+    image = "images:alpine/edge";
+    virtualMachine = true;
+    config = {
+      "limits.cpu" = "1";
+      "limits.memory" = "1GiB";
+      "security.secureboot" = "false";
+      "boot.autostart" = "true";
+    };
+    devices.root = {
+      type = "disk";
+      path = "/";
+      pool = "local";
+      size = "8GiB";
+    };
+  };
+
   # Incus asserts on iptables; it manages its own nft chains.
   networking.nftables.enable = true;
 
