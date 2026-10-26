@@ -28,19 +28,16 @@
 
       fallbackChains = {
         default = [
-          "openai-codex/gpt-5.6-terra"
+          "openai-codex/gpt-6-luna"
           "xai-oauth/grok-4.6"
-          "openrouter/deepseek/deepseek-v4-flash-0731"
         ];
         smol = [
-          "openai-codex/gpt-5.6-luna"
+          "openai-codex/gpt-6-luna"
           "xai-oauth/grok-4.6"
-          "openrouter/deepseek/deepseek-v4-flash-0731"
         ];
         slow = [
-          "openai-codex/gpt-5.6-sol"
+          "openai-codex/gpt-6.1-sol"
           "xai-oauth/grok-4.6"
-          "openrouter/deepseek/deepseek-v4-flash-0731"
         ];
       };
 
