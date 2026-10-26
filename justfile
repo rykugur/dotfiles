@@ -27,7 +27,7 @@ destroy vmid:
   PVE_API_TOKEN="$(cat {{pve_token}})" PVE_API_URL="{{pve_url}}" \
   nix run .#pve-provision -- destroy {{vmid}} --force-stop
 
-# Create a VM and install NixOS onto it, headless end to end (elantris, rysn, ...).
+# Create a VM and install NixOS onto it headless end to end.
 vm-install host:
   #!/usr/bin/env bash
   set -euo pipefail
@@ -66,7 +66,7 @@ vm-install host:
   [[ -n "${ip:-}" ]] || { echo "no address from the guest agent" >&2; exit 1; }
   echo "installer at $ip"
 
-  # Hosts without sops (rysn's persistence-only phase) need no extra files.
+  # Hosts without sops need no installer extra files.
   ssh_hosts="$(mktemp -p /dev/shm)"
   trap 'rm -f "$ssh_hosts"' EXIT
   extra_opts=()
@@ -104,7 +104,7 @@ vm-install host:
       -o "UserKnownHostsFile=$ssh_hosts" -o StrictHostKeyChecking=accept-new \
       "${plain_ssh_identity_opts[@]}" \
       "root@{{host}}.local.ryk.sh" \
-      'test "$(findmnt -n -o FSTYPE /)" = btrfs && { test "{{host}}" = rysn && findmnt -n /home && findmnt -n /persist || systemctl is-active --quiet comin; }' \
+      'test "$(findmnt -n -o FSTYPE /)" = btrfs && systemctl is-active --quiet comin' \
       >/dev/null 2>&1; then
       echo "{{host}} booted NixOS from disk"
       exit 0

@@ -41,20 +41,3 @@ variable "elantris_boot_from_disk" {
   type        = bool
   default     = true
 }
-
-variable "rysn_vm_id" {
-  type    = number
-  default = 122
-}
-
-variable "rysn_installer_iso_path" {
-  description = "Result of `nix build .#rysn-installer-iso` (…/iso/rysn-installer.iso). Defaults to the path already in state so installing a different host doesn't require this unrelated value — a real reinstall still overrides it explicitly."
-  type        = string
-  default     = "/nix/store/wk75wcy8hzpfdq8jxgvf5l427sxvr57f-rysn-installer.iso/iso/rysn-installer.iso"
-}
-
-variable "rysn_boot_from_disk" {
-  description = "Boot the installed system by default; set false only during initial installation."
-  type        = bool
-  default     = true
-}
