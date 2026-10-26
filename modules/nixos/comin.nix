@@ -18,6 +18,12 @@
         '';
       };
 
+      options.ryk.comin.url = lib.mkOption {
+        type = lib.types.str;
+        default = "https://github.com/rykugur/dotfiles.git";
+        description = "Repository this host polls for its own configuration.";
+      };
+
       options.ryk.comin.manualHosts = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [
@@ -49,7 +55,7 @@
           {
             name = "origin";
             # Public repo, so no deploy key or token is needed on the host.
-            url = "https://github.com/rykugur/dotfiles.git";
+            url = config.ryk.comin.url;
             # `main` is comin's role name for the production branch, not a
             # branch named "main". The per-host testing branch keeps comin's
             # default name, `testing-<hostname>`, and runs as `test`.
