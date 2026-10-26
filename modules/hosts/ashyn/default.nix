@@ -24,6 +24,7 @@
       ./_role.nix
       ./_incus.nix
       ./_impermanence.nix
+      { ryk.comin.url = "https://github.com/rykugur/ashyn.git"; }
     ];
     specialArgs = { inherit inputs; };
   };
