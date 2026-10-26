@@ -9,6 +9,7 @@
     }:
     let
       ohMyPi = config.programs.omp.package;
+      piIntercom = pkgs.pi-intercom;
       mcp = import ../_mcp.nix { inherit pkgs; };
       commonSkills = (import ../_skills.nix { inherit inputs pkgs; }).commonSkills;
       skillFiles = lib.listToAttrs (
@@ -79,6 +80,9 @@
         programs.omp.enable = true;
 
         home.file = {
+          # Package root keeps pi-intercom's relative imports and manifest together.
+          ".omp/agent/extensions/pi-intercom".source = piIntercom;
+          ".omp/agent/skills/pi-intercom".source = "${piIntercom}/skills/pi-intercom";
           ".omp/agent/AGENTS.md".source = ./AGENTS.md;
           ".omp/agent/mcp.json".text = builtins.toJSON {
             mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
