@@ -3,16 +3,7 @@
   flake.modules.nixos.ssh =
     { username, ... }:
     {
-      services.openssh = {
-        enable = true;
-        settings = {
-          PermitRootLogin = "no";
-          PasswordAuthentication = false;
-          KbdInteractiveAuthentication = false;
-        };
-      };
-
-      users.users.${username}.openssh.authorizedKeys.keys = import ./_dusty-ssh-keys.nix;
+      imports = [ self.modules.nixos.ssh-server ];
 
       home-manager.users.${username}.imports = [ self.modules.homeManager.ssh ];
     };
