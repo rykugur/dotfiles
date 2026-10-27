@@ -47,7 +47,6 @@ in
                 claude-code
                 codex
                 herdr
-                # espanso
                 homelab
                 shell
                 obsidian

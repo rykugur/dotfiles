@@ -133,7 +133,6 @@ let
                   btop
                   bottom
                   htop
-                  espanso
                   gtk
                   eve-online
                   easyeffects
