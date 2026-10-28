@@ -18,7 +18,9 @@ let
         self.modules.nixos.dank-material-shell
 
         self.modules.nixos.nix-defaults
-        self.modules.nixos.vasher-cache
+        # Vasher is down pending a rebuild (2026-10-28); re-add
+        # self.modules.nixos.vasher-cache once it serves again. An unreachable
+        # substituter costs ~10-20s of curl retries per narinfo miss.
         self.modules.nixos.ssh
         self.modules.nixos.helix-root
         ./_configuration.nix

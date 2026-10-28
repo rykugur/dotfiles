@@ -18,7 +18,8 @@ in
       self.modules.nixos.nix-defaults
       self.modules.nixos.meta
       self.modules.nixos.login-shell
-      self.modules.nixos.vasher-cache
+      # Vasher is down pending a rebuild (2026-10-28); re-add
+      # self.modules.nixos.vasher-cache once it serves again. See jezrien.
       self.modules.nixos.helix-guest
       self.modules.nixos.helix-root
       self.modules.nixos.omp-host

@@ -34,3 +34,8 @@ comin-status +hosts:
     echo "== $h"
     ssh "$h.local.ryk.sh" 'systemctl is-active comin; comin status --oneline || true; readlink /run/current-system'
   done
+
+# Check pinned src hashes in pkgs/ against upstream. No build, no failing hash.
+# `just rehash trios`, `just rehash --all`, add `--write` to apply fixes.
+rehash +args:
+  ./scripts/rehash.sh {{args}}

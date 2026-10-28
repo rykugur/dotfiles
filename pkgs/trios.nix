@@ -22,17 +22,17 @@
 }:
 let
   pname = "trios";
-  version = "1.6.1";
+  version = "1.7.0";
 
   release =
     {
       x86_64-linux = {
         filename = "TriOS-Linux.zip";
-        hash = "sha256-Xt+q86ik8QRxwenjVhGR8WnmWDBOIPY9eDv7HxGFJ5Y=";
+        hash = "sha256-aFgw8tYyQTAsP69DCe+yofmhHvSXTHuhyPOVyezlzFI=";
       };
       aarch64-darwin = {
         filename = "TriOS-MacOS-AppleSilicon.zip";
-        hash = "sha256-yMPshWT2dKllGXPmW3as7WGUKHlJMiY6TDK0KcpsSow=";
+        hash = "sha256-zGwO8TMmDJh/y4GMkD5B/vMM8OQHUsoX2KAs8WVgyjI=";
       };
     }
     .${stdenv.hostPlatform.system}
@@ -75,7 +75,11 @@ in
 stdenv.mkDerivation {
   inherit pname version src;
 
-  nativeBuildInputs = [ makeWrapper copyDesktopItems ] ++ lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
+  nativeBuildInputs = [
+    makeWrapper
+    copyDesktopItems
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
   buildInputs = lib.optionals stdenv.hostPlatform.isLinux linuxRuntimeDeps;
   desktopItems = lib.optionals stdenv.hostPlatform.isLinux [ desktopItem ];
   preFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
@@ -112,6 +116,9 @@ stdenv.mkDerivation {
     homepage = "https://github.com/wispborne/TriOS";
     license = lib.licenses.unfree;
     mainProgram = "trios";
-    platforms = [ "x86_64-linux" "aarch64-darwin" ];
+    platforms = [
+      "x86_64-linux"
+      "aarch64-darwin"
+    ];
   };
 }
