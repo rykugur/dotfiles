@@ -5,9 +5,6 @@
       pkgs.just
       pkgs.sops
       pkgs.age
-      pkgs.nixos-anywhere
-      # infra/proxmox: VM lifecycle on roshar
-      pkgs.opentofu
       pkgs.uv
     ];
   };
