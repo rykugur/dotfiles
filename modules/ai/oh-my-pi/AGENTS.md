@@ -7,7 +7,8 @@
 ## Project Change History
 
 - Arcanum is the single wiki and the source of truth for changes and decisions made with Dusty in dotfiles, homelab, and other personal projects. Those repos keep no `wiki/` and no `docs/`; they hold code, a `README.md`, and a `CLAUDE.md` that points at Arcanum.
-- Before completing such work, read Arcanum's `CLAUDE.md`, `index.md`, and the recent entries in the current month's `log/YYYY-MM.md`. Record each change or related batch as a new entry there — heading `## [YYYY-MM-DD] <verb> | <title>` followed by `**Project:** <name>` — stating what changed, why, decisions and tradeoffs, affected paths, and observed results or uncertainty. Update the relevant page under `wiki/Projects/<Name>/` for durable decisions.
+- Record each change or related batch as a new entry in the current month's `log/YYYY-MM.md` — heading `## [YYYY-MM-DD] <verb> | <title>` followed by `**Project:** <name>` — stating what changed, why, decisions and tradeoffs, affected paths, and observed results or uncertainty. Update the relevant page under `wiki/Projects/<Name>/` for durable decisions. Commit and push: the cluster MCP index syncs from Forgejo and cannot see unpushed work.
+- Writing an entry needs no preamble reading — do not read `CLAUDE.md`, `index.md`, or `log.md` first. To look up past work, use the `arcanum` MCP (`query`, `get`), or read the month log by range (`log/2026-10.md:-200`, or `grep "^## \[" log/*.md` for headings). Never read a log file or `index.md` whole, and never re-read a file you already read this session.
 - Keep durable documentation in Arcanum, not in the project repo. If Arcanum is unavailable, report that the change was not logged rather than claiming it was.
 
 ## System Configuration
