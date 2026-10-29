@@ -6,6 +6,19 @@
 # boot — the mount is established on first access and torn down after the
 # idle-timeout. Keeps the system responsive when the server is unreachable.
 #
+# Known failure mode — Dolphin reports "Access denied. Could not write to
+# <dest file>" while `cp` in a terminal works: the TrueNAS share maps every
+# client identity to the NAS user (uid/gid 3000), but KIO fchown()s each
+# directory it creates to the *source* owner (uid 1000 here) right after
+# mkdir. ZFS lets an owner give ownership away regardless of WRITE_OWNER, so
+# the chown succeeds and the directory the copy just created is no longer
+# owned by the mapped identity — the first file written into it gets EACCES,
+# and the leftovers can't be deleted or chowned back from any client. Nothing
+# on this side can prevent it (no NFS mount option disables the client-side
+# chown). The fix is an explicit *inheritable* ACE on the dataset,
+# `user:dusty:modify:fd:allow`: inherited ACEs survive the chown, so access
+# stays with the mapped identity whatever KIO does with the owner field.
+#
 # Darwin (taln) is supported via autofs: `flake.modules.darwin.dusty-nfs`
 # writes a direct map and splices /etc/auto_master. The splice itself also
 # runs from a LaunchDaemon (RunAtLoad + hourly), not just activation:
