@@ -47,6 +47,7 @@ in
                 claude-code
                 codex
                 herdr
+                openrig
                 homelab
                 shell
                 obsidian

@@ -1,0 +1,9 @@
+name: shared
+version: "1.0"
+description: Shared contract for the local development team.
+
+resources:
+  guidance:
+    - id: team
+      path: guidance/team.md
+      merge: managed_block

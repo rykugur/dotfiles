@@ -8,7 +8,6 @@
       home.packages = [
         pkgs.llmfit
         pkgs.rtk
-        pkgs.openrig
       ];
 
       home.activation.rtkInitClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

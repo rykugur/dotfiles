@@ -1,0 +1,19 @@
+name: validator
+version: "1.0"
+description: Sigzil — Validator; exercises acceptance criteria and records observed evidence.
+
+imports:
+  - ref: local:../shared
+
+profiles:
+  default:
+    uses:
+      guidance: [shared:team]
+
+startup:
+  files:
+    - path: guidance/role.md
+      orientation: role
+      delivery_hint: send_text
+      required: true
+      applies_on: [fresh_start, restore]

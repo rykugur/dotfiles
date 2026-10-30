@@ -128,6 +128,7 @@ let
                   claude-code
                   codex
                   herdr
+                  openrig
                   zed-editor
                   oh-my-pi
 
