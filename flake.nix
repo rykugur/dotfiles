@@ -80,6 +80,11 @@
       url = "github:rykugur/SPT-Linux-Guide";
       flake = false;
     };
+
+    amethyst = {
+      url = "github:ChrisDKN/Amethyst-Mod-Manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ###
 
     ### random stuff

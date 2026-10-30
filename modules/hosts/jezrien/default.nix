@@ -132,6 +132,7 @@ let
                   oh-my-pi
 
                   # individual modules
+                  amethyst
                   btop
                   bottom
                   htop
