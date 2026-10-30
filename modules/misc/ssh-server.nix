@@ -11,6 +11,6 @@
           KbdInteractiveAuthentication = false;
         };
       };
-      users.users.${username}.openssh.authorizedKeys.keys = import ./_dusty-ssh-keys.nix;
+      users.users.${username}.openssh.authorizedKeys.keys = builtins.attrValues (import ./_dusty-ssh-keys.nix);
     };
 }

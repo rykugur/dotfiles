@@ -8,8 +8,8 @@
         settings = {
           ui = { default-command = "status"; };
           user = {
-            name = "rykugur";
-            email = "rollhax@gmail.com";
+            name = "Dusty";
+            email = "dusty@ryk.sh";
           };
           signing = {
             behavior = "own";

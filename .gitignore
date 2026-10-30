@@ -4,6 +4,9 @@
 .envrc
 .worktrees
 
+# Jujutsu colocated metadata (local operation log / working copy).
+.jj/
+
 # grok-cli (superagent-ai/grok-cli) project-local state.
 # Global/user state lives in ~/.grok/ (managed declaratively by the
 # modules/ai/grok.nix home-manager module, including mcp + sub-agents).

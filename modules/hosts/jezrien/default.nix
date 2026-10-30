@@ -141,6 +141,7 @@ let
                   easyeffects
                   homelab
                   jackify
+                  jujutsu
                   keebs
                   obsidian
                   # sesh
