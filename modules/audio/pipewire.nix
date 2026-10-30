@@ -152,6 +152,17 @@
             };
         };
 
+        # Keep the audio graph out of zram. swappiness=180 (modules/nixos/zram.nix)
+        # evicts cold anon pages aggressively, and a SCHED_RR data-loop that page
+        # faults into compressed swap blows its cycle deadline -> xruns -> static.
+        # Observed on jezrien at a 256/48000 (5.33ms) quantum with ~75 MB of the
+        # chain parked in zram. Costs ~150 MB of unreclaimable RAM.
+        systemd.user.services = {
+          pipewire.serviceConfig.MemorySwapMax = 0;
+          pipewire-pulse.serviceConfig.MemorySwapMax = 0;
+          wireplumber.serviceConfig.MemorySwapMax = 0;
+        };
+
         security.rtkit.enable = true;
         users.users.${config.ryk.username}.extraGroups = [ "audio" ];
       };

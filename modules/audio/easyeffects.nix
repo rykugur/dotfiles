@@ -5,6 +5,12 @@
     {
       services.easyeffects.enable = true;
 
+      # EasyEffects sits in the playback graph, so its DSP pages have the same
+      # realtime deadline as PipeWire's. It was the worst offender on jezrien
+      # (~54 MB parked in zram), so keep it resident too. See modules/audio/
+      # pipewire.nix for the full rationale.
+      systemd.user.services.easyeffects.Service.MemorySwapMax = 0;
+
       # DeepFilterNet (deep noise suppression) -> Gate. Denoise the TV out from
       # under speech, then gate the residual so Discord's VAD sees silence in
       # the gaps. Keys/defaults are EasyEffects 8.2.5's; only attack/release/
