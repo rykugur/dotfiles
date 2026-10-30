@@ -60,16 +60,6 @@ in
                 television
               ];
 
-              # Reaches hoid over the tailnet when away: homelab-0 advertises
-              # 10.3.10.0/24, so no second tailnet node is needed on hoid.
-              # Broker mode bypasses the local credential store, so a cold
-              # start with neither LAN nor tailnet fails closed.
-              sops.secrets.omp_auth_broker_token = {
-                sopsFile = ./secrets.yaml;
-                path = "${config.home.homeDirectory}/.omp/auth-broker.token";
-                mode = "0400";
-              };
-              ryk.omp.broker.url = "https://hoid.local.ryk.sh:8765";
 
               home.packages = with pkgs; [
                 nh

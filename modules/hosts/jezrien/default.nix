@@ -158,19 +158,8 @@ let
                   homelab_ssh_private_key = {
                     sopsFile = ./secrets.yaml;
                   };
-                  # OMP resolves the broker bearer from this exact path when
-                  # `auth.broker.token` is unset, so the secret never has to
-                  # appear in config.yml or the store.
-                  omp_auth_broker_token = {
-                    sopsFile = ./secrets.yaml;
-                    path = "/home/${username}/.omp/auth-broker.token";
-                    mode = "0400";
-                  };
                 };
 
-                # Credentials come from hoid. Local logins are bypassed while
-                # this is set, and a cold start with hoid down fails closed.
-                ryk.omp.broker.url = "https://hoid.local.ryk.sh:8765";
 
                 home.packages = with pkgs; [
                   # nix

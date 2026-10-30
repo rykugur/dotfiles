@@ -105,11 +105,6 @@
           run ${ohMyPi}/bin/omp config set cycleOrder ${lib.escapeShellArg (builtins.toJSON cycleOrder)}
         '';
 
-        home.activation.ohMyPiBroker = lib.mkIf (config.ryk.omp.broker.url != null) (
-          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            run ${ohMyPi}/bin/omp config set auth.broker.url ${lib.escapeShellArg config.ryk.omp.broker.url}
-          ''
-        );
       };
     };
 }
