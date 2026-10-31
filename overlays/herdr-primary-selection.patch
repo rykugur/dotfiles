@@ -1,0 +1,1345 @@
+diff --git a/src/client/clipboard_forwarding.rs b/src/client/clipboard_forwarding.rs
+index f3ba282..4b29623 100644
+--- a/src/client/clipboard_forwarding.rs
++++ b/src/client/clipboard_forwarding.rs
+@@ -11,5 +11,5 @@ pub(super) fn forward_clipboard(data: &str) -> bool {
+         warn!("received invalid clipboard payload from server");
+         return false;
+     };
+-    crate::selection::write_osc52_bytes(&bytes)
++    crate::selection::write_clipboard_bytes(&bytes, crate::selection::ClipboardTarget::SYSTEM)
+ }
+diff --git a/src/client/shell.rs b/src/client/shell.rs
+index 2d18044..d1ac29d 100644
+--- a/src/client/shell.rs
++++ b/src/client/shell.rs
+@@ -67,7 +67,10 @@ use crate::protocol::{
+ #[cfg(test)]
+ use crate::raw_input::RawInputEvent;
+ 
+-fn target_event_message(target: ClientInputTarget, event: ClientPaneInputEvent) -> ClientMessage {
++pub(crate) fn target_event_message(
++    target: ClientInputTarget,
++    event: ClientPaneInputEvent,
++) -> ClientMessage {
+     match target {
+         ClientInputTarget::Pane(pane_id) => ClientMessage::ClientShellPaneInput {
+             pane_id,
+diff --git a/src/client/shell/actions.rs b/src/client/shell/actions.rs
+index 83819b0..b8a5373 100644
+--- a/src/client/shell/actions.rs
++++ b/src/client/shell/actions.rs
+@@ -268,7 +268,12 @@ impl ClientShellState {
+         }
+     }
+ 
+-    pub(super) fn request_selection_copy(&mut self, outcome: &mut ClientShellInput, live: bool) {
++    pub(super) fn request_selection_copy(
++        &mut self,
++        outcome: &mut ClientShellInput,
++        live: bool,
++        target: crate::selection::ClipboardTarget,
++    ) {
+         let Some(selection) = self.selection.as_ref() else {
+             return;
+         };
+@@ -297,7 +302,7 @@ impl ClientShellState {
+                     content_revision,
+                 },
+             ),
+-            PendingEndpointKind::SelectionCopy,
++            PendingEndpointKind::SelectionCopy { target },
+             outcome,
+         );
+     }
+@@ -633,7 +638,7 @@ impl ClientShellState {
+                 let repaint = self.complete_pane_scroll(pane_id, serial, result, &mut outcome);
+                 return (repaint, outcome.actions);
+             }
+-            PendingEndpointKind::SelectionCopy => {
++            PendingEndpointKind::SelectionCopy { target } => {
+                 return match result {
+                     Ok(crate::api::schema::ResponseResult::PaneSelection { text, .. })
+                         if !text.is_empty() =>
+@@ -641,7 +646,10 @@ impl ClientShellState {
+                         let repaint = self.show_copy_feedback(std::time::Instant::now());
+                         (
+                             repaint,
+-                            vec![ClientShellAction::ClipboardWrite(text.into_bytes())],
++                            vec![ClientShellAction::ClipboardWrite {
++                                bytes: text.into_bytes(),
++                                target,
++                            }],
+                         )
+                     }
+                     Ok(crate::api::schema::ResponseResult::PaneSelection { .. }) => {
+diff --git a/src/client/shell/config.rs b/src/client/shell/config.rs
+index 04a3ddb..4208ff7 100644
+--- a/src/client/shell/config.rs
++++ b/src/client/shell/config.rs
+@@ -130,6 +130,7 @@ impl ClientShellConfig {
+             toast_delay_seconds: config.ui.toast.delay_seconds,
+             toast_position: config.ui.toast.herdr.position,
+             copy_on_select: config.ui.copy_on_select,
++            paste_on_middle_click: config.ui.paste_on_middle_click,
+             clipboard_toast_enabled: config.ui.toast.clipboard.enabled,
+             clipboard_toast_position: config.ui.toast.clipboard.position,
+             theme_name: theme_runtime.manual_name.clone(),
+@@ -357,6 +358,7 @@ impl ClientShellConfig {
+                 self.toast_delay_seconds = ui.toast.delay_seconds;
+                 self.toast_position = ui.toast.herdr.position;
+                 self.copy_on_select = ui.copy_on_select;
++                self.paste_on_middle_click = ui.paste_on_middle_click;
+                 self.clipboard_toast_enabled = ui.toast.clipboard.enabled;
+                 self.clipboard_toast_position = ui.toast.clipboard.position;
+                 self.prompt_new_tab_name = ui.prompt_new_tab_name;
+diff --git a/src/client/shell/copy_mode.rs b/src/client/shell/copy_mode.rs
+index be5b63e..3e85f34 100644
+--- a/src/client/shell/copy_mode.rs
++++ b/src/client/shell/copy_mode.rs
+@@ -841,7 +841,11 @@ impl ClientShellState {
+         {
+             // A visible explicit selection is live. If the fallback above supplied
+             // a search match, retain the revision that established its boundaries.
+-            self.request_selection_copy(outcome, live_selection);
++            self.request_selection_copy(
++                outcome,
++                live_selection,
++                crate::selection::ClipboardTarget::SYSTEM,
++            );
+         }
+         self.selection = None;
+         self.selection_highlight_clear_deadline = None;
+diff --git a/src/client/shell/input.rs b/src/client/shell/input.rs
+index ee92d59..e46b414 100644
+--- a/src/client/shell/input.rs
++++ b/src/client/shell/input.rs
+@@ -645,14 +645,14 @@ impl ClientShellState {
+         self.word_selection_gesture = None;
+         if self.mode != ClientShellMode::Copy
+             && self.copy_or_terminal_mode() != ClientShellMode::Copy
+-            && !self.config.copy_on_select
++            && !self.config.copy_on_select.is_enabled()
+             && is_retained_selection_copy_key(key)
+             && self
+                 .selection
+                 .as_ref()
+                 .is_some_and(crate::selection::Selection::is_visible)
+         {
+-            self.request_selection_copy(outcome, true);
++            self.request_selection_copy(outcome, true, crate::selection::ClipboardTarget::SYSTEM);
+             self.selection = None;
+             self.stop_selection_autoscroll();
+             self.selection_highlight_clear_deadline = None;
+diff --git a/src/client/shell/mouse.rs b/src/client/shell/mouse.rs
+index 8e873d6..f67f7d6 100644
+--- a/src/client/shell/mouse.rs
++++ b/src/client/shell/mouse.rs
+@@ -1761,8 +1761,15 @@ impl ClientShellState {
+                 .selection
+                 .as_mut()
+                 .is_some_and(crate::selection::Selection::finish);
+-            if copied && self.config.copy_on_select {
+-                self.request_selection_copy(outcome, true);
++            let copy_target = copied
++                .then(|| {
++                    crate::selection::ClipboardTarget::from_copy_on_select(
++                        self.config.copy_on_select,
++                    )
++                })
++                .flatten();
++            if let Some(target) = copy_target {
++                self.request_selection_copy(outcome, true, target);
+                 self.selection = None;
+             } else if self
+                 .selection
+@@ -2279,21 +2286,47 @@ impl ClientShellState {
+                 }
+             }
+             MouseEventKind::Down(MouseButton::Middle) => {
+-                if let Some(hit) = self
++                let pane_hit = self
+                     .hits
+                     .panes
+                     .iter()
+-                    .find(|hit| super::contains(hit.inner_rect, point) && hit.mouse_reporting)
+-                    .cloned()
+-                {
+-                    self.push_pane_mouse_event(&hit, mouse, mouse.modifiers, outcome);
+-                    self.pane_mouse_gesture = Some(ClientPaneMouseGesture {
+-                        last_position: self.pane_mouse_position(&hit, mouse),
+-                        hit,
+-                        button: MouseButton::Middle,
+-                        stripped_modifiers: crossterm::event::KeyModifiers::empty(),
+-                        last_event: mouse,
+-                    });
++                    .find(|hit| super::contains(hit.inner_rect, point))
++                    .cloned();
++                if let Some(hit) = pane_hit {
++                    if hit.mouse_reporting {
++                        // The pane app asked for mouse reporting, so the click
++                        // belongs to it; pasting would swallow an event it
++                        // requested. Host terminals apply the same precedence.
++                        self.push_pane_mouse_event(&hit, mouse, mouse.modifiers, outcome);
++                        self.pane_mouse_gesture = Some(ClientPaneMouseGesture {
++                            last_position: self.pane_mouse_position(&hit, mouse),
++                            hit,
++                            button: MouseButton::Middle,
++                            stripped_modifiers: crossterm::event::KeyModifiers::empty(),
++                            last_event: mouse,
++                        });
++                    } else if let Some(source) =
++                        crate::selection::PasteSource::from_paste_on_middle_click(
++                            self.config.paste_on_middle_click,
++                        )
++                    {
++                        let target = if hit.popup {
++                            ClientInputTarget::Popup(hit.pane_id.clone())
++                        } else {
++                            self.push_endpoint_method(
++                                crate::api::schema::Method::PaneFocus(
++                                    crate::api::schema::PaneTarget {
++                                        pane_id: hit.pane_id.clone(),
++                                    },
++                                ),
++                                outcome,
++                            );
++                            ClientInputTarget::Pane(hit.pane_id)
++                        };
++                        outcome
++                            .actions
++                            .push(ClientShellAction::PasteClipboard { target, source });
++                    }
+                 }
+             }
+             MouseEventKind::Up(MouseButton::Left | MouseButton::Middle)
+diff --git a/src/client/shell/state.rs b/src/client/shell/state.rs
+index 5a73292..eb12db3 100644
+--- a/src/client/shell/state.rs
++++ b/src/client/shell/state.rs
+@@ -29,7 +29,8 @@ pub(crate) struct ClientShellConfig {
+     pub(super) toast_delivery: crate::config::ToastDelivery,
+     pub(super) toast_delay_seconds: u64,
+     pub(super) toast_position: crate::config::ToastHerdrPosition,
+-    pub(super) copy_on_select: bool,
++    pub(super) copy_on_select: crate::config::CopyOnSelect,
++    pub(super) paste_on_middle_click: crate::config::PasteOnMiddleClick,
+     pub(super) clipboard_toast_enabled: bool,
+     pub(super) clipboard_toast_position: crate::config::ToastClipboardPosition,
+     pub(super) theme_name: String,
+@@ -246,7 +247,18 @@ pub(crate) enum ClientShellAction {
+         boot_id: String,
+         request: Box<crate::api::schema::Request>,
+     },
+-    ClipboardWrite(Vec<u8>),
++    /// Write `bytes` to the local clipboard buffers named by `target`.
++    ClipboardWrite {
++        bytes: Vec<u8>,
++        target: crate::selection::ClipboardTarget,
++    },
++    /// Read the local clipboard buffer named by `source` and paste it into
++    /// `target`. Herdr captures the mouse, so the host terminal never performs
++    /// its own middle-click paste while Herdr runs; this restores it.
++    PasteClipboard {
++        target: ClientInputTarget,
++        source: crate::selection::PasteSource,
++    },
+     OpenSafeWebUrl(String),
+     ActivateEndpoint {
+         endpoint_id: ClientEndpointId,
+@@ -642,7 +654,9 @@ pub(super) enum PendingEndpointKind {
+     WorktreeRemove {
+         forced: bool,
+     },
+-    SelectionCopy,
++    SelectionCopy {
++        target: crate::selection::ClipboardTarget,
++    },
+     PaneScroll {
+         pane_id: String,
+         serial: u64,
+@@ -750,7 +764,7 @@ pub(super) struct ClientVisibleNotification {
+ }
+ 
+ #[derive(Clone, Debug, PartialEq, Eq)]
+-pub(super) enum ClientInputTarget {
++pub(crate) enum ClientInputTarget {
+     Pane(String),
+     Popup(String),
+ }
+diff --git a/src/client/shell/tests/copy.rs b/src/client/shell/tests/copy.rs
+index 317950c..f13d92d 100644
+--- a/src/client/shell/tests/copy.rs
++++ b/src/client/shell/tests/copy.rs
+@@ -209,7 +209,8 @@ fn client_mouse_selection_highlights_and_copies_through_endpoint_extraction() {
+     assert!(repaint);
+     assert!(matches!(
+         &actions[..],
+-        [ClientShellAction::ClipboardWrite(bytes)] if bytes == b"LIV"
++        [ClientShellAction::ClipboardWrite { bytes, target }]
++            if bytes == b"LIV" && *target == crate::selection::ClipboardTarget::SYSTEM
+     ));
+     assert_eq!(
+         state
+@@ -220,6 +221,163 @@ fn client_mouse_selection_highlights_and_copies_through_endpoint_extraction() {
+     );
+ }
+ 
++#[test]
++fn copy_on_select_targets_configured_clipboard_buffers() {
++    let cases = [
++        (
++            crate::config::CopyOnSelect::Clipboard,
++            crate::selection::ClipboardTarget::SYSTEM,
++        ),
++        (
++            crate::config::CopyOnSelect::Primary,
++            crate::selection::ClipboardTarget {
++                clipboard: false,
++                primary: true,
++            },
++        ),
++        (
++            crate::config::CopyOnSelect::Both,
++            crate::selection::ClipboardTarget {
++                clipboard: true,
++                primary: true,
++            },
++        ),
++    ];
++    for (mode, expected_target) in cases {
++        let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
++        state.config.copy_on_select = mode;
++        state.set_snapshot(Box::new(snapshot()));
++        state.set_pane_surface(surface());
++        state.compose(106, 20).expect("composed frame");
++        let pane = state.hits.panes[0].clone();
++        for kind in [
++            MouseEventKind::Down(MouseButton::Left),
++            MouseEventKind::Drag(MouseButton::Left),
++        ] {
++            state.handle_raw_events(vec![RawInputEvent::Mouse(crossterm::event::MouseEvent {
++                kind,
++                column: pane.inner_rect.x + u16::from(matches!(kind, MouseEventKind::Drag(_))) * 2,
++                row: pane.inner_rect.y,
++                modifiers: KeyModifiers::empty(),
++            })]);
++        }
++        let release =
++            state.handle_raw_events(vec![RawInputEvent::Mouse(crossterm::event::MouseEvent {
++                kind: MouseEventKind::Up(MouseButton::Left),
++                column: pane.inner_rect.x + 2,
++                row: pane.inner_rect.y,
++                modifiers: KeyModifiers::empty(),
++            })]);
++        let [ClientShellAction::Endpoint { request, .. }] = &release.actions[..] else {
++            panic!("mode {mode:?}: selection release should request endpoint extraction");
++        };
++        let request_id = request.id.clone();
++
++        let (_, actions) = state.handle_endpoint_result(
++            "boot-1",
++            &request_id,
++            Ok(crate::api::schema::ResponseResult::PaneSelection {
++                pane_id: "pane_1".into(),
++                text: "LIV".into(),
++            }),
++        );
++        assert!(
++            matches!(
++                &actions[..],
++                [ClientShellAction::ClipboardWrite { bytes, target }]
++                    if bytes == b"LIV" && *target == expected_target
++            ),
++            "mode {mode:?}: unexpected actions {actions:?}"
++        );
++    }
++}
++
++fn middle_click(state: &mut ClientShellState) -> ClientShellInput {
++    let pane = state.hits.panes[0].clone();
++    state.handle_raw_events(vec![RawInputEvent::Mouse(crossterm::event::MouseEvent {
++        kind: MouseEventKind::Down(MouseButton::Middle),
++        column: pane.inner_rect.x,
++        row: pane.inner_rect.y,
++        modifiers: KeyModifiers::empty(),
++    })])
++}
++
++fn paste_source(outcome: &ClientShellInput) -> Option<crate::selection::PasteSource> {
++    outcome.actions.iter().find_map(|action| match action {
++        ClientShellAction::PasteClipboard { target, source } => {
++            assert!(matches!(target, ClientInputTarget::Pane(pane_id) if pane_id == "pane_1"));
++            Some(*source)
++        }
++        _ => None,
++    })
++}
++
++#[test]
++fn middle_click_paste_targets_configured_clipboard() {
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
++    state.set_snapshot(Box::new(snapshot()));
++    state.set_pane_surface(surface());
++    state.compose(106, 20).expect("composed frame");
++
++    state.config.paste_on_middle_click = crate::config::PasteOnMiddleClick::Disabled;
++    let outcome = middle_click(&mut state);
++    assert_eq!(paste_source(&outcome), None);
++    assert!(outcome.actions.is_empty());
++    assert!(outcome.requests.is_empty());
++
++    state.config.paste_on_middle_click = crate::config::PasteOnMiddleClick::Primary;
++    let outcome = middle_click(&mut state);
++    assert_eq!(
++        paste_source(&outcome),
++        Some(crate::selection::PasteSource::Primary)
++    );
++    assert!(
++        outcome.actions.iter().any(|action| matches!(
++            action,
++            ClientShellAction::Endpoint { request, .. }
++                if matches!(
++                    &request.method,
++                    crate::api::schema::Method::PaneFocus(target) if target.pane_id == "pane_1"
++                )
++        )),
++        "middle-click paste should focus the pane it pastes into"
++    );
++
++    state.config.paste_on_middle_click = crate::config::PasteOnMiddleClick::Clipboard;
++    let outcome = middle_click(&mut state);
++    assert_eq!(
++        paste_source(&outcome),
++        Some(crate::selection::PasteSource::Clipboard)
++    );
++}
++
++#[test]
++fn middle_click_paste_defers_to_pane_apps_that_report_mouse() {
++    let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
++    state.config.paste_on_middle_click = crate::config::PasteOnMiddleClick::Primary;
++    state.set_snapshot(Box::new(snapshot()));
++    let mut pane_surface = surface();
++    pane_surface.panes[0].mouse_reporting = true;
++    state.set_pane_surface(pane_surface);
++    state.compose(106, 20).expect("composed frame");
++
++    let outcome = middle_click(&mut state);
++    assert_eq!(paste_source(&outcome), None);
++    let [ClientMessage::ClientShellPaneInput { pane_id, events }] = &outcome.requests[..] else {
++        panic!("middle-click should be forwarded to the mouse-reporting pane app");
++    };
++    assert_eq!(pane_id, "pane_1");
++    assert!(matches!(
++        &events[..],
++        [ClientPaneInputEvent::Mouse {
++            kind: crate::protocol::ClientMouseKind::Down(
++                crate::protocol::ClientMouseButton::Middle
++            ),
++            ..
++        }]
++    ));
++}
++
+ #[test]
+ fn clipboard_feedback_is_client_local_and_respects_config() {
+     let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
+@@ -248,7 +406,7 @@ fn clipboard_feedback_is_client_local_and_respects_config() {
+ #[test]
+ fn retained_mouse_selection_survives_output_and_copies_without_terminal_input() {
+     let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
+-    state.config.copy_on_select = false;
++    state.config.copy_on_select = crate::config::CopyOnSelect::Disabled;
+     state.set_snapshot(Box::new(snapshot()));
+     state.set_pane_surface(surface());
+     state.compose(106, 20).expect("composed frame");
+@@ -344,7 +502,11 @@ fn retained_mouse_selection_survives_output_and_copies_without_terminal_input()
+             text: "yIV".into(),
+         }),
+     );
+-    assert!(matches!(&actions[..], [ClientShellAction::ClipboardWrite(bytes)] if bytes == b"yIV"));
++    assert!(matches!(
++        &actions[..],
++        [ClientShellAction::ClipboardWrite { bytes, target }]
++            if bytes == b"yIV" && *target == crate::selection::ClipboardTarget::SYSTEM
++    ));
+ }
+ 
+ #[test]
+@@ -405,7 +567,7 @@ fn selection_edge_drag_requests_scroll_and_timer_continues_it() {
+ #[test]
+ fn keyboard_copy_mode_owns_cursor_selection_copy_and_scroll_restore() {
+     let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
+-    state.config.copy_on_select = false;
++    state.config.copy_on_select = crate::config::CopyOnSelect::Disabled;
+     state.set_snapshot(Box::new(snapshot()));
+     let mut pane_surface = surface();
+     pane_surface.panes[0].scroll = Some(crate::protocol::PaneSurfaceScrollMetrics {
+@@ -1805,7 +1967,7 @@ fn navigator_owns_search_mouse_selection_and_stable_target_focus() {
+ #[test]
+ fn copy_mode_survives_mouse_motion_and_parks_across_focus_changes() {
+     let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
+-    state.config.copy_on_select = false;
++    state.config.copy_on_select = crate::config::CopyOnSelect::Disabled;
+     state.set_snapshot(Box::new(snapshot()));
+     let mut pane_surface = surface();
+     pane_surface.panes[0].scroll = Some(crate::protocol::PaneSurfaceScrollMetrics {
+@@ -1938,7 +2100,7 @@ fn copy_mode_survives_mouse_motion_and_parks_across_focus_changes() {
+ #[test]
+ fn retained_selection_copy_suppresses_key_repeats() {
+     let mut config = Config::default();
+-    config.ui.copy_on_select = false;
++    config.ui.copy_on_select = crate::config::CopyOnSelect::Disabled;
+     let mut state = ClientShellState::new(ClientShellConfig::from_config(&config));
+     state.set_snapshot(Box::new(snapshot()));
+     state.set_pane_surface(surface());
+diff --git a/src/client/shell/tests/endpoint_requests.rs b/src/client/shell/tests/endpoint_requests.rs
+index 1f51f06..2b45c9f 100644
+--- a/src/client/shell/tests/endpoint_requests.rs
++++ b/src/client/shell/tests/endpoint_requests.rs
+@@ -425,7 +425,11 @@ fn failed_selection_copy_does_not_send_terminal_input() {
+         }),
+     ] {
+         let mut outcome = ClientShellInput::default();
+-        state.request_selection_copy(&mut outcome, false);
++        state.request_selection_copy(
++            &mut outcome,
++            false,
++            crate::selection::ClipboardTarget::SYSTEM,
++        );
+         let (_, actions) =
+             state.handle_endpoint_result("boot-1", request_id(&outcome.actions), result);
+         assert!(actions.is_empty());
+diff --git a/src/client/shell/tests/input.rs b/src/client/shell/tests/input.rs
+index 8b817d0..746a09a 100644
+--- a/src/client/shell/tests/input.rs
++++ b/src/client/shell/tests/input.rs
+@@ -647,7 +647,7 @@ fn highlighted_search_match_copies_after_in_flight_repeat() {
+     );
+     assert!(matches!(
+         &clipboard[..],
+-        [ClientShellAction::ClipboardWrite(bytes)] if bytes == b"needle"
++        [ClientShellAction::ClipboardWrite { bytes, .. }] if bytes == b"needle"
+     ));
+ }
+ 
+diff --git a/src/client/shell/tests/mouse_selection.rs b/src/client/shell/tests/mouse_selection.rs
+index eced234..8b5a342 100644
+--- a/src/client/shell/tests/mouse_selection.rs
++++ b/src/client/shell/tests/mouse_selection.rs
+@@ -409,7 +409,7 @@ fn client_double_click_selects_word_and_copies_only_after_release() {
+             );
+             let copied = word_row_reply(&mut state, &word_read_id(&actions), "bravo");
+             assert!(
+-                matches!(&copied[..], [ClientShellAction::ClipboardWrite(bytes)] if bytes == b"bravo")
++                matches!(&copied[..], [ClientShellAction::ClipboardWrite { bytes, target: crate::selection::ClipboardTarget::SYSTEM }] if bytes == b"bravo")
+             );
+             assert!(state.tick_copy_feedback(state.selection_highlight_clear_deadline.unwrap()));
+             assert!(state.selection.is_none());
+@@ -426,7 +426,11 @@ fn client_double_click_selects_word_and_copies_only_after_release() {
+ 
+ fn word_drag_state(copy_on_select: bool) -> ClientShellState {
+     let mut config = Config::default();
+-    config.ui.copy_on_select = copy_on_select;
++    config.ui.copy_on_select = if copy_on_select {
++        crate::config::CopyOnSelect::Clipboard
++    } else {
++        crate::config::CopyOnSelect::Disabled
++    };
+     let mut state = ClientShellState::new(ClientShellConfig::from_config(&config));
+     state.set_snapshot(Box::new(snapshot()));
+     let mut pane_surface = surface();
+@@ -576,7 +580,7 @@ fn double_click_drag_waits_for_latest_row_before_copying() {
+             "bravo charlie\ndelta echo foxtrot\ngolf hotel",
+         );
+         assert!(
+-            matches!(&copied[..], [ClientShellAction::ClipboardWrite(bytes)]
++            matches!(&copied[..], [ClientShellAction::ClipboardWrite { bytes, target: crate::selection::ClipboardTarget::SYSTEM }]
+             if bytes == b"bravo charlie\ndelta echo foxtrot\ngolf hotel")
+         );
+     }
+diff --git a/src/client/shell/word_selection.rs b/src/client/shell/word_selection.rs
+index f4329ce..d8ec972 100644
+--- a/src/client/shell/word_selection.rs
++++ b/src/client/shell/word_selection.rs
+@@ -146,8 +146,10 @@ impl ClientShellState {
+                 selection.finish();
+             }
+             self.word_selection_gesture = None;
+-            if self.config.copy_on_select {
+-                self.request_selection_copy(outcome, false);
++            if let Some(target) =
++                crate::selection::ClipboardTarget::from_copy_on_select(self.config.copy_on_select)
++            {
++                self.request_selection_copy(outcome, false, target);
+                 if dragged {
+                     self.selection = None;
+                 } else {
+diff --git a/src/client/shell/worktrees.rs b/src/client/shell/worktrees.rs
+index 56c554c..5c27eda 100644
+--- a/src/client/shell/worktrees.rs
++++ b/src/client/shell/worktrees.rs
+@@ -533,7 +533,7 @@ impl ClientShellState {
+                 | PendingEndpointKind::ReloadConfig
+                 | PendingEndpointKind::IntegrationList
+                 | PendingEndpointKind::IntegrationInstall
+-                | PendingEndpointKind::SelectionCopy
++                | PendingEndpointKind::SelectionCopy { .. }
+                 | PendingEndpointKind::PaneScroll { .. }
+                 | PendingEndpointKind::WordSelection { .. }
+                 | PendingEndpointKind::PaneLinkActivate { .. }
+diff --git a/src/client/shell_runtime.rs b/src/client/shell_runtime.rs
+index 66a4186..e61e72f 100644
+--- a/src/client/shell_runtime.rs
++++ b/src/client/shell_runtime.rs
+@@ -33,8 +33,22 @@ pub(super) fn dispatch_client_shell_actions(
+                     repaint |= shell.cancel_endpoint_request(&request.id);
+                 }
+             }
+-            shell::ClientShellAction::ClipboardWrite(bytes) => {
+-                crate::selection::write_osc52_bytes(&bytes);
++            shell::ClientShellAction::ClipboardWrite { bytes, target } => {
++                crate::selection::write_clipboard_bytes(&bytes, target);
++            }
++            shell::ClientShellAction::PasteClipboard { target, source } => {
++                // The clipboard is read here, on the host that owns the mouse,
++                // so a remote client pastes its own selection buffer.
++                if endpoints.active_surface_available() {
++                    if let Some(text) = crate::selection::read_clipboard_text(source) {
++                        let request = shell::target_event_message(
++                            target,
++                            crate::protocol::ClientPaneInputEvent::Paste(text),
++                        );
++                        write_to_server(endpoints, &request)
++                            .map_err(ClientError::ConnectionLost)?;
++                    }
++                }
+             }
+             shell::ClientShellAction::ActivateEndpoint {
+                 endpoint_id,
+diff --git a/src/config.rs b/src/config.rs
+index 925423d..6d85f64 100644
+--- a/src/config.rs
++++ b/src/config.rs
+@@ -23,10 +23,10 @@ pub use self::{
+     },
+     model::{
+         validated_sidebar_bounds, AgentPanelSortConfig, Config, ConfigReloadReport,
+-        ConfigReloadStatus, HostCursorModeConfig, NewTerminalCwdConfig, PaneBordersConfig,
+-        ShellModeConfig, SidebarCollapsedModeConfig, StatusIndicatorStyle, TabBarPositionConfig,
+-        ToastClipboardPosition, ToastConfig, ToastDelivery, ToastHerdrPosition,
+-        UpdateChannelConfig, MAX_TOAST_DELAY_SECONDS,
++        ConfigReloadStatus, CopyOnSelect, HostCursorModeConfig, NewTerminalCwdConfig,
++        PaneBordersConfig, PasteOnMiddleClick, ShellModeConfig, SidebarCollapsedModeConfig,
++        StatusIndicatorStyle, TabBarPositionConfig, ToastClipboardPosition, ToastConfig,
++        ToastDelivery, ToastHerdrPosition, UpdateChannelConfig, MAX_TOAST_DELAY_SECONDS,
+     },
+     sidebar::{
+         AgentSidebarToken, AgentsSidebarConfig, SidebarConfig, SidebarTokenStyle,
+diff --git a/src/config/model.rs b/src/config/model.rs
+index 29802fd..b661917 100644
+--- a/src/config/model.rs
++++ b/src/config/model.rs
+@@ -142,6 +142,148 @@ pub enum SidebarCollapsedModeConfig {
+     Hidden,
+ }
+ 
++/// Whether and where a finished mouse selection is copied.
++///
++/// Accepts either a boolean or a string in config:
++/// - `false` (alias: `"disabled"`) — keep drag selection visible without
++///   copying; a double-click still copies a word.
++/// - `true` (alias: `"clipboard"`) — copy a selection to the system clipboard.
++/// - `"primary"` — copy a selection to the selection clipboard only (PRIMARY on
++///   Linux/X11/Wayland, pasted with middle-click). macOS and Windows have no
++///   selection clipboard, so this degrades to selection without auto-copy.
++/// - `"both"` — copy a selection to both the system clipboard and the
++///   selection clipboard.
++///
++/// Only the automatic on-select copy honors the target. Explicit copies (copy
++/// mode yank, OSC 52 from a pane child) always go to the system clipboard;
++/// a double-click word copy honors the target but falls back to the system
++/// clipboard when automatic copying is disabled.
++#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
++pub enum CopyOnSelect {
++    /// Automatic copy-on-select is off (`false`). Mouse selection stays
++    /// available; it is just never auto-copied.
++    Disabled,
++    /// Copy a selection to the system clipboard (`true` / `"clipboard"`).
++    #[default]
++    Clipboard,
++    /// Copy a selection to the selection clipboard only (`"primary"`).
++    Primary,
++    /// Copy a selection to both clipboards (`"both"`).
++    Both,
++}
++
++impl CopyOnSelect {
++    /// Whether a finished drag selection is auto-copied. `Primary` still
++    /// counts as enabled on platforms without a selection clipboard; the
++    /// selection simply has nowhere to be auto-copied there.
++    pub fn is_enabled(self) -> bool {
++        self != CopyOnSelect::Disabled
++    }
++}
++
++impl<'de> Deserialize<'de> for CopyOnSelect {
++    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
++    where
++        D: Deserializer<'de>,
++    {
++        struct CopyOnSelectVisitor;
++
++        impl de::Visitor<'_> for CopyOnSelectVisitor {
++            type Value = CopyOnSelect;
++
++            fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
++                f.write_str(
++                    "a boolean or one of \"disabled\", \"clipboard\", \"primary\", \"both\"",
++                )
++            }
++
++            fn visit_bool<E: de::Error>(self, value: bool) -> Result<CopyOnSelect, E> {
++                Ok(if value {
++                    CopyOnSelect::Clipboard
++                } else {
++                    CopyOnSelect::Disabled
++                })
++            }
++
++            fn visit_str<E: de::Error>(self, value: &str) -> Result<CopyOnSelect, E> {
++                match value.trim().to_ascii_lowercase().as_str() {
++                    "disabled" => Ok(CopyOnSelect::Disabled),
++                    "clipboard" => Ok(CopyOnSelect::Clipboard),
++                    "primary" => Ok(CopyOnSelect::Primary),
++                    "both" => Ok(CopyOnSelect::Both),
++                    other => Err(de::Error::custom(format!(
++                        "copy_on_select must be a boolean or \"disabled\"/\"clipboard\"/\"primary\"/\"both\", got {other:?}"
++                    ))),
++                }
++            }
++        }
++
++        deserializer.deserialize_any(CopyOnSelectVisitor)
++    }
++}
++
++/// Whether a middle-click inside a pane pastes, and which clipboard it reads.
++///
++/// Accepts either a boolean or a string in config:
++/// - `false` (alias: `"disabled"`) — middle-click is never turned into a paste.
++/// - `true` (alias: `"primary"`) — paste the selection clipboard (PRIMARY on
++///   Linux/X11/Wayland). macOS and Windows have no selection clipboard, so this
++///   reads the system clipboard there instead.
++/// - `"clipboard"` — paste the system clipboard on every platform.
++///
++/// Herdr captures the mouse, so the host terminal never performs its own
++/// middle-click paste while Herdr runs. This setting is what restores it. A
++/// pane app that requested mouse reporting keeps receiving the middle-click
++/// instead; pasting into it would swallow an event the app asked for.
++#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
++pub enum PasteOnMiddleClick {
++    /// Middle-click paste is off (`false`). This is the default.
++    #[default]
++    Disabled,
++    /// Paste the selection clipboard (`true` / `"primary"`).
++    Primary,
++    /// Paste the system clipboard (`"clipboard"`).
++    Clipboard,
++}
++
++impl<'de> Deserialize<'de> for PasteOnMiddleClick {
++    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
++    where
++        D: Deserializer<'de>,
++    {
++        struct PasteOnMiddleClickVisitor;
++
++        impl de::Visitor<'_> for PasteOnMiddleClickVisitor {
++            type Value = PasteOnMiddleClick;
++
++            fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
++                f.write_str("a boolean or one of \"disabled\", \"primary\", \"clipboard\"")
++            }
++
++            fn visit_bool<E: de::Error>(self, value: bool) -> Result<PasteOnMiddleClick, E> {
++                Ok(if value {
++                    PasteOnMiddleClick::Primary
++                } else {
++                    PasteOnMiddleClick::Disabled
++                })
++            }
++
++            fn visit_str<E: de::Error>(self, value: &str) -> Result<PasteOnMiddleClick, E> {
++                match value.trim().to_ascii_lowercase().as_str() {
++                    "disabled" => Ok(PasteOnMiddleClick::Disabled),
++                    "primary" => Ok(PasteOnMiddleClick::Primary),
++                    "clipboard" => Ok(PasteOnMiddleClick::Clipboard),
++                    other => Err(de::Error::custom(format!(
++                        "paste_on_middle_click must be a boolean or \"disabled\"/\"primary\"/\"clipboard\", got {other:?}"
++                    ))),
++                }
++            }
++        }
++
++        deserializer.deserialize_any(PasteOnMiddleClickVisitor)
++    }
++}
++
+ #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+ pub struct RightClickPassthroughModifierConfig(Option<KeyModifiers>);
+ 
+@@ -950,8 +1092,12 @@ pub struct UiConfig {
+     pub mobile_width_threshold: u16,
+     /// Capture mouse input for Herdr's mouse UI. Default: true.
+     pub mouse_capture: bool,
+-    /// Copy text selected with the mouse. Default: true.
+-    pub copy_on_select: bool,
++    /// Copy text selected with the mouse. Boolean or "disabled"/"clipboard"/"primary"/"both".
++    /// Default: true (system clipboard).
++    pub copy_on_select: CopyOnSelect,
++    /// Paste on middle-click inside a pane. Boolean or "disabled"/"primary"/"clipboard".
++    /// Default: false.
++    pub paste_on_middle_click: PasteOnMiddleClick,
+     /// Host cursor policy. Default: auto.
+     pub host_cursor: HostCursorModeConfig,
+     /// Modifier that lets right-click gestures pass through to pane apps. Empty disables it.
+@@ -1205,7 +1351,8 @@ impl Default for UiConfig {
+             sidebar_collapsed_mode: SidebarCollapsedModeConfig::Compact,
+             mobile_width_threshold: DEFAULT_MOBILE_WIDTH_THRESHOLD,
+             mouse_capture: true,
+-            copy_on_select: true,
++            copy_on_select: CopyOnSelect::default(),
++            paste_on_middle_click: PasteOnMiddleClick::default(),
+             host_cursor: HostCursorModeConfig::Auto,
+             right_click_passthrough_modifier: RightClickPassthroughModifierConfig::default(),
+             redraw_on_focus_gained: true,
+@@ -1750,14 +1897,72 @@ mouse_capture = false
+     #[test]
+     fn copy_on_select_default_on_and_parse() {
+         let default_config = Config::default();
+-        assert!(default_config.ui.copy_on_select);
++        assert_eq!(default_config.ui.copy_on_select, CopyOnSelect::Clipboard);
++        assert!(default_config.ui.copy_on_select.is_enabled());
++
++        let cases = [
++            ("copy_on_select = false", CopyOnSelect::Disabled),
++            ("copy_on_select = \"disabled\"", CopyOnSelect::Disabled),
++            ("copy_on_select = true", CopyOnSelect::Clipboard),
++            ("copy_on_select = \"clipboard\"", CopyOnSelect::Clipboard),
++            ("copy_on_select = \"primary\"", CopyOnSelect::Primary),
++            ("copy_on_select = \"both\"", CopyOnSelect::Both),
++        ];
++        for (line, expected) in cases {
++            let toml = format!("[ui]\n{line}\n");
++            let config: Config = toml::from_str(&toml).unwrap();
++            assert_eq!(config.ui.copy_on_select, expected, "parsing {line:?}");
++        }
++        assert!(!CopyOnSelect::Disabled.is_enabled());
++    }
+ 
+-        let toml = r#"
+-[ui]
+-copy_on_select = false
+-"#;
+-        let config: Config = toml::from_str(toml).unwrap();
+-        assert!(!config.ui.copy_on_select);
++    #[test]
++    fn copy_on_select_rejects_unknown_string() {
++        let toml = "[ui]\ncopy_on_select = \"sometimes\"\n";
++        assert!(toml::from_str::<Config>(toml).is_err());
++    }
++
++    #[test]
++    fn paste_on_middle_click_defaults_off_and_parses() {
++        let default_config = Config::default();
++        assert_eq!(
++            default_config.ui.paste_on_middle_click,
++            PasteOnMiddleClick::Disabled
++        );
++
++        let cases = [
++            (
++                "paste_on_middle_click = false",
++                PasteOnMiddleClick::Disabled,
++            ),
++            (
++                "paste_on_middle_click = \"disabled\"",
++                PasteOnMiddleClick::Disabled,
++            ),
++            ("paste_on_middle_click = true", PasteOnMiddleClick::Primary),
++            (
++                "paste_on_middle_click = \"primary\"",
++                PasteOnMiddleClick::Primary,
++            ),
++            (
++                "paste_on_middle_click = \"clipboard\"",
++                PasteOnMiddleClick::Clipboard,
++            ),
++        ];
++        for (line, expected) in cases {
++            let toml = format!("[ui]\n{line}\n");
++            let config: Config = toml::from_str(&toml).unwrap();
++            assert_eq!(
++                config.ui.paste_on_middle_click, expected,
++                "parsing {line:?}"
++            );
++        }
++    }
++
++    #[test]
++    fn paste_on_middle_click_rejects_unknown_string() {
++        let toml = "[ui]\npaste_on_middle_click = \"both\"\n";
++        assert!(toml::from_str::<Config>(toml).is_err());
+     }
+ 
+     #[test]
+diff --git a/src/main.rs b/src/main.rs
+index f97e7e2..3fdca84 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -260,10 +260,23 @@ const DEFAULT_CONFIG: &str = r##"# herdr configuration
+ # mouse_capture = true
+ 
+ # Automatically copy text selected with the mouse.
+-# Set false to retain drag or double-click word selection until Ctrl+C,
+-# or Cmd+C when the host forwards it, copies and clears it.
++# false       = retain drag or double-click word selection until Ctrl+C, or Cmd+C
++#               when the host forwards it, copies and clears it ("disabled" is an alias).
++# true        = copy to the system clipboard ("clipboard" is an alias).
++# "primary"   = copy to the selection clipboard only (PRIMARY, middle-click paste on Linux).
++# "both"      = copy to both the system clipboard and the selection clipboard.
++# macOS/Windows have no selection clipboard: "both" behaves like true and "primary" selects without copying.
+ # copy_on_select = true
+ 
++# Paste on middle-click inside a pane.
++# Herdr captures the mouse, so the host terminal never performs its own middle-click paste while Herdr runs.
++# false       = middle-click never pastes ("disabled" is an alias).
++# true        = paste the selection clipboard ("primary" is an alias; PRIMARY on Linux).
++# "clipboard" = paste the system clipboard.
++# macOS/Windows have no selection clipboard, so "primary" reads the system clipboard there.
++# Pane apps that request mouse reporting keep receiving the middle-click instead of pasting.
++# paste_on_middle_click = false
++
+ # Host cursor policy: "auto", "native", or "drawn".
+ # "auto" draws Herdr's own cursor on native Windows builds and WSL to avoid ConPTY cursor flicker, and uses the native terminal cursor elsewhere.
+ # "native" always uses the outer terminal cursor. "drawn" always draws Herdr's cursor as terminal cell content.
+diff --git a/src/platform/fallback.rs b/src/platform/fallback.rs
+index 2dc7772..9c151bb 100644
+--- a/src/platform/fallback.rs
++++ b/src/platform/fallback.rs
+@@ -250,6 +250,16 @@ pub fn write_clipboard(_bytes: &[u8]) -> bool {
+     false
+ }
+ 
++/// Unsupported platform stub.
++pub fn write_primary(_bytes: &[u8]) -> bool {
++    false
++}
++
++/// Unsupported platform stub.
++pub fn read_primary() -> Option<String> {
++    None
++}
++
+ /// Unsupported platform stub.
+ pub fn read_clipboard_text() -> Option<String> {
+     None
+diff --git a/src/platform/linux.rs b/src/platform/linux.rs
+index ea9b13d..8815511 100644
+--- a/src/platform/linux.rs
++++ b/src/platform/linux.rs
+@@ -858,6 +858,15 @@ pub fn write_clipboard(bytes: &[u8]) -> bool {
+     false
+ }
+ 
++pub fn write_primary(bytes: &[u8]) -> bool {
++    for command in primary_clipboard_commands() {
++        if run_clipboard_command(&command, bytes) {
++            return true;
++        }
++    }
++    false
++}
++
+ pub fn read_clipboard_text() -> Option<String> {
+     for command in read_clipboard_text_commands() {
+         if let Some(text) = read_clipboard_text_with_command(&command) {
+@@ -871,6 +880,21 @@ pub fn clipboard_text_matches(_bytes: &[u8]) -> Option<bool> {
+     None
+ }
+ 
++/// Read the PRIMARY selection, the buffer middle-click pastes from.
++///
++/// Returns `None` when no selection tool is reachable or PRIMARY is empty, in
++/// which case the caller pastes nothing rather than falling back to CLIPBOARD;
++/// silently pasting a different buffer than the one asked for is worse than
++/// doing nothing.
++pub fn read_primary() -> Option<String> {
++    for command in read_primary_commands() {
++        if let Some(text) = read_clipboard_text_with_command(&command) {
++            return Some(text);
++        }
++    }
++    None
++}
++
+ pub fn open_url(url: &str) -> std::io::Result<Option<std::process::Child>> {
+     Command::new("xdg-open")
+         .arg(url)
+@@ -1078,17 +1102,83 @@ fn clipboard_commands() -> Vec<ClipboardCommand> {
+     commands
+ }
+ 
++/// Commands that write to the PRIMARY selection (middle-click paste buffer).
++fn primary_clipboard_commands() -> Vec<ClipboardCommand> {
++    let mut commands = Vec::new();
++
++    if std::env::var_os("WAYLAND_DISPLAY").is_some() {
++        commands.push(ClipboardCommand {
++            program: "wl-copy",
++            args: &["--primary", "--type", "text/plain;charset=utf-8"],
++        });
++    }
++
++    if std::env::var_os("DISPLAY").is_some() {
++        commands.push(ClipboardCommand {
++            program: "xclip",
++            args: &["-selection", "primary", "-in"],
++        });
++        commands.push(ClipboardCommand {
++            program: "xsel",
++            args: &["--primary", "--input"],
++        });
++    }
++
++    commands
++}
++
++/// Commands that read the PRIMARY selection (middle-click paste buffer).
++///
++/// `wl-paste` appends a newline to text output unless `--no-newline` is passed,
++/// which would turn a pasted command into a submitted one. The flag suppresses
++/// only the appended newline; newlines inside the selection survive.
++fn read_primary_commands() -> Vec<ClipboardCommand> {
++    let mut commands = Vec::new();
++
++    if std::env::var_os("WAYLAND_DISPLAY").is_some() {
++        commands.push(ClipboardCommand {
++            program: "wl-paste",
++            args: &[
++                "--primary",
++                "--no-newline",
++                "--type",
++                "text/plain;charset=utf-8",
++            ],
++        });
++        commands.push(ClipboardCommand {
++            program: "wl-paste",
++            args: &["--primary", "--no-newline", "--type", "text/plain"],
++        });
++    }
++
++    if std::env::var_os("DISPLAY").is_some() {
++        commands.push(ClipboardCommand {
++            program: "xclip",
++            args: &["-selection", "primary", "-out"],
++        });
++        commands.push(ClipboardCommand {
++            program: "xsel",
++            args: &["--primary", "--output"],
++        });
++    }
++
++    commands
++}
++
++/// Commands that read the system clipboard. `--no-newline` matters here for the
++/// same reason it does in [`read_primary_commands`].
++
+ fn read_clipboard_text_commands() -> Vec<ClipboardCommand> {
+     let mut commands = Vec::new();
+ 
+     if std::env::var_os("WAYLAND_DISPLAY").is_some() {
+         commands.push(ClipboardCommand {
+             program: "wl-paste",
+-            args: &["--type", "text/plain;charset=utf-8"],
++            args: &["--no-newline", "--type", "text/plain;charset=utf-8"],
+         });
+         commands.push(ClipboardCommand {
+             program: "wl-paste",
+-            args: &["--type", "text/plain"],
++            args: &["--no-newline", "--type", "text/plain"],
+         });
+     }
+ 
+diff --git a/src/platform/macos.rs b/src/platform/macos.rs
+index 484ed1c..73ee84f 100644
+--- a/src/platform/macos.rs
++++ b/src/platform/macos.rs
+@@ -647,6 +647,17 @@ pub fn write_clipboard(bytes: &[u8]) -> bool {
+     )
+ }
+ 
++/// macOS has no PRIMARY selection clipboard.
++pub fn write_primary(_bytes: &[u8]) -> bool {
++    false
++}
++
++/// macOS has no PRIMARY selection clipboard, so a middle-click paste asking for
++/// it reads the system clipboard instead.
++pub fn read_primary() -> Option<String> {
++    read_clipboard_text()
++}
++
+ pub fn read_clipboard_text() -> Option<String> {
+     const MAX_CLIPBOARD_TEXT_BYTES: usize = 1024 * 1024;
+ 
+diff --git a/src/platform/windows.rs b/src/platform/windows.rs
+index 16b2f99..b85c4a6 100644
+--- a/src/platform/windows.rs
++++ b/src/platform/windows.rs
+@@ -2723,6 +2723,17 @@ pub fn write_clipboard(bytes: &[u8]) -> bool {
+     }
+ }
+ 
++/// Windows has no PRIMARY selection clipboard.
++pub fn write_primary(_bytes: &[u8]) -> bool {
++    false
++}
++
++/// Windows has no PRIMARY selection clipboard, so a middle-click paste asking
++/// for it reads the system clipboard instead.
++pub fn read_primary() -> Option<String> {
++    read_clipboard_text()
++}
++
+ pub fn read_clipboard_text() -> Option<String> {
+     None
+ }
+diff --git a/src/selection.rs b/src/selection.rs
+index 9b47b2e..5118045 100644
+--- a/src/selection.rs
++++ b/src/selection.rs
+@@ -296,10 +296,15 @@ fn clamp_to_pane(screen_col: u16, screen_row: u16, pane_inner: Rect) -> (u16, u1
+     (clamped_row - pane_inner.y, clamped_col - pane_inner.x)
+ }
+ 
+-fn osc52_sequence(bytes: &[u8]) -> String {
++/// Builds an OSC 52 write for a specific selection buffer.
++///
++/// The selection parameter is `c` for the system clipboard and `p` for the
++/// PRIMARY selection. Some terminals still only honor BEL-terminated OSC 52
++/// writes, so herdr emits BEL even though ST works in newer emulators.
++fn osc52_sequence_for(bytes: &[u8], selection: char) -> String {
+     use base64::Engine;
+     let encoded = base64::engine::general_purpose::STANDARD.encode(bytes);
+-    format!("\x1b]52;c;{encoded}\x07")
++    format!("\x1b]52;{selection};{encoded}\x07")
+ }
+ 
+ fn contains_wsl_marker(value: &str) -> bool {
+@@ -352,28 +357,129 @@ fn should_prefer_osc52() -> bool {
+     )
+ }
+ 
+-/// Write clipboard bytes to the system clipboard via native platform tools or OSC 52.
++/// Which clipboard buffers a copy should be written to.
++///
++/// On Linux/X11/Wayland the system clipboard (CLIPBOARD, pasted with Ctrl/Cmd+V)
++/// and the selection clipboard (PRIMARY, pasted with middle-click) are
++/// independent. macOS and Windows have no PRIMARY, so `primary` is a no-op there.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub struct ClipboardTarget {
++    /// Write to the system clipboard (OSC 52 `c`).
++    pub clipboard: bool,
++    /// Write to the PRIMARY selection clipboard (OSC 52 `p`).
++    pub primary: bool,
++}
++
++impl ClipboardTarget {
++    /// Explicit copies (copy mode yank, OSC 52 from a pane child) always target
++    /// the system clipboard only.
++    pub const SYSTEM: Self = Self {
++        clipboard: true,
++        primary: false,
++    };
++
++    /// Resolves the target for an automatic on-select copy from configuration.
++    ///
++    /// Returns `None` when copy-on-select is disabled, signalling the caller to
++    /// skip the copy entirely.
++    pub fn from_copy_on_select(mode: crate::config::CopyOnSelect) -> Option<Self> {
++        match mode {
++            crate::config::CopyOnSelect::Disabled => None,
++            crate::config::CopyOnSelect::Clipboard => Some(Self::SYSTEM),
++            crate::config::CopyOnSelect::Primary => Some(Self {
++                clipboard: false,
++                primary: true,
++            }),
++            crate::config::CopyOnSelect::Both => Some(Self {
++                clipboard: true,
++                primary: true,
++            }),
++        }
++    }
++}
++
++impl Default for ClipboardTarget {
++    fn default() -> Self {
++        Self::SYSTEM
++    }
++}
++
++/// Clipboard buffer a paste reads from.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum PasteSource {
++    /// The selection clipboard (PRIMARY on Linux/X11/Wayland). Platforms
++    /// without one read the system clipboard instead.
++    Primary,
++    /// The system clipboard.
++    Clipboard,
++}
++
++impl PasteSource {
++    /// Resolves the buffer a middle-click paste reads from configuration.
++    ///
++    /// Returns `None` when middle-click paste is disabled.
++    pub fn from_paste_on_middle_click(mode: crate::config::PasteOnMiddleClick) -> Option<Self> {
++        match mode {
++            crate::config::PasteOnMiddleClick::Disabled => None,
++            crate::config::PasteOnMiddleClick::Primary => Some(Self::Primary),
++            crate::config::PasteOnMiddleClick::Clipboard => Some(Self::Clipboard),
++        }
++    }
++}
++
++/// Reads text from `source` on this host.
+ ///
+-/// OSC 52 format: `ESC ] 52 ; c ; <base64> BEL`
++/// Returns `None` when the buffer is empty or unreachable, so the caller
++/// pastes nothing rather than silently pasting a different buffer.
++pub fn read_clipboard_text(source: PasteSource) -> Option<String> {
++    let text = match source {
++        PasteSource::Primary => crate::platform::read_primary(),
++        PasteSource::Clipboard => crate::platform::read_clipboard_text(),
++    };
++    text.filter(|text| !text.is_empty())
++}
++
++/// Write clipboard bytes to the requested clipboard buffers.
+ ///
+-/// Some terminals still only honor BEL-terminated OSC 52 writes, so herdr
+-/// emits BEL here even though ST works in newer emulators.
++/// Each requested buffer is written natively where possible, falling back to an
++/// OSC 52 sequence (`c` for the system clipboard, `p` for PRIMARY) when native
++/// writes are unavailable or a remote/WSL session prefers OSC 52 passthrough.
+ ///
+-/// Returns false when the clipboard already holds the same text or output fails.
+-pub fn write_osc52_bytes(bytes: &[u8]) -> bool {
++/// Returns true when a requested buffer already holds the text or a write is
++/// dispatched.
++pub fn write_clipboard_bytes(bytes: &[u8], target: ClipboardTarget) -> bool {
+     let prefer_osc52 = should_prefer_osc52();
+-    if !prefer_osc52 && crate::platform::clipboard_text_matches(bytes) == Some(true) {
+-        tracing::debug!(bytes = bytes.len(), "suppressed duplicate clipboard write");
+-        return false;
++    let mut wrote = false;
++    if target.clipboard {
++        wrote |= if !prefer_osc52 && crate::platform::clipboard_text_matches(bytes) == Some(true) {
++            tracing::debug!(bytes = bytes.len(), "suppressed duplicate clipboard write");
++            true
++        } else {
++            write_one_clipboard(bytes, false, prefer_osc52)
++        };
++    }
++    if target.primary {
++        wrote |= write_one_clipboard(bytes, true, prefer_osc52);
+     }
++    wrote
++}
+ 
+-    if !prefer_osc52 && crate::platform::write_clipboard(bytes) {
+-        true
+-    } else {
+-        let sequence = osc52_sequence(bytes);
+-        let mut stdout = std::io::stdout();
+-        stdout.write_all(sequence.as_bytes()).is_ok() && stdout.flush().is_ok()
++fn write_one_clipboard(bytes: &[u8], primary: bool, prefer_osc52: bool) -> bool {
++    if !prefer_osc52 {
++        let native_ok = if primary {
++            crate::platform::write_primary(bytes)
++        } else {
++            crate::platform::write_clipboard(bytes)
++        };
++        if native_ok {
++            return true;
++        }
+     }
++
++    let selection = if primary { 'p' } else { 'c' };
++    let sequence = osc52_sequence_for(bytes, selection);
++    let mut stdout = std::io::stdout();
++    stdout.write_all(sequence.as_bytes()).is_ok() && stdout.flush().is_ok()
+ }
+ 
+ #[cfg(test)]
+@@ -423,7 +529,56 @@ mod tests {
+ 
+     #[test]
+     fn osc52_sequence_uses_bel_terminator() {
+-        assert_eq!(osc52_sequence(b"hello"), "\x1b]52;c;aGVsbG8=\x07");
++        assert_eq!(osc52_sequence_for(b"hello", 'c'), "\x1b]52;c;aGVsbG8=\x07");
++    }
++
++    #[test]
++    fn osc52_sequence_uses_primary_selector() {
++        assert_eq!(osc52_sequence_for(b"hello", 'p'), "\x1b]52;p;aGVsbG8=\x07");
++    }
++
++    #[test]
++    fn paste_source_from_paste_on_middle_click_maps_modes() {
++        use crate::config::PasteOnMiddleClick;
++        assert_eq!(
++            PasteSource::from_paste_on_middle_click(PasteOnMiddleClick::Disabled),
++            None
++        );
++        assert_eq!(
++            PasteSource::from_paste_on_middle_click(PasteOnMiddleClick::Primary),
++            Some(PasteSource::Primary)
++        );
++        assert_eq!(
++            PasteSource::from_paste_on_middle_click(PasteOnMiddleClick::Clipboard),
++            Some(PasteSource::Clipboard)
++        );
++    }
++
++    #[test]
++    fn clipboard_target_from_copy_on_select_maps_modes() {
++        use crate::config::CopyOnSelect;
++        assert_eq!(
++            ClipboardTarget::from_copy_on_select(CopyOnSelect::Disabled),
++            None
++        );
++        assert_eq!(
++            ClipboardTarget::from_copy_on_select(CopyOnSelect::Clipboard),
++            Some(ClipboardTarget::SYSTEM)
++        );
++        assert_eq!(
++            ClipboardTarget::from_copy_on_select(CopyOnSelect::Primary),
++            Some(ClipboardTarget {
++                clipboard: false,
++                primary: true
++            })
++        );
++        assert_eq!(
++            ClipboardTarget::from_copy_on_select(CopyOnSelect::Both),
++            Some(ClipboardTarget {
++                clipboard: true,
++                primary: true
++            })
++        );
+     }
+ 
+     #[test]

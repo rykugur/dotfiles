@@ -17,6 +17,9 @@ pane_borders = true
 pane_gaps = true
 show_agent_labels_on_pane_borders = true
 status_indicators = "symbols"
+# Select-to-PRIMARY and middle-click paste. Needs the herdr overlay on 0.9.5.
+copy_on_select = "both"
+paste_on_middle_click = "primary"
 sidebar_width = 32
 sidebar_max_width = 40
 # Sorting stays "spaces", so rows of the same space stay adjacent; Herdr 0.9.1

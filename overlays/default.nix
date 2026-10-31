@@ -17,6 +17,12 @@
       system = prev.stdenv.hostPlatform.system;
     in
     {
+      # 0.9.5 port of martinholy/herdr copy-on-select-primary + paste-on-middle-click.
+      # Upstream does not take outside PRs; drop when a release ships these settings.
+      herdr = prev.herdr.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ./herdr-primary-selection.patch ];
+      });
+
       # TEMPORARY — REVIEW BY 2026-10-28.
       #
       # nixpkgs 6bd75267 (PR #571181, 2026-10-13) made aggregateModules merge a
