@@ -1,0 +1,16 @@
+diff --git a/src/apprt/gtk/class/surface.zig b/src/apprt/gtk/class/surface.zig
+--- a/src/apprt/gtk/class/surface.zig
++++ b/src/apprt/gtk/class/surface.zig
+@@ -2946,12 +2946,6 @@
+         // Report the event
+         const button = translateMouseButton(gesture.as(gtk.GestureSingle).getCurrentButton());
+ 
+-        // If this click is only transitioning split focus, suppress it so
+-        // it doesn't get forwarded to the terminal as a mouse event.
+-        if (!had_focus and button == .left) {
+-            priv.suppress_left_mouse_release = true;
+-            return;
+-        }
+ 
+         if (button == .middle and
+             !priv.gtk_enable_primary_paste and
