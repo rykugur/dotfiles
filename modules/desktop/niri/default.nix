@@ -546,13 +546,22 @@
                     open-fullscreen = true;
                     # variable-refresh-rate = true;
                   }
-                  # {
-                  #   matches = [{
-                  #     app-id = "starcitizen.exe";
-                  #     # title = "^Star Citizen.*$";
-                  #   }];
-                  #   variable-refresh-rate = true;
-                  # }
+                  {
+                    matches = [
+                      {
+                        app-id = "starcitizen.exe";
+                      }
+                    ];
+                    # The game runs "Borderless" at the output's native
+                    # 3440x1440. Tiled, niri hands it 3400x1358 (gaps 16 +
+                    # border 4 + bar 42) while the game keeps rendering and
+                    # hit-testing at 3440x1440, so clicks land up to 82px
+                    # above the drawn cursor at the bottom of the screen.
+                    # Whether it self-promotes to fullscreen is racy, so pin
+                    # it.
+                    open-fullscreen = true;
+                    # variable-refresh-rate = true;
+                  }
                 ]
               ++ (mkFloatingAppRules [
                 { app-id = "galculator"; }

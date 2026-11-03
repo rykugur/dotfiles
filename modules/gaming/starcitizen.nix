@@ -4,6 +4,7 @@
     { config, pkgs, ... }:
     let
       username = config.ryk.username;
+      nixCitizenPkgs = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system};
     in
     {
       imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
@@ -30,6 +31,22 @@
 
       programs.rsi-launcher = {
         enable = true;
+
+        # nix-citizen's overlay defines wine-astral via callPackage against
+        # *our* nixpkgs, and smartPackage prefers pkgs.wine-astral whenever it
+        # exists - so every nixpkgs bump rebuilt wine-astral, and the mingw
+        # gcc under it, from source while the byte-identical version sat in
+        # nix-citizen.cachix.org unused. Point both options at nix-citizen's
+        # own package set instead: built against their pinned nixpkgs, which
+        # is what cachix actually has.
+        #
+        # includeOverlay = false would be the tidier fix, but it is broken
+        # upstream - modules/nixos/star-citizen/default.nix:20 reads
+        # `self.packages.${pkgs.stdenv.hostPlatform}`, indexing with the
+        # platform attrset rather than its .system string, so the fallback
+        # throws "expected a string but found a set".
+        wine = nixCitizenPkgs.wine-astral;
+        package = nixCitizenPkgs.rsi-launcher;
         enableNTsync = false; # Jezrien imports the standalone ntsync module.
 
         # Launch OpenTrack alongside RSI Launcher in the same Wine environment.
