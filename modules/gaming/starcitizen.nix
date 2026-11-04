@@ -3,8 +3,12 @@
   flake.modules.nixos.starcitizen =
     { config, pkgs, ... }:
     let
+      system = pkgs.stdenv.hostPlatform.system;
       username = config.ryk.username;
-      nixCitizenPkgs = inputs.nix-citizen.packages.${pkgs.stdenv.hostPlatform.system};
+      nixCitizenPkgs = inputs.nix-citizen.packages.${system};
+      # Graphics userspace from nix-citizen's *pinned* nixpkgs, so it shares
+      # wine-astral's glibc. See the VK_DRIVER_FILES note below.
+      nixCitizenNixpkgs = inputs.nix-citizen.inputs.nixpkgs.legacyPackages.${system};
     in
     {
       imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
@@ -57,6 +61,18 @@
           export DXVK_HUD=compiler
           export MANGO_HUD=1
           export MANGOHUD=1
+
+          # Wine comes from nix-citizen's pinned nixpkgs (glibc 2.42) while
+          # this host is on glibc 2.44. Wine's own glibc is loaded first, so
+          # dlopen of the *system* mesa ICD fails - "libm.so.6: version
+          # `GLIBC_2.44' not found (required by libLLVM.so.21.1)" - the loader
+          # finds no GPU and DXVK aborts in DxvkInstance::createInstance.
+          # Feed it the ICD and implicit layers from the same pinned nixpkgs
+          # instead; RADV is userspace only, so a minor version skew against
+          # the system mesa is harmless. Drop these two exports once
+          # nix-citizen's nixpkgs pin reaches glibc >= this host's.
+          export VK_DRIVER_FILES=${nixCitizenNixpkgs.mesa}/share/vulkan/icd.d/radeon_icd.x86_64.json
+          export VK_ADD_IMPLICIT_LAYER_PATH=${nixCitizenNixpkgs.mangohud}/share/vulkan/implicit_layer.d
           export WINE_HIDE_NVIDIA_GPU=1
           export PROTON_ENABLE_WAYLAND=1
           export WINEDLLOVERRIDES="$WINEDLLOVERRIDES;winewayland.drv=n,b"
