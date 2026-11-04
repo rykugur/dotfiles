@@ -1,7 +1,7 @@
 { inputs, self, ... }:
 {
   flake.modules.nixos.starcitizen =
-    { config, pkgs, ... }:
+    { config, lib, pkgs, ... }:
     let
       system = pkgs.stdenv.hostPlatform.system;
       username = config.ryk.username;
@@ -9,9 +9,21 @@
       # Graphics userspace from nix-citizen's *pinned* nixpkgs, so it shares
       # wine-astral's glibc. See the VK_DRIVER_FILES note below.
       nixCitizenNixpkgs = inputs.nix-citizen.inputs.nixpkgs.legacyPackages.${system};
+      hostGlibc = pkgs.stdenv.cc.libc.version;
+      wineGlibc = nixCitizenNixpkgs.stdenv.cc.libc.version;
     in
     {
       imports = [ inputs.nix-citizen.nixosModules.StarCitizen ];
+
+      # Fires once nix-citizen's pin catches up: the VK_DRIVER_FILES /
+      # VK_ADD_IMPLICIT_LAYER_PATH exports below are then dead weight and the
+      # launcher can use the system mesa again.
+      warnings = lib.optional (lib.versionAtLeast wineGlibc hostGlibc) ''
+        starcitizen: nix-citizen's nixpkgs now has glibc ${wineGlibc} >= this
+        host's ${hostGlibc}. Drop the VK_DRIVER_FILES and
+        VK_ADD_IMPLICIT_LAYER_PATH exports from modules/gaming/starcitizen.nix
+        and verify the launcher still reaches "D3D11InternalCreateDevice".
+      '';
 
       security.pam.loginLimits = [
         {
