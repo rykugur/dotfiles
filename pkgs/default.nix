@@ -27,6 +27,7 @@ in
   tpm = pkgs.callPackage ./tpm.nix { };
   openrig = pkgs.callPackage ./openrig.nix { };
   herdr-navigator = pkgs.callPackage ./herdr-navigator.nix { };
+  rex = inputs.rex.packages.${pkgs.stdenv.hostPlatform.system}.rex;
   pi-intercom = pkgs.callPackage ./pi-intercom.nix { };
   omp-collab-relay = pkgs.callPackage ./omp-collab-relay.nix { src = inputs.oh-my-pi; };
 }

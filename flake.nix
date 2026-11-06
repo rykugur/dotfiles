@@ -106,6 +106,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zmx-session-manager.url = "github:mdsakalu/zmx-session-manager";
+    rex = {
+      url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ###
 
     ### ai stuff

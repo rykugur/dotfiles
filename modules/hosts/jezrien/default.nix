@@ -163,7 +163,6 @@ let
                   };
                 };
 
-
                 home.packages = with pkgs; [
                   # nix
                   nix-prefetch-scripts
@@ -179,6 +178,8 @@ let
                   pinta
                   xrandr
                   xbacklight
+
+                  rex
 
                   # misc gaming
                   dolphin-emu

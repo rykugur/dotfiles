@@ -1795,6 +1795,23 @@
         "type": "github"
       }
     },
+    "rex": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793910724,
+        "narHash": "sha256-LfiDGOT/ldWUItHQ6wilNiQ0bFEonyXxSpHg1XGjJmc=",
+        "type": "tarball",
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot/0.0.1793910724-g2e71f8.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz"
+      }
+    },
     "root": {
       "inputs": {
         "amethyst": "amethyst",
@@ -1823,6 +1840,7 @@
         "noctalia": "noctalia",
         "oh-my-pi": "oh-my-pi",
         "ompweb": "ompweb",
+        "rex": "rex",
         "ryze312-stackpkgs": "ryze312-stackpkgs",
         "skills-anthropic": "skills-anthropic",
         "skills-simple-english": "skills-simple-english",
