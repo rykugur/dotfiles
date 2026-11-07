@@ -49,6 +49,7 @@ in
                 herdr
                 openrig
                 homelab
+                jujutsu
                 shell
                 obsidian
                 opencode

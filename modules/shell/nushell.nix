@@ -1,6 +1,6 @@
 # Nushell — dendritic homeManager module
 { ... }: {
-  flake.modules.homeManager.nushell = { pkgs, ... }:
+  flake.modules.homeManager.nushell = { config, lib, pkgs, ... }:
     let
       nu-scripts = pkgs.fetchFromGitHub {
         owner = "nushell";
@@ -18,6 +18,13 @@
         # niri, not Steam. Costs one bash subprocess per shell start.
         loadSessionVariables = true;
         extraEnv = ''
+          ${lib.optionalString pkgs.stdenv.isDarwin ''
+            # Vendor autoload runs after config.nu, too late for shell integrations.
+            $env.PATH = ($env.PATH | prepend [
+              "/run/current-system/sw/bin"
+              "${config.home.profileDirectory}/bin"
+            ] | uniq)
+          ''}
           $env.LOCAL_CONFIG_FILE = $"($nu.data-dir)/vendor/autoload/config.nu"
           $env.DOTFILES_DIR = $"($env.HOME)/.dotfiles"
           $env.config.table.show_empty = false
