@@ -83,6 +83,11 @@
           # Package root keeps pi-intercom's relative imports and manifest together.
           ".omp/agent/extensions/pi-intercom".source = piIntercom;
           ".omp/agent/skills/pi-intercom".source = "${piIntercom}/skills/pi-intercom";
+          # Cloudflare's multi-phase audit skill. OMP-only: it fans out many
+          # isolated hunter/verifier subagents, which the other harnesses here
+          # either cannot do or would do at much higher cost.
+          ".omp/agent/skills/security-audit".source =
+            "${inputs.skills-cloudflare-security-audit}/skills/security-audit";
           ".omp/agent/AGENTS.md".source = ./AGENTS.md;
           ".omp/agent/mcp.json".text = builtins.toJSON {
             mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);

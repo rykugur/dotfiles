@@ -30,7 +30,9 @@ callPackage "${prepared}/nix/package.nix" {
   buildNpmPackage =
     argsOrFn:
     let
-      npmDepsHash = "sha256-sWlf6K96SKtjdaX5EWwoIT28r46QM17hd/o0qW8hSyY=";
+      # Refreshed 2026-11-07: the previous value no longer reproduced against
+      # the pinned nixpkgs, which is the drift the comment above predicts.
+      npmDepsHash = "sha256-h4T8ysAYEC3NFXAxlxXYlxbIi/aleAZPAb8jgiHNiqY=";
     in
     buildNpmPackage (
       if builtins.isFunction argsOrFn then

@@ -64,7 +64,6 @@
           hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
         };
       });
-      zsm = inputs.zmx-session-manager.packages.${system}.default;
 
       lib = prev.lib // {
         fetch7z =

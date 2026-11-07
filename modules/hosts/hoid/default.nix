@@ -16,6 +16,7 @@ in
     system = "x86_64-linux";
     modules = [
       self.modules.nixos.nix-defaults
+      self.modules.nixos.dotfiles-overlays
       self.modules.nixos.meta
       self.modules.nixos.login-shell
       # Vasher is down pending a rebuild (2026-10-28); re-add
@@ -27,6 +28,13 @@ in
 
       ./_platform-lxc.nix
       ./_role.nix
+
+      {
+        # Was the comin module's default until the module moved to shardpool,
+        # where defaulting to this repository would have been wrong for every
+        # other consumer. Hoid is the one host that really does poll dotfiles.
+        ryk.comin.url = "https://github.com/rykugur/dotfiles.git";
+      }
 
       inputs.home-manager.nixosModules.home-manager
       {
