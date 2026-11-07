@@ -490,7 +490,9 @@
           # LAN only.
           package = pkgs.caddy.withPlugins {
             plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
-            hash = "sha256-5a5cpFl90pEWt0lUC4ZJQ7g+1//ZvsRhee64Dt9vh5o=";
+            # Refreshed 2026-11-07: Go module resolution moved under the
+            # pinned nixpkgs and the old vendor hash stopped reproducing.
+            hash = "sha256-tubXIDCJnO2mvdnPlZclwDhNGaeeYLSt7lnni3+pXDo=";
           };
           email = lib.mkIf cfg.proxy.tls.enable cfg.proxy.tls.email;
           environmentFile = lib.mkIf (cfg.proxy.tls.environmentFile != null) cfg.proxy.tls.environmentFile;
