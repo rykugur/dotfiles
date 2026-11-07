@@ -1,4 +1,4 @@
-{ self, ... }:
+{ inputs, self, ... }:
 {
   flake.modules.nixos.ssh =
     { username, ... }:
@@ -20,8 +20,9 @@
       };
 
       # Public half of this host's sops `ssh_private_key`. Looked up by
-      # hostname from `_dusty-ssh-keys.nix`; not a secret, so not in sops.
-      home.file.".ssh/id_ed25519.pub".text = (import ./_dusty-ssh-keys.nix).${hostname} + "\n";
+      # hostname from shardpool's key list; not a secret, so not in sops.
+      home.file.".ssh/id_ed25519.pub".text =
+        inputs.shardpool.lib.dustySshKeys.${hostname} + "\n";
 
       programs = {
         ssh = {

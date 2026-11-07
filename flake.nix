@@ -15,6 +15,22 @@
 
     import-tree.url = "github:vic/import-tree";
 
+    # Shared headless-host modules, extracted so ashyn/khriss/wayne/oathgate
+    # stop pulling this flake's whole desktop closure. Everything it exports
+    # is re-exported here under its previous name by modules/_shardpool.nix.
+    shardpool = {
+      url = "github:rykugur/shardpool";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+      inputs.comin.follows = "comin";
+      inputs.impermanence.follows = "impermanence";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.import-tree.follows = "import-tree";
+      inputs.helix.follows = "helix";
+      inputs.umbrella.follows = "umbrella";
+      inputs.zmx-session-manager.follows = "zmx-session-manager";
+    };
+
     comin = {
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -155,6 +171,10 @@
     };
     skills-simple-english = {
       url = "github:AminBlg/SimpleEnglish";
+      flake = false;
+    };
+    skills-cloudflare-security-audit = {
+      url = "github:cloudflare/security-audit-skill";
       flake = false;
     };
     ###

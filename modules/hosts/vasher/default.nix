@@ -6,6 +6,7 @@
     system = "x86_64-linux";
     modules = [
       self.modules.nixos.nix-defaults
+      self.modules.nixos.dotfiles-overlays
       ./_role.nix
       ./_platform-lxc.nix
       self.modules.nixos.vasher-cache

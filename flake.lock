@@ -1842,7 +1842,9 @@
         "ompweb": "ompweb",
         "rex": "rex",
         "ryze312-stackpkgs": "ryze312-stackpkgs",
+        "shardpool": "shardpool",
         "skills-anthropic": "skills-anthropic",
+        "skills-cloudflare-security-audit": "skills-cloudflare-security-audit",
         "skills-simple-english": "skills-simple-english",
         "skills-vercel": "skills-vercel",
         "sops-nix": "sops-nix",
@@ -1938,6 +1940,50 @@
         "type": "github"
       }
     },
+    "shardpool": {
+      "inputs": {
+        "comin": [
+          "comin"
+        ],
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "helix": [
+          "helix"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "impermanence": [
+          "impermanence"
+        ],
+        "import-tree": [
+          "import-tree"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "umbrella": [
+          "umbrella"
+        ],
+        "zmx-session-manager": [
+          "zmx-session-manager"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794072093,
+        "narHash": "sha256-kUuxeNOJYg+mhHjikY3oRTyJavsAkdDr1JP5SxBfPiM=",
+        "owner": "rykugur",
+        "repo": "shardpool",
+        "rev": "cefeca57ddb46f7ab69269a9d80891ec471efb0c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rykugur",
+        "repo": "shardpool",
+        "type": "github"
+      }
+    },
     "skills-anthropic": {
       "flake": false,
       "locked": {
@@ -1951,6 +1997,22 @@
       "original": {
         "owner": "anthropics",
         "repo": "skills",
+        "type": "github"
+      }
+    },
+    "skills-cloudflare-security-audit": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789414134,
+        "narHash": "sha256-oVVACjotkHvllQGxEP8yWaEt4c3GxT0d909TUM5P3NM=",
+        "owner": "cloudflare",
+        "repo": "security-audit-skill",
+        "rev": "c1c8a8c1471069fb0e188eeaff69b8e8db6564a8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cloudflare",
+        "repo": "security-audit-skill",
         "type": "github"
       }
     },

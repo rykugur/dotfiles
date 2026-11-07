@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 {
   flake.modules.homeManager.zed-editor =
     { lib, pkgs, ... }:
@@ -80,7 +80,9 @@
 
       home.file = {
         ".config/zed/snippets" = {
-          source = ../../configs/snippets;
+          # Shared with the Helix module, which moved to shardpool along with
+          # the snippet files themselves.
+          source = inputs.shardpool.lib.editorSnippets;
           recursive = true;
         };
       };
