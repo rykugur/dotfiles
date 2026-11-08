@@ -62,7 +62,7 @@
       options.ryk.omp.broker.url = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
-        example = "http://hoid.local.ryk.sh:8765";
+        example = "http://broker.local.ryk.sh:8765";
         description = ''
           Remote auth-broker this client resolves credentials through. Setting
           it bypasses the local SQLite credential store entirely: if the broker
