@@ -10,6 +10,6 @@
 
       services.input-remapper.enable = true;
 
-      environment.systemPackages = with pkgs; [ piper polychromatic ];
+      environment.systemPackages = [ pkgs.polychromatic ];
     };
 }
