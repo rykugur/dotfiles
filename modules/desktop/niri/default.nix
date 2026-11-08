@@ -194,7 +194,7 @@
           After = [ "graphical-session.target" ];
         };
         Service = {
-          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${clipboardPrimaryMirror}/bin/clipboard-primary-mirror";
+          ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch ${clipboardPrimaryMirror}/bin/clipboard-primary-mirror";
           Restart = "on-failure";
           RestartSec = 5;
         };
