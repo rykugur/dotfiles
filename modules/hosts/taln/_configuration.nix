@@ -45,6 +45,9 @@
 
   system = {
     defaults = {
+      # Stage Manager requires each display to have separate Spaces.
+      spaces.spans-displays = false;
+
       dock = {
         autohide = true;
 

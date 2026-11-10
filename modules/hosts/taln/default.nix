@@ -20,7 +20,6 @@ in
 
       self.modules.darwin.fonts
       self.modules.darwin.stylix
-      self.modules.darwin.aerospace
       self.modules.darwin.dusty-nfs
 
       # home-manager config
@@ -44,15 +43,12 @@ in
 
                 # individual modules (not in developer group)
                 ai-common
-                claude-code
-                codex
                 herdr
                 openrig
                 homelab
                 jujutsu
                 shell
                 obsidian
-                opencode
                 oh-my-pi
                 sops
                 ssh
@@ -61,7 +57,6 @@ in
                 superfile
                 television
               ];
-
 
               home.packages = with pkgs; [
                 nh
