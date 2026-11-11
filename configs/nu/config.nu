@@ -4,6 +4,7 @@ source ./docker.nu
 source ./git.nu
 source ./k8s.nu
 source ./git.nu
+source ./jj.nu
 source ./linux.nu
 source ./misc.nu
 source ./nix.nu

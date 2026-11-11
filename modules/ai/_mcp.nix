@@ -25,15 +25,6 @@ let
       command = "${pkgs.bun}/bin/bunx";
       args = [ "@upstash/context7-mcp" ];
     };
-
-    # N95 iGPU reranker still takes 30-90s even Vulkan-accelerated
-    # (see homelab wiki [[arcanum-mcp]]); default 30s client timeout
-    # is too tight.
-    arcanum = {
-      type = "http";
-      url = "https://mcp.arcanum.k8s.local.ryk.sh/mcp";
-      timeout = 90000;
-    };
   };
 
   pick = names: lib.getAttrs names servers;

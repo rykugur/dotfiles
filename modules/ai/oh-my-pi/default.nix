@@ -89,9 +89,6 @@
           ".omp/agent/skills/security-audit".source =
             "${inputs.skills-cloudflare-security-audit}/skills/security-audit";
           ".omp/agent/AGENTS.md".source = ./AGENTS.md;
-          ".omp/agent/mcp.json".text = builtins.toJSON {
-            mcpServers = mcp.toOhMyPi (mcp.pick [ "arcanum" ]);
-          };
           # Escape stays free for autocomplete/modal dismissal; F9 is the
           # muscle-memory-safe cancel-turn chord for vim/helix users who
           # reach for Esc out of habit.

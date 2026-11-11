@@ -1,7 +1,7 @@
 { ... }:
 {
   flake.modules.homeManager.openrig =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
       home.packages = [
         pkgs.openrig
@@ -17,6 +17,21 @@
         source = ../../configs/openrig/specs;
         recursive = true;
       };
+
+      # Older generations linked this entire directory. A leftover link can
+      # dangle after GC, and recursive linking cannot mkdir through it. Remove
+      # only that Home Manager-owned link, never a user's directory or link.
+      home.activation.migrateOpenrigSpecs =
+        lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] ''
+          openrigSpecs="$HOME/.openrig/specs"
+          if [[ -L "$openrigSpecs" ]]; then
+            case "$(readlink "$openrigSpecs")" in
+              ${builtins.storeDir}/*-home-manager-files/.openrig/specs)
+                run unlink -- "$openrigSpecs"
+                ;;
+            esac
+          fi
+        '';
 
       # OpenRig never starts tmux itself — it only probes the default socket
       # (`tmux list-sessions`) and blocks daemon start if no server answers

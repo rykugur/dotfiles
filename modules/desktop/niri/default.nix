@@ -147,7 +147,7 @@
           xwayland-satellite
         ]
         ++ [
-          (pkgs.writeScriptBin "conditional-kill.nu" (builtins.readFile ./scripts/conditional-kill.nu))
+          (pkgs.writeScriptBin "confirm-close.nu" (builtins.readFile ./scripts/confirm-close.nu))
           (pkgs.writeScriptBin "conditional-fullscreen.nu" (
             builtins.readFile ./scripts/conditional-fullscreen.nu
           ))
@@ -368,8 +368,12 @@
                 "Mod+o".action = show-hotkey-overlay;
                 "Mod+q" = {
                   action = lib.mkDefault (spawn [
-                    "${config.home.homeDirectory}/.nix-profile/bin/conditional-kill.nu"
+                    "${config.home.homeDirectory}/.nix-profile/bin/confirm-close.nu"
                   ]);
+                  repeat = false;
+                };
+                "Mod+Shift+q" = {
+                  action = lib.mkDefault close-window;
                   repeat = false;
                 };
                 "Mod+v" = {

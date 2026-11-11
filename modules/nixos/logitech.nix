@@ -3,6 +3,8 @@
   flake.modules.nixos.logitech =
     { pkgs, ... }:
     {
+      imports = [ ./_logitech/mouse-battery.nix ];
+
       services.ratbagd = {
         enable = true;
         # nixpkgs' libratbag 0.18 lacks G502 X Plus support. Remove this

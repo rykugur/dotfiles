@@ -25,6 +25,12 @@
           default = "none";
         };
 
+        extraRightWidgets = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = "Feature-owned bar widgets to place immediately after the system tray.";
+        };
+
         avatar = lib.mkOption {
           type = lib.types.nullOr lib.types.path;
           default = ./avatar.png;
@@ -158,19 +164,21 @@
                     "clock"
                     "weather"
                   ];
-                  rightWidgets = [
-                    "systemTray"
-                    "clipboard"
-                    "cpuUsage"
-                    "memUsage"
-                    "notificationButton"
-                    # Click toggles idle inhibit indefinitely; right-click opens
-                    # the duration presets popout (new in DMS 2.0). Blocks the
-                    # three ac* timeouts above via SessionService.idleInhibited.
-                    "idleInhibitor"
-                    "battery"
-                    "controlCenterButton"
-                  ];
+                  rightWidgets =
+                    [ "systemTray" ]
+                    ++ rykCfg.dankMaterialShell.extraRightWidgets
+                    ++ [
+                      "clipboard"
+                      "cpuUsage"
+                      "memUsage"
+                      "notificationButton"
+                      # Click toggles idle inhibit indefinitely; right-click opens
+                      # the duration presets popout (new in DMS 2.0). Blocks the
+                      # three ac* timeouts above via SessionService.idleInhibited.
+                      "idleInhibitor"
+                      "battery"
+                      "controlCenterButton"
+                    ];
                 }
               ];
 

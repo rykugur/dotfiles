@@ -1,6 +1,6 @@
 ---
 name: arcanum
-description: Use before starting non-trivial work on ~/projects/homelab, ~/projects/dotfiles, or other tracked infra/AI projects, and whenever the user asks "have we dealt with this before" / "what do we know about X" / references past decisions, architecture, or troubleshooting. Check the Arcanum knowledge base via the arcanum MCP tools (query/get/status) before re-deriving an answer or re-investigating something that may already be documented.
+description: Use before starting non-trivial work on ~/projects/homelab, ~/projects/dotfiles, or other tracked infra/AI projects, and whenever the user asks "have we dealt with this before" / "what do we know about X" / references past decisions, architecture, or troubleshooting. Check the Arcanum knowledge base at ~/projects/arcanum before re-deriving an answer or re-investigating something that may already be documented.
 ---
 
 # Arcanum knowledge base
@@ -29,25 +29,26 @@ optional extra.
 
 ## How to use it
 
-Three read-only tools, no auth, LAN-only endpoint:
+There is no search service. The `arcanum` MCP was scaled to zero on
+2026-10-30 after measurement showed a semantic query cost >80s against 0.45s
+for the BM25 index under it (`log/2026-10.md:7221`). `grep` is the index.
 
-- `query` — hybrid BM25 + semantic + reranked search. Best first move for a
-  fuzzy question. Provide `intent` on every call. Expect **30-90s latency**
-  on this deployment (N95 iGPU-accelerated reranker) — that's normal, not a
-  hang; the client timeout here is tuned to 90s specifically for this.
-- `get` — exact retrieval by path or docid from a `query` hit. Supports fuzzy
-  path suggestions if you get the slug slightly wrong.
-- `status` — index health/doc counts; fast, useful sanity check.
+- **Decisions and history:** `grep "^## \[" ~/projects/arcanum/log/*.md` for
+  headings, then read the matching entry by range. Never read a month log
+  whole — `log/2026-10.md` is ~430 KB.
+- **Durable pages:** `grep -ril <term> ~/projects/arcanum/wiki/`, or
+  `index.md` to resolve a page by name.
+- **Specs and plans:** `archive/specs/<project>/`, `archive/plans/<project>/`,
+  by path.
 
 Always cite the returned repo-relative path when you use a result. If a
 result contradicts something you're about to claim from memory, trust the
 wiki — it's the corrected, cross-checked version.
 
-## What it is not
+## Writing back
 
-Read-only. No mutation, shell, or write tools are exposed here — don't expect
-to file new findings back through MCP. If a session produces something worth
-keeping (a root cause, a corrected theory, a new convention), that's a
-separate step: edit the wiki directly under `~/projects/arcanum` (if present
-in the workspace) and push — git-sync picks it up on the homelab side within
-~60s, no redeploy needed.
+If a session produces something worth keeping (a root cause, a corrected
+theory, a new convention), edit the wiki directly under `~/projects/arcanum`,
+then commit and push. Other machines read Arcanum from Forgejo, so unpushed
+work is invisible to them. See that repo's `CLAUDE.md` for the entry format
+and the read budget.
